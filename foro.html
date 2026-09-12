@@ -103,7 +103,7 @@
         </div>
 
         <div id="lista-hilos">
-            <p style="color: #888; text-align: center; font-size: 14px;">Cargando debates...</p>
+            <p style="color: #888; text-align: center; font-size: 14px;">Conectando con la comunidad...</p>
         </div>
     </div>
 
@@ -178,7 +178,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
@@ -198,37 +198,6 @@
         window.cerrarModalCrear = function() { document.getElementById('modalCrear').style.display = 'none'; }
         window.cerrarModalHilo = function() { document.getElementById('modalHilo').style.display = 'none'; }
 
-        async function cargarDebates() {
-            const lista = document.getElementById('lista-hilos');
-            try {
-                const querySnapshot = await getDocs(collection(db, "foro_debates"));
-                lista.innerHTML = '';
-                if (querySnapshot.empty) {
-                    lista.innerHTML = '<p style="color: #888; text-align: center; font-size: 14px;">Aún no hay debates creados. ¡Sé el primero en iniciar uno!</p>';
-                    return;
-                }
-                querySnapshot.forEach((docH) => {
-                    const h = docH.data();
-                    const idH = docH.id;
-                    const tarjeta = document.createElement('div');
-                    tarjeta.className = 'thread-card';
-                    tarjeta.innerHTML = `
-                        <span class="thread-category">${h.categoria || 'General'}</span>
-                        <a class="thread-title" onclick="abrirHilo('${idH}', '${(h.titulo || '').replace(/'/g, "\\'")}', '${(h.texto || '').replace(/'/g, "\\'")}', '${h.autor || 'Anónimo'}', '${h.categoria || 'General'}')">${h.titulo}</a>
-                        <p class="thread-snippet">${h.texto}</p>
-                        <div class="thread-meta">
-                            <span class="thread-author">Por: ${h.autor || 'Anónimo'}</span>
-                            <span>Comunidad Activa</span>
-                        </div>
-                    `;
-                    lista.appendChild(tarjeta);
-                });
-            } catch (error) {
-                console.error("Error al cargar debates: ", error);
-                lista.innerHTML = '<p style="color: #888; text-align: center; font-size: 14px;">Error de conexión con la base de datos.</p>';
-            }
-        }
-
         window.publicarDebate = async function(event) {
             event.preventDefault();
             const autor = document.getElementById('autorDebate').value;
@@ -236,21 +205,22 @@
             const titulo = document.getElementById('tituloDebate').value;
             const texto = document.getElementById('textoDebate').value;
 
-            document.getElementById('modalCrear').style.display = 'none';
-            document.getElementById('formDebate').reset();
-
             try {
+                // Primero guardamos en Firebase asegurando la promesa
                 await addDoc(collection(db, "foro_debates"), {
                     autor: autor,
                     categoria: categoria,
                     titulo: titulo,
                     texto: texto,
-                    fecha: new Date().toISOString()
+                    fecha: serverTimestamp()
                 });
-                await cargarDebates(); // Actualiza la lista al instante
+
+                // Limpiamos y cerramos la ventana solo una vez confirmado el guardado
+                document.getElementById('formDebate').reset();
+                document.getElementById('modalCrear').style.display = 'none';
             } catch (error) {
                 console.error("Error al guardar debate: ", error);
-                alert("No se pudo guardar el debate. Verificá tu conexión.");
+                alert("Hubo un error al publicar. Verificá tu conexión.");
             }
         };
 
@@ -262,29 +232,26 @@
             document.getElementById('hiloTextoModal').innerText = texto;
             document.getElementById('hiloAutorModal').innerText = autor;
             document.getElementById('modalHilo').style.display = 'flex';
-            cargarRespuestas(id);
+            cargarRespuestasFirebase(id);
         }
 
-        async function cargarRespuestas(hiloId) {
+        function cargarRespuestasFirebase(hiloId) {
             const contenedor = document.getElementById('contenedorRespuestas');
             contenedor.innerHTML = '<p style="color: #666; font-size: 13px;">Cargando respuestas...</p>';
-            try {
-                const querySnapshot = await getDocs(collection(db, "foro_debates", hiloId, "respuestas"));
+            onSnapshot(collection(db, "foro_debates", hiloId, "respuestas"), (snapshot) => {
                 contenedor.innerHTML = '';
-                if (querySnapshot.empty) {
+                if (snapshot.empty) {
                     contenedor.innerHTML = '<p style="color: #666; font-size: 13px; font-style: italic;">Aún no hay comentarios. Sé el primero en responder.</p>';
                     return;
                 }
-                querySnapshot.forEach((docR) => {
+                snapshot.forEach((docR) => {
                     const r = docR.data();
                     const div = document.createElement('div');
                     div.className = 'respuesta-card';
                     div.innerHTML = `<div class="respuesta-meta"><span style="color: #dfc285; font-weight: bold;">${r.autor || 'Anónimo'}</span><span>Hace un momento</span></div><div>${r.texto}</div>`;
                     contenedor.appendChild(div);
                 });
-            } catch (error) {
-                console.error("Error al cargar respuestas: ", error);
-            }
+            });
         }
 
         window.enviarRespuesta = async function(event) {
@@ -293,22 +260,44 @@
             const texto = document.getElementById('textoRespuesta').value;
             if (!hiloActualId) return;
 
-            document.getElementById('autorRespuesta').value = '';
-            document.getElementById('textoRespuesta').value = '';
-
             try {
                 await addDoc(collection(db, "foro_debates", hiloActualId, "respuestas"), {
                     autor: autor,
                     texto: texto,
-                    fecha: new Date().toISOString()
+                    fecha: serverTimestamp()
                 });
-                await cargarRespuestas(hiloActualId);
+                document.getElementById('autorRespuesta').value = '';
+                document.getElementById('textoRespuesta').value = '';
             } catch (error) {
                 console.error("Error al enviar respuesta: ", error);
             }
         };
 
-        cargarDebates();
+        // Escucha en tiempo real de los debates generales
+        onSnapshot(collection(db, "foro_debates"), (snapshot) => {
+            const lista = document.getElementById('lista-hilos');
+            lista.innerHTML = '';
+            if (snapshot.empty) {
+                lista.innerHTML = '<p style="color: #888; text-align: center; font-size: 14px;">Aún no hay debates creados. ¡Sé el primero en iniciar uno!</p>';
+                return;
+            }
+            snapshot.forEach((docH) => {
+                const h = docH.data();
+                const idH = docH.id;
+                const tarjeta = document.createElement('div');
+                tarjeta.className = 'thread-card';
+                tarjeta.innerHTML = `
+                    <span class="thread-category">${h.categoria || 'General'}</span>
+                    <a class="thread-title" onclick="abrirHilo('${idH}', '${(h.titulo || '').replace(/'/g, "\\'")}', '${(h.texto || '').replace(/'/g, "\\'")}', '${h.autor || 'Anónimo'}', '${h.categoria || 'General'}')">${h.titulo}</a>
+                    <p class="thread-snippet">${h.texto}</p>
+                    <div class="thread-meta">
+                        <span class="thread-author">Por: ${h.autor || 'Anónimo'}</span>
+                        <span>Comunidad Activa</span>
+                    </div>
+                `;
+                lista.appendChild(tarjeta);
+            });
+        });
     </script>
 </body>
 </html>
