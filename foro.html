@@ -1,97 +1,401 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Foro General | Masajistas Privé</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
-</head>
-<body style="background-color: #0d0d0d; color: #e5e0d8; font-family: 'Montserrat', sans-serif; margin: 0; padding: 20px;">
-
-  <div style="max-width: 600px; margin: 0 auto; padding-bottom: 40px;">
-    <a href="index.html" style="color: #dfc285; text-decoration: none; font-size: 14px; display: inline-block; margin-bottom: 20px;">← Volver al Inicio</a>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foro & Comunidad | Masajistas Privé</title>
+    <!-- Importamos fuentes elegantes desde Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
     
-    <div class="experiencias-section" style="background-color: #141414; border: 1px solid rgba(223, 194, 133, 0.2); border-radius: 8px; padding: 20px;">
-      <h3 style="color: #dfc285; margin-top: 0; border-bottom: 1px solid rgba(223, 194, 133, 0.2); padding-bottom: 10px;">Foro General de Comunidad</h3>
-      
-      <!-- Contenedor donde se cargan los mensajes en tiempo real -->
-      <div id="lista-experiencias" style="margin-bottom: 20px;"></div>
-      
-      <!-- Formulario del foro -->
-      <form id="form-experiencia">
-        <div style="margin-bottom: 12px;">
-          <input type="text" id="nombre-usuario" placeholder="Tu nombre o apodo" required style="width: 100%; background-color: #0d0d0d; border: 1px solid rgba(223, 194, 133, 0.3); border-radius: 6px; padding: 12px; color: #e5e0d8; font-family: 'Montserrat', sans-serif; box-sizing: border-box;">
-        </div>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            background-color: #0d0d0d; 
+            color: #e5e0d8; 
+            font-family: 'Montserrat', sans-serif; 
+            line-height: 1.6; 
+        }
         
-        <div style="margin-bottom: 12px;">
-          <textarea id="texto-experiencia" placeholder="Escribe tu mensaje en el foro..." required style="width: 100%; background-color: #0d0d0d; border: 1px solid rgba(223, 194, 133, 0.3); border-radius: 6px; padding: 12px; color: #e5e0d8; font-family: 'Montserrat', sans-serif; min-height: 90px; box-sizing: border-box; resize: vertical;"></textarea>
-        </div>
+        h1, h2, h3, .logo, .thread-title, .btn-nuevo, .modal-content h3 {
+            font-family: 'Cormorant Garamond', serif;
+            letter-spacing: 1.5px;
+        }
+
+        header { 
+            background: #141414; 
+            border-bottom: 1px solid rgba(223, 194, 133, 0.35); 
+            padding: 15px 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        .logo { 
+            color: #dfc285; 
+            font-size: 20px; 
+            font-weight: 600; 
+            text-decoration: none; 
+            text-transform: uppercase; 
+        }
+        .nav-links a { 
+            color: #aaa; 
+            font-family: 'Montserrat', sans-serif;
+            text-decoration: none; 
+            margin-left: 20px; 
+            font-size: 13px; 
+            font-weight: 400;
+            letter-spacing: 1px;
+            transition: color 0.3s; 
+        }
+        .nav-links a:hover, .nav-links a.active { color: #dfc285; }
+
+        .container { max-width: 900px; margin: 30px auto; padding: 0 20px; }
         
-        <div>
-          <button type="submit" style="width: 100%; background-color: #dfc285; color: #0d0d0d; border: none; border-radius: 6px; padding: 12px; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-family: 'Montserrat', sans-serif; box-sizing: border-box;">Publicar en el Foro</button>
+        .foro-header { text-align: center; margin-bottom: 40px; }
+        .foro-header h1 { color: #dfc285; font-size: 32px; font-weight: 600; text-transform: uppercase; margin-bottom: 10px; }
+        .foro-header p { color: #aaa; font-size: 14px; font-family: 'Montserrat', sans-serif; font-weight: 300; }
+
+        .thread-card { 
+            background: #141414; 
+            border: 1px solid rgba(223, 194, 133, 0.25); 
+            border-radius: 6px; 
+            padding: 22px; 
+            margin-bottom: 20px; 
+            transition: border-color 0.3s, background 0.3s; 
+        }
+        .thread-card:hover { 
+            border-color: #dfc285; 
+            background: #181818;
+        }
+        .thread-category { color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; display: block; margin-bottom: 6px; }
+        .thread-title { color: #ffffff; font-size: 22px; font-weight: 600; text-decoration: none; display: block; margin-bottom: 10px; cursor: pointer; }
+        .thread-title:hover { color: #dfc285; }
+        .thread-snippet { color: #bcbbb5; font-size: 14px; font-weight: 300; margin-bottom: 15px; }
+        
+        .thread-meta { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #777; border-top: 1px solid rgba(255, 255, 255, 0.06); padding-top: 12px; font-weight: 300; }
+        .thread-author { color: #999; }
+
+        .btn-nuevo { 
+            display: inline-block; 
+            background-color: transparent; 
+            color: #dfc285; 
+            border: 1px solid #dfc285;
+            padding: 10px 22px; 
+            border-radius: 4px; 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 15px; 
+            text-transform: uppercase; 
+            letter-spacing: 1.5px; 
+            margin-bottom: 30px; 
+            cursor: pointer;
+            transition: all 0.3s; 
+        }
+        .btn-nuevo:hover { background-color: #dfc285; color: #0d0d0d; }
+
+        /* Modal general */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .modal-content {
+            background: #141414;
+            border: 1px solid #dfc285;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-content h3 { color: #dfc285; font-size: 24px; margin-bottom: 20px; text-align: center; }
+        
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 12px; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .form-control {
+            width: 100%;
+            background: #0d0d0d;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 10px;
+            color: #e5e0d8;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+        }
+        .form-control:focus { border-color: #dfc285; outline: none; }
+        .modal-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+        .btn-cancelar {
+            background: transparent; color: #aaa; border: 1px solid #444; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 13px;
+        }
+        .btn-enviar {
+            background: #dfc285; color: #0d0d0d; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 13px; text-transform: uppercase;
+        }
+
+        /* Estilo para las respuestas dentro del hilo */
+        .respuesta-card {
+            background: #1a1a1a;
+            border-left: 3px solid #dfc285;
+            padding: 12px 15px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 13px;
+            color: #ccc;
+        }
+        .respuesta-meta { font-size: 11px; color: #888; margin-bottom: 5px; display: flex; justify-content: space-between; }
+
+        footer { text-align: center; padding: 30px 20px; color: #666; font-size: 12px; border-top: 1px solid rgba(255, 255, 255, 0.06); margin-top: 50px; font-weight: 300; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">Masajistas Privé</a>
+        <div class="nav-links">
+            <a href="index.html">Inicio</a>
+            <a href="foro.html" class="active">Comunidad & Foro</a>
         </div>
-      </form>
+    </header>
+
+    <div class="container">
+        
+        <div class="foro-header">
+            <h1>Círculo Privé — Comunidad</h1>
+            <p>Un espacio de intercambio exclusivo sobre bienestar, recomendaciones y experiencias con total discreción.</p>
+        </div>
+
+        <div style="text-align: right;">
+            <button class="btn-nuevo" onclick="abrirModalCrear()">+ Iniciar Debate</button>
+        </div>
+
+        <!-- Contenedor donde se cargan los hilos desde Firebase en tiempo real -->
+        <div id="lista-hilos">
+            <p style="color: #888; text-align: center; font-size: 14px;">Cargando debates de la comunidad...</p>
+        </div>
+
     </div>
-  </div>
 
-  <!-- Script de Firebase conectado al proyecto -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    <!-- Modal: Crear Debate -->
+    <div class="modal-overlay" id="modalCrear">
+        <div class="modal-content">
+            <h3>Iniciar Nuevo Debate</h3>
+            <form id="formDebate" onsubmit="publicarDebate(event)">
+                <div class="form-group">
+                    <label>Tu Seudónimo / Nombre</label>
+                    <input type="text" id="autorDebate" class="form-control" placeholder="Ej: Visitante_Discreto" required>
+                </div>
+                <div class="form-group">
+                    <label>Categoría</label>
+                    <select id="catDebate" class="form-control">
+                        <option value="Recomendaciones & Zonas">Recomendaciones & Zonas</option>
+                        <option value="Bienestar & Técnicas">Bienestar & Técnicas</option>
+                        <option value="General">General</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Título del Debate</label>
+                    <input type="text" id="tituloDebate" class="form-control" placeholder="¿De qué querés hablar?" required>
+                </div>
+                <div class="form-group">
+                    <label>Mensaje o Descripción</label>
+                    <textarea id="textoDebate" class="form-control" rows="4" placeholder="Escribí tu consulta o reflexión..." required></textarea>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-cancelar" onclick="cerrarModalCrear()">Cancelar</button>
+                    <button type="submit" class="btn-enviar">Publicar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
-      authDomain: "masajistasprivepro.firebaseapp.com",
-      projectId: "masajistasprivepro",
-      storageBucket: "masajistasprivepro.firebasestorage.app",
-      messagingSenderId: "768677270509",
-      appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
-      measurementId: "G-SBN70C32JF"
-    };
+    <!-- Modal: Ver Hilo y Responder -->
+    <div class="modal-overlay" id="modalHilo">
+        <div class="modal-content">
+            <span id="hiloCatModal" class="thread-category"></span>
+            <h3 id="hiloTituloModal" style="text-align: left; margin-bottom: 10px;"></h3>
+            <p id="hiloTextoModal" style="color: #ccc; font-size: 14px; margin-bottom: 15px;"></p>
+            <div style="font-size: 12px; color: #888; margin-bottom: 25px; border-bottom: 1px solid #333; padding-bottom: 10px;">
+                Iniciado por: <span id="hiloAutorModal" style="color: #dfc285;"></span>
+            </div>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+            <h4 style="color: #dfc285; font-size: 16px; margin-bottom: 15px; font-family: 'Cormorant Garamond', serif;">Respuestas de la Comunidad</h4>
+            
+            <!-- Contenedor de las respuestas -->
+            <div id="contenedorRespuestas" style="margin-bottom: 20px;">
+                <p style="color: #666; font-size: 13px;">Cargando respuestas...</p>
+            </div>
 
-    const seccionForo = "foro-general";
+            <!-- Formulario para responder -->
+            <form onsubmit="enviarRespuesta(event)" style="border-top: 1px solid #333; padding-top: 15px;">
+                <input type="hidden" id="hiloIdActual">
+                <div class="form-group">
+                    <label>Tu Seudónimo</label>
+                    <input type="text" id="autorRespuesta" class="form-control" placeholder="Tu apodo" required>
+                </div>
+                <div class="form-group">
+                    <label>Tu Respuesta</label>
+                    <textarea id="textoRespuesta" class="form-control" rows="3" placeholder="Escribí tu comentario..." required></textarea>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-cancelar" onclick="cerrarModalHilo()">Cerrar</button>
+                    <button type="submit" class="btn-enviar">Comentar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-    const form = document.getElementById("form-experiencia");
-    const lista = document.getElementById("lista-experiencias");
+    <footer>
+        <p>&copy; 2026 Masajistas Privé. Todos los derechos reservados. Espacio exclusivo para adultos.</p>
+    </footer>
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const nombre = document.getElementById("nombre-usuario").value;
-      const texto = document.getElementById("texto-experiencia").value;
-      
-      try {
-        await addDoc(collection(db, "experiencias"), {
-          perfil: seccionForo,
-          autor: nombre,
-          comentario: texto,
-          fecha: serverTimestamp()
+    <!-- Firebase y Lógica del Foro -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
+            authDomain: "masajistasprivepro.firebaseapp.com",
+            projectId: "masajistasprivepro",
+            storageBucket: "masajistasprivepro.firebasestorage.app",
+            messagingSenderId: "768677270509",
+            appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
+            measurementId: "G-SBN70C32JF"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let hiloActualId = null;
+        window.hiloCache = {}; // Guardar datos de los hilos abiertos
+
+        window.abrirModalCrear = function() { document.getElementById('modalCrear').style.display = 'flex'; }
+        window.cerrarModalCrear = function() { document.getElementById('modalCrear').style.display = 'none'; }
+        window.cerrarModalHilo = function() { document.getElementById('modalHilo').style.display = 'none'; }
+
+        // Publicar un nuevo debate en Firebase
+        window.publicarDebate = async function(event) {
+            event.preventDefault();
+            const autor = document.getElementById('autorDebate').value;
+            const categoria = document.getElementById('catDebate').value;
+            const titulo = document.getElementById('tituloDebate').value;
+            const texto = document.getElementById('textoDebate').value;
+
+            try {
+                await addDoc(collection(db, "foro_debates"), {
+                    autor: autor,
+                    categoria: categoria,
+                    titulo: titulo,
+                    texto: texto,
+                    fecha: serverTimestamp()
+                });
+                document.getElementById('formDebate').reset();
+                cerrarModalCrear();
+            } catch (error) {
+                console.error("Error al crear debate: ", error);
+            }
+        };
+
+        // Abrir modal de hilo específico
+        window.abrirHilo = function(id, titulo, texto, autor, categoria) {
+            hiloActualId = id;
+            document.getElementById('hiloIdActual').value = id;
+            document.getElementById('hiloCatModal').innerText = categoria;
+            document.getElementById('hiloTituloModal').innerText = titulo;
+            document.getElementById('hiloTextoModal').innerText = texto;
+            document.getElementById('hiloAutorModal').innerText = autor;
+
+            document.getElementById('modalHilo').style.display = 'flex';
+            cargarRespuestasFirebase(id);
+        }
+
+        // Cargar respuestas de un hilo en tiempo real desde Firebase
+        function cargarRespuestasFirebase(hiloId) {
+            const contenedor = document.getElementById('contenedorRespuestas');
+            contenedor.innerHTML = '<p style="color: #666; font-size: 13px;">Cargando respuestas...</p>';
+
+            const qResp = query(collection(db, "foro_debates", hiloId, "respuestas"), orderBy("fecha", "asc"));
+            onSnapshot(qResp, (snapshot) => {
+                contenedor.innerHTML = '';
+                if (snapshot.empty) {
+                    contenedor.innerHTML = '<p style="color: #666; font-size: 13px; font-style: italic;">Aún no hay comentarios. Sé el primero en responder.</p>';
+                    return;
+                }
+
+                snapshot.forEach((docR) => {
+                    const r = docR.data();
+                    const div = document.createElement('div');
+                    div.className = 'respuesta-card';
+                    div.innerHTML = `
+                        <div class="respuesta-meta">
+                            <span style="color: #dfc285; font-weight: bold;">${r.autor || 'Anónimo'}</span>
+                            <span>Hace un momento</span>
+                        </div>
+                        <div>${r.texto}</div>
+                    `;
+                    contenedor.appendChild(div);
+                });
+            });
+        }
+
+        // Enviar respuesta a un hilo guardándola en Firebase
+        window.enviarRespuesta = async function(event) {
+            event.preventDefault();
+            const autor = document.getElementById('autorRespuesta').value;
+            const texto = document.getElementById('textoRespuesta').value;
+
+            if (!hiloActualId) return;
+
+            try {
+                await addDoc(collection(db, "foro_debates", hiloActualId, "respuestas"), {
+                    autor: autor,
+                    texto: texto,
+                    fecha: serverTimestamp()
+                });
+                document.getElementById('autorRespuesta').value = '';
+                document.getElementById('textoRespuesta').value = '';
+            } catch (error) {
+                console.error("Error al enviar respuesta: ", error);
+            }
+        };
+
+        // Escuchar en tiempo real la lista de debates principales
+        const qDebates = query(collection(db, "foro_debates"), orderBy("fecha", "desc"));
+        onSnapshot(qDebates, (snapshot) => {
+            const lista = document.getElementById('lista-hilos');
+            lista.innerHTML = '';
+
+            if (snapshot.empty) {
+                lista.innerHTML = '<p style="color: #888; text-align: center; font-size: 14px;">Aún no hay debates creados. ¡Sé el primero en iniciar uno!</p>';
+                return;
+            }
+
+            snapshot.forEach((docH) => {
+                const h = docH.data();
+                const idH = docH.id;
+
+                const tarjeta = document.createElement('div');
+                tarjeta.className = 'thread-card';
+                tarjeta.innerHTML = `
+                    <span class="thread-category">${h.categoria || 'General'}</span>
+                    <a class="thread-title" onclick="abrirHilo('${idH}', '${h.titulo.replace(/'/g, "\\'")}', '${h.texto.replace(/'/g, "\\'")}', '${h.autor}', '${h.categoria}')">${h.titulo}</a>
+                    <p class="thread-snippet">${h.texto}</p>
+                    <div class="thread-meta">
+                        <span class="thread-author">Por: ${h.autor}</span>
+                        <span>Activo en la comunidad</span>
+                    </div>
+                `;
+                lista.appendChild(tarjeta);
+            });
         });
-        form.reset();
-      } catch (error) {
-        console.error("Error al guardar en el foro: ", error);
-      }
-    });
-
-    const q = query(collection(db, "experiencias"), where("perfil", "==", seccionForo));
-    onSnapshot(q, (snapshot) => {
-      lista.innerHTML = "";
-      if (snapshot.empty) {
-        lista.innerHTML = "<p style='color: #888; font-size: 13px; text-align: center;'>Aún no hay mensajes. ¡Sé el primero en escribir!</p>";
-        return;
-      }
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-        const div = document.createElement("div");
-        div.style.cssText = "background: #0d0d0d; border: 1px solid rgba(223, 194, 133, 0.1); padding: 12px; border-radius: 6px; margin-bottom: 10px;";
-        div.innerHTML = `<strong style="color: #dfc285; display: block; margin-bottom: 4px;">${data.autor || "Anónimo"}</strong><p style="margin: 0; color: #ddd; font-size: 14px;">${data.comentario}</p>`;
-        lista.appendChild(div);
-      });
-    });
-  </script>
+    </script>
 </body>
 </html>
-
