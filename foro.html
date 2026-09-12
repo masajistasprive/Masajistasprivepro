@@ -28,7 +28,7 @@
         
         #loading { text-align: center; font-style: italic; color: #888; margin: 20px 0; }
         
-        .post { background: var(--box-bg); padding: 15px; margin-bottom: 20px; border-radius: 6px; border-left: 4px solid var(--champagne); }
+        .post { background: var(--box-bg); padding: 15px; margin-bottom: 20px; border-radius: 6px; border-left: 4px solid var(--champagne); position: relative; }
         .post h3 { margin: 0 0 5px 0; color: var(--champagne); }
         .post p { margin: 0 0 10px 0; word-break: break-word; color: #ddd; }
         .post small { color: #aaa; }
@@ -43,8 +43,13 @@
         .back-btn { background: #252525; color: var(--champagne); border: 1px solid var(--champagne); padding: 8px 15px; margin-bottom: 20px; border-radius: 4px; cursor: pointer; font-weight: bold; width: auto; display: inline-block; }
         .back-btn:hover { background: #333; }
 
+        /* Ocultos por defecto hasta que ingreses como admin */
+        .admin-only { display: none !important; }
+        .delete-btn { background: none; border: none; color: #ff5555; cursor: pointer; font-size: 0.8em; padding: 0; font-weight: bold; width: auto; float: right; }
+        .delete-btn:hover { color: #ff8888; background: none; }
+
         .comments-section { margin-top: 15px; border-top: 1px solid #333; padding-top: 12px; }
-        .comment-item { font-size: 0.9em; margin-bottom: 12px; color: #ccc; word-break: break-word; background: #1c1c1c; padding: 10px; border-radius: 6px; }
+        .comment-item { font-size: 0.9em; margin-bottom: 12px; color: #ccc; word-break: break-word; background: #1c1c1c; padding: 10px; border-radius: 6px; position: relative; }
         .comment-author { color: var(--champagne); font-weight: bold; margin-right: 6px; }
         .comment-time { font-size: 0.75em; color: #777; margin-left: 8px; }
         
@@ -69,6 +74,11 @@
         .post-media { max-width: 100%; max-height: 250px; border-radius: 6px; margin-top: 8px; display: block; object-fit: contain; background: #000; }
         
         .file-preview-text { font-size: 0.75em; color: var(--champagne); margin-left: 5px; font-style: italic; }
+
+        /* Estilo discreto para el acceso admin al pie de página */
+        .admin-footer { text-align: center; margin-top: 30px; font-size: 0.8em; color: #555; }
+        .admin-link { color: #555; text-decoration: none; cursor: pointer; }
+        .admin-link:hover { color: var(--champagne); }
     </style>
 </head>
 <body>
@@ -99,7 +109,7 @@
                 <button class="emoji-btn" onclick="agregarEmoji('contenidoInput', '👏')">👏</button>
                 <button class="emoji-btn" onclick="agregarEmoji('contenidoInput', '✨')">✨</button>
                 <label class="file-upload-label">
-                    📷 Adjuntar foto/GIF <input type="file" id="mainImageFile" accept="image/*" onchange="previewFile('mainImageFile', 'mainFileName')">
+                    📷 Adjuntar foto <input type="file" id="mainImageFile" accept="image/*" onchange="previewFile('mainImageFile', 'mainFileName')">
                 </label>
                 <span id="mainFileName" class="file-preview-text"></span>
             </div>
@@ -141,6 +151,11 @@
             </div>
         </div>
     </div>
+
+    <!-- Acceso discreto para administración -->
+    <div class="admin-footer">
+        <span class="admin-link" onclick="activarAdmin()">Admin</span>
+    </div>
 </div>
 
 <script>
@@ -158,6 +173,38 @@
   const db = firebase.firestore();
 
   let currentPostId = null;
+  let isAdmin = false;
+
+  // Función para activar el modo admin con contraseña
+  window.activarAdmin = function() {
+      const pass = prompt("Ingresá la contraseña de administrador:");
+      if (pass === "prive2026") { // Podes cambiar esta clave cuando quieras
+          isAdmin = true;
+          alert("Modo administrador activado.");
+          location.reload(); // Recarga para mostrar los botones de borrar
+      } else if (pass !== null) {
+          alert("Contraseña incorrecta.");
+      }
+  };
+
+  // Guardar estado de admin en la sesión para no pedir contraseña a cada rato
+  if (sessionStorage.getItem("priveAdmin") === "true") {
+      isAdmin = true;
+  }
+
+  // Interceptar la activación para guardarla en sesión
+  const originalActivarAdmin = window.activarAdmin;
+  window.activarAdmin = function() {
+      const pass = prompt("Ingresá la contraseña de administrador:");
+      if (pass === "prive2026") {
+          isAdmin = true;
+          sessionStorage.setItem("priveAdmin", "true");
+          alert("Modo administrador activado.");
+          location.reload();
+      } else if (pass !== null) {
+          alert("Contraseña incorrecta.");
+      }
+  };
 
   const loadingDiv = document.getElementById('loading');
   const postsContainer = document.getElementById('postsContainer');
@@ -214,7 +261,7 @@
       reader.readAsDataURL(file);
   }
 
-  // Cargar lista principal de temas (sin orderBy para evitar errores de índice en Firestore)
+  // Cargar lista principal de temas
   db.collection("temas").onSnapshot((snapshot) => {
       loadingDiv.style.display = 'none';
       postsContainer.innerHTML = "";
@@ -229,7 +276,6 @@
           docs.push({ id: docSnap.id, ...docSnap.data() });
       });
 
-      // Ordenar por fecha de forma segura en memoria
       docs.sort((a, b) => {
           let timeA = a.fecha ? a.fecha.toMillis() : 0;
           let timeB = b.fecha ? b.fecha.toMillis() : 0;
@@ -242,10 +288,12 @@
           const likesCount = data.likes || 0;
           
           let mediaHtml = data.image ? `<img src="${data.image}" class="post-media" alt="Imagen">` : '';
+          let deleteBtnHtml = isAdmin ? `<button class="delete-btn" onclick="borrarTema('${postId}')">🗑️ Eliminar tema</button>` : '';
 
           const postElement = document.createElement('div');
           postElement.className = 'post';
           postElement.innerHTML = `
+              ${deleteBtnHtml}
               <h3>${escapeHtml(data.titulo)}</h3>
               <p>${escapeHtml(data.contenido)}</p>
               ${mediaHtml}
@@ -258,9 +306,6 @@
           `;
           postsContainer.appendChild(postElement);
       });
-  }, (error) => {
-      console.error("Error al cargar temas:", error);
-      loadingDiv.innerHTML = "Error al conectar con la base de datos.";
   });
 
   // Publicar tema principal
@@ -297,12 +342,33 @@
           })
           .catch((error) => {
               console.error("Error al guardar el tema: ", error);
-              alert("Hubo un error al publicar.");
               publicarBtn.disabled = false;
               publicarBtn.textContent = "Publicar Tema";
           });
       });
   });
+
+  // Borrar Tema completo
+  window.borrarTema = function(postId) {
+      if (confirm("¿Estás seguro de eliminar este tema y todas sus respuestas?")) {
+          db.collection("temas").doc(postId).delete().then(() => {
+              if (currentPostId === postId) {
+                  volverAlListado();
+              }
+          }).catch((error) => {
+              console.error("Error al eliminar el tema:", error);
+          });
+      }
+  };
+
+  // Borrar Comentario individual
+  window.borrarComentario = function(postId, replyId) {
+      if (confirm("¿Estás seguro de eliminar este comentario?")) {
+          db.collection("temas").doc(postId).collection("respuestas").doc(replyId).delete().catch((error) => {
+              console.error("Error al eliminar el comentario:", error);
+          });
+      }
+  };
 
   // Abrir hilo individual
   window.abrirHilo = function(postId) {
@@ -316,9 +382,11 @@
               const fechaFormateada = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : '';
               const likesCount = data.likes || 0;
               let mediaHtml = data.image ? `<img src="${data.image}" class="post-media" alt="Imagen">` : '';
+              let deleteBtnHtml = isAdmin ? `<button class="delete-btn" onclick="borrarTema('${postId}')">🗑️ Eliminar tema</button>` : '';
 
               document.getElementById('singlePostContainer').innerHTML = `
                   <div class="post" style="border-left-color: var(--champagne); margin-bottom: 10px;">
+                      ${deleteBtnHtml}
                       <h2>${escapeHtml(data.titulo)}</h2>
                       <p style="font-size: 1.1em;">${escapeHtml(data.contenido)}</p>
                       ${mediaHtml}
@@ -356,10 +424,12 @@
               const rFecha = rData.fecha ? new Date(rData.fecha.toDate()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
               const rLikes = rData.likes || 0;
               let rMedia = rData.image ? `<img src="${rData.image}" class="msg-media" alt="Adjunto">` : '';
+              let deleteCommentBtn = isAdmin ? `<button class="delete-btn" onclick="borrarComentario('${postId}', '${rId}')">🗑️ Eliminar</button>` : '';
 
               const commentDiv = document.createElement('div');
               commentDiv.className = 'comment-item';
               commentDiv.innerHTML = `
+                  ${deleteCommentBtn}
                   <div>
                       <span class="comment-author">${escapeHtml(rData.autor)}:</span>
                       <span>${escapeHtml(rData.contenido)}</span>
