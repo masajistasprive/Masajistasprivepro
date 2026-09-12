@@ -9,21 +9,32 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <style>
         body { font-family: Arial, sans-serif; background-color: #121212; color: #e0e0e0; margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: 0 auto; background: #1e1e1e; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-        h1, h2 { color: #ff5722; text-align: center; }
+        .container { max-width: 800px; margin: 0 auto; background: #1a1a1a; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.7); border: 1px solid #333; }
+        h1, h2 { color: #d4af37; text-align: center; } /* Tono dorado principal */
         .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input[type="text"], textarea { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #444; background: #2c2c2c; color: #fff; border-radius: 4px; }
-        button { background: #ff5722; color: white; border: none; padding: 10px 15px; cursor: pointer; border-radius: 4px; font-weight: bold; width: 100%; }
-        button:hover { background: #e64a19; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #d4af37; }
+        input[type="text"], textarea { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #444; background: #252525; color: #fff; border-radius: 4px; }
+        input[type="text"]:focus, textarea:focus { border-color: #d4af37; outline: none; }
+        button { background: #d4af37; color: #121212; border: none; padding: 10px 15px; cursor: pointer; border-radius: 4px; font-weight: bold; width: 100%; transition: background 0.2s; }
+        button:hover { background: #c5a059; }
         #loading { text-align: center; font-style: italic; color: #888; margin: 20px 0; }
-        .post { background: #2c2c2c; padding: 15px; margin-bottom: 15px; border-radius: 6px; border-left: 4px solid #ff5722; }
-        .post h3 { margin: 0 0 5px 0; color: #ffa726; }
-        .post p { margin: 0 0 10px 0; word-break: break-word; }
-        .post small { color: #888; }
+        .post { background: #222; padding: 15px; margin-bottom: 20px; border-radius: 6px; border-left: 4px solid #d4af37; }
+        .post h3 { margin: 0 0 5px 0; color: #f3e5ab; }
+        .post p { margin: 0 0 10px 0; word-break: break-word; color: #ddd; }
+        .post small { color: #aaa; }
+        
+        /* Estilos para las respuestas */
+        .replies-section { margin-top: 15px; border-top: 1px solid #333; padding-top: 10px; }
+        .reply-item { background: #181818; padding: 8px 12px; margin-top: 8px; border-radius: 4px; border-left: 2px solid #c5a059; font-size: 0.9em; }
+        .reply-item p { margin: 2px 0 5px 0; }
+        .reply-item small { color: #888; font-size: 0.8em; }
+        .reply-form { margin-top: 10px; display: flex; gap: 5px; }
+        .reply-form input { font-size: 0.9em; padding: 6px; }
+        .reply-btn { width: auto; padding: 6px 12px; font-size: 0.9em; background: #c5a059; color: #121212; }
     </style>
 </head>
 <body>
+
 <div style="text-align: center; margin-bottom: 20px;">
     <img src="img/logo.png" alt="Logo" style="max-height: 80px;">
 </div>
@@ -44,7 +55,7 @@
     </div>
     <button id="publicarBtn">Publicar Tema</button>
 
-    <hr style="border: 0; border-top: 1px solid #444; margin: 30px 0;">
+    <hr style="border: 0; border-top: 1px solid #333; margin: 30px 0;">
 
     <h2>Temas del Foro</h2>
     <div id="loading">Cargando temas...</div>
@@ -52,7 +63,6 @@
 </div>
 
 <script>
-  // Configuración de Firebase con tus credenciales actualizadas
   const firebaseConfig = {
     apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
     authDomain: "masajistasprivepro.firebaseapp.com",
@@ -63,7 +73,6 @@
     measurementId: "G-SBN70C32JF"
   };
 
-  // Inicializar Firebase
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
 
@@ -71,7 +80,7 @@
   const postsContainer = document.getElementById('postsContainer');
   const publicarBtn = document.getElementById('publicarBtn');
 
-  // Función para cargar los temas en tiempo real
+  // Cargar temas y sus respuestas en tiempo real
   db.collection("temas").orderBy("fecha", "desc").onSnapshot((snapshot) => {
       loadingDiv.style.display = 'none';
       postsContainer.innerHTML = "";
@@ -81,8 +90,9 @@
           return;
       }
 
-      snapshot.forEach((doc) => {
-          const data = doc.data();
+      snapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          const postId = docSnap.id;
           const fechaFormateada = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : 'Hace un momento';
           
           const postElement = document.createElement('div');
@@ -91,15 +101,44 @@
               <h3>${escapeHtml(data.titulo)}</h3>
               <p>${escapeHtml(data.contenido)}</p>
               <small>Publicado por <b>${escapeHtml(data.autor)}</b> el ${fechaFormateada}</small>
+              
+              <div class="replies-section">
+                  <div id="replies-${postId}"></div>
+                  <div class="reply-form">
+                      <input type="text" id="replyAuthor-${postId}" placeholder="Tu nombre" style="flex: 1;">
+                      <input type="text" id="replyText-${postId}" placeholder="Escribir respuesta..." style="flex: 2;">
+                      <button class="reply-btn" onclick="enviarRespuesta('${postId}')">Responder</button>
+                  </div>
+              </div>
           `;
           postsContainer.appendChild(postElement);
+
+          // Cargar respuestas de este post específico en tiempo real
+          db.collection("temas").doc(postId).collection("respuestas").orderBy("fecha", "asc")
+            .onSnapshot((replySnapshot) => {
+                const repliesContainer = document.getElementById(`replies-${postId}`);
+                repliesContainer.innerHTML = "";
+
+                replySnapshot.forEach((replyDoc) => {
+                    const rData = replyDoc.data();
+                    const rFecha = rData.fecha ? new Date(rData.fecha.toDate()).toLocaleString() : 'Hace un momento';
+                    
+                    const replyDiv = document.createElement('div');
+                    replyDiv.className = 'reply-item';
+                    replyDiv.innerHTML = `
+                        <p>${escapeHtml(rData.contenido)}</p>
+                        <small><b>${escapeHtml(rData.autor)}</b> - ${rFecha}</small>
+                    `;
+                    repliesContainer.appendChild(replyDiv);
+                });
+            });
       });
   }, (error) => {
       console.error("Error al cargar los temas: ", error);
       loadingDiv.innerHTML = "Error al conectar con la base de datos.";
   });
 
-  // Función para publicar un nuevo tema
+  // Publicar un nuevo tema principal
   publicarBtn.addEventListener('click', () => {
       const autor = document.getElementById('autorInput').value.trim();
       const titulo = document.getElementById('tituloInput').value.trim();
@@ -133,7 +172,33 @@
       });
   });
 
-  // Utilidad simple para evitar inyecciones HTML básicas en el navegador
+  // Enviar respuesta a un post
+  window.enviarRespuesta = function(postId) {
+      const autorInput = document.getElementById(`replyAuthor-${postId}`);
+      const textInput = document.getElementById(`replyText-${postId}`);
+      
+      const autor = autorInput.value.trim();
+      const contenido = textInput.value.trim();
+
+      if (!autor || !contenido) {
+          alert("Ingresá tu nombre y el texto de la respuesta.");
+          return;
+      }
+
+      db.collection("temas").doc(postId).collection("respuestas").add({
+          autor: autor,
+          contenido: contenido,
+          fecha: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .then(() => {
+          textInput.value = '';
+      })
+      .catch((error) => {
+          console.error("Error al enviar respuesta:", error);
+          alert("No se pudo enviar la respuesta.");
+      });
+  };
+
   function escapeHtml(text) {
       const map = {
           '&': '&amp;',
