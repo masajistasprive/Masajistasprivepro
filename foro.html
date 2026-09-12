@@ -184,7 +184,7 @@
         <p>&copy; 2026 Masajistas Privé. Todos los derechos reservados. Espacio exclusivo para adultos.</p>
     </footer>
 
-    <script type="module">
+        <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
@@ -202,9 +202,17 @@
         const db = getFirestore(app);
         let hiloActualId = null;
 
-        window.abrirModalCrear = function() { document.getElementById('modalCrear').style.display = 'flex'; }
-        window.cerrarModalCrear = function() { document.getElementById('modalCrear').style.display = 'none'; }
-        window.cerrarModalHilo = function() { document.getElementById('modalHilo').style.display = 'none'; }
+        window.abrirModalCrear = function() {
+            document.getElementById('modalCrear').style.display = 'flex';
+        }
+
+        window.cerrarModalCrear = function() {
+            document.getElementById('modalCrear').style.display = 'none';
+        }
+
+        window.cerrarModalHilo = function() {
+            document.getElementById('modalHilo').style.display = 'none';
+        }
 
         window.publicarDebate = async function(event) {
             event.preventDefault();
@@ -221,8 +229,10 @@
                     texto: texto,
                     fecha: serverTimestamp()
                 });
+                
+                // Forzamos el cierre de la ventana y reseteamos el formulario
                 document.getElementById('formDebate').reset();
-                cerrarModalCrear();
+                document.getElementById('modalCrear').style.display = 'none';
             } catch (error) {
                 console.error("Error al crear debate: ", error);
             }
@@ -302,6 +312,3 @@
             });
         });
     </script>
-</body>
-</html>
-
