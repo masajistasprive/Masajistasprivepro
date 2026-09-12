@@ -207,7 +207,6 @@
 // --- AUTO-INYECCIÓN DE SOUNDTRACK PRIVÉ EN TODO EL SITIO ---
 (function() {
     window.addEventListener('DOMContentLoaded', () => {
-        // Evitar duplicar si ya se cargó
         if (document.getElementById('privePlayerContainer')) return;
 
         const playerContainer = document.createElement('div');
@@ -216,8 +215,8 @@
         
         playerContainer.innerHTML = `
             <span style="color: #dfbc63; font-size: 0.8em; font-weight: 600; letter-spacing: 0.5px;">🎧 Soundtrack</span>
-            <audio id="priveAudio" loop preload="none">
-                <source src="https://actions.google.com/sounds/v1/ambiences/rain_heavy.ogg" type="audio/ogg">
+            <audio id="priveAudio" loop preload="auto">
+                <source src="https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=lofi-study-112191.mp3" type="audio/mpeg">
             </audio>
             <button id="privePlayBtn" style="background: #dfbc63; color: #121212; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; font-size: 0.85em;">▶</button>
         `;
@@ -229,10 +228,12 @@
 
         btn.addEventListener('click', () => {
             if (audio.paused) {
+                audio.load(); // Fuerza al navegador móvil a refrescar el stream
                 audio.play().then(() => {
                     btn.textContent = "⏸";
                 }).catch(e => {
-                    console.log("Reproducción bloqueada por el navegador:", e);
+                    console.log("Error de reproducción en móvil:", e);
+                    alert("Tocá de nuevo el botón de play para habilitar el audio.");
                 });
             } else {
                 audio.pause();
