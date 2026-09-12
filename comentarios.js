@@ -217,7 +217,7 @@
         playerContainer.innerHTML = `
             <span style="color: #dfbc63; font-size: 0.8em; font-weight: 600; letter-spacing: 0.5px;">🎧 Soundtrack</span>
             <audio id="priveAudio" loop preload="none">
-                <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf756.mp3?filename=deep-ambient-chill-11082.mp3" type="audio/mpeg">
+                <source src="https://actions.google.com/sounds/v1/ambiences/rain_heavy.ogg" type="audio/ogg">
             </audio>
             <button id="privePlayBtn" style="background: #dfbc63; color: #121212; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; font-size: 0.85em;">▶</button>
         `;
@@ -241,4 +241,3 @@
         });
     });
 })();
-
