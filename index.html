@@ -10,17 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
-<div id="modal-edad" class="modal-edad-overlay">
-    <div class="modal-edad-content">
-        <h2>MASAJISTAS PRIVÉ</h2>
-        <p>Este sitio web contiene material exclusivo para adultos (+18) y servicios de relax independientes. Debes ser mayor de edad para ingresar.</p>
-        <div class="modal-edad-botones">
-            <button id="btn-mayor" class="btn-ingresar">Soy mayor de 18 años</button>
-            <a href="https://www.google.com" class="btn-salir">Salir</a>
-        </div>
-    </div>
-</div>
-
+    
     <style>
         body {
             font-family: 'Montserrat', sans-serif !important;
@@ -126,17 +116,28 @@
         }
     </style>
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-DXX740HP41"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DXX740HP41"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-  gtag('config', 'G-DXX740HP41');
-</script>
-
+      gtag('config', 'G-DXX740HP41');
+    </script>
 </head>
 <body>
+
+    <!-- Modal de Advertencia de Edad (Bien ubicado dentro del body) -->
+    <div id="modal-edad" class="modal-edad-overlay">
+        <div class="modal-edad-content">
+            <h2>MASAJISTAS PRIVÉ</h2>
+            <p>Este sitio web contiene material exclusivo para adultos (+18) y servicios de relax independientes. Debes ser mayor de edad para ingresar.</p>
+            <div class="modal-edad-botones">
+                <button id="btn-mayor" class="btn-ingresar">Soy mayor de 18 años</button>
+                <a href="https://www.google.com" class="btn-salir">Salir</a>
+            </div>
+        </div>
+    </div>
 
     <!-- Cabecera limpia y sofisticada -->
     <header class="header-prive">
@@ -571,7 +572,7 @@
                 `;
 
                 const isPlayingNow = !bgAudio.paused;
-                floatingBtn.innerHTML = `<span id="priveIconSymbol" style="color: #dfbc63; font-size: 1.15em; line-height: 1;">${isPlayingNow ? '⏸' : '🎵'}</span>`;
+                floatingBtn.innerHTML = `<span id="priveIconSymbol" style="color: #dfc285; font-size: 1.15em; line-height: 1;">${isPlayingNow ? '⏸' : '🎵'}</span>`;
                 document.body.appendChild(floatingBtn);
 
                 floatingBtn.onclick = () => {
