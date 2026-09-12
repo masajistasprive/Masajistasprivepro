@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mia | Masajistas Privé</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="perfil-body">
+
+    <!-- Header Estilo App de Lujo -->
+       <!-- Header Estilo App de Lujo con Logo Grande -->
+    <header class="header-prive">
+        <div class="header-left">
+            <img src="img/monograma.png" alt="Monograma" class="header-monograma">
+        </div>
+        <div class="header-center">
+            <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">
+        </div>
+        <div class="header-right">
+            <a href="index.html" class="btn-buscar">← Volver</a>
+        </div>
+    </header>
+
+
+    <main class="container perfil-container">
+        
+        <!-- Galería de 4 Fotos -->
+        <div class="perfil-galeria-grid">
+            <img src="img/Mia1.jpg" alt="Mia" class="foto-principal" id="fotoPrincipal">
+            <div class="galeria-miniaturas">
+                <img src="img/Mia1.jpg" alt="Mia 1" onclick="cambiarFoto(this)">
+                <img src="img/Mia2.jpg" alt="Mia 2" onclick="cambiarFoto(this)">
+                <img src="img/Mia3.jpg" alt="Mia 3" onclick="cambiarFoto(this)">
+                <img src="img/Mia4.jpg" alt="Mia 4" onclick="cambiarFoto(this)">
+            </div>
+        </div>
+
+        <!-- Información -->
+           <!-- Información de Mía -->
+        <div class="perfil-info">
+            <div class="perfil-titulo-seccion">
+                <h2>Mía</h2>
+                <span class="badge-verificado">✓ Privé Verificado</span>
+            </div>
+
+            <p class="perfil-ubicacion">📍 Zona: <strong>Congreso</strong></p>
+            <p class="perfil-modalidad">🏠 Modalidad: <strong>Gabinete / Domicilio</strong></p>
+
+            <div class="perfil-descripcion">
+                <h3>Sobre mí</h3>
+                <p>💗 Mi servicio es de masajes sensuales, buscando tu relajación plena y relax. Cualquier duda se charla por mensaje… Espero conocerte pronto 💗</p>
+            </div>
+
+            <div class="perfil-detalles">
+                <div class="detalle-item">
+                    <span>Horarios:</span> 12:00 a 18:00 hs.
+                </div>
+            </div>
+
+            <a href="https://wa.me/5491130065404?text=Hola%20Mía,%20vi%20tu%20perfil%20en%20Masajistas%20Privé" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
+                💬 Contactar por WhatsApp
+            </a>
+        </div>
+
+    <footer class="footer">
+        <p>Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.</p>
+        <p class="copyright">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        function cambiarFoto(element) {
+            const fotoPrincipal = document.getElementById('fotoPrincipal');
+            fotoPrincipal.src = element.src;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matias | Masajistas Privé</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="perfil-body">
+
+    <!-- Header Estilo App de Lujo -->
+       <!-- Header Estilo App de Lujo con Logo Grande -->
+    <header class="header-prive">
+        <div class="header-left">
+            <img src="img/monograma.png" alt="Monograma" class="header-monograma">
+        </div>
+        <div class="header-center">
+            <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">
+        </div>
+        <div class="header-right">
+            <a href="index.html" class="btn-buscar">← Volver</a>
+        </div>
+    </header>
+
+
+    <main class="container perfil-container">
+        
+        <!-- Galería de 4 Fotos -->
+        <div class="perfil-galeria-grid">
+            <img src="img/Matias1.jpg" alt="Matias" class="foto-principal" id="fotoPrincipal">
+            <div class="galeria-miniaturas">
+                <img src="img/Matias1.jpg" alt="Matias 1" onclick="cambiarFoto(this)">
+                <img src="img/Matias2.jpg" alt="Matias 2" onclick="cambiarFoto(this)">
+                <img src="img/Matias3.jpg" alt="Matias 3" onclick="cambiarFoto(this)">
+                <img src="img/Matias4.jpg" alt="Matias 4" onclick="cambiarFoto(this)">
+            </div>
+        </div>
+
+        <!-- Información -->
+          <!-- Información de Matias -->
+        <div class="perfil-info">
+            <div class="perfil-titulo-seccion">
+                <h2>Matias</h2>
+                <span class="badge-verificado">✓ Privé Verificado</span>
+            </div>
+
+            <p class="perfil-ubicacion">📍 Zona: <strong>Recoleta</strong></p>
+            <p class="perfil-modalidad">🏠 Modalidad: <strong>Departamento / Gabinete</strong></p>
+
+            <div class="perfil-descripcion">
+                <h3>Sobre mí y Servicios</h3>
+                <p>Masajes profesionales para relajarte y renovar tu energía. Masajes relajantes y descontracturantes en todo el cuerpo, realizados sobre camilla y con cremas neutras.</p>
+                <p style="margin-top: 0.5rem;">También ofrezco masajes naturistas sensitivos y reflexología, en un ambiente cálido, tranquilo y climatizado.</p>
+                <div style="margin-top: 0.5rem; color: #94a3b8; font-size: 0.9rem;">
+                    <strong>Técnicas:</strong> Relajantes, descontracturantes, sensitivos, naturistas, reflexología.
+                </div>
+            </div>
+
+            <div class="perfil-detalles">
+                <div class="detalle-item">
+                    <span>Horarios:</span> Lunes a domingo de 11 a 22 hs.
+                </div>
+                <div class="detalle-item">
+                    <span>Comodidades:</span> Camilla, cremas neutras, ambiente climatizado.
+                </div>
+                <div class="detalle-item">
+                    <span>Turnos:</span> Atención personalizada con reserva previa.
+                </div>
+            </div>
+
+            <a href="https://wa.me/5491121808338?text=Hola%20Matias,%20vi%20tu%20perfil%20en%20Masajistas%20Privé" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
+                💬 Contactar por WhatsApp
+            </a>
+        </div>
+
+    <footer class="footer">
+        <p>Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.</p>
+        <p class="copyright">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        function cambiarFoto(element) {
+            const fotoPrincipal = document.getElementById('fotoPrincipal');
+            fotoPrincipal.src = element.src;
+        }
+    </script>
+</body>
+</html>

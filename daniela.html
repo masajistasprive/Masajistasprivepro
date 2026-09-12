@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daniela | Masajistas Privé</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="perfil-body">
+
+    <!-- Header Estilo App de Lujo -->
+       <!-- Header Estilo App de Lujo con Logo Grande -->
+    <header class="header-prive">
+        <div class="header-left">
+            <img src="img/monograma.png" alt="Monograma" class="header-monograma">
+        </div>
+        <div class="header-center">
+            <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">
+        </div>
+        <div class="header-right">
+            <a href="index.html" class="btn-buscar">← Volver</a>
+        </div>
+    </header>
+
+
+    <main class="container perfil-container">
+        
+        <!-- Galería de 4 Fotos -->
+        <div class="perfil-galeria-grid">
+            <img src="img/Daniela1.jpg" alt="Daniela" class="foto-principal" id="fotoPrincipal">
+            <div class="galeria-miniaturas">
+                <img src="img/Daniela1.jpg" alt="Daniela 1" onclick="cambiarFoto(this)">
+                <img src="img/Daniela2.jpg" alt="Daniela 2" onclick="cambiarFoto(this)">
+                <img src="img/Daniela3.jpg" alt="Daniela 3" onclick="cambiarFoto(this)">
+                <img src="img/Daniela4.jpg" alt="Daniela 4" onclick="cambiarFoto(this)">
+            </div>
+        </div>
+
+        <!-- Información -->
+            <!-- Información de Daniela -->
+        <div class="perfil-info">
+            <div class="perfil-titulo-seccion">
+                <h2>Daniela</h2>
+                <span class="badge-verificado">✓ Privé Verificado</span>
+            </div>
+
+            <p class="perfil-ubicacion">📍 Zona: <strong>Microcentro CABA</strong></p>
+            <p class="perfil-modalidad">🏠 Modalidad: <strong>Departamento propio</strong></p>
+
+            <div class="perfil-descripcion">
+                <h3>Sobre mí y Servicios</h3>
+                <p>Te recibo en un espacio privado, limpio, cómodo y totalmente discreto. Brindo masajes relajantes, descontracturantes, deportivos y sensuales, con una atención cálida, respetuosa y personalizada.</p>
+                <p style="margin-top: 0.5rem;">Cada sesión está pensada para ayudarte a liberar tensiones, desconectar del estrés y disfrutar de un momento único de bienestar. La experiencia se completa con un relajante relax manual.</p>
+            </div>
+
+            <div class="perfil-detalles">
+                <div class="detalle-item">
+                    <span>Horarios:</span> Lunes a sábado de 11 a 19 hs.
+                </div>
+                <div class="detalle-item">
+                    <span>Atención:</span> Tu comodidad, privacidad y satisfacción son mi prioridad.
+                </div>
+            </div>
+
+            <a href="https://wa.me/5491124983744?text=Hola%20Daniela,%20vi%20tu%20perfil%20en%20Masajistas%20Privé" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
+                💬 Contactar por WhatsApp
+            </a>
+        </div>
+
+
+    <footer class="footer">
+        <p>Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.</p>
+        <p class="copyright">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        function cambiarFoto(element) {
+            const fotoPrincipal = document.getElementById('fotoPrincipal');
+            fotoPrincipal.src = element.src;
+        }
+    </script>
+</body>
+</html>

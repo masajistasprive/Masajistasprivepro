@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jennyfer | Masajistas Privé</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="perfil-body">
+
+    <!-- Header Estilo App de Lujo -->
+       <!-- Header Estilo App de Lujo con Logo Grande -->
+    <header class="header-prive">
+        <div class="header-left">
+            <img src="img/monograma.png" alt="Monograma" class="header-monograma">
+        </div>
+        <div class="header-center">
+            <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">
+        </div>
+        <div class="header-right">
+            <a href="index.html" class="btn-buscar">← Volver</a>
+        </div>
+    </header>
+
+
+    <main class="container perfil-container">
+        
+        <!-- Galería de 4 Fotos -->
+        <div class="perfil-galeria-grid">
+            <img src="img/Jennyfer1.jpg" alt="Jennyfer" class="foto-principal" id="fotoPrincipal">
+            <div class="galeria-miniaturas">
+                <img src="img/Jennyfer1.jpg" alt="Jennyfer 1" onclick="cambiarFoto(this)">
+                <img src="img/Jennyfer2.jpg" alt="Jennyfer 2" onclick="cambiarFoto(this)">
+                <img src="img/Jennyfer3.jpg" alt="Jennyfer 3" onclick="cambiarFoto(this)">
+                <img src="img/Jennyfer4.jpg" alt="Jennyfer 4" onclick="cambiarFoto(this)">
+            </div>
+        </div>
+
+        <!-- Información -->
+            <!-- Información de Jennyfer -->
+        <div class="perfil-info">
+            <div class="perfil-titulo-seccion">
+                <h2>Jennyfer</h2>
+                <span class="badge-verificado">✓ Privé Verificado</span>
+            </div>
+
+            <p class="perfil-ubicacion">📍 Zona: <strong>Tribunales</strong></p>
+            <p class="perfil-modalidad">🏠 Modalidad: <strong>Consultorio propio</strong></p>
+
+            <div class="perfil-descripcion">
+                <h3>Sobre mí y Servicios</h3>
+                <p>Brindo una atención integral orientada al bienestar y la estética profesional.</p>
+                <ul style="list-style: none; padding: 0; margin-top: 0.5rem; color: #94a3b8;">
+                    <li>✅ Masajes profesionales</li>
+                    <li>✅ Depilación Láser</li>
+                    <li>✅ Cosmetología Facial y corporal</li>
+                </ul>
+            </div>
+
+            <div class="perfil-detalles">
+                <div class="detalle-item">
+                    <span>Horarios:</span> Lunes a viernes de 08 a 19 hs. Sábados y domingos previa reserva con seña.
+                </div>
+                <div class="detalle-item">
+                    <span>Comodidades:</span> Ducha, aire acondicionado, gabinete cosmetológico, gabinete spa, frigobar.
+                </div>
+                <div class="detalle-item">
+                    <span>Pagos:</span> Efectivo, transferencia. (Tarjetas de crédito y débito con 15% de recargo).
+                </div>
+            </div>
+
+            <a             <a href="https://wa.me/5491124078332?text=Hola%20Jennyfer,%20vi%20tu%20perfil%20en%20Masajistas%20Privé" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
+                💬 Contactar por WhatsApp
+            </a>
+
+        </div>
+
+
+    <footer class="footer">
+        <p>Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.</p>
+        <p class="copyright">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        function cambiarFoto(element) {
+            const fotoPrincipal = document.getElementById('fotoPrincipal');
+            fotoPrincipal.src = element.src;
+        }
+    </script>
+</body>
+</html>

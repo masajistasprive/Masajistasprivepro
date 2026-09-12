@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masajistas Privé | Portal Exclusivo</title>
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Fuentes elegantes Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+<div id="modal-edad" class="modal-edad-overlay">
+    <div class="modal-edad-content">
+        <h2>MASAJISTAS PRIVÉ</h2>
+        <p>Este sitio web contiene material exclusivo para adultos (+18) y servicios de relax independientes. Debes ser mayor de edad para ingresar.</p>
+        <div class="modal-edad-botones">
+            <button id="btn-mayor" class="btn-ingresar">Soy mayor de 18 años</button>
+            <a href="https://www.google.com" class="btn-salir">Salir</a>
+        </div>
+    </div>
+</div>
+
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif !important;
+            background-color: #0d0d0d !important;
+            color: #e5e0d8;
+        }
+        h1, h2, h3, .section-heading, .card-gradient-overlay h3 {
+            font-family: 'Cormorant Garamond', serif !important;
+            letter-spacing: 1.5px;
+        }
+        .section-heading, .blog-title, h2 {
+            color: #dfc285 !important;
+        }
+        .blog-card {
+            background: #141414;
+            border: 1px solid rgba(223, 194, 133, 0.25);
+            border-radius: 6px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .blog-card:hover {
+            border-color: #dfc285;
+            background: #181818;
+        }
+        
+        /* Botón de Foro Sofisticado, Fino y Atractivo */
+        .btn-foro-prive {
+            background: linear-gradient(135deg, rgba(223, 194, 133, 0.15), rgba(223, 194, 133, 0.05));
+            border: 1px solid #dfc285;
+            color: #dfc285;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(223, 194, 133, 0.15);
+            transition: all 0.3s ease;
+        }
+        .btn-foro-prive:hover {
+            background: #dfc285;
+            color: #0d0d0d;
+            box-shadow: 0 4px 20px rgba(223, 194, 133, 0.4);
+            transform: translateY(-1px);
+        }
+
+        /* Footer Ordenado: Redes a un costado y textos alineados */
+        .footer-container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            text-align: left;
+        }
+        @media(min-width: 600px) {
+            .footer-container {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+        .footer-socials {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .footer-social-link {
+            color: #dfc285;
+            text-decoration: none;
+            font-size: 12px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-weight: 400;
+            opacity: 0.75;
+            transition: opacity 0.2s;
+        }
+        .footer-social-link:hover {
+            opacity: 1;
+        }
+        .footer-legal {
+            font-size: 11px;
+            color: #777;
+            line-height: 1.6;
+            max-width: 550px;
+        }
+        
+        .dolar-card {
+            background: #141414;
+            border: 1px solid rgba(223, 194, 133, 0.25);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            max-width: 900px;
+            margin: 30px auto;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Cabecera limpia y sofisticada -->
+    <header class="header-prive">
+        <div class="header-left">
+            <img src="img/monograma.png" alt="Monograma" class="header-monograma">
+        </div>
+        <div class="header-center">
+            <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">
+        </div>
+        <div class="header-right">
+            <a href="foro.html" class="btn-foro-prive">💬 Foro</a>
+        </div>
+    </header>
+
+    <!-- Historias / Círculos de Acceso Rápido -->
+    <div class="stories-container" style="margin-top: 1rem;">
+        <a href="jennyfer.html" class="story-item">
+            <div class="story-ring"><img src="img/jennyfer1.jpg" alt="Jennyfer"></div>
+            <span>Jennyfer</span>
+        </a>
+        <a href="deby.html" class="story-item">
+            <div class="story-ring"><img src="img/deby1.jpg" alt="Deby"></div>
+            <span>Deby</span>
+        </a>
+        <a href="prada.html" class="story-item">
+            <div class="story-ring"><img src="img/prada1.jpg" alt="Prada"></div>
+            <span>Prada</span>
+        </a>
+        <a href="lupita.html" class="story-item">
+            <div class="story-ring"><img src="img/lupita1.jpg" alt="Lupita"></div>
+            <span>Lupita</span>
+        </a>
+        <a href="sol.html" class="story-item">
+            <div class="story-ring"><img src="img/sol1.jpg" alt="Sol"></div>
+            <span>Sol</span>
+        </a>
+    </div>
+
+    <!-- Botones de Categorías en Píldora -->
+    <nav class="pills-container">
+        <button class="pill-btn active" data-filter="todas">Todas</button>
+        <button class="pill-btn" data-filter="terapeuticas">Terapéuticas</button>
+        <button class="pill-btn" data-filter="sensuales">Sensuales</button>
+        <button class="pill-btn" data-filter="masculinos">Masculinos</button>
+    </nav>
+
+    <!-- Grilla Principal por Categorías -->
+    <main class="container">
+
+        <!-- ================= MASAJISTAS TERAPÉUTICAS ================= -->
+        <h2 class="section-heading" data-section="terapeuticas">Masajistas Terapéuticas</h2>
+        <div class="grid-perfiles">
+            <a href="jennyfer.html" class="card-link" data-categoria="terapeuticas">
+                <article class="card">
+                    <div class="card-image">
+                        <img src="img/jennyfer1.jpg" alt="Jennyfer" loading="lazy">
+                        <span class="badge-verificado">✓ Verificado</span>
+                        <div class="card-gradient-overlay">
+                            <h3>Jennyfer</h3>
+                            <span class="zona">📍 TRIBUNALES</span>
+                            <span class="modalidad-tag">Consultorio propio</span>
+                        </div>
+                    </div>
+                </article>
+            </a>
+            <a href="prada.html" class="card-link" data-categoria="terapeuticas">
+                <article class="card">
+                    <div class="card-image">
+                        <img src="img/prada1.jpg" alt="Prada" loading="lazy">
+                        <span class="badge-verificado">✓ Verificado</span>
+                        <div class="card-gradient-overlay">
+                            <h3>Prada</h3>
+                            <span class="zona">📍 TRIBUNALES</span>
+                            <span class="modalidad-tag">Gabinete propio</span>
+                        </div>
+                    </div>
+                </article>
+            </a>
+            <a href="mariela.html" class="card-link" data-categoria="terapeuticas">
+                <article class="card">
+                    <div class="card-image">
+                        <img src="img/mariela1.jpg" alt="Mariela" loading="lazy">
+                        <span class="badge-verificado">✓ Verificado</span>
+                        <div class="card-gradient-overlay">
+                            <h3>Mariela</h3>
+                            <span class="zona">📍 CONGRESO</span>
+                            <span class="modalidad-tag">Departamento propio</span>
+                        </div>
+                    </div>
+                </article>
+            </a>
+            <a href="daniela.html" class="card-link" data-categoria="terapeuticas">
+                <article class="card">
+                    <div class="card-image">
+                        <img src="img/daniela1.jpg" alt="Daniela" loading="lazy">
+                        <span class="badge-verificado">✓ Verificado</span>
+                        <div class="card-gradient-overlay">
+                            <h3>Daniela</h3>
+                            <span class="zona">📍 MICROCENTRO</span>
+                            <span class="modalidad-tag">Departamento propio</span>
+                        </div>
+                    </div>
+                </article>
+            </a>
+            <a href="zaira.html" class="card-link" data-categoria="terapeuticas">
+                <article class="card">
+                    <div class="card-image">
+                        <img src="img/zaira1.jpg" alt="Zaira" loading="lazy">
+                        <span class="badge-verificado">✓ Verificado</span>
+                        <div class="card-gradient-overlay">
+                            <h3>Zaira</h3>
+                            <span class="zona">📍 CABALLITO</span>
+                            <span class="modalidad-tag">Gabinete propio</span>
+                        </div>
+                    </div>
+                </article>
+            </a>
+        </div>
+
+        <!-- ================= MASAJISTAS SENSUALES ================= -->
+        <h2 class="section-heading" data-section="sensuales" style="margin-top: 2rem;">Masajistas Sensuales</h2>
+        <div class="grid-perfiles">
+            <a href="deby.html" class="card-link" data-categoria="sensuales">
+                <article class="card">
+                    <div class="card-image">
+                        <img src="img/deby1.jpg" alt="Deby" loading="lazy">
+                        <span class="badge-verificado">✓ Verificado</span>
+                        <div class="card-gradient-overlay">
+                            <h3>Deby</h3>
+                            <span class="zona">📍 CABALLITO</span>
+                            <span class="modalidad-tag">Gabinete propio</span>
+                        </div>
+                    </div>
+                </article>
+            </a>
+            <a href="donatella.html" class="card-link" data-categoria="sensuales">
+                <article class="card">
+                    <div class="card-image">
+                        <img src="img/donatella1.jpg" alt="Donatella" loading="lazy">
+                        <span class="badge-verificado">✓ Verificado</span>
+                        <div class="card-gradient-overlay">
+                            <h3>Donatella</h3>
+                            <span class="zona">📍 CABA</span>
+                            <span class="modalidad-tag">Gabinete propio</span>
+                        </div>
+                    </div>
+                </article>
+            </a>
+            <a href="celeste.html" class="card-link" data-categoria="sensuales">
+                <article class="card">
+                    <div class="card-image">
+                        <img src="img/celeste1.jpg" alt="Celeste" loading="lazy">
+                        <span class="badge-verificado">✓ Verificado</span>
+                        <div class="card-gradient-overlay">
+                            <h3>Celeste</h3>
+                            <span class="zona">📍 CONGRESO</span>
+                            <span class="modalidad-tag">Gabinete / Domicilio</span>
+                        </div>
+                    </div>
+                </article>
+            </a>
+            <a href="mia.html" class="card-link" data-categoria="sensuales">
+                <article class="card">
+                    <div class="card-image">
+                        <img src="img/mia1.jpg" alt="Mía" loading="lazy">
+                        <span class="badge-verificado">✓ Verificado</span>
+                        <div class="card-gradient-overlay">
+                            <h3>Mía</h3>
+                            <span class="zona">📍 CONGRESO</span>
+                            <span class="modalidad-tag">Gabinete / Domicilio</span>
+                        </div>
+                    </div>
+                </article>
+            </a>
+            <a href="sol.html" class="card-link" data-categoria="sensuales">
+                <article class="card">
+                    <div class="card-image">
+                        <img src="img/sol1.jpg" alt="Sol" loading="lazy">
+                        <span class="badge-verificado">✓ Verificado</span>
+                        <div class="card-gradient-overlay">
+                            <h3>Sol</h3>
+                            <span class="zona">📍 TRIBUNALES</span>
+                            <span class="modalidad-tag">Departamento propio</span>
+                        </div>
+                    </div>
+                </article>
+            </a>
+            <a href="lupita.html" class="card-link" data-categoria="sensuales">
+                <article class="card">
+                    <div class="card-image">
+                        <img src="img/lupita1.jpg" alt="Lupita" loading="lazy">
+                        <span class="badge-verificado">✓ Verificado</span>
+                        <div class="card-gradient-overlay">
+                            <h3>Lupita</h3>
+                            <span class="zona">📍 TRIBUNALES</span>
+                            <span class="modalidad-tag">Gabinete / Domicilio</span>
+                        </div>
+                    </div>
+                </article>
+            </a>
+        </div>
+
+        <!-- ================= MASAJISTAS MASCULINOS ================= -->
+        <h2 class="section-heading" data-section="masculinos" style="margin-top: 2rem;">Masajistas Masculinos</h2>
+        <div class="grid-perfiles">
+            <a href="matias.html" class="card-link" data-categoria="masculinos">
+                <article class="card">
+                    <div class="card-image">
+                        <img src="img/matias1.jpg" alt="Matias" loading="lazy">
+                        <span class="badge-verificado">✓ Verificado</span>
+                        <div class="card-gradient-overlay">
+                            <h3>Matias</h3>
+                            <span class="zona">📍 VILLA CRESPO</span>
+                            <span class="modalidad-tag">Gabinete propio</span>
+                        </div>
+                    </div>
+                </article>
+            </a>
+            <div class="card-ad">
+                <div class="ad-content">
+                    <h3>Tu anuncio aquí</h3>
+                    <a href="https://wa.me/5491131774848?text=Hola,%20quiero%20publicar%20mi%20anuncio" target="_blank" class="btn-ad">Contáctanos</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= FANTASÍAS ================= -->
+        <h2 class="section-heading" data-section="fantasias" style="margin-top: 2rem;">Fantasías</h2>
+        <div class="grid-perfiles">
+            <div class="card-ad" style="border: 1px dashed rgba(223,194,133,0.3);">
+                <div class="ad-content">
+                    <h3 style="color: #dfc285;">Sección de Fantasías</h3>
+                    <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 1rem;">Próximamente contenidos exclusivos</p>
+                    <a href="https://wa.me/5491131774848?text=Hola,%20quiero%20consultar%20sobre%20Fantasias" target="_blank" class="btn-ad">Consultar</a>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ========================================== -->
+    <!-- COTIZACIÓN DEL DÓLAR EN TIEMPO REAL -->
+    <!-- ========================================== -->
+    <div class="dolar-card">
+        <span style="color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 2px;">Indicadores Financieros</span>
+        <h3 style="color: #fff; font-size: 18px; margin: 8px 0; font-family: 'Cormorant Garamond', serif;">Cotización Dólar (Argentina)</h3>
+        <div id="dolar-info" style="color: #ccc; font-size: 14px;">Cargando cotización actual...</div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SECCIÓN: CUADERNO PRIVÉ (BLOG INTERACTIVO) -->
+    <!-- ========================================== -->
+    <section style="max-width: 900px; margin: 40px auto; padding: 0 20px;">
+        <div style="text-align: center; margin-bottom: 35px;">
+            <span style="color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 3px; font-weight: 500; display: block; margin-bottom: 8px;">Editorial & Bienestar</span>
+            <h2 style="font-size: 30px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; color: #dfc285; font-family: 'Cormorant Garamond', serif;">Cuaderno Privé</h2>
+            <p style="color: #999; font-size: 14px; font-weight: 300;">Artículos, reflexiones y secretos para elevar tu experiencia de relajación.</p>
+        </div>
+
+        <div style="display: grid; gap: 20px;">
+            <div class="blog-card" onclick="abrirArticulo('El poder del tacto: Cómo aliviar las contracturas por estrés laboral', 'El ritmo de vida actual y las horas frente a la pantalla generan una acumulación silenciosa de tensión en la zona cervical y la espalda alta. Un buen masaje descontracturante no es solo un mimo, sino una necesidad fisiológica para restablecer la circulación y liberar endorfinas que reducen el cortisol acumulado por el estrés diario.')">
+                <span style="color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; display: block; margin-bottom: 6px;">Bienestar & Salud</span>
+                <h3 style="color: #ffffff; font-size: 22px; font-weight: 600; margin-bottom: 10px; font-family: 'Cormorant Garamond', serif;">El poder del tacto: Cómo aliviar las contracturas por estrés laboral</h3>
+                <p style="color: #bcbbb5; font-size: 14px; font-weight: 300; margin-bottom: 15px;">Descubrí por qué la acumulación de tensión en la espalda afecta tu rendimiento diario y cómo un buen masaje descontracturante redefine tu energía.</p>
+                <span style="color: #dfc285; font-size: 13px; font-weight: 600; letter-spacing: 1px;">Leer artículo completo &rarr;</span>
+            </div>
+
+            <div class="blog-card" onclick="abrirArticulo('Aromas que transforman: El arte de preparar la mente antes de la sesión', 'La aromaterapia actúa directamente sobre el sistema límbico, la zona del cerebro encargada de las emociones y la memoria. Combinar notas de lavanda, sándalo o azahar antes de ingresar al gabinete potencia de forma exponencial el estado de desconexión profunda y paz mental.')">
+                <span style="color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; display: block; margin-bottom: 6px;">Aromaterapia & Entorno</span>
+                <h3 style="color: #ffffff; font-size: 22px; font-weight: 600; margin-bottom: 10px; font-family: 'Cormorant Garamond', serif;">Aromas que transforman: El arte de preparar la mente antes de la sesión</h3>
+                <p style="color: #bcbbb5; font-size: 14px; font-weight: 300; margin-bottom: 15px;">Pequeños hábitos de desconexión digital y ambientación consciente que podés aplicar antes de encontrarte con tu masajista.</p>
+                <span style="color: #dfc285; font-size: 13px; font-weight: 600; letter-spacing: 1px;">Leer artículo completo &rarr;</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal de Lectura para el Blog -->
+    <div id="modalArticulo" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); justify-content: center; align-items: center; z-index: 9999; padding: 20px;">
+        <div style="background: #141414; border: 1px solid #dfc285; border-radius: 8px; width: 100%; max-width: 600px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+            <h3 id="tituloArticuloModal" style="color: #dfc285; font-size: 24px; margin-bottom: 15px; font-family: 'Cormorant Garamond', serif;"></h3>
+            <p id="textoArticuloModal" style="color: #ccc; font-size: 14px; line-height: 1.8; margin-bottom: 25px; font-weight: 300; font-family: 'Montserrat', sans-serif;"></p>
+            <div style="text-align: right;">
+                <button type="button" onclick="cerrarArticulo()" style="background: #dfc285; color: #0d0d0d; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-weight: 600; text-transform: uppercase; font-family: 'Montserrat', sans-serif;">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SECCIÓN: SOUNDTRACK / AUDIO AMBIENTAL -->
+    <!-- ========================================== -->
+    <section style="max-width: 900px; margin: 40px auto; padding: 0 20px;">
+        <div style="background: #141414; border: 1px solid rgba(223, 194, 133, 0.25); border-radius: 8px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <span style="color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">Ambiente Sonoro</span>
+                <h3 style="color: #dfc285; font-size: 20px; margin: 8px 0; font-family: 'Cormorant Garamond', serif;">Soundtrack Privé</h3>
+                <p style="color: #bbb; font-size: 13px; line-height: 1.5; margin-bottom: 15px;">Activá música ambiental de alta frecuencia para acompañar tu navegación por el portal.</p>
+            </div>
+            <div style="background: #1f1f1f; padding: 10px; border-radius: 6px; text-align: center;">
+                <audio controls style="width: 100%; height: 32px;">
+                    <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf7f6.mp3?filename=gentle-cels-110757.mp3" type="audio/mpeg">
+                    Tu navegador no soporta el reproductor de audio.
+                </audio>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Sofisticado y Ordenado -->
+    <footer class="footer" style="padding: 50px 20px; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 50px; background: #0b0b0b;">
+        <div class="footer-container">
+            
+            <!-- Columna Izquierda: Redes Sociales a un costado -->
+            <div class="footer-socials">
+                <span style="color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px; font-weight: 500;">Síguenos</span>
+                <a href="https://instagram.com/masajistasprive" target="_blank" class="footer-social-link">Instagram</a>
+                <a href="https://facebook.com/masajistasprive" target="_blank" class="footer-social-link">Facebook</a>
+                <a href="https://twitter.com/masajistasprive" target="_blank" class="footer-social-link">Twitter</a>
+                <a href="https://t.me/masajistasprive" target="_blank" class="footer-social-link">Telegram</a>
+                <a href="https://whatsapp.com/channel/0029VbDhx91BA1f3Cob1BR1J" target="_blank" class="footer-social-link">WhatsApp</a>
+            </div>
+
+            <!-- Columna Central: Textos Legales -->
+            <div class="footer-legal">
+                <p>Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.</p>
+                <p style="margin-top: 6px;">Todo el contenido, marcas y logotipos pertenecen a sus respectivos dueños.</p>
+                <p class="copyright" style="margin-top: 10px; color: #dfc285; font-size: 12px;">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        const pills = document.querySelectorAll('.pill-btn');
+        const cards = document.querySelectorAll('.card-link');
+        pills.forEach(pill => {
+            pill.addEventListener('click', () => {
+                pills.forEach(p => p.classList.remove('active'));
+                pill.classList.add('active');
+                const filter = pill.getAttribute('data-filter');
+                cards.forEach(card => {
+                    if (filter === 'todas' || card.getAttribute('data-categoria') === filter) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        function abrirArticulo(titulo, texto) {
+            document.getElementById('tituloArticuloModal').innerText = titulo;
+            document.getElementById('textoArticuloModal').innerText = texto;
+            document.getElementById('modalArticulo').style.display = 'flex';
+        }
+
+        function cerrarArticulo() {
+            document.getElementById('modalArticulo').style.display = 'none';
+        }
+
+        async function obtenerDolar() {
+            try {
+                const response = await fetch('https://dolarapi.com/v1/dolares/blue');
+                const data = await response.json();
+                document.getElementById('dolar-info').innerHTML = `
+                    <span style="color: #dfc285; font-weight: 600;">Dólar Blue</span> — Compra: $${data.compra} | Venta: $${data.venta}
+                `;
+            } catch (error) {
+                document.getElementById('dolar-info').innerHTML = "No se pudo cargar la cotización en este momento.";
+            }
+        }
+        obtenerDolar();
+            const modalEdad = document.getElementById('modal-edad');
+    const btnMayor = document.getElementById('btn-mayor');
+
+    if (sessionStorage.getItem('edadVerificada') === 'true') {
+        if (modalEdad) modalEdad.style.display = 'none';
+    }
+
+    if (btnMayor && modalEdad) {
+        btnMayor.addEventListener('click', () => {
+            sessionStorage.setItem('edadVerificada', 'true');
+            modalEdad.style.display = 'none';
+        });
+    }
+
+    </script>
+
+</body>
+</html>
