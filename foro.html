@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Foro - Masajistas Privé</title>
-    <!-- Firebase App (compat) y Firestore -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <style>
@@ -23,24 +22,38 @@
         .post p { margin: 0 0 10px 0; word-break: break-word; color: #ddd; }
         .post small { color: #aaa; }
 
-        .actions-bar { display: flex; gap: 15px; margin-top: 10px; font-size: 0.85em; }
+        .actions-bar { display: flex; gap: 15px; margin-top: 10px; font-size: 0.85em; justify-content: space-between; align-items: center; }
         .like-btn { background: none; border: none; color: #d4af37; cursor: pointer; padding: 0; font-weight: bold; width: auto; display: flex; align-items: center; gap: 4px; }
         .like-btn:hover { color: #f3e5ab; background: none; }
+        
+        .view-btn { background: #c5a059; color: #121212; border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.85em; cursor: pointer; font-weight: bold; width: auto; }
+        .view-btn:hover { background: #d4af37; }
 
-        /* Estilo de comentarios e hilos */
+        .back-btn { background: #333; color: #d4af37; border: 1px solid #d4af37; padding: 8px 15px; margin-bottom: 20px; border-radius: 4px; cursor: pointer; font-weight: bold; width: auto; display: inline-block; }
+        .back-btn:hover { background: #444; }
+
+        /* Estilo de comentarios y respuestas */
         .comments-section { margin-top: 15px; border-top: 1px solid #333; padding-top: 12px; }
-        .comment-item { font-size: 0.9em; margin-bottom: 10px; color: #ccc; word-break: break-word; background: #1c1c1c; padding: 8px; border-radius: 4px; }
+        .comment-item { font-size: 0.9em; margin-bottom: 10px; color: #ccc; word-break: break-word; background: #1c1c1c; padding: 10px; border-radius: 4px; }
         .comment-author { color: #f3e5ab; font-weight: bold; margin-right: 6px; }
         .comment-time { font-size: 0.75em; color: #777; margin-left: 8px; }
         
-        .comment-form { margin-top: 10px; display: flex; gap: 6px; }
-        .comment-form input { font-size: 0.85em; padding: 6px 10px; background: #1a1a1a; border: 1px solid #444; }
-        .comment-btn { width: auto; padding: 6px 12px; font-size: 0.85em; background: #d4af37; color: #121212; white-space: nowrap; }
+        .comment-form { margin-top: 15px; display: flex; flex-direction: column; gap: 8px; }
+        .comment-inputs { display: flex; gap: 6px; }
+        .comment-inputs input { font-size: 0.9em; padding: 8px; background: #1a1a1a; border: 1px solid #444; }
+        .comment-btn { width: auto; padding: 8px 16px; font-size: 0.9em; background: #d4af37; color: #121212; white-space: nowrap; }
 
-        /* Caja para responder a un comentario específico */
-        .reply-box { margin-top: 6px; display: none; gap: 5px; padding-left: 15px; border-left: 2px solid #d4af37; }
-        .reply-trigger { color: #c5a059; cursor: pointer; font-size: 0.8em; background: none; border: none; padding: 0; text-decoration: underline; width: auto; }
+        /* Barra de Emojis rápida */
+        .emoji-bar { display: flex; gap: 5px; flex-wrap: wrap; background: #181818; padding: 5px; border-radius: 4px; border: 1px solid #333; }
+        .emoji-btn { background: none; border: none; font-size: 1.2em; cursor: pointer; padding: 2px 6px; width: auto; }
+        .emoji-btn:hover { background: #333; border-radius: 3px; }
+
+        .reply-box { margin-top: 8px; display: none; flex-direction: column; gap: 6px; padding-left: 15px; border-left: 2px solid #d4af37; }
+        .reply-trigger { color: #c5a059; cursor: pointer; font-size: 0.85em; background: none; border: none; padding: 0; text-decoration: underline; width: auto; }
         .reply-trigger:hover { color: #f3e5ab; background: none; }
+        
+        /* Contenido multimedia (GIFs o imágenes) */
+        .msg-media { max-width: 100%; max-height: 250px; border-radius: 6px; margin-top: 8px; display: block; }
     </style>
 </head>
 <body>
@@ -51,25 +64,60 @@
 
 <div class="container">
     <h1>Foro Masajistas Privé</h1>
-    
-    <!-- Formulario para crear un tema -->
-    <div class="form-group">
-        <h2>Crear nuevo tema</h2>
-        <input type="text" id="autorInput" placeholder="Tu nombre o apodo">
-    </div>
-    <div class="form-group">
-        <input type="text" id="tituloInput" placeholder="Título del tema">
-    </div>
-    <div class="form-group">
-        <textarea id="contenidoInput" rows="4" placeholder="Escribí tu mensaje aquí..."></textarea>
-    </div>
-    <button id="publicarBtn">Publicar Tema</button>
 
-    <hr style="border: 0; border-top: 1px solid #333; margin: 30px 0;">
+    <div id="listView">
+        <div class="form-group">
+            <h2>Crear nuevo tema</h2>
+            <input type="text" id="autorInput" placeholder="Tu nombre o apodo">
+        </div>
+        <div class="form-group">
+            <input type="text" id="tituloInput" placeholder="Título del tema">
+        </div>
+        <div class="form-group">
+            <textarea id="contenidoInput" rows="4" placeholder="Escribí tu mensaje aquí..."></textarea>
+            <div class="emoji-bar" style="margin-top: 5px;">
+                <button class="emoji-btn" onclick="agregarEmoji('contenidoInput', '😊')">😊</button>
+                <button class="emoji-btn" onclick="agregarEmoji('contenidoInput', '👍')">👍</button>
+                <button class="emoji-btn" onclick="agregarEmoji('contenidoInput', '🔥')">🔥</button>
+                <button class="emoji-btn" onclick="agregarEmoji('contenidoInput', '❤️')">❤️</button>
+                <button class="emoji-btn" onclick="agregarEmoji('contenidoInput', '👏')">👏</button>
+                <button class="emoji-btn" onclick="agregarEmoji('contenidoInput', '✨')">✨</button>
+                <input type="text" id="gifInput" placeholder="Pegar link de GIF (opcional .gif)" style="flex: 1; font-size: 0.8em; padding: 4px;">
+            </div>
+        </div>
+        <button id="publicarBtn">Publicar Tema</button>
 
-    <h2>Temas del Foro</h2>
-    <div id="loading">Cargando temas...</div>
-    <div id="postsContainer"></div>
+        <hr style="border: 0; border-top: 1px solid #333; margin: 30px 0;">
+
+        <h2>Temas del Foro</h2>
+        <div id="loading">Cargando temas...</div>
+        <div id="postsContainer"></div>
+    </div>
+
+    <div id="threadView" style="display: none;">
+        <button class="back-btn" onclick="volverAlListado()">← Volver al Foro</button>
+        <div id="singlePostContainer"></div>
+        
+        <div class="comments-section">
+            <h3>Comentarios y Respuestas</h3>
+            <div id="singleCommentsContainer"></div>
+            
+            <div class="comment-form">
+                <div class="comment-inputs">
+                    <input type="text" id="activeAuthor" placeholder="Tu nombre" style="flex: 1;">
+                    <input type="text" id="activeCommentText" placeholder="Escribir comentario..." style="flex: 2.5;">
+                </div>
+                <div class="emoji-bar">
+                    <button class="emoji-btn" onclick="agregarEmoji('activeCommentText', '😊')">😊</button>
+                    <button class="emoji-btn" onclick="agregarEmoji('activeCommentText', '👍')">👍</button>
+                    <button class="emoji-btn" onclick="agregarEmoji('activeCommentText', '🔥')">🔥</button>
+                    <button class="emoji-btn" onclick="agregarEmoji('activeCommentText', '❤️')">❤️</button>
+                    <input type="text" id="activeGifInput" placeholder="Link de GIF (opcional)" style="flex: 1; font-size: 0.8em; padding: 4px;">
+                </div>
+                <button class="comment-btn" onclick="enviarComentarioActivo()">Comentar</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -86,11 +134,20 @@
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
 
+  let currentPostId = null;
+
   const loadingDiv = document.getElementById('loading');
   const postsContainer = document.getElementById('postsContainer');
   const publicarBtn = document.getElementById('publicarBtn');
 
-  // Cargar temas y comentarios en tiempo real
+  // Función auxiliar para insertar emojis en los inputs
+  window.agregarEmoji = function(elementId, emoji) {
+      const input = document.getElementById(elementId);
+      input.value += emoji;
+      input.focus();
+  };
+
+  // Cargar lista principal de temas
   db.collection("temas").orderBy("fecha", "desc").onSnapshot((snapshot) => {
       loadingDiv.style.display = 'none';
       postsContainer.innerHTML = "";
@@ -106,65 +163,23 @@
           const fechaFormateada = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : 'Hace un momento';
           const likesCount = data.likes || 0;
           
+          let mediaHtml = data.gif ? `<img src="${escapeHtml(data.gif)}" class="msg-media" alt="GIF">` : '';
+
           const postElement = document.createElement('div');
           postElement.className = 'post';
           postElement.innerHTML = `
               <h3>${escapeHtml(data.titulo)}</h3>
               <p>${escapeHtml(data.contenido)}</p>
+              ${mediaHtml}
               <small>Publicado por <b>${escapeHtml(data.autor)}</b> el ${fechaFormateada}</small>
               
               <div class="actions-bar">
                   <button class="like-btn" onclick="darLikePost('${postId}', ${likesCount})">👍 Me gusta (<span id="likes-count-${postId}">${likesCount}</span>)</button>
-              </div>
-
-              <div class="comments-section">
-                  <div id="comments-${postId}"></div>
-                  <div class="comment-form">
-                      <input type="text" id="commAuthor-${postId}" placeholder="Nombre" style="flex: 1;">
-                      <input type="text" id="commText-${postId}" placeholder="Escribir comentario..." style="flex: 2.5;">
-                      <button class="comment-btn" onclick="enviarComentario('${postId}')">Enviar</button>
-                  </div>
+                  <button class="view-btn" onclick="abrirHilo('${postId}')">Ver Debate / Responder</button>
               </div>
           `;
           postsContainer.appendChild(postElement);
-
-          // Cargar comentarios en tiempo real
-          db.collection("temas").doc(postId).collection("respuestas").orderBy("fecha", "asc")
-            .onSnapshot((replySnapshot) => {
-                const commentsContainer = document.getElementById(`comments-${postId}`);
-                commentsContainer.innerHTML = "";
-
-                replySnapshot.forEach((replyDoc) => {
-                    const rData = replyDoc.data();
-                    const rId = replyDoc.id;
-                    const rFecha = rData.fecha ? new Date(rData.fecha.toDate()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
-                    const rLikes = rData.likes || 0;
-                    
-                    const commentDiv = document.createElement('div');
-                    commentDiv.className = 'comment-item';
-                    commentDiv.innerHTML = `
-                        <div>
-                            <span class="comment-author">${escapeHtml(rData.autor)}:</span>
-                            <span>${escapeHtml(rData.contenido)}</span>
-                            <span class="comment-time">${rFecha}</span>
-                        </div>
-                        <div style="display: flex; gap: 10px; margin-top: 5px; align-items: center;">
-                            <button class="like-btn" style="font-size: 0.8em;" onclick="darLikeComentario('${postId}', '${rId}', ${rLikes})">👍 <span id="r-likes-${rId}">${rLikes}</span></button>
-                            <button class="reply-trigger" onclick="toggleReplyBox('${rId}')">Responder</button>
-                        </div>
-                        <div id="reply-box-${rId}" class="reply-box">
-                            <input type="text" id="rAuthor-${rId}" placeholder="Nombre" style="flex: 1;">
-                            <input type="text" id="rText-${rId}" placeholder="Responder a ${escapeHtml(rData.autor)}..." style="flex: 2;">
-                            <button class="comment-btn" onclick="enviarRespuestaAComentario('${postId}', '${rId}', '${escapeHtml(rData.autor)}')">Responder</button>
-                        </div>
-                    `;
-                    commentsContainer.appendChild(commentDiv);
-                });
-            });
       });
-  }, (error) => {
-      console.error("Error al cargar los temas: ", error);
-      loadingDiv.innerHTML = "Error al conectar con la base de datos.";
   });
 
   // Publicar tema principal
@@ -172,9 +187,10 @@
       const autor = document.getElementById('autorInput').value.trim();
       const titulo = document.getElementById('tituloInput').value.trim();
       const contenido = document.getElementById('contenidoInput').value.trim();
+      const gif = document.getElementById('gifInput').value.trim();
 
       if (!autor || !titulo || !contenido) {
-          alert("Por favor completá todos los campos antes de publicar.");
+          alert("Por favor completá nombre, título y mensaje antes de publicar.");
           return;
       }
 
@@ -185,108 +201,166 @@
           autor: autor,
           titulo: titulo,
           contenido: contenido,
+          gif: gif,
           likes: 0,
           fecha: firebase.firestore.FieldValue.serverTimestamp()
       })
       .then(() => {
           document.getElementById('tituloInput').value = '';
           document.getElementById('contenidoInput').value = '';
+          document.getElementById('gifInput').value = '';
           publicarBtn.disabled = false;
           publicarBtn.textContent = "Publicar Tema";
       })
       .catch((error) => {
           console.error("Error al guardar el tema: ", error);
-          alert("Hubo un error al publicar. Intentá nuevamente.");
           publicarBtn.disabled = false;
           publicarBtn.textContent = "Publicar Tema";
       });
   });
 
-  // Dar Me Gusta a un tema
+  // Abrir vista de hilo individual (sub-página)
+  window.abrirHilo = function(postId) {
+      currentPostId = postId;
+      document.getElementById('listView').style.display = 'none';
+      document.getElementById('threadView').style.display = 'block';
+
+      // Cargar detalles del post seleccionado
+      db.collection("temas").doc(postId).get().then((doc) => {
+          if (doc.exists) {
+              const data = doc.data();
+              const fechaFormateada = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : '';
+              const likesCount = data.likes || 0;
+              let mediaHtml = data.gif ? `<img src="${escapeHtml(data.gif)}" class="msg-media" alt="GIF">` : '';
+
+              document.getElementById('singlePostContainer').innerHTML = `
+                  <div class="post" style="border-left-color: #f3e5ab; margin-bottom: 10px;">
+                      <h2>${escapeHtml(data.titulo)}</h2>
+                      <p style="font-size: 1.1em;">${escapeHtml(data.contenido)}</p>
+                      ${mediaHtml}
+                      <small>Publicado por <b>${escapeHtml(data.autor)}</b> el ${fechaFormateada}</small>
+                      <div class="actions-bar" style="margin-top: 15px;">
+                          <button class="like-btn" onclick="darLikePost('${postId}', ${likesCount})">👍 Me gusta (<span id="likes-count-${postId}">${likesCount}</span>)</button>
+                      </div>
+                  </div>
+              `;
+          }
+      });
+
+      // Cargar comentarios en tiempo real del hilo
+      db.collection("temas").doc(postId).collection("respuestas").orderBy("fecha", "asc")
+        .onSnapshot((snapshot) => {
+            const commentsContainer = document.getElementById('singleCommentsContainer');
+            commentsContainer.innerHTML = "";
+
+            if (snapshot.empty) {
+                commentsContainer.innerHTML = "<p style='color: #777; font-size: 0.9em;'>No hay comentarios aún. ¡Sé el primero en responder!</p>";
+                return;
+            }
+
+            snapshot.forEach((replyDoc) => {
+                const rData = replyDoc.data();
+                const rId = replyDoc.id;
+                const rFecha = rData.fecha ? new Date(rData.fecha.toDate()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+                const rLikes = rData.likes || 0;
+                let rMedia = rData.gif ? `<img src="${escapeHtml(rData.gif)}" class="msg-media" alt="GIF">` : '';
+
+                const commentDiv = document.createElement('div');
+                commentDiv.className = 'comment-item';
+                commentDiv.innerHTML = `
+                    <div>
+                        <span class="comment-author">${escapeHtml(rData.autor)}:</span>
+                        <span>${escapeHtml(rData.contenido)}</span>
+                        ${rMedia}
+                        <span class="comment-time">${rFecha}</span>
+                    </div>
+                    <div style="display: flex; gap: 15px; margin-top: 8px; align-items: center;">
+                        <button class="like-btn" style="font-size: 0.8em;" onclick="darLikeComentario('${postId}', '${rId}', ${rLikes})">👍 <span id="r-likes-${rId}">${rLikes}</span></button>
+                        <button class="reply-trigger" onclick="toggleReplyBox('${rId}')">Responder</button>
+                    </div>
+                    <div id="reply-box-${rId}" class="reply-box">
+                        <input type="text" id="rAuthor-${rId}" placeholder="Nombre" style="font-size: 0.85em; padding: 6px;">
+                        <input type="text" id="rText-${rId}" placeholder="Responder a ${escapeHtml(rData.autor)}..." style="font-size: 0.85em; padding: 6px;">
+                        <input type="text" id="rGif-${rId}" placeholder="Link GIF (opcional)" style="font-size: 0.8em; padding: 4px;">
+                        <button class="comment-btn" onclick="enviarRespuestaAComentario('${postId}', '${rId}', '${escapeHtml(rData.autor)}')">Enviar respuesta</button>
+                    </div>
+                `;
+                commentsContainer.appendChild(commentDiv);
+            });
+        });
+  };
+
+  window.volverAlListado = function() {
+      currentPostId = null;
+      document.getElementById('threadView').style.display = 'none';
+      document.getElementById('listView').style.display = 'block';
+  };
+
+  // Enviar comentario dentro del hilo
+  window.enviarComentarioActivo = function() {
+      if (!currentPostId) return;
+      const autor = document.getElementById('activeAuthor').value.trim();
+      const contenido = document.getElementById('activeCommentText').value.trim();
+      const gif = document.getElementById('activeGifInput').value.trim();
+
+      if (!autor || !contenido) {
+          alert("Ingresá tu nombre y el comentario.");
+          return;
+      }
+
+      db.collection("temas").doc(currentPostId).collection("respuestas").add({
+          autor: autor,
+          contenido: contenido,
+          gif: gif,
+          likes: 0,
+          fecha: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .then(() => {
+          document.getElementById('activeCommentText').value = '';
+          document.getElementById('activeGifInput').value = '';
+      });
+  };
+
+  // Enviar respuesta directa a un comentario
+  window.enviarRespuestaAComentario = function(postId, replyId, targetAuthor) {
+      const autor = document.getElementById(`rAuthor-${replyId}`).value.trim();
+      const contenido = document.getElementById(`rText-${replyId}`).value.trim();
+      const gif = document.getElementById(`rGif-${replyId}`).value.trim();
+
+      if (!autor || !contenido) {
+          alert("Ingresá tu nombre y la respuesta.");
+          return;
+      }
+
+      db.collection("temas").doc(postId).collection("respuestas").add({
+          autor: autor,
+          contenido: `@${targetAuthor} ${contenido}`,
+          gif: gif,
+          likes: 0,
+          fecha: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .then(() => {
+          document.getElementById(`rText-${replyId}`).value = '';
+          document.getElementById(`rGif-${replyId}`).value = '';
+          document.getElementById(`reply-box-${replyId}`).style.display = 'none';
+      });
+  };
+
   window.darLikePost = function(postId, currentLikes) {
-      db.collection("temas").doc(postId).update({
-          likes: currentLikes + 1
-      });
+      db.collection("temas").doc(postId).update({ likes: currentLikes + 1 });
   };
 
-  // Dar Me Gusta a un comentario
   window.darLikeComentario = function(postId, replyId, currentLikes) {
-      db.collection("temas").doc(postId).collection("respuestas").doc(replyId).update({
-          likes: currentLikes + 1
-      });
+      db.collection("temas").doc(postId).collection("respuestas").doc(replyId).update({ likes: currentLikes + 1 });
   };
 
-  // Mostrar u ocultar cajita de respuesta individual
   window.toggleReplyBox = function(rId) {
       const box = document.getElementById(`reply-box-${rId}`);
       box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
   };
 
-  // Enviar comentario general
-  window.enviarComentario = function(postId) {
-      const authorInput = document.getElementById(`commAuthor-${postId}`);
-      const textInput = document.getElementById(`commText-${postId}`);
-      
-      const autor = authorInput.value.trim();
-      const contenido = textInput.value.trim();
-
-      if (!autor || !contenido) {
-          alert("Ingresá tu nombre y el texto del comentario.");
-          return;
-      }
-
-      db.collection("temas").doc(postId).collection("respuestas").add({
-          autor: autor,
-          contenido: contenido,
-          likes: 0,
-          fecha: firebase.firestore.FieldValue.serverTimestamp()
-      })
-      .then(() => {
-          textInput.value = '';
-      })
-      .catch((error) => {
-          console.error("Error al enviar comentario:", error);
-      });
-  };
-
-  // Enviar respuesta directa a un comentario (mencionando al usuario)
-  window.enviarRespuestaAComentario = function(postId, replyId, targetAuthor) {
-      const authorInput = document.getElementById(`rAuthor-${replyId}`);
-      const textInput = document.getElementById(`rText-${replyId}`);
-      
-      const autor = authorInput.value.trim();
-      const contenido = textInput.value.trim();
-
-      if (!autor || !contenido) {
-          alert("Ingresá tu nombre y tu respuesta.");
-          return;
-      }
-
-      const contenidoConMencion = `@${targetAuthor} ${contenido}`;
-
-      db.collection("temas").doc(postId).collection("respuestas").add({
-          autor: autor,
-          contenido: contenidoConMencion,
-          likes: 0,
-          fecha: firebase.firestore.FieldValue.serverTimestamp()
-      })
-      .then(() => {
-          textInput.value = '';
-          document.getElementById(`reply-box-${replyId}`).style.display = 'none';
-      })
-      .catch((error) => {
-          console.error("Error al enviar respuesta:", error);
-      });
-  };
-
   function escapeHtml(text) {
-      const map = {
-          '&': '&amp;',
-          '<': '&lt;',
-          '>': '&gt;',
-          '"': '&quot;',
-          "'": '&#039;'
-      };
+      const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
       return text.replace(/[&<>"']/g, function(m) { return map[m]; });
   }
 </script>
