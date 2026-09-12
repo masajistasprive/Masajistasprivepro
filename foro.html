@@ -4,168 +4,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Foro & Comunidad | Masajistas Privé</title>
-    <!-- Importamos fuentes elegantes desde Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { 
-            background-color: #0d0d0d; 
-            color: #e5e0d8; 
-            font-family: 'Montserrat', sans-serif; 
-            line-height: 1.6; 
-        }
+        body { background-color: #0d0d0d; color: #e5e0d8; font-family: 'Montserrat', sans-serif; line-height: 1.6; }
+        h1, h2, h3, .logo, .thread-title, .btn-nuevo, .modal-content h3 { font-family: 'Cormorant Garamond', serif; letter-spacing: 1.5px; }
         
-        h1, h2, h3, .logo, .thread-title, .btn-nuevo, .modal-content h3 {
-            font-family: 'Cormorant Garamond', serif;
-            letter-spacing: 1.5px;
-        }
-
         header { 
             background: #141414; 
-            border-bottom: 1px solid rgba(223, 194, 133, 0.35); 
-            padding: 15px 25px; 
+            border-bottom: 1px solid rgba(223, 194, 133, 0.2); 
+            padding: 18px 30px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
         }
         .logo { 
             color: #dfc285; 
-            font-size: 22px; 
+            font-size: 20px; 
             font-weight: 600; 
             text-decoration: none; 
-            text-transform: uppercase;
+            text-transform: uppercase; 
             letter-spacing: 2px;
-            white-space: nowrap;
         }
-        .nav-links {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
+        .nav-links { display: flex; gap: 25px; align-items: center; }
         .nav-links a { 
             color: #aaa; 
-            font-family: 'Montserrat', sans-serif;
             text-decoration: none; 
-            font-size: 12px; 
-            font-weight: 500;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            transition: color 0.3s;
-            border: 1px solid rgba(223, 194, 133, 0.2);
-            padding: 6px 14px;
-            border-radius: 4px;
+            font-size: 13px; 
+            font-weight: 400; 
+            letter-spacing: 1px; 
+            text-transform: none; 
+            border: none; 
+            padding: 0; 
+            background: transparent;
+            transition: color 0.3s; 
         }
         .nav-links a:hover, .nav-links a.active { 
             color: #dfc285; 
-            border-color: #dfc285;
-            background: rgba(223, 194, 133, 0.05);
+            border: none; 
+            background: transparent; 
         }
 
         .container { max-width: 900px; margin: 30px auto; padding: 0 20px; }
-        
         .foro-header { text-align: center; margin-bottom: 40px; }
         .foro-header h1 { color: #dfc285; font-size: 32px; font-weight: 600; text-transform: uppercase; margin-bottom: 10px; }
-        .foro-header p { color: #aaa; font-size: 14px; font-family: 'Montserrat', sans-serif; font-weight: 300; }
-
-        .thread-card { 
-            background: #141414; 
-            border: 1px solid rgba(223, 194, 133, 0.25); 
-            border-radius: 6px; 
-            padding: 22px; 
-            margin-bottom: 20px; 
-            transition: border-color 0.3s, background 0.3s; 
-        }
-        .thread-card:hover { 
-            border-color: #dfc285; 
-            background: #181818;
-        }
+        .foro-header p { color: #aaa; font-size: 14px; font-weight: 300; }
+        .thread-card { background: #141414; border: 1px solid rgba(223, 194, 133, 0.25); border-radius: 6px; padding: 22px; margin-bottom: 20px; transition: 0.3s; }
+        .thread-card:hover { border-color: #dfc285; background: #181818; }
         .thread-category { color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; display: block; margin-bottom: 6px; }
         .thread-title { color: #ffffff; font-size: 22px; font-weight: 600; text-decoration: none; display: block; margin-bottom: 10px; cursor: pointer; }
         .thread-title:hover { color: #dfc285; }
         .thread-snippet { color: #bcbbb5; font-size: 14px; font-weight: 300; margin-bottom: 15px; }
-        
         .thread-meta { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #777; border-top: 1px solid rgba(255, 255, 255, 0.06); padding-top: 12px; font-weight: 300; }
-        .thread-author { color: #999; }
-
+        
         .btn-nuevo { 
-            display: inline-block; 
-            background-color: transparent; 
+            background: transparent; 
             color: #dfc285; 
-            border: 1px solid #dfc285;
+            border: 1px solid #dfc285; 
             padding: 10px 22px; 
             border-radius: 4px; 
-            text-decoration: none; 
             font-weight: 600; 
             font-size: 15px; 
             text-transform: uppercase; 
             letter-spacing: 1.5px; 
             margin-bottom: 30px; 
-            cursor: pointer;
-            transition: all 0.3s; 
+            cursor: pointer; 
+            transition: 0.3s; 
         }
-        .btn-nuevo:hover { background-color: #dfc285; color: #0d0d0d; }
+        .btn-nuevo:hover { background: #dfc285; color: #0d0d0d; }
 
-        /* Modal general */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            padding: 20px;
-            overflow-y: auto;
-        }
-        .modal-content {
-            background: #141414;
-            border: 1px solid #dfc285;
-            border-radius: 8px;
-            width: 100%;
-            max-width: 600px;
-            padding: 30px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 1000; padding: 20px; overflow-y: auto; }
+        .modal-content { background: #141414; border: 1px solid #dfc285; border-radius: 8px; width: 100%; max-width: 600px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto; }
         .modal-content h3 { color: #dfc285; font-size: 24px; margin-bottom: 20px; text-align: center; }
-        
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; font-size: 12px; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
-        .form-control {
-            width: 100%;
-            background: #0d0d0d;
-            border: 1px solid #333;
-            border-radius: 4px;
-            padding: 10px;
-            color: #e5e0d8;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 14px;
-        }
+        .form-control { width: 100%; background: #0d0d0d; border: 1px solid #333; border-radius: 4px; padding: 10px; color: #e5e0d8; font-family: 'Montserrat', sans-serif; font-size: 14px; }
         .form-control:focus { border-color: #dfc285; outline: none; }
         .modal-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
-        .btn-cancelar {
-            background: transparent; color: #aaa; border: 1px solid #444; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 13px;
-        }
-        .btn-enviar {
-            background: #dfc285; color: #0d0d0d; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 13px; text-transform: uppercase;
-        }
-
-        .respuesta-card {
-            background: #1a1a1a;
-            border-left: 3px solid #dfc285;
-            padding: 12px 15px;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            font-size: 13px;
-            color: #ccc;
-        }
+        .btn-cancelar { background: transparent; color: #aaa; border: 1px solid #444; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 13px; }
+        .btn-enviar { background: #dfc285; color: #0d0d0d; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 13px; text-transform: uppercase; }
+        .respuesta-card { background: #1a1a1a; border-left: 3px solid #dfc285; padding: 12px 15px; border-radius: 4px; margin-bottom: 10px; font-size: 13px; color: #ccc; }
         .respuesta-meta { font-size: 11px; color: #888; margin-bottom: 5px; display: flex; justify-content: space-between; }
-
-        footer { text-align: center; padding: 30px 20px; color: #666; font-size: 12px; border-top: 1px solid rgba(255, 255, 255, 0.06); margin-top: 50px; font-weight: 300; }
+        footer { text-align: center; padding: 30px 20px; color: #666; font-size: 12px; border-top: 1px solid rgba(255,255,255,0.06); margin-top: 50px; font-weight: 300; }
     </style>
 </head>
 <body>
@@ -179,7 +101,6 @@
     </header>
 
     <div class="container">
-        
         <div class="foro-header">
             <h1>Círculo Privé — Comunidad</h1>
             <p>Un espacio de intercambio exclusivo sobre bienestar, recomendaciones y experiencias con total discreción.</p>
@@ -189,14 +110,11 @@
             <button class="btn-nuevo" onclick="abrirModalCrear()">+ Iniciar Debate</button>
         </div>
 
-        <!-- Contenedor de hilos -->
         <div id="lista-hilos">
             <p style="color: #888; text-align: center; font-size: 14px;">Conectando con la comunidad...</p>
         </div>
-
     </div>
 
-    <!-- Modal: Crear Debate -->
     <div class="modal-overlay" id="modalCrear">
         <div class="modal-content">
             <h3>Iniciar Nuevo Debate</h3>
@@ -229,7 +147,6 @@
         </div>
     </div>
 
-    <!-- Modal: Ver Hilo y Responder -->
     <div class="modal-overlay" id="modalHilo">
         <div class="modal-content">
             <span id="hiloCatModal" class="thread-category"></span>
@@ -239,7 +156,7 @@
                 Iniciado por: <span id="hiloAutorModal" style="color: #dfc285;"></span>
             </div>
 
-            <h4 style="color: #dfc285; font-size: 16px; margin-bottom: 15px; font-family: 'Cormorant Garamond', serif;">Respuestas de la Comunidad</h4>
+            <h4 style="color: #dfc285; font-size: 16px; margin-bottom: 15px;">Respuestas de la Comunidad</h4>
             
             <div id="contenedorRespuestas" style="margin-bottom: 20px;">
                 <p style="color: #666; font-size: 13px;">Cargando respuestas...</p>
@@ -267,10 +184,9 @@
         <p>&copy; 2026 Masajistas Privé. Todos los derechos reservados. Espacio exclusivo para adultos.</p>
     </footer>
 
-    <!-- Firebase y Lógica -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
@@ -284,7 +200,6 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-
         let hiloActualId = null;
 
         window.abrirModalCrear = function() { document.getElementById('modalCrear').style.display = 'flex'; }
@@ -310,7 +225,6 @@
                 cerrarModalCrear();
             } catch (error) {
                 console.error("Error al crear debate: ", error);
-                alert("Hubo un error al publicar. Verificá tu conexión.");
             }
         };
 
@@ -321,7 +235,6 @@
             document.getElementById('hiloTituloModal').innerText = titulo;
             document.getElementById('hiloTextoModal').innerText = texto;
             document.getElementById('hiloAutorModal').innerText = autor;
-
             document.getElementById('modalHilo').style.display = 'flex';
             cargarRespuestasFirebase(id);
         }
@@ -329,25 +242,17 @@
         function cargarRespuestasFirebase(hiloId) {
             const contenedor = document.getElementById('contenedorRespuestas');
             contenedor.innerHTML = '<p style="color: #666; font-size: 13px;">Cargando respuestas...</p>';
-
             onSnapshot(collection(db, "foro_debates", hiloId, "respuestas"), (snapshot) => {
                 contenedor.innerHTML = '';
                 if (snapshot.empty) {
                     contenedor.innerHTML = '<p style="color: #666; font-size: 13px; font-style: italic;">Aún no hay comentarios. Sé el primero en responder.</p>';
                     return;
                 }
-
                 snapshot.forEach((docR) => {
                     const r = docR.data();
                     const div = document.createElement('div');
                     div.className = 'respuesta-card';
-                    div.innerHTML = `
-                        <div class="respuesta-meta">
-                            <span style="color: #dfc285; font-weight: bold;">${r.autor || 'Anónimo'}</span>
-                            <span>Hace un momento</span>
-                        </div>
-                        <div>${r.texto}</div>
-                    `;
+                    div.innerHTML = `<div class="respuesta-meta"><span style="color: #dfc285; font-weight: bold;">${r.autor || 'Anónimo'}</span><span>Hace un momento</span></div><div>${r.texto}</div>`;
                     contenedor.appendChild(div);
                 });
             });
@@ -357,7 +262,6 @@
             event.preventDefault();
             const autor = document.getElementById('autorRespuesta').value;
             const texto = document.getElementById('textoRespuesta').value;
-
             if (!hiloActualId) return;
 
             try {
@@ -373,20 +277,16 @@
             }
         };
 
-        // Escuchar debates en tiempo real
         onSnapshot(collection(db, "foro_debates"), (snapshot) => {
             const lista = document.getElementById('lista-hilos');
             lista.innerHTML = '';
-
             if (snapshot.empty) {
                 lista.innerHTML = '<p style="color: #888; text-align: center; font-size: 14px;">Aún no hay debates creados. ¡Sé el primero en iniciar uno!</p>';
                 return;
             }
-
             snapshot.forEach((docH) => {
                 const h = docH.data();
                 const idH = docH.id;
-
                 const tarjeta = document.createElement('div');
                 tarjeta.className = 'thread-card';
                 tarjeta.innerHTML = `
