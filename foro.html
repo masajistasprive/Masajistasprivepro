@@ -18,7 +18,7 @@
         #loading { text-align: center; font-style: italic; color: #888; margin: 20px 0; }
         
         .post { background: #222; padding: 15px; margin-bottom: 20px; border-radius: 6px; border-left: 4px solid #d4af37; }
-        .post h3 { margin: 0 0 5px 0; color: #f3e5ab; }
+        .post h3 { margin: 0 0 5px 0; color: #d4af37; }
         .post p { margin: 0 0 10px 0; word-break: break-word; color: #ddd; }
         .post small { color: #aaa; }
 
@@ -26,15 +26,15 @@
         .like-btn { background: none; border: none; color: #d4af37; cursor: pointer; padding: 0; font-weight: bold; width: auto; display: flex; align-items: center; gap: 4px; }
         .like-btn:hover { color: #f3e5ab; background: none; }
         
-        .view-btn { background: #c5a059; color: #121212; border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.85em; cursor: pointer; font-weight: bold; width: auto; }
-        .view-btn:hover { background: #d4af37; }
+        .view-btn { background: #d4af37; color: #121212; border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.85em; cursor: pointer; font-weight: bold; width: auto; }
+        .view-btn:hover { background: #c5a059; }
 
-        .back-btn { background: #333; color: #d4af37; border: 1px solid #d4af37; padding: 8px 15px; margin-bottom: 20px; border-radius: 4px; cursor: pointer; font-weight: bold; width: auto; display: inline-block; }
-        .back-btn:hover { background: #444; }
+        .back-btn { background: #252525; color: #d4af37; border: 1px solid #d4af37; padding: 8px 15px; margin-bottom: 20px; border-radius: 4px; cursor: pointer; font-weight: bold; width: auto; display: inline-block; }
+        .back-btn:hover { background: #333; }
 
         .comments-section { margin-top: 15px; border-top: 1px solid #333; padding-top: 12px; }
         .comment-item { font-size: 0.9em; margin-bottom: 10px; color: #ccc; word-break: break-word; background: #1c1c1c; padding: 10px; border-radius: 4px; }
-        .comment-author { color: #f3e5ab; font-weight: bold; margin-right: 6px; }
+        .comment-author { color: #d4af37; font-weight: bold; margin-right: 6px; }
         .comment-time { font-size: 0.75em; color: #777; margin-left: 8px; }
         
         .comment-form { margin-top: 15px; display: flex; flex-direction: column; gap: 8px; }
@@ -47,7 +47,7 @@
         .emoji-btn:hover { background: #333; border-radius: 3px; }
 
         .reply-box { margin-top: 8px; display: none; flex-direction: column; gap: 6px; padding-left: 15px; border-left: 2px solid #d4af37; }
-        .reply-trigger { color: #c5a059; cursor: pointer; font-size: 0.85em; background: none; border: none; padding: 0; text-decoration: underline; width: auto; }
+        .reply-trigger { color: #d4af37; cursor: pointer; font-size: 0.85em; background: none; border: none; padding: 0; text-decoration: underline; width: auto; }
         .reply-trigger:hover { color: #f3e5ab; background: none; }
         
         .msg-media { max-width: 100%; max-height: 220px; border-radius: 6px; margin-top: 8px; display: block; object-fit: contain; }
@@ -230,7 +230,7 @@
               let mediaHtml = data.gif && data.gif.trim() !== "" ? `<img src="${escapeHtml(data.gif.trim())}" class="msg-media" alt="GIF">` : '';
 
               document.getElementById('singlePostContainer').innerHTML = `
-                  <div class="post" style="border-left-color: #f3e5ab; margin-bottom: 10px;">
+                  <div class="post" style="border-left-color: #d4af37; margin-bottom: 10px;">
                       <h2>${escapeHtml(data.titulo)}</h2>
                       <p style="font-size: 1.1em;">${escapeHtml(data.contenido)}</p>
                       ${mediaHtml}
