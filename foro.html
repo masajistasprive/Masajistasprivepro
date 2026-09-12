@@ -32,7 +32,6 @@
         .back-btn { background: #333; color: #d4af37; border: 1px solid #d4af37; padding: 8px 15px; margin-bottom: 20px; border-radius: 4px; cursor: pointer; font-weight: bold; width: auto; display: inline-block; }
         .back-btn:hover { background: #444; }
 
-        /* Estilo de comentarios y respuestas */
         .comments-section { margin-top: 15px; border-top: 1px solid #333; padding-top: 12px; }
         .comment-item { font-size: 0.9em; margin-bottom: 10px; color: #ccc; word-break: break-word; background: #1c1c1c; padding: 10px; border-radius: 4px; }
         .comment-author { color: #f3e5ab; font-weight: bold; margin-right: 6px; }
@@ -43,7 +42,6 @@
         .comment-inputs input { font-size: 0.9em; padding: 8px; background: #1a1a1a; border: 1px solid #444; }
         .comment-btn { width: auto; padding: 8px 16px; font-size: 0.9em; background: #d4af37; color: #121212; white-space: nowrap; }
 
-        /* Barra de Emojis rápida */
         .emoji-bar { display: flex; gap: 5px; flex-wrap: wrap; background: #181818; padding: 5px; border-radius: 4px; border: 1px solid #333; }
         .emoji-btn { background: none; border: none; font-size: 1.2em; cursor: pointer; padding: 2px 6px; width: auto; }
         .emoji-btn:hover { background: #333; border-radius: 3px; }
@@ -52,8 +50,7 @@
         .reply-trigger { color: #c5a059; cursor: pointer; font-size: 0.85em; background: none; border: none; padding: 0; text-decoration: underline; width: auto; }
         .reply-trigger:hover { color: #f3e5ab; background: none; }
         
-        /* Contenido multimedia (GIFs o imágenes) */
-        .msg-media { max-width: 100%; max-height: 250px; border-radius: 6px; margin-top: 8px; display: block; }
+        .msg-media { max-width: 100%; max-height: 220px; border-radius: 6px; margin-top: 8px; display: block; object-fit: contain; }
     </style>
 </head>
 <body>
@@ -82,7 +79,7 @@
                 <button class="emoji-btn" onclick="agregarEmoji('contenidoInput', '❤️')">❤️</button>
                 <button class="emoji-btn" onclick="agregarEmoji('contenidoInput', '👏')">👏</button>
                 <button class="emoji-btn" onclick="agregarEmoji('contenidoInput', '✨')">✨</button>
-                <input type="text" id="gifInput" placeholder="Pegar link de GIF (opcional .gif)" style="flex: 1; font-size: 0.8em; padding: 4px;">
+                <input type="text" id="gifInput" placeholder="Link de GIF (opcional)" style="flex: 1; font-size: 0.8em; padding: 4px;">
             </div>
         </div>
         <button id="publicarBtn">Publicar Tema</button>
@@ -140,7 +137,6 @@
   const postsContainer = document.getElementById('postsContainer');
   const publicarBtn = document.getElementById('publicarBtn');
 
-  // Función auxiliar para insertar emojis en los inputs
   window.agregarEmoji = function(elementId, emoji) {
       const input = document.getElementById(elementId);
       input.value += emoji;
@@ -163,7 +159,7 @@
           const fechaFormateada = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : 'Hace un momento';
           const likesCount = data.likes || 0;
           
-          let mediaHtml = data.gif ? `<img src="${escapeHtml(data.gif)}" class="msg-media" alt="GIF">` : '';
+          let mediaHtml = data.gif && data.gif.trim() !== "" ? `<img src="${escapeHtml(data.gif.trim())}" class="msg-media" alt="GIF">` : '';
 
           const postElement = document.createElement('div');
           postElement.className = 'post';
@@ -206,6 +202,7 @@
           fecha: firebase.firestore.FieldValue.serverTimestamp()
       })
       .then(() => {
+          document.getElementById('autorInput').value = '';
           document.getElementById('tituloInput').value = '';
           document.getElementById('contenidoInput').value = '';
           document.getElementById('gifInput').value = '';
@@ -219,19 +216,18 @@
       });
   });
 
-  // Abrir vista de hilo individual (sub-página)
+  // Abrir vista de hilo individual
   window.abrirHilo = function(postId) {
       currentPostId = postId;
       document.getElementById('listView').style.display = 'none';
       document.getElementById('threadView').style.display = 'block';
 
-      // Cargar detalles del post seleccionado
       db.collection("temas").doc(postId).get().then((doc) => {
           if (doc.exists) {
               const data = doc.data();
               const fechaFormateada = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : '';
               const likesCount = data.likes || 0;
-              let mediaHtml = data.gif ? `<img src="${escapeHtml(data.gif)}" class="msg-media" alt="GIF">` : '';
+              let mediaHtml = data.gif && data.gif.trim() !== "" ? `<img src="${escapeHtml(data.gif.trim())}" class="msg-media" alt="GIF">` : '';
 
               document.getElementById('singlePostContainer').innerHTML = `
                   <div class="post" style="border-left-color: #f3e5ab; margin-bottom: 10px;">
@@ -247,7 +243,6 @@
           }
       });
 
-      // Cargar comentarios en tiempo real del hilo
       db.collection("temas").doc(postId).collection("respuestas").orderBy("fecha", "asc")
         .onSnapshot((snapshot) => {
             const commentsContainer = document.getElementById('singleCommentsContainer');
@@ -263,7 +258,7 @@
                 const rId = replyDoc.id;
                 const rFecha = rData.fecha ? new Date(rData.fecha.toDate()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
                 const rLikes = rData.likes || 0;
-                let rMedia = rData.gif ? `<img src="${escapeHtml(rData.gif)}" class="msg-media" alt="GIF">` : '';
+                let rMedia = rData.gif && rData.gif.trim() !== "" ? `<img src="${escapeHtml(rData.gif.trim())}" class="msg-media" alt="GIF">` : '';
 
                 const commentDiv = document.createElement('div');
                 commentDiv.className = 'comment-item';
@@ -296,15 +291,14 @@
       document.getElementById('listView').style.display = 'block';
   };
 
-  // Enviar comentario dentro del hilo
   window.enviarComentarioActivo = function() {
       if (!currentPostId) return;
       const autor = document.getElementById('activeAuthor').value.trim();
       const contenido = document.getElementById('activeCommentText').value.trim();
       const gif = document.getElementById('activeGifInput').value.trim();
 
-      if (!autor || !contenido) {
-          alert("Ingresá tu nombre y el comentario.");
+      if (!autor || (!contenido && !gif)) {
+          alert("Ingresá tu nombre y un comentario o un GIF.");
           return;
       }
 
@@ -321,14 +315,13 @@
       });
   };
 
-  // Enviar respuesta directa a un comentario
   window.enviarRespuestaAComentario = function(postId, replyId, targetAuthor) {
       const autor = document.getElementById(`rAuthor-${replyId}`).value.trim();
       const contenido = document.getElementById(`rText-${replyId}`).value.trim();
       const gif = document.getElementById(`rGif-${replyId}`).value.trim();
 
-      if (!autor || !contenido) {
-          alert("Ingresá tu nombre y la respuesta.");
+      if (!autor || (!contenido && !gif)) {
+          alert("Ingresá tu nombre y tu respuesta o GIF.");
           return;
       }
 
@@ -360,6 +353,7 @@
   };
 
   function escapeHtml(text) {
+      if (!text) return '';
       const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
       return text.replace(/[&<>"']/g, function(m) { return map[m]; });
   }
