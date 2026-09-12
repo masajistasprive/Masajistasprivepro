@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Foro - Masajistas Privé</title>
+    <!-- Firebase App (compat) y Firestore -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <style>
@@ -50,7 +51,7 @@
         .reply-trigger { color: #d4af37; cursor: pointer; font-size: 0.85em; background: none; border: none; padding: 0; text-decoration: underline; width: auto; }
         .reply-trigger:hover { color: #f3e5ab; background: none; }
         
-        .msg-media { max-width: 100%; max-height: 220px; border-radius: 6px; margin-top: 8px; display: block; object-fit: contain; }
+        .msg-media { max-width: 100%; max-height: 220px; border-radius: 6px; margin-top: 8px; display: block; object-fit: contain; background: #000; }
     </style>
 </head>
 <body>
@@ -62,6 +63,7 @@
 <div class="container">
     <h1>Foro Masajistas Privé</h1>
 
+    <!-- VISTA 1: LISTA DE TEMAS -->
     <div id="listView">
         <div class="form-group">
             <h2>Crear nuevo tema</h2>
@@ -79,7 +81,7 @@
                 <button class="emoji-btn" onclick="agregarEmoji('contenidoInput', '❤️')">❤️</button>
                 <button class="emoji-btn" onclick="agregarEmoji('contenidoInput', '👏')">👏</button>
                 <button class="emoji-btn" onclick="agregarEmoji('contenidoInput', '✨')">✨</button>
-                <input type="text" id="gifInput" placeholder="Link de GIF (opcional)" style="flex: 1; font-size: 0.8em; padding: 4px;">
+                <input type="text" id="gifInput" placeholder="Link de GIF / Imagen (opcional)" style="flex: 1; font-size: 0.8em; padding: 4px;">
             </div>
         </div>
         <button id="publicarBtn">Publicar Tema</button>
@@ -91,6 +93,7 @@
         <div id="postsContainer"></div>
     </div>
 
+    <!-- VISTA 2: HILO INDIVIDUAL -->
     <div id="threadView" style="display: none;">
         <button class="back-btn" onclick="volverAlListado()">← Volver al Foro</button>
         <div id="singlePostContainer"></div>
@@ -109,7 +112,7 @@
                     <button class="emoji-btn" onclick="agregarEmoji('activeCommentText', '👍')">👍</button>
                     <button class="emoji-btn" onclick="agregarEmoji('activeCommentText', '🔥')">🔥</button>
                     <button class="emoji-btn" onclick="agregarEmoji('activeCommentText', '❤️')">❤️</button>
-                    <input type="text" id="activeGifInput" placeholder="Link de GIF (opcional)" style="flex: 1; font-size: 0.8em; padding: 4px;">
+                    <input type="text" id="activeGifInput" placeholder="Link de GIF / Imagen (opcional)" style="flex: 1; font-size: 0.8em; padding: 4px;">
                 </div>
                 <button class="comment-btn" onclick="enviarComentarioActivo()">Comentar</button>
             </div>
@@ -143,6 +146,13 @@
       input.focus();
   };
 
+  // Función segura para renderizar multimedia
+  function renderMedia(url) {
+      if (!url || url.trim() === "") return "";
+      const cleanUrl = url.trim();
+      return `<img src="${cleanUrl}" class="msg-media" alt="Multimedia" onerror="this.style.display='none';">`;
+  }
+
   // Cargar lista principal de temas
   db.collection("temas").orderBy("fecha", "desc").onSnapshot((snapshot) => {
       loadingDiv.style.display = 'none';
@@ -159,7 +169,7 @@
           const fechaFormateada = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : 'Hace un momento';
           const likesCount = data.likes || 0;
           
-          let mediaHtml = data.gif && data.gif.trim() !== "" ? `<img src="${escapeHtml(data.gif.trim())}" class="msg-media" alt="GIF">` : '';
+          let mediaHtml = renderMedia(data.gif);
 
           const postElement = document.createElement('div');
           postElement.className = 'post';
@@ -227,7 +237,7 @@
               const data = doc.data();
               const fechaFormateada = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : '';
               const likesCount = data.likes || 0;
-              let mediaHtml = data.gif && data.gif.trim() !== "" ? `<img src="${escapeHtml(data.gif.trim())}" class="msg-media" alt="GIF">` : '';
+              let mediaHtml = renderMedia(data.gif);
 
               document.getElementById('singlePostContainer').innerHTML = `
                   <div class="post" style="border-left-color: #d4af37; margin-bottom: 10px;">
@@ -258,7 +268,7 @@
                 const rId = replyDoc.id;
                 const rFecha = rData.fecha ? new Date(rData.fecha.toDate()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
                 const rLikes = rData.likes || 0;
-                let rMedia = rData.gif && rData.gif.trim() !== "" ? `<img src="${escapeHtml(rData.gif.trim())}" class="msg-media" alt="GIF">` : '';
+                let rMedia = renderMedia(rData.gif);
 
                 const commentDiv = document.createElement('div');
                 commentDiv.className = 'comment-item';
@@ -276,7 +286,7 @@
                     <div id="reply-box-${rId}" class="reply-box">
                         <input type="text" id="rAuthor-${rId}" placeholder="Nombre" style="font-size: 0.85em; padding: 6px;">
                         <input type="text" id="rText-${rId}" placeholder="Responder a ${escapeHtml(rData.autor)}..." style="font-size: 0.85em; padding: 6px;">
-                        <input type="text" id="rGif-${rId}" placeholder="Link GIF (opcional)" style="font-size: 0.8em; padding: 4px;">
+                        <input type="text" id="rGif-${rId}" placeholder="Link GIF / Imagen (opcional)" style="font-size: 0.8em; padding: 4px;">
                         <button class="comment-btn" onclick="enviarRespuestaAComentario('${postId}', '${rId}', '${escapeHtml(rData.autor)}')">Enviar respuesta</button>
                     </div>
                 `;
