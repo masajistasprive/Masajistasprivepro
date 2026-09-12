@@ -4,14 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Foro - Masajistas Privé</title>
-    <!-- Firebase App (compat) y Firestore -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <style>
         :root {
             --champagne: #dfbc63;
             --champagne-light: #f3e5ab;
-            --champagne-dark: #b8973e;
             --bg-dark: #121212;
             --card-bg: #1a1a1a;
             --box-bg: #222222;
@@ -24,7 +22,6 @@
         input[type="text"], textarea { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #444; background: #252525; color: #fff; border-radius: 4px; }
         input[type="text"]:focus, textarea:focus { border-color: var(--champagne); outline: none; }
         
-        /* Botones color Champagne */
         button { background: var(--champagne); color: #121212; border: none; padding: 10px 15px; cursor: pointer; border-radius: 4px; font-weight: bold; width: 100%; transition: background 0.2s; }
         button:hover { background: var(--champagne-light); }
         
@@ -39,14 +36,14 @@
         .like-btn { background: none; border: none; color: var(--champagne); cursor: pointer; padding: 0; font-weight: bold; width: auto; display: flex; align-items: center; gap: 4px; }
         .like-btn:hover { color: var(--champagne-light); background: none; }
         
-        .view-btn { background: var(--champagne); color: #121212; border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.85em; cursor: pointer; font-weight: bold; width: auto; }
+        .view-btn { background: var(--champagne); color: #121212; border: none; padding: 6px 12px; border-radius: 8px; font-size: 0.85em; cursor: pointer; font-weight: bold; width: auto; }
         .view-btn:hover { background: var(--champagne-light); }
 
         .back-btn { background: #252525; color: var(--champagne); border: 1px solid var(--champagne); padding: 8px 15px; margin-bottom: 20px; border-radius: 4px; cursor: pointer; font-weight: bold; width: auto; display: inline-block; }
         .back-btn:hover { background: #333; }
 
         .comments-section { margin-top: 15px; border-top: 1px solid #333; padding-top: 12px; }
-        .comment-item { font-size: 0.9em; margin-bottom: 10px; color: #ccc; word-break: break-word; background: #1c1c1c; padding: 10px; border-radius: 4px; }
+        .comment-item { font-size: 0.9em; margin-bottom: 12px; color: #ccc; word-break: break-word; background: #1c1c1c; padding: 10px; border-radius: 6px; }
         .comment-author { color: var(--champagne); font-weight: bold; margin-right: 6px; }
         .comment-time { font-size: 0.75em; color: #777; margin-left: 8px; }
         
@@ -55,15 +52,24 @@
         .comment-inputs input { font-size: 0.9em; padding: 8px; background: #1a1a1a; border: 1px solid #444; }
         .comment-btn { width: auto; padding: 8px 16px; font-size: 0.9em; background: var(--champagne); color: #121212; white-space: nowrap; }
 
-        .emoji-bar { display: flex; gap: 5px; flex-wrap: wrap; background: #181818; padding: 5px; border-radius: 4px; border: 1px solid #333; }
+        .emoji-bar { display: flex; gap: 5px; flex-wrap: wrap; background: #181818; padding: 5px; border-radius: 4px; border: 1px solid #333; align-items: center; }
         .emoji-btn { background: none; border: none; font-size: 1.2em; cursor: pointer; padding: 2px 6px; width: auto; }
         .emoji-btn:hover { background: #333; border-radius: 3px; }
+
+        /* Botón de adjuntar archivo tipo red social */
+        .file-upload-label { color: var(--champagne); cursor: pointer; font-size: 0.85em; display: flex; align-items: center; gap: 4px; background: #252525; padding: 4px 8px; border-radius: 4px; border: 1px solid #444; width: auto; }
+        .file-upload-label:hover { background: #333; }
+        input[type="file"] { display: none; }
 
         .reply-box { margin-top: 8px; display: none; flex-direction: column; gap: 6px; padding-left: 15px; border-left: 2px solid var(--champagne); }
         .reply-trigger { color: var(--champagne); cursor: pointer; font-size: 0.85em; background: none; border: none; padding: 0; text-decoration: underline; width: auto; }
         .reply-trigger:hover { color: var(--champagne-light); background: none; }
         
-        .msg-media { max-width: 100%; max-height: 220px; border-radius: 6px; margin-top: 8px; display: block; object-fit: contain; background: #000; }
+        /* Tamaño razonable y prolijo para comentarios estilo IG */
+        .msg-media { max-width: 140px; max-height: 140px; border-radius: 6px; margin-top: 6px; display: block; object-fit: cover; background: #000; border: 1px solid #444; }
+        .post-media { max-width: 100%; max-height: 250px; border-radius: 6px; margin-top: 8px; display: block; object-fit: contain; background: #000; }
+        
+        .file-preview-text { font-size: 0.75em; color: var(--champagne); margin-left: 5px; font-style: italic; }
     </style>
 </head>
 <body>
@@ -75,7 +81,6 @@
 <div class="container">
     <h1>Foro Masajistas Privé</h1>
 
-    <!-- VISTA 1: LISTA DE TEMAS -->
     <div id="listView">
         <div class="form-group">
             <h2>Crear nuevo tema</h2>
@@ -93,7 +98,10 @@
                 <button class="emoji-btn" onclick="agregarEmoji('contenidoInput', '❤️')">❤️</button>
                 <button class="emoji-btn" onclick="agregarEmoji('contenidoInput', '👏')">👏</button>
                 <button class="emoji-btn" onclick="agregarEmoji('contenidoInput', '✨')">✨</button>
-                <input type="text" id="gifInput" placeholder="Link de GIF / Imagen (opcional)" style="flex: 1; font-size: 0.8em; padding: 4px;">
+                <label class="file-upload-label">
+                    📷 Adjuntar foto/GIF <input type="file" id="mainImageFile" accept="image/*" onchange="previewFile('mainImageFile', 'mainFileName')">
+                </label>
+                <span id="mainFileName" class="file-preview-text"></span>
             </div>
         </div>
         <button id="publicarBtn">Publicar Tema</button>
@@ -105,7 +113,6 @@
         <div id="postsContainer"></div>
     </div>
 
-    <!-- VISTA 2: HILO INDIVIDUAL -->
     <div id="threadView" style="display: none;">
         <button class="back-btn" onclick="volverAlListado()">← Volver al Foro</button>
         <div id="singlePostContainer"></div>
@@ -124,7 +131,10 @@
                     <button class="emoji-btn" onclick="agregarEmoji('activeCommentText', '👍')">👍</button>
                     <button class="emoji-btn" onclick="agregarEmoji('activeCommentText', '🔥')">🔥</button>
                     <button class="emoji-btn" onclick="agregarEmoji('activeCommentText', '❤️')">❤️</button>
-                    <input type="text" id="activeGifInput" placeholder="Link de GIF / Imagen (opcional)" style="flex: 1; font-size: 0.8em; padding: 4px;">
+                    <label class="file-upload-label">
+                        📷 Adjuntar <input type="file" id="activeImageFile" accept="image/*" onchange="previewFile('activeImageFile', 'activeFileName')">
+                    </label>
+                    <span id="activeFileName" class="file-preview-text"></span>
                 </div>
                 <button class="comment-btn" onclick="enviarComentarioActivo()">Comentar</button>
             </div>
@@ -158,13 +168,53 @@
       input.focus();
   };
 
-  // Procesador inteligente de links de GIFs (soporta Tenor, Giphy y links directos)
-  function renderMedia(url) {
-      if (!url || url.trim() === "") return "";
-      let cleanUrl = url.trim();
-      
-      // Si es un link de Tenor web, intentamos adaptarlo o mostrarlo seguro
-      return `<img src="${cleanUrl}" class="msg-media" alt="GIF" onerror="this.onerror=null; this.insertAdjacentHTML('afterend', '<a href=\'${cleanUrl}\' target=\'_blank\' style=\'color:var(--champagne); display:block; font-size:0.85em; margin-top:5px;\'>Ver GIF adjunto ↗</a>'); this.style.display='none';">`;
+  // Muestra el nombre del archivo seleccionado
+  window.previewFile = function(inputId, nameId) {
+      const input = document.getElementById(inputId);
+      const nameSpan = document.getElementById(nameId);
+      if (input.files && input.files[0]) {
+          nameSpan.textContent = "✓ " + input.files[0].name;
+      } else {
+          nameSpan.textContent = "";
+      }
+  };
+
+  // Comprime y convierte la imagen/GIF subida a Base64 para que entre perfecto en Firebase sin pagar hosting de archivos
+  function convertImageToBase64(fileInputId, callback) {
+      const fileInput = document.getElementById(fileInputId);
+      if (!fileInput.files || !fileInput.files[0]) {
+          callback(null);
+          return;
+      }
+      const file = fileInput.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+          const img = new Image();
+          img.onload = function() {
+              const canvas = document.createElement('canvas');
+              let width = img.width;
+              let height = img.height;
+              const maxDim = 600; // Tamaño máximo razonable para comentarios
+              
+              if (width > height && width > maxDim) {
+                  height *= maxDim / width;
+                  width = maxDim;
+              } else if (height > maxDim) {
+                  width *= maxDim / height;
+                  height = maxDim;
+              }
+              
+              canvas.width = width;
+              canvas.height = height;
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0, width, height);
+              
+              // Devuelve la imagen optimizada
+              callback(canvas.toDataURL('image/jpeg', 0.75));
+          };
+          img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
   }
 
   // Cargar lista principal de temas
@@ -183,18 +233,17 @@
           const fechaFormateada = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : 'Hace un momento';
           const likesCount = data.likes || 0;
           
-          let mediaHtml = renderMedia(data.gif);
+          let mediaHtml = data.image ? `<img src="${data.image}" class="post-media" alt="Imagen">` : '';
 
           const postElement = document.createElement('div');
           postElement.className = 'post';
           postElement.innerHTML = `
               <h3>${escapeHtml(data.titulo)}</h3>
-              <p>${escapeHtml(data.contenido)}</p>
-              ${mediaHtml}
-              <small>Publicado por <b>${escapeHtml(data.autor)}</b> el ${fechaFormateada}</small>
+              <p>${escapeHtml(data.contenido)}</p>${mediaHtml}
+              <small>Publicado por <b>${escapeHtml(data.autor)}</b> el${fechaFormateada}</small>
               
               <div class="actions-bar">
-                  <button class="like-btn" onclick="darLikePost('${postId}', ${likesCount})">👍 Me gusta (<span id="likes-count-${postId}">${likesCount}</span>)</button>
+                  <button class="like-btn" onclick="darLikePost('${postId}',${likesCount})">👍 Me gusta (<span id="likes-count-${postId}">${likesCount}</span>)</button>
                   <button class="view-btn" onclick="abrirHilo('${postId}')">Ver Debate / Responder</button>
               </div>
           `;
@@ -207,7 +256,6 @@
       const autor = document.getElementById('autorInput').value.trim();
       const titulo = document.getElementById('tituloInput').value.trim();
       const contenido = document.getElementById('contenidoInput').value.trim();
-      const gif = document.getElementById('gifInput').value.trim();
 
       if (!autor || !titulo || !contenido) {
           alert("Por favor completá nombre, título y mensaje antes de publicar.");
@@ -215,28 +263,31 @@
       }
 
       publicarBtn.disabled = true;
-      publicarBtn.textContent = "Publicando...";
+      publicarBtn.textContent = "Procesando...";
 
-      db.collection("temas").add({
-          autor: autor,
-          titulo: titulo,
-          contenido: contenido,
-          gif: gif,
-          likes: 0,
-          fecha: firebase.firestore.FieldValue.serverTimestamp()
-      })
-      .then(() => {
-          document.getElementById('autorInput').value = '';
-          document.getElementById('tituloInput').value = '';
-          document.getElementById('contenidoInput').value = '';
-          document.getElementById('gifInput').value = '';
-          publicarBtn.disabled = false;
-          publicarBtn.textContent = "Publicar Tema";
-      })
-      .catch((error) => {
-          console.error("Error al guardar el tema: ", error);
-          publicarBtn.disabled = false;
-          publicarBtn.textContent = "Publicar Tema";
+      convertImageToBase64('mainImageFile', (imageBase64) => {
+          db.collection("temas").add({
+              autor: autor,
+              titulo: titulo,
+              contenido: contenido,
+              image: imageBase64 || "",
+              likes: 0,
+              fecha: firebase.firestore.FieldValue.serverTimestamp()
+          })
+          .then(() => {
+              document.getElementById('autorInput').value = '';
+              document.getElementById('tituloInput').value = '';
+              document.getElementById('contenidoInput').value = '';
+              document.getElementById('mainImageFile').value = '';
+              document.getElementById('mainFileName').textContent = '';
+              publicarBtn.disabled = false;
+              publicarBtn.textContent = "Publicar Tema";
+          })
+          .catch((error) => {
+              console.error("Error al guardar el tema: ", error);
+              publicarBtn.disabled = false;
+              publicarBtn.textContent = "Publicar Tema";
+          });
       });
   });
 
@@ -251,16 +302,15 @@
               const data = doc.data();
               const fechaFormateada = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : '';
               const likesCount = data.likes || 0;
-              let mediaHtml = renderMedia(data.gif);
+              let mediaHtml = data.image ? `<img src="${data.image}" class="post-media" alt="Imagen">` : '';
 
               document.getElementById('singlePostContainer').innerHTML = `
                   <div class="post" style="border-left-color: var(--champagne); margin-bottom: 10px;">
                       <h2>${escapeHtml(data.titulo)}</h2>
-                      <p style="font-size: 1.1em;">${escapeHtml(data.contenido)}</p>
-                      ${mediaHtml}
-                      <small>Publicado por <b>${escapeHtml(data.autor)}</b> el ${fechaFormateada}</small>
+                      <p style="font-size: 1.1em;">${escapeHtml(data.contenido)}</p>${mediaHtml}
+                      <small>Publicado por <b>${escapeHtml(data.autor)}</b> el${fechaFormateada}</small>
                       <div class="actions-bar" style="margin-top: 15px;">
-                          <button class="like-btn" onclick="darLikePost('${postId}', ${likesCount})">👍 Me gusta (<span id="likes-count-${postId}">${likesCount}</span>)</button>
+                          <button class="like-btn" onclick="darLikePost('${postId}',${likesCount})">👍 Me gusta (<span id="likes-count-${postId}">${likesCount}</span>)</button>
                       </div>
                   </div>
               `;
@@ -282,107 +332,16 @@
                 const rId = replyDoc.id;
                 const rFecha = rData.fecha ? new Date(rData.fecha.toDate()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
                 const rLikes = rData.likes || 0;
-                let rMedia = renderMedia(rData.gif);
+                let rMedia = rData.image ? `<img src="${rData.image}" class="msg-media" alt="Adjunto">` : '';
 
                 const commentDiv = document.createElement('div');
                 commentDiv.className = 'comment-item';
                 commentDiv.innerHTML = `
                     <div>
                         <span class="comment-author">${escapeHtml(rData.autor)}:</span>
-                        <span>${escapeHtml(rData.contenido)}</span>
-                        ${rMedia}
+                        <span>${escapeHtml(rData.contenido)}</span>${rMedia}
                         <span class="comment-time">${rFecha}</span>
                     </div>
                     <div style="display: flex; gap: 15px; margin-top: 8px; align-items: center;">
-                        <button class="like-btn" style="font-size: 0.8em;" onclick="darLikeComentario('${postId}', '${rId}', ${rLikes})">👍 <span id="r-likes-${rId}">${rLikes}</span></button>
-                        <button class="reply-trigger" onclick="toggleReplyBox('${rId}')">Responder</button>
-                    </div>
-                    <div id="reply-box-${rId}" class="reply-box">
-                        <input type="text" id="rAuthor-${rId}" placeholder="Nombre" style="font-size: 0.85em; padding: 6px;">
-                        <input type="text" id="rText-${rId}" placeholder="Responder a ${escapeHtml(rData.autor)}..." style="font-size: 0.85em; padding: 6px;">
-                        <input type="text" id="rGif-${rId}" placeholder="Link GIF / Imagen (opcional)" style="font-size: 0.8em; padding: 4px;">
-                        <button class="comment-btn" onclick="enviarRespuestaAComentario('${postId}', '${rId}', '${escapeHtml(rData.autor)}')">Enviar respuesta</button>
-                    </div>
-                `;
-                commentsContainer.appendChild(commentDiv);
-            });
-        });
-  };
-
-  window.volverAlListado = function() {
-      currentPostId = null;
-      document.getElementById('threadView').style.display = 'none';
-      document.getElementById('listView').style.display = 'block';
-  };
-
-  window.enviarComentarioActivo = function() {
-      if (!currentPostId) return;
-      const autor = document.getElementById('activeAuthor').value.trim();
-      const contenido = document.getElementById('activeCommentText').value.trim();
-      const gif = document.getElementById('activeGifInput').value.trim();
-
-      if (!autor || (!contenido && !gif)) {
-          alert("Ingresá tu nombre y un comentario o un GIF.");
-          return;
-      }
-
-      db.collection("temas").doc(currentPostId).collection("respuestas").add({
-          autor: autor,
-          contenido: contenido,
-          gif: gif,
-          likes: 0,
-          fecha: firebase.firestore.FieldValue.serverTimestamp()
-      })
-      .then(() => {
-          document.getElementById('activeCommentText').value = '';
-          document.getElementById('activeGifInput').value = '';
-      });
-  };
-
-  window.enviarRespuestaAComentario = function(postId, replyId, targetAuthor) {
-      const autor = document.getElementById(`rAuthor-${replyId}`).value.trim();
-      const contenido = document.getElementById(`rText-${replyId}`).value.trim();
-      const gif = document.getElementById(`rGif-${replyId}`).value.trim();
-
-      if (!autor || (!contenido && !gif)) {
-          alert("Ingresá tu nombre y tu respuesta o GIF.");
-          return;
-      }
-
-      db.collection("temas").doc(postId).collection("respuestas").add({
-          autor: autor,
-          contenido: `@${targetAuthor} ${contenido}`,
-          gif: gif,
-          likes: 0,
-          fecha: firebase.firestore.FieldValue.serverTimestamp()
-      })
-      .then(() => {
-          document.getElementById(`rText-${replyId}`).value = '';
-          document.getElementById(`rGif-${replyId}`).value = '';
-          document.getElementById(`reply-box-${replyId}`).style.display = 'none';
-      });
-  };
-
-  window.darLikePost = function(postId, currentLikes) {
-      db.collection("temas").doc(postId).update({ likes: currentLikes + 1 });
-  };
-
-  window.darLikeComentario = function(postId, replyId, currentLikes) {
-      db.collection("temas").doc(postId).collection("respuestas").doc(replyId).update({ likes: currentLikes + 1 });
-  };
-
-  window.toggleReplyBox = function(rId) {
-      const box = document.getElementById(`reply-box-${rId}`);
-      box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
-  };
-
-  function escapeHtml(text) {
-      if (!text) return '';
-      const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
-      return text.replace(/[&<>"']/g, function(m) { return map[m]; });
-  }
-</script>
-
-</body>
-</html>
+                        <button class="like-btn" style="font-size:
 
