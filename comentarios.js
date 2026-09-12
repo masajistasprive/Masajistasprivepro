@@ -214,9 +214,9 @@
         playerContainer.style.cssText = "position: fixed; bottom: 20px; left: 20px; z-index: 9999; background: rgba(18, 18, 18, 0.95); backdrop-filter: blur(6px); border: 1px solid #dfbc63; border-radius: 20px; padding: 8px 12px; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.6); font-family: sans-serif;";
         
         playerContainer.innerHTML = `
-            <span style="color: #dfbc63; font-size: 0.75em; font-weight: 600;">🎧 Chill</span>
+            <span style="color: #dfbc63; font-size: 0.75em; font-weight: 600;">🎧 Soundtrack</span>
             <audio id="priveAudio" controls loop style="height: 30px; width: 140px;">
-                <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf756.mp3?filename=deep-ambient-chill-11082.mp3" type="audio/mpeg">
+                <source src="/chill.mp3" type="audio/mpeg">
                 Tu navegador no soporta audio.
             </audio>
         `;
