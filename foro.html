@@ -184,7 +184,7 @@
         <p>&copy; 2026 Masajistas Privé. Todos los derechos reservados. Espacio exclusivo para adultos.</p>
     </footer>
 
-        <script type="module">
+            <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
@@ -214,28 +214,29 @@
             document.getElementById('modalHilo').style.display = 'none';
         }
 
-        window.publicarDebate = async function(event) {
+        // Función optimizada para cerrar de inmediato y guardar en segundo plano
+        window.publicarDebate = function(event) {
             event.preventDefault();
+            
             const autor = document.getElementById('autorDebate').value;
             const categoria = document.getElementById('catDebate').value;
             const titulo = document.getElementById('tituloDebate').value;
             const texto = document.getElementById('textoDebate').value;
 
-            try {
-                await addDoc(collection(db, "foro_debates"), {
-                    autor: autor,
-                    categoria: categoria,
-                    titulo: titulo,
-                    texto: texto,
-                    fecha: serverTimestamp()
-                });
-                
-                // Forzamos el cierre de la ventana y reseteamos el formulario
-                document.getElementById('formDebate').reset();
-                document.getElementById('modalCrear').style.display = 'none';
-            } catch (error) {
-                console.error("Error al crear debate: ", error);
-            }
+            // Cerramos la ventana y reseteamos el formulario al instante para que no quede abierto
+            document.getElementById('modalCrear').style.display = 'none';
+            document.getElementById('formDebate').reset();
+
+            // Enviamos los datos a Firebase en segundo plano
+            addDoc(collection(db, "foro_debates"), {
+                autor: autor,
+                categoria: categoria,
+                titulo: titulo,
+                texto: texto,
+                fecha: serverTimestamp()
+            }).catch((error) => {
+                console.error("Error al guardar debate: ", error);
+            });
         };
 
         window.abrirHilo = function(id, titulo, texto, autor, categoria) {
@@ -268,23 +269,22 @@
             });
         }
 
-        window.enviarRespuesta = async function(event) {
+        window.enviarRespuesta = function(event) {
             event.preventDefault();
             const autor = document.getElementById('autorRespuesta').value;
             const texto = document.getElementById('textoRespuesta').value;
             if (!hiloActualId) return;
 
-            try {
-                await addDoc(collection(db, "foro_debates", hiloActualId, "respuestas"), {
-                    autor: autor,
-                    texto: texto,
-                    fecha: serverTimestamp()
-                });
-                document.getElementById('autorRespuesta').value = '';
-                document.getElementById('textoRespuesta').value = '';
-            } catch (error) {
+            document.getElementById('autorRespuesta').value = '';
+            document.getElementById('textoRespuesta').value = '';
+
+            addDoc(collection(db, "foro_debates", hiloActualId, "respuestas"), {
+                autor: autor,
+                texto: texto,
+                fecha: serverTimestamp()
+            }).catch((error) => {
                 console.error("Error al enviar respuesta: ", error);
-            }
+            });
         };
 
         onSnapshot(collection(db, "foro_debates"), (snapshot) => {
