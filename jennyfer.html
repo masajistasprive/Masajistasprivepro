@@ -88,6 +88,103 @@
         }
     </script>
         <script src="comentarios.js"></script>
+    <!-- --- SOUNDTRACK PRIVÉ - MOTOR GLOBAL FLOTANTE --- -->
+    <script>
+        (function() {
+            if (window.priveEngineLoaded) return;
+            window.priveEngineLoaded = true;
+
+            let bgAudio = document.getElementById('priveGlobalAudioEngine');
+            if (!bgAudio) {
+                bgAudio = window.top.document.getElementById('priveGlobalAudioEngine');
+            }
+            if (!bgAudio) {
+                bgAudio = document.createElement('audio');
+                bgAudio.id = 'priveGlobalAudioEngine';
+                bgAudio.loop = true;
+                bgAudio.preload = 'auto';
+                
+                let audioSource = document.createElement('source');
+                audioSource.src = 'chill.mp3';
+                audioSource.type = 'audio/mpeg';
+                bgAudio.appendChild(audioSource);
+                document.body.appendChild(bgAudio);
+            }
+
+            function injectFloatingButton() {
+                if (document.getElementById('priveUltraSutilBtn')) return;
+
+                const floatingBtn = document.createElement('div');
+                floatingBtn.id = 'priveUltraSutilBtn';
+                floatingBtn.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    left: 20px;
+                    z-index: 999999;
+                    background: rgba(18, 18, 18, 0.9);
+                    border: 1px solid #dfbc63;
+                    border-radius: 50px;
+                    width: 44px;
+                    height: 44px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.7);
+                    backdrop-filter: blur(6px);
+                `;
+
+                const isPlayingNow = !bgAudio.paused;
+                floatingBtn.innerHTML = `<span id="priveIconSymbol" style="color: #dfbc63; font-size: 1.15em; line-height: 1;">${isPlayingNow ? '⏸' : '🎵'}</span>`;
+                document.body.appendChild(floatingBtn);
+
+                floatingBtn.onclick = () => {
+                    if (bgAudio.paused) {
+                        bgAudio.play().then(() => {
+                            document.getElementById('priveIconSymbol').textContent = '⏸';
+                            localStorage.setItem('priveStatePlaying', 'true');
+                        }).catch(err => {
+                            bgAudio.load();
+                            bgAudio.play().then(() => {
+                                document.getElementById('priveIconSymbol').textContent = '⏸';
+                                localStorage.setItem('priveStatePlaying', 'true');
+                            });
+                        });
+                    } else {
+                        bgAudio.pause();
+                        document.getElementById('priveIconSymbol').textContent = '🎵';
+                        localStorage.setItem('priveStatePlaying', 'false');
+                    }
+                };
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', injectFloatingButton);
+            } else {
+                injectFloatingButton();
+            }
+
+            window.addEventListener('load', () => {
+                let savedTime = localStorage.getItem('priveAudioCurrentTime');
+                if (savedTime && !isNaN(savedTime)) {
+                    bgAudio.currentTime = parseFloat(savedTime);
+                }
+
+                if (localStorage.getItem('priveStatePlaying') === 'true' && bgAudio.paused) {
+                    bgAudio.play().then(() => {
+                        const icon = document.getElementById('priveIconSymbol');
+                        if (icon) icon.textContent = '⏸';
+                    }).catch(e => console.log("Autoplay restringido"));
+                }
+            });
+
+            setInterval(() => {
+                if (!bgAudio.paused) {
+                    localStorage.setItem('priveAudioCurrentTime', bgAudio.currentTime);
+                }
+            }, 1000);
+        })();
+    </script>
 
 </body>
 </html>
