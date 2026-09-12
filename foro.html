@@ -194,19 +194,10 @@
         const db = getFirestore(app);
         let hiloActualId = null;
 
-        window.abrirModalCrear = function() {
-            document.getElementById('modalCrear').style.display = 'flex';
-        }
+        window.abrirModalCrear = function() { document.getElementById('modalCrear').style.display = 'flex'; }
+        window.cerrarModalCrear = function() { document.getElementById('modalCrear').style.display = 'none'; }
+        window.cerrarModalHilo = function() { document.getElementById('modalHilo').style.display = 'none'; }
 
-        window.cerrarModalCrear = function() {
-            document.getElementById('modalCrear').style.display = 'none';
-        }
-
-        window.cerrarModalHilo = function() {
-            document.getElementById('modalHilo').style.display = 'none';
-        }
-
-        // Carga rápida inicial de debates
         async function cargarDebates() {
             const lista = document.getElementById('lista-hilos');
             try {
@@ -234,7 +225,7 @@
                 });
             } catch (error) {
                 console.error("Error al cargar debates: ", error);
-                lista.innerHTML = '<p style="color: #888; text-align: center; font-size: 14px;">Error al conectar con el servidor.</p>';
+                lista.innerHTML = '<p style="color: #888; text-align: center; font-size: 14px;">Error de conexión con la base de datos.</p>';
             }
         }
 
@@ -256,13 +247,14 @@
                     texto: texto,
                     fecha: new Date().toISOString()
                 });
-                cargarDebates(); // Recarga inmediata al publicar
+                await cargarDebates(); // Actualiza la lista al instante
             } catch (error) {
                 console.error("Error al guardar debate: ", error);
+                alert("No se pudo guardar el debate. Verificá tu conexión.");
             }
         };
 
-        window.abrirHilo = async function(id, titulo, texto, autor, categoria) {
+        window.abrirHilo = function(id, titulo, texto, autor, categoria) {
             hiloActualId = id;
             document.getElementById('hiloIdActual').value = id;
             document.getElementById('hiloCatModal').innerText = categoria;
@@ -310,13 +302,12 @@
                     texto: texto,
                     fecha: new Date().toISOString()
                 });
-                cargarRespuestas(hiloActualId); // Recarga inmediata de respuestas
+                await cargarRespuestas(hiloActualId);
             } catch (error) {
                 console.error("Error al enviar respuesta: ", error);
             }
         };
 
-        // Ejecutar carga inicial al abrir la página
         cargarDebates();
     </script>
 </body>
