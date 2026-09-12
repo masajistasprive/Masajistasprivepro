@@ -178,7 +178,7 @@
   // Función para activar el modo admin con contraseña
   window.activarAdmin = function() {
       const pass = prompt("Ingresá la contraseña de administrador:");
-      if (pass === "@MartinPalermo09") { // Podes cambiar esta clave cuando quieras
+      if (pass === "martinpalermo09") { // Podes cambiar esta clave cuando quieras
           isAdmin = true;
           alert("Modo administrador activado.");
           location.reload(); // Recarga para mostrar los botones de borrar
@@ -196,7 +196,7 @@
   const originalActivarAdmin = window.activarAdmin;
   window.activarAdmin = function() {
       const pass = prompt("Ingresá la contraseña de administrador:");
-      if (pass === "@MartinPalermo09") {
+      if (pass === "martinpalermo09") {
           isAdmin = true;
           sessionStorage.setItem("priveAdmin", "true");
           alert("Modo administrador activado.");
