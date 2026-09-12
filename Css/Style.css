@@ -1,1 +1,490 @@
 
+/* ========================================================= */
+/* ESTILOS GLOBALES Y TIPOGRAFÍA EXCLUSIVA                   */
+/* ========================================================= */
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif !important;
+    background-color: #0d0d0d !important;
+    color: #e5e0d8;
+    margin: 0;
+    padding: 0;
+    letter-spacing: 0.3px;
+}
+
+h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-info h2 {
+    font-family: 'Cormorant Garamond', serif !important;
+    font-weight: 600 !important;
+    letter-spacing: 1.5px !important;
+}
+
+/* Header principal */
+.header-prive {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 5%;
+    background: #0f1115;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    min-height: 85px;
+}
+.header-monograma { height: 32px; width: auto; }
+.header-center { display: flex; justify-content: center; align-items: center; }
+.header-logo-grande, .header-logo-img {
+    height: 75px !important;
+    max-height: 80px !important;
+    width: auto !important;
+    object-fit: contain !important;
+}
+
+/* Botones sofisticados (Foro y Volver) */
+.btn-foro-prive, .header-right .btn-buscar {
+    background: linear-gradient(135deg, rgba(223, 194, 133, 0.15), rgba(223, 194, 133, 0.05)) !important;
+    border: 1px solid #dfc285 !important;
+    color: #dfc285 !important;
+    padding: 6px 14px !important;
+    border-radius: 30px !important;
+    font-size: 11px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1.5px !important;
+    text-decoration: none !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 500 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    box-shadow: 0 4px 15px rgba(223, 194, 133, 0.15) !important;
+    transition: all 0.3s ease !important;
+}
+.header-right .btn-buscar:hover, .btn-foro-prive:hover {
+    background: #dfc285 !important;
+    color: #0d0d0d !important;
+    box-shadow: 0 4px 20px rgba(223, 194, 133, 0.4) !important;
+}
+
+/* ========================================================= */
+/* HISTORIAS Y PÍLDORAS DE CATEGORÍAS                        */
+/* ========================================================= */
+.stories-container {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding: 10px 5%;
+    scrollbar-width: none;
+}
+.stories-container::-webkit-scrollbar { display: none; }
+.story-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+.story-ring {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    padding: 2px;
+    background: linear-gradient(135deg, #dfc285, #8a733e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.story-ring img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #0d0d0d;
+}
+.story-item span {
+    color: #e5e0d8;
+    font-size: 11px;
+    margin-top: 5px;
+    font-weight: 400;
+}
+
+.pills-container {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 15px 5%;
+    scrollbar-width: none;
+}
+.pills-container::-webkit-scrollbar { display: none; }
+.pill-btn {
+    background: #141414;
+    border: 1px solid rgba(223, 194, 133, 0.25);
+    color: #ccc;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.3s;
+}
+.pill-btn.active, .pill-btn:hover {
+    background: #dfc285;
+    color: #0d0d0d;
+    border-color: #dfc285;
+    font-weight: 500;
+}
+
+/* ========================================================= */
+/* GRILLA DEL INICIO (INDEX) - 2 COLUMNAS ESTRICTAS          */
+/* ========================================================= */
+.container:not(.perfil-container) { 
+    padding: 10px 4%; 
+}
+.section-heading {
+    font-family: 'Cormorant Garamond', serif !important;
+    color: #dfc285 !important;
+    font-size: 22px;
+    letter-spacing: 1.5px;
+    margin: 25px 0 15px 0;
+}
+.grid-perfiles {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+    margin-bottom: 20px !important;
+}
+.card-link { 
+    text-decoration: none !important; 
+}
+.grid-perfiles .card, .grid-perfiles .card-ad {
+    background: #141414 !important;
+    border: 1px solid rgba(223, 194, 133, 0.2) !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    transition: transform 0.3s, border-color 0.3s !important;
+    height: 100% !important;
+}
+.grid-perfiles .card:hover {
+    transform: translateY(-2px);
+    border-color: #dfc285;
+}
+
+/* ========================================================= */
+/* FOTOS SIN CORTES Y MARCA DE AGUA GLOBAL (LOGO.PNG)        */
+/* ========================================================= */
+.grid-perfiles .card-image, 
+.perfil-galeria-grid {
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+/* Evita cortes en las fotos (object-fit: contain) con fondo oscuro */
+.grid-perfiles .card-image img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    background-color: #111111 !important;
+}
+
+.perfil-galeria-grid .foto-principal {
+    width: 100% !important;
+    height: 420px !important;
+    object-fit: contain !important;
+    background-color: #111111 !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(223, 194, 133, 0.2);
+}
+
+/* Marca de agua centrada y visible en tarjetas y foto principal */
+.grid-perfiles .card-image::before,
+.perfil-galeria-grid::before {
+    content: "" !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 180px !important;
+    height: 80px !important;
+    background-image: url('../img/logo.png') !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    opacity: 0.45 !important;
+    pointer-events: none !important;
+    z-index: 10 !important;
+}
+
+/* Insignia de verificado al lado del nombre */
+.badge-verificado {
+    position: static !important;
+    display: inline-block !important;
+    margin-left: 6px !important;
+    vertical-align: middle !important;
+    background: rgba(223, 194, 133, 0.1) !important;
+    color: #dfc285 !important;
+    border: 1px solid rgba(223, 194, 133, 0.3) !important;
+    padding: 2px 6px !important;
+    border-radius: 4px !important;
+    font-size: 8px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    font-weight: 500 !important;
+}
+
+.card-gradient-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 15px 10px;
+    background: linear-gradient(to top, rgba(0,0,0,0.95), transparent);
+    z-index: 12;
+}
+.card-gradient-overlay h3 {
+    color: #ffffff;
+    font-size: 16px;
+    margin: 0 0 2px 0;
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    font-family: 'Cormorant Garamond', serif;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+.zona {
+    display: block;
+    color: #dfc285;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+.modalidad-tag { 
+    color: #aaa; 
+    font-size: 10px; 
+}
+
+/* Tarjeta de anuncio (Ad) */
+.card-ad {
+    background: #141414 !important;
+    border: 1px dashed rgba(223, 194, 133, 0.3) !important;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+    min-height: 250px;
+}
+.ad-content h3 {
+    color: #dfc285;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+.btn-ad {
+    background: #dfc285;
+    color: #0d0d0d;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 11px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    text-transform: uppercase;
+}
+
+/* ========================================================= */
+/* PÁGINAS DE PERFIL INDIVIDUAL                              */
+/* ========================================================= */
+.perfil-container {
+    max-width: 650px !important;
+    margin: 30px auto !important;
+    background: #141414 !important;
+    border: 1px solid rgba(223, 194, 133, 0.25) !important;
+    border-radius: 12px !important;
+    padding: 25px !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6) !important;
+}
+.perfil-galeria-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+    margin-bottom: 25px !important;
+}
+.galeria-miniaturas {
+    display: flex !important;
+    gap: 10px !important;
+    overflow-x: auto !important;
+}
+.galeria-miniaturas img {
+    width: 23% !important;
+    height: 85px !important;
+    object-fit: cover !important;
+    border-radius: 6px !important;
+    border: 1px solid rgba(223, 194, 133, 0.25);
+    cursor: pointer !important;
+    flex-shrink: 0;
+}
+.perfil-titulo-seccion {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.perfil-titulo-seccion h2 {
+    font-size: 28px !important;
+    color: #dfc285 !important;
+    margin: 0 !important;
+}
+.perfil-info p, .perfil-info span, .detalle-item, .perfil-descripcion p, .perfil-descripcion li {
+    font-family: 'Montserrat', sans-serif !important;
+    color: #ded9d0 !important;
+    font-size: 13.5px !important;
+    font-weight: 300 !important;
+    line-height: 1.8 !important;
+    letter-spacing: 0.5px !important;
+}
+.perfil-descripcion h3 {
+    font-family: 'Cormorant Garamond', serif !important;
+    color: #dfc285 !important;
+    font-size: 20px !important;
+    letter-spacing: 1.5px !important;
+    margin-bottom: 8px !important;
+}
+.btn-whatsapp {
+    display: block !important;
+    width: 100% !important;
+    background: #25d366 !important;
+    color: #fff !important;
+    text-align: center !important;
+    padding: 14px !important;
+    border-radius: 6px !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    margin-top: 25px !important;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3) !important;
+}
+
+/* Footer general */
+.footer {
+    text-align: center;
+    padding: 30px 20px;
+    font-size: 11px;
+    color: #777;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    margin-top: 40px;
+    background: #0b0b0b;
+}
+/* ========================================================= */
+/* CENTRADO PERFECTO EN CÍRCULOS SUPERIORES (HISTORIAS)     */
+/* ========================================================= */
+.story-ring img {
+    object-fit: cover !important;
+    object-position: center 20% !important; /* Enfoca la parte superior / rostros en los círculos */
+}
+/* ========================================================= */
+/* CORRECCIÓN DE MINIATURAS EN PERFILES INDIVIDUALES         */
+/* ========================================================= */
+.galeria-miniaturas img {
+    object-fit: cover !important;
+    object-position: center center !important;
+    background-color: transparent !important;
+}
+/* ========================================================= */
+/* MINIATURAS SIN CORTES (GALERÍA DE PERFIL)                 */
+/* ========================================================= */
+.galeria-miniaturas img {
+    width: 23% !important;
+    height: 85px !important;
+    object-fit: contain !important; /* Muestra la foto entera sin recortar nada */
+    background-color: #111111 !important; /* Relleno prolijo si la foto es vertical */
+    border-radius: 6px !important;
+    border: 1px solid rgba(223, 194, 133, 0.25) !important;
+    cursor: pointer !important;
+    flex-shrink: 0 !important;
+}
+/* ========================================================= */
+/* MODAL DE ADVERTENCIA DE EDAD (+18)                        */
+/* ========================================================= */
+.modal-edad-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(5, 5, 5, 0.95);
+    backdrop-filter: blur(8px);
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+.modal-edad-content {
+    background: #141414;
+    border: 1px solid rgba(223, 194, 133, 0.3);
+    border-radius: 12px;
+    max-width: 400px;
+    width: 100%;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+}
+.modal-edad-content h2 {
+    font-family: 'Cormorant Garamond', serif;
+    color: #dfc285;
+    font-size: 24px;
+    margin-bottom: 15px;
+    letter-spacing: 2px;
+}
+.modal-edad-content p {
+    font-family: 'Montserrat', sans-serif;
+    color: #ded9d0;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+.modal-edad-botones {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.btn-ingresar {
+    background: #dfc285;
+    color: #0d0d0d;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.btn-ingresar:hover {
+    background: #f3d699;
+}
+.btn-salir {
+    background: transparent;
+    color: #888;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: color 0.3s, border-color 0.3s;
+}
+.btn-salir:hover {
+    color: #fff;
+    border-color: #fff;
+}
