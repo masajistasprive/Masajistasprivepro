@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Foro - Masajistas Privé</title>
+    <!-- Firebase App (compat) y Firestore -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <style>
@@ -56,7 +57,6 @@
         .emoji-btn { background: none; border: none; font-size: 1.2em; cursor: pointer; padding: 2px 6px; width: auto; }
         .emoji-btn:hover { background: #333; border-radius: 3px; }
 
-        /* Botón de adjuntar archivo tipo red social */
         .file-upload-label { color: var(--champagne); cursor: pointer; font-size: 0.85em; display: flex; align-items: center; gap: 4px; background: #252525; padding: 4px 8px; border-radius: 4px; border: 1px solid #444; width: auto; }
         .file-upload-label:hover { background: #333; }
         input[type="file"] { display: none; }
@@ -65,7 +65,6 @@
         .reply-trigger { color: var(--champagne); cursor: pointer; font-size: 0.85em; background: none; border: none; padding: 0; text-decoration: underline; width: auto; }
         .reply-trigger:hover { color: var(--champagne-light); background: none; }
         
-        /* Tamaño razonable y prolijo para comentarios estilo IG */
         .msg-media { max-width: 140px; max-height: 140px; border-radius: 6px; margin-top: 6px; display: block; object-fit: cover; background: #000; border: 1px solid #444; }
         .post-media { max-width: 100%; max-height: 250px; border-radius: 6px; margin-top: 8px; display: block; object-fit: contain; background: #000; }
         
@@ -81,6 +80,7 @@
 <div class="container">
     <h1>Foro Masajistas Privé</h1>
 
+    <!-- VISTA 1: LISTA DE TEMAS -->
     <div id="listView">
         <div class="form-group">
             <h2>Crear nuevo tema</h2>
@@ -113,6 +113,7 @@
         <div id="postsContainer"></div>
     </div>
 
+    <!-- VISTA 2: HILO INDIVIDUAL -->
     <div id="threadView" style="display: none;">
         <button class="back-btn" onclick="volverAlListado()">← Volver al Foro</button>
         <div id="singlePostContainer"></div>
@@ -168,7 +169,6 @@
       input.focus();
   };
 
-  // Muestra el nombre del archivo seleccionado
   window.previewFile = function(inputId, nameId) {
       const input = document.getElementById(inputId);
       const nameSpan = document.getElementById(nameId);
@@ -179,10 +179,9 @@
       }
   };
 
-  // Comprime y convierte la imagen/GIF subida a Base64 para que entre perfecto en Firebase sin pagar hosting de archivos
   function convertImageToBase64(fileInputId, callback) {
       const fileInput = document.getElementById(fileInputId);
-      if (!fileInput.files || !fileInput.files[0]) {
+      if (!fileInput || !fileInput.files || !fileInput.files[0]) {
           callback(null);
           return;
       }
@@ -194,7 +193,7 @@
               const canvas = document.createElement('canvas');
               let width = img.width;
               let height = img.height;
-              const maxDim = 600; // Tamaño máximo razonable para comentarios
+              const maxDim = 500;
               
               if (width > height && width > maxDim) {
                   height *= maxDim / width;
@@ -208,17 +207,15 @@
               canvas.height = height;
               const ctx = canvas.getContext('2d');
               ctx.drawImage(img, 0, 0, width, height);
-              
-              // Devuelve la imagen optimizada
-              callback(canvas.toDataURL('image/jpeg', 0.75));
+              callback(canvas.toDataURL('image/jpeg', 0.7));
           };
           img.src = e.target.result;
       };
       reader.readAsDataURL(file);
   }
 
-  // Cargar lista principal de temas
-  db.collection("temas").orderBy("fecha", "desc").onSnapshot((snapshot) => {
+  // Cargar lista principal de temas (sin orderBy para evitar errores de índice en Firestore)
+  db.collection("temas").onSnapshot((snapshot) => {
       loadingDiv.style.display = 'none';
       postsContainer.innerHTML = "";
 
@@ -227,9 +224,20 @@
           return;
       }
 
+      let docs = [];
       snapshot.forEach((docSnap) => {
-          const data = docSnap.data();
-          const postId = docSnap.id;
+          docs.push({ id: docSnap.id, ...docSnap.data() });
+      });
+
+      // Ordenar por fecha de forma segura en memoria
+      docs.sort((a, b) => {
+          let timeA = a.fecha ? a.fecha.toMillis() : 0;
+          let timeB = b.fecha ? b.fecha.toMillis() : 0;
+          return timeB - timeA;
+      });
+
+      docs.forEach((data) => {
+          const postId = data.id;
           const fechaFormateada = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : 'Hace un momento';
           const likesCount = data.likes || 0;
           
@@ -239,16 +247,20 @@
           postElement.className = 'post';
           postElement.innerHTML = `
               <h3>${escapeHtml(data.titulo)}</h3>
-              <p>${escapeHtml(data.contenido)}</p>${mediaHtml}
-              <small>Publicado por <b>${escapeHtml(data.autor)}</b> el${fechaFormateada}</small>
+              <p>${escapeHtml(data.contenido)}</p>
+              ${mediaHtml}
+              <small>Publicado por <b>${escapeHtml(data.autor)}</b> el ${fechaFormateada}</small>
               
               <div class="actions-bar">
-                  <button class="like-btn" onclick="darLikePost('${postId}',${likesCount})">👍 Me gusta (<span id="likes-count-${postId}">${likesCount}</span>)</button>
+                  <button class="like-btn" onclick="darLikePost('${postId}', ${likesCount})">👍 Me gusta (<span id="likes-count-${postId}">${likesCount}</span>)</button>
                   <button class="view-btn" onclick="abrirHilo('${postId}')">Ver Debate / Responder</button>
               </div>
           `;
           postsContainer.appendChild(postElement);
       });
+  }, (error) => {
+      console.error("Error al cargar temas:", error);
+      loadingDiv.innerHTML = "Error al conectar con la base de datos.";
   });
 
   // Publicar tema principal
@@ -263,7 +275,7 @@
       }
 
       publicarBtn.disabled = true;
-      publicarBtn.textContent = "Procesando...";
+      publicarBtn.textContent = "Publicando...";
 
       convertImageToBase64('mainImageFile', (imageBase64) => {
           db.collection("temas").add({
@@ -285,13 +297,14 @@
           })
           .catch((error) => {
               console.error("Error al guardar el tema: ", error);
+              alert("Hubo un error al publicar.");
               publicarBtn.disabled = false;
               publicarBtn.textContent = "Publicar Tema";
           });
       });
   });
 
-  // Abrir vista de hilo individual
+  // Abrir hilo individual
   window.abrirHilo = function(postId) {
       currentPostId = postId;
       document.getElementById('listView').style.display = 'none';
@@ -307,41 +320,157 @@
               document.getElementById('singlePostContainer').innerHTML = `
                   <div class="post" style="border-left-color: var(--champagne); margin-bottom: 10px;">
                       <h2>${escapeHtml(data.titulo)}</h2>
-                      <p style="font-size: 1.1em;">${escapeHtml(data.contenido)}</p>${mediaHtml}
-                      <small>Publicado por <b>${escapeHtml(data.autor)}</b> el${fechaFormateada}</small>
+                      <p style="font-size: 1.1em;">${escapeHtml(data.contenido)}</p>
+                      ${mediaHtml}
+                      <small>Publicado por <b>${escapeHtml(data.autor)}</b> el ${fechaFormateada}</small>
                       <div class="actions-bar" style="margin-top: 15px;">
-                          <button class="like-btn" onclick="darLikePost('${postId}',${likesCount})">👍 Me gusta (<span id="likes-count-${postId}">${likesCount}</span>)</button>
+                          <button class="like-btn" onclick="darLikePost('${postId}', ${likesCount})">👍 Me gusta (<span id="likes-count-${postId}">${likesCount}</span>)</button>
                       </div>
                   </div>
               `;
           }
       });
 
-      db.collection("temas").doc(postId).collection("respuestas").orderBy("fecha", "asc")
-        .onSnapshot((snapshot) => {
-            const commentsContainer = document.getElementById('singleCommentsContainer');
-            commentsContainer.innerHTML = "";
+      db.collection("temas").doc(postId).collection("respuestas").onSnapshot((snapshot) => {
+          const commentsContainer = document.getElementById('singleCommentsContainer');
+          commentsContainer.innerHTML = "";
 
-            if (snapshot.empty) {
-                commentsContainer.innerHTML = "<p style='color: #777; font-size: 0.9em;'>No hay comentarios aún. ¡Sé el primero en responder!</p>";
-                return;
-            }
+          if (snapshot.empty) {
+              commentsContainer.innerHTML = "<p style='color: #777; font-size: 0.9em;'>No hay comentarios aún. ¡Sé el primero en responder!</p>";
+              return;
+          }
 
-            snapshot.forEach((replyDoc) => {
-                const rData = replyDoc.data();
-                const rId = replyDoc.id;
-                const rFecha = rData.fecha ? new Date(rData.fecha.toDate()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
-                const rLikes = rData.likes || 0;
-                let rMedia = rData.image ? `<img src="${rData.image}" class="msg-media" alt="Adjunto">` : '';
+          let replyDocs = [];
+          snapshot.forEach((replyDoc) => {
+              replyDocs.push({ id: replyDoc.id, ...replyDoc.data() });
+          });
 
-                const commentDiv = document.createElement('div');
-                commentDiv.className = 'comment-item';
-                commentDiv.innerHTML = `
-                    <div>
-                        <span class="comment-author">${escapeHtml(rData.autor)}:</span>
-                        <span>${escapeHtml(rData.contenido)}</span>${rMedia}
-                        <span class="comment-time">${rFecha}</span>
-                    </div>
-                    <div style="display: flex; gap: 15px; margin-top: 8px; align-items: center;">
-                        <button class="like-btn" style="font-size:
+          replyDocs.sort((a, b) => {
+              let timeA = a.fecha ? a.fecha.toMillis() : 0;
+              let timeB = b.fecha ? b.fecha.toMillis() : 0;
+              return timeA - timeB;
+          });
+
+          replyDocs.forEach((rData) => {
+              const rId = rData.id;
+              const rFecha = rData.fecha ? new Date(rData.fecha.toDate()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+              const rLikes = rData.likes || 0;
+              let rMedia = rData.image ? `<img src="${rData.image}" class="msg-media" alt="Adjunto">` : '';
+
+              const commentDiv = document.createElement('div');
+              commentDiv.className = 'comment-item';
+              commentDiv.innerHTML = `
+                  <div>
+                      <span class="comment-author">${escapeHtml(rData.autor)}:</span>
+                      <span>${escapeHtml(rData.contenido)}</span>
+                      ${rMedia}
+                      <span class="comment-time">${rFecha}</span>
+                  </div>
+                  <div style="display: flex; gap: 15px; margin-top: 8px; align-items: center;">
+                      <button class="like-btn" style="font-size: 0.8em;" onclick="darLikeComentario('${postId}', '${rId}', ${rLikes})">👍 <span id="r-likes-${rId}">${rLikes}</span></button>
+                      <button class="reply-trigger" onclick="toggleReplyBox('${rId}')">Responder</button>
+                  </div>
+                  <div id="reply-box-${rId}" class="reply-box">
+                      <input type="text" id="rAuthor-${rId}" placeholder="Nombre" style="font-size: 0.85em; padding: 6px;">
+                      <input type="text" id="rText-${rId}" placeholder="Responder a ${escapeHtml(rData.autor)}..." style="font-size: 0.85em; padding: 6px;">
+                      <label class="file-upload-label" style="font-size:0.8em; width:fit-content;">
+                          📷 Foto <input type="file" id="rFile-${rId}" accept="image/*" onchange="previewFile('rFile-${rId}', 'rFileName-${rId}')">
+                      </label>
+                      <span id="rFileName-${rId}" class="file-preview-text"></span>
+                      <button class="comment-btn" onclick="enviarRespuestaAComentario('${postId}', '${rId}', '${escapeHtml(rData.autor)}')">Enviar</button>
+                  </div>
+              `;
+              commentsContainer.appendChild(commentDiv);
+          });
+      });
+  };
+
+  window.volverAlListado = function() {
+      currentPostId = null;
+      document.getElementById('threadView').style.display = 'none';
+      document.getElementById('listView').style.display = 'block';
+  };
+
+  window.enviarComentarioActivo = function() {
+      if (!currentPostId) return;
+      const autor = document.getElementById('activeAuthor').value.trim();
+      const contenido = document.getElementById('activeCommentText').value.trim();
+
+      if (!autor || !contenido) {
+          alert("Ingresá tu nombre y un comentario.");
+          return;
+      }
+
+      convertImageToBase64('activeImageFile', (imageBase64) => {
+          db.collection("temas").doc(currentPostId).collection("respuestas").add({
+              autor: autor,
+              contenido: contenido,
+              image: imageBase64 || "",
+              likes: 0,
+              fecha: firebase.firestore.FieldValue.serverTimestamp()
+          })
+          .then(() => {
+              document.getElementById('activeCommentText').value = '';
+              document.getElementById('activeImageFile').value = '';
+              document.getElementById('activeFileName').textContent = '';
+          });
+      });
+  };
+
+  window.enviarRespuestaAComentario = function(postId, replyId, targetAuthor) {
+      const autor = document.getElementById(`rAuthor-${replyId}`).value.trim();
+      const contenido = document.getElementById(`rText-${replyId}`).value.trim();
+
+      if (!autor || !contenido) {
+          alert("Ingresá tu nombre y tu respuesta.");
+          return;
+      }
+
+      const fileInputId = `rFile-${replyId}`;
+      const fileInput = document.getElementById(fileInputId);
+      
+      const procesarEnvio = (imageBase64) => {
+          db.collection("temas").doc(postId).collection("respuestas").add({
+              autor: autor,
+              contenido: `@${targetAuthor} ${contenido}`,
+              image: imageBase64 || "",
+              likes: 0,
+              fecha: firebase.firestore.FieldValue.serverTimestamp()
+          })
+          .then(() => {
+              document.getElementById(`rText-${replyId}`).value = '';
+              fileInput.value = '';
+              document.getElementById(`reply-box-${replyId}`).style.display = 'none';
+          });
+      };
+
+      if (fileInput.files && fileInput.files[0]) {
+          convertImageToBase64(fileInputId, procesarEnvio);
+      } else {
+          procesarEnvio(null);
+      }
+  };
+
+  window.darLikePost = function(postId, currentLikes) {
+      db.collection("temas").doc(postId).update({ likes: currentLikes + 1 });
+  };
+
+  window.darLikeComentario = function(postId, replyId, currentLikes) {
+      db.collection("temas").doc(postId).collection("respuestas").doc(replyId).update({ likes: currentLikes + 1 });
+  };
+
+  window.toggleReplyBox = function(rId) {
+      const box = document.getElementById(`reply-box-${rId}`);
+      box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
+  };
+
+  function escapeHtml(text) {
+      if (!text) return '';
+      const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+      return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+  }
+</script>
+
+</body>
+</html>
 
