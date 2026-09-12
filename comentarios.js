@@ -216,7 +216,7 @@
         playerContainer.innerHTML = `
             <span style="color: #dfbc63; font-size: 0.75em; font-weight: 600;">🎧 Soundtrack</span>
             <audio id="priveAudio" controls loop style="height: 30px; width: 140px;">
-                <source src="/chill.mp3" type="audio/mpeg">
+                <source src="chill.mp3" type="audio/mpeg">
                 Tu navegador no soporta audio.
             </audio>
         `;
