@@ -22,16 +22,25 @@
         .post h3 { margin: 0 0 5px 0; color: #f3e5ab; }
         .post p { margin: 0 0 10px 0; word-break: break-word; color: #ddd; }
         .post small { color: #aaa; }
-        
-        /* Estilo de comentarios tipo Instagram/Facebook */
+
+        .actions-bar { display: flex; gap: 15px; margin-top: 10px; font-size: 0.85em; }
+        .like-btn { background: none; border: none; color: #d4af37; cursor: pointer; padding: 0; font-weight: bold; width: auto; display: flex; align-items: center; gap: 4px; }
+        .like-btn:hover { color: #f3e5ab; background: none; }
+
+        /* Estilo de comentarios e hilos */
         .comments-section { margin-top: 15px; border-top: 1px solid #333; padding-top: 12px; }
-        .comment-item { font-size: 0.9em; margin-bottom: 8px; color: #ccc; word-break: break-word; }
+        .comment-item { font-size: 0.9em; margin-bottom: 10px; color: #ccc; word-break: break-word; background: #1c1c1c; padding: 8px; border-radius: 4px; }
         .comment-author { color: #f3e5ab; font-weight: bold; margin-right: 6px; }
         .comment-time { font-size: 0.75em; color: #777; margin-left: 8px; }
         
-        .comment-form { margin-top: 12px; display: flex; gap: 6px; }
-        .comment-form input { font-size: 0.85em; padding: 7px 10px; background: #1a1a1a; border: 1px solid #444; }
-        .comment-btn { width: auto; padding: 7px 14px; font-size: 0.85em; background: #d4af37; color: #121212; white-space: nowrap; }
+        .comment-form { margin-top: 10px; display: flex; gap: 6px; }
+        .comment-form input { font-size: 0.85em; padding: 6px 10px; background: #1a1a1a; border: 1px solid #444; }
+        .comment-btn { width: auto; padding: 6px 12px; font-size: 0.85em; background: #d4af37; color: #121212; white-space: nowrap; }
+
+        /* Caja para responder a un comentario específico */
+        .reply-box { margin-top: 6px; display: none; gap: 5px; padding-left: 15px; border-left: 2px solid #d4af37; }
+        .reply-trigger { color: #c5a059; cursor: pointer; font-size: 0.8em; background: none; border: none; padding: 0; text-decoration: underline; width: auto; }
+        .reply-trigger:hover { color: #f3e5ab; background: none; }
     </style>
 </head>
 <body>
@@ -95,6 +104,7 @@
           const data = docSnap.data();
           const postId = docSnap.id;
           const fechaFormateada = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : 'Hace un momento';
+          const likesCount = data.likes || 0;
           
           const postElement = document.createElement('div');
           postElement.className = 'post';
@@ -103,18 +113,22 @@
               <p>${escapeHtml(data.contenido)}</p>
               <small>Publicado por <b>${escapeHtml(data.autor)}</b> el ${fechaFormateada}</small>
               
+              <div class="actions-bar">
+                  <button class="like-btn" onclick="darLikePost('${postId}', ${likesCount})">👍 Me gusta (<span id="likes-count-${postId}">${likesCount}</span>)</button>
+              </div>
+
               <div class="comments-section">
                   <div id="comments-${postId}"></div>
                   <div class="comment-form">
                       <input type="text" id="commAuthor-${postId}" placeholder="Nombre" style="flex: 1;">
-                      <input type="text" id="commText-${postId}" placeholder="Comentar..." style="flex: 2.5;">
+                      <input type="text" id="commText-${postId}" placeholder="Escribir comentario..." style="flex: 2.5;">
                       <button class="comment-btn" onclick="enviarComentario('${postId}')">Enviar</button>
                   </div>
               </div>
           `;
           postsContainer.appendChild(postElement);
 
-          // Cargar comentarios en tiempo real estilo feed
+          // Cargar comentarios en tiempo real
           db.collection("temas").doc(postId).collection("respuestas").orderBy("fecha", "asc")
             .onSnapshot((replySnapshot) => {
                 const commentsContainer = document.getElementById(`comments-${postId}`);
@@ -122,14 +136,27 @@
 
                 replySnapshot.forEach((replyDoc) => {
                     const rData = replyDoc.data();
+                    const rId = replyDoc.id;
                     const rFecha = rData.fecha ? new Date(rData.fecha.toDate()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+                    const rLikes = rData.likes || 0;
                     
                     const commentDiv = document.createElement('div');
                     commentDiv.className = 'comment-item';
                     commentDiv.innerHTML = `
-                        <span class="comment-author">${escapeHtml(rData.autor)}:</span>
-                        <span>${escapeHtml(rData.contenido)}</span>
-                        <span class="comment-time">${rFecha}</span>
+                        <div>
+                            <span class="comment-author">${escapeHtml(rData.autor)}:</span>
+                            <span>${escapeHtml(rData.contenido)}</span>
+                            <span class="comment-time">${rFecha}</span>
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 5px; align-items: center;">
+                            <button class="like-btn" style="font-size: 0.8em;" onclick="darLikeComentario('${postId}', '${rId}', ${rLikes})">👍 <span id="r-likes-${rId}">${rLikes}</span></button>
+                            <button class="reply-trigger" onclick="toggleReplyBox('${rId}')">Responder</button>
+                        </div>
+                        <div id="reply-box-${rId}" class="reply-box">
+                            <input type="text" id="rAuthor-${rId}" placeholder="Nombre" style="flex: 1;">
+                            <input type="text" id="rText-${rId}" placeholder="Responder a ${escapeHtml(rData.autor)}..." style="flex: 2;">
+                            <button class="comment-btn" onclick="enviarRespuestaAComentario('${postId}', '${rId}', '${escapeHtml(rData.autor)}')">Responder</button>
+                        </div>
                     `;
                     commentsContainer.appendChild(commentDiv);
                 });
@@ -158,6 +185,7 @@
           autor: autor,
           titulo: titulo,
           contenido: contenido,
+          likes: 0,
           fecha: firebase.firestore.FieldValue.serverTimestamp()
       })
       .then(() => {
@@ -174,7 +202,27 @@
       });
   });
 
-  // Enviar comentario rápido
+  // Dar Me Gusta a un tema
+  window.darLikePost = function(postId, currentLikes) {
+      db.collection("temas").doc(postId).update({
+          likes: currentLikes + 1
+      });
+  };
+
+  // Dar Me Gusta a un comentario
+  window.darLikeComentario = function(postId, replyId, currentLikes) {
+      db.collection("temas").doc(postId).collection("respuestas").doc(replyId).update({
+          likes: currentLikes + 1
+      });
+  };
+
+  // Mostrar u ocultar cajita de respuesta individual
+  window.toggleReplyBox = function(rId) {
+      const box = document.getElementById(`reply-box-${rId}`);
+      box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
+  };
+
+  // Enviar comentario general
   window.enviarComentario = function(postId) {
       const authorInput = document.getElementById(`commAuthor-${postId}`);
       const textInput = document.getElementById(`commText-${postId}`);
@@ -190,6 +238,7 @@
       db.collection("temas").doc(postId).collection("respuestas").add({
           autor: autor,
           contenido: contenido,
+          likes: 0,
           fecha: firebase.firestore.FieldValue.serverTimestamp()
       })
       .then(() => {
@@ -197,7 +246,36 @@
       })
       .catch((error) => {
           console.error("Error al enviar comentario:", error);
-          alert("No se pudo enviar el comentario.");
+      });
+  };
+
+  // Enviar respuesta directa a un comentario (mencionando al usuario)
+  window.enviarRespuestaAComentario = function(postId, replyId, targetAuthor) {
+      const authorInput = document.getElementById(`rAuthor-${replyId}`);
+      const textInput = document.getElementById(`rText-${replyId}`);
+      
+      const autor = authorInput.value.trim();
+      const contenido = textInput.value.trim();
+
+      if (!autor || !contenido) {
+          alert("Ingresá tu nombre y tu respuesta.");
+          return;
+      }
+
+      const contenidoConMencion = `@${targetAuthor} ${contenido}`;
+
+      db.collection("temas").doc(postId).collection("respuestas").add({
+          autor: autor,
+          contenido: contenidoConMencion,
+          likes: 0,
+          fecha: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .then(() => {
+          textInput.value = '';
+          document.getElementById(`reply-box-${replyId}`).style.display = 'none';
+      })
+      .catch((error) => {
+          console.error("Error al enviar respuesta:", error);
       });
   };
 
