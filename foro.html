@@ -10,27 +10,28 @@
     <style>
         body { font-family: Arial, sans-serif; background-color: #121212; color: #e0e0e0; margin: 0; padding: 20px; }
         .container { max-width: 800px; margin: 0 auto; background: #1a1a1a; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.7); border: 1px solid #333; }
-        h1, h2 { color: #d4af37; text-align: center; } /* Tono dorado principal */
+        h1, h2 { color: #d4af37; text-align: center; }
         .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; color: #d4af37; }
         input[type="text"], textarea { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #444; background: #252525; color: #fff; border-radius: 4px; }
         input[type="text"]:focus, textarea:focus { border-color: #d4af37; outline: none; }
         button { background: #d4af37; color: #121212; border: none; padding: 10px 15px; cursor: pointer; border-radius: 4px; font-weight: bold; width: 100%; transition: background 0.2s; }
         button:hover { background: #c5a059; }
         #loading { text-align: center; font-style: italic; color: #888; margin: 20px 0; }
+        
         .post { background: #222; padding: 15px; margin-bottom: 20px; border-radius: 6px; border-left: 4px solid #d4af37; }
         .post h3 { margin: 0 0 5px 0; color: #f3e5ab; }
         .post p { margin: 0 0 10px 0; word-break: break-word; color: #ddd; }
         .post small { color: #aaa; }
         
-        /* Estilos para las respuestas */
-        .replies-section { margin-top: 15px; border-top: 1px solid #333; padding-top: 10px; }
-        .reply-item { background: #181818; padding: 8px 12px; margin-top: 8px; border-radius: 4px; border-left: 2px solid #c5a059; font-size: 0.9em; }
-        .reply-item p { margin: 2px 0 5px 0; }
-        .reply-item small { color: #888; font-size: 0.8em; }
-        .reply-form { margin-top: 10px; display: flex; gap: 5px; }
-        .reply-form input { font-size: 0.9em; padding: 6px; }
-        .reply-btn { width: auto; padding: 6px 12px; font-size: 0.9em; background: #c5a059; color: #121212; }
+        /* Estilo de comentarios tipo Instagram/Facebook */
+        .comments-section { margin-top: 15px; border-top: 1px solid #333; padding-top: 12px; }
+        .comment-item { font-size: 0.9em; margin-bottom: 8px; color: #ccc; word-break: break-word; }
+        .comment-author { color: #f3e5ab; font-weight: bold; margin-right: 6px; }
+        .comment-time { font-size: 0.75em; color: #777; margin-left: 8px; }
+        
+        .comment-form { margin-top: 12px; display: flex; gap: 6px; }
+        .comment-form input { font-size: 0.85em; padding: 7px 10px; background: #1a1a1a; border: 1px solid #444; }
+        .comment-btn { width: auto; padding: 7px 14px; font-size: 0.85em; background: #d4af37; color: #121212; white-space: nowrap; }
     </style>
 </head>
 <body>
@@ -80,7 +81,7 @@
   const postsContainer = document.getElementById('postsContainer');
   const publicarBtn = document.getElementById('publicarBtn');
 
-  // Cargar temas y sus respuestas en tiempo real
+  // Cargar temas y comentarios en tiempo real
   db.collection("temas").orderBy("fecha", "desc").onSnapshot((snapshot) => {
       loadingDiv.style.display = 'none';
       postsContainer.innerHTML = "";
@@ -102,34 +103,35 @@
               <p>${escapeHtml(data.contenido)}</p>
               <small>Publicado por <b>${escapeHtml(data.autor)}</b> el ${fechaFormateada}</small>
               
-              <div class="replies-section">
-                  <div id="replies-${postId}"></div>
-                  <div class="reply-form">
-                      <input type="text" id="replyAuthor-${postId}" placeholder="Tu nombre" style="flex: 1;">
-                      <input type="text" id="replyText-${postId}" placeholder="Escribir respuesta..." style="flex: 2;">
-                      <button class="reply-btn" onclick="enviarRespuesta('${postId}')">Responder</button>
+              <div class="comments-section">
+                  <div id="comments-${postId}"></div>
+                  <div class="comment-form">
+                      <input type="text" id="commAuthor-${postId}" placeholder="Nombre" style="flex: 1;">
+                      <input type="text" id="commText-${postId}" placeholder="Comentar..." style="flex: 2.5;">
+                      <button class="comment-btn" onclick="enviarComentario('${postId}')">Enviar</button>
                   </div>
               </div>
           `;
           postsContainer.appendChild(postElement);
 
-          // Cargar respuestas de este post específico en tiempo real
+          // Cargar comentarios en tiempo real estilo feed
           db.collection("temas").doc(postId).collection("respuestas").orderBy("fecha", "asc")
             .onSnapshot((replySnapshot) => {
-                const repliesContainer = document.getElementById(`replies-${postId}`);
-                repliesContainer.innerHTML = "";
+                const commentsContainer = document.getElementById(`comments-${postId}`);
+                commentsContainer.innerHTML = "";
 
                 replySnapshot.forEach((replyDoc) => {
                     const rData = replyDoc.data();
-                    const rFecha = rData.fecha ? new Date(rData.fecha.toDate()).toLocaleString() : 'Hace un momento';
+                    const rFecha = rData.fecha ? new Date(rData.fecha.toDate()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
                     
-                    const replyDiv = document.createElement('div');
-                    replyDiv.className = 'reply-item';
-                    replyDiv.innerHTML = `
-                        <p>${escapeHtml(rData.contenido)}</p>
-                        <small><b>${escapeHtml(rData.autor)}</b> - ${rFecha}</small>
+                    const commentDiv = document.createElement('div');
+                    commentDiv.className = 'comment-item';
+                    commentDiv.innerHTML = `
+                        <span class="comment-author">${escapeHtml(rData.autor)}:</span>
+                        <span>${escapeHtml(rData.contenido)}</span>
+                        <span class="comment-time">${rFecha}</span>
                     `;
-                    repliesContainer.appendChild(replyDiv);
+                    commentsContainer.appendChild(commentDiv);
                 });
             });
       });
@@ -138,7 +140,7 @@
       loadingDiv.innerHTML = "Error al conectar con la base de datos.";
   });
 
-  // Publicar un nuevo tema principal
+  // Publicar tema principal
   publicarBtn.addEventListener('click', () => {
       const autor = document.getElementById('autorInput').value.trim();
       const titulo = document.getElementById('tituloInput').value.trim();
@@ -172,16 +174,16 @@
       });
   });
 
-  // Enviar respuesta a un post
-  window.enviarRespuesta = function(postId) {
-      const autorInput = document.getElementById(`replyAuthor-${postId}`);
-      const textInput = document.getElementById(`replyText-${postId}`);
+  // Enviar comentario rápido
+  window.enviarComentario = function(postId) {
+      const authorInput = document.getElementById(`commAuthor-${postId}`);
+      const textInput = document.getElementById(`commText-${postId}`);
       
-      const autor = autorInput.value.trim();
+      const autor = authorInput.value.trim();
       const contenido = textInput.value.trim();
 
       if (!autor || !contenido) {
-          alert("Ingresá tu nombre y el texto de la respuesta.");
+          alert("Ingresá tu nombre y el texto del comentario.");
           return;
       }
 
@@ -194,8 +196,8 @@
           textInput.value = '';
       })
       .catch((error) => {
-          console.error("Error al enviar respuesta:", error);
-          alert("No se pudo enviar la respuesta.");
+          console.error("Error al enviar comentario:", error);
+          alert("No se pudo enviar el comentario.");
       });
   };
 
