@@ -204,83 +204,89 @@
         }
     }
 })();
-// --- SOUNDTRACK PRIVÉ - DISEÑO ELEGANTE INTEGRADO ---
+// --- SOUNDTRACK PRIVÉ - DISEÑO GLAMOUR INTEGRADO ---
 (function() {
     window.addEventListener('DOMContentLoaded', () => {
-        if (document.getElementById('privePlayerContainer')) return;
-
-        const playerContainer = document.createElement('div');
-        playerContainer.id = 'privePlayerContainer';
-        playerContainer.style.cssText = `
-            position: fixed; 
-            bottom: 20px; 
-            left: 20px; 
-            z-index: 9999; 
-            background: linear-gradient(135deg, rgba(20, 20, 20, 0.95), rgba(10, 10, 10, 0.95)); 
-            border: 1px solid rgba(223, 188, 99, 0.4); 
-            border-radius: 50px; 
-            padding: 6px 14px 6px 12px; 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7); 
-            font-family: 'Cinzel', 'Times New Roman', serif;
-            backdrop-filter: blur(8px);
-        `;
+        // Buscar si hay un contenedor específico en la página principal o crear el flotante por defecto
+        let targetContainer = document.getElementById('seccion-reproductor-prive');
         
-        playerContainer.innerHTML = `
-            <audio id="priveAudio" loop preload="auto">
-                <source src="/masajistasprive/Masajistasprivepro/chill.mp3" type="audio/mpeg">
-            </audio>
-            
-            <button id="privePlayBtn" style="
-                background: linear-gradient(135deg, #dfbc63, #b89742); 
-                color: #121212; 
-                border: none; 
-                border-radius: 50%; 
-                width: 30px; 
-                height: 30px; 
-                cursor: pointer; 
-                display: flex; 
-                align-items: center; 
-                justify-content: center; 
-                font-size: 0.85em; 
-                box-shadow: 0 2px 8px rgba(223, 188, 99, 0.3);
-            ">▶</button>
-            
-            <div style="display: flex; flex-direction: column;">
-                <span style="color: #dfbc63; font-size: 0.7em; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">Soundtrack</span>
-                <span id="priveStatus" style="color: #888; font-size: 0.6em; letter-spacing: 0.5px;">Pausado</span>
+        const playerHTML = `
+            <div style="background: linear-gradient(145deg, #161616, #0d0d0d); border: 1px solid rgba(223, 188, 99, 0.4); border-radius: 16px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); font-family: 'Cinzel', 'Times New Roman', serif; text-align: center; position: relative; overflow: hidden;">
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, #dfbc63, transparent);"></div>
+                
+                <span style="color: #dfbc63; font-size: 0.85em; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; display: block; margin-bottom: 6px;">Soundtrack Privé</span>
+                <span style="color: #999; font-size: 0.72em; display: block; margin-bottom: 15px; letter-spacing: 0.5px;">Atmósfera sonora exclusiva para acompañar tu navegación</span>
+                
+                <audio id="priveAudioGlobal" loop preload="auto">
+                    <source src="/masajistasprive/Masajistasprivepro/chill.mp3" type="audio/mpeg">
+                </audio>
+
+                <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
+                    <button id="priveCustomPlayBtn" style="
+                        background: linear-gradient(135deg, #dfbc63, #b89742); 
+                        color: #121212; 
+                        border: none; 
+                        border-radius: 50px; 
+                        padding: 10px 24px; 
+                        cursor: pointer; 
+                        font-weight: bold; 
+                        font-size: 0.85em; 
+                        letter-spacing: 1px;
+                        display: flex; 
+                        align-items: center; 
+                        gap: 8px;
+                        box-shadow: 0 4px 15px rgba(223, 188, 99, 0.3);
+                        transition: all 0.3s ease;
+                    ">
+                        <span id="priveIcon" style="font-size: 1.1em;">▶</span> 
+                        <span id="priveBtnText">REPRODUCIR</span>
+                    </button>
+                </div>
+                
+                <div id="priveStatusText" style="color: #dfbc63; font-size: 0.65em; margin-top: 12px; letter-spacing: 1px; text-transform: uppercase; opacity: 0.8;">Sistema en espera</div>
             </div>
         `;
-        
-        document.body.appendChild(playerContainer);
 
-        const audio = document.getElementById('priveAudio');
-        const btn = document.getElementById('privePlayBtn');
-        const status = document.getElementById('priveStatus');
+        if (targetContainer) {
+            targetContainer.innerHTML = playerHTML;
+        } else if (!document.getElementById('privePlayerContainer')) {
+            // Si no hay contenedor específico, crea la cápsula flotante con el mismo diseño glamour
+            const playerContainer = document.createElement('div');
+            playerContainer.id = 'privePlayerContainer';
+            playerContainer.style.cssText = "position: fixed; bottom: 20px; left: 20px; z-index: 9999;";
+            playerContainer.innerHTML = playerHTML;
+            document.body.appendChild(playerContainer);
+        }
 
-        btn.addEventListener('click', () => {
-            if (audio.paused) {
-                audio.play().then(() => {
-                    btn.textContent = "⏸";
-                    status.textContent = "Reproduciendo";
-                    status.style.color = "#dfbc63";
-                }).catch(e => {
-                    console.log("Error de reproducción:", e);
-                    audio.load();
+        const audio = document.getElementById('priveAudioGlobal');
+        const playBtn = document.getElementById('priveCustomPlayBtn');
+        const icon = document.getElementById('priveIcon');
+        const btnText = document.getElementById('priveBtnText');
+        const statusText = document.getElementById('priveStatusText');
+
+        if (playBtn && audio) {
+            playBtn.addEventListener('click', () => {
+                if (audio.paused) {
                     audio.play().then(() => {
-                        btn.textContent = "⏸";
-                        status.textContent = "Reproduciendo";
-                        status.style.color = "#dfbc63";
+                        icon.textContent = "⏸";
+                        btnText.textContent = "PAUSAR";
+                        statusText.textContent = "Reproduciendo ambiente";
+                    }).catch(e => {
+                        console.log("Error al reproducir:", e);
+                        audio.load();
+                        audio.play().then(() => {
+                            icon.textContent = "⏸";
+                            btnText.textContent = "PAUSAR";
+                            statusText.textContent = "Reproduciendo ambiente";
+                        });
                     });
-                });
-            } else {
-                audio.pause();
-                btn.textContent = "▶";
-                status.textContent = "Pausado";
-                status.style.color = "#888";
-            }
-        });
+                } else {
+                    audio.pause();
+                    icon.textContent = "▶";
+                    btnText.textContent = "REPRODUCIR";
+                    statusText.textContent = "En pausa";
+                }
+            });
+        }
     });
 })();
