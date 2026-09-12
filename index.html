@@ -519,11 +519,7 @@
         btnMayor.addEventListener('click', () => {
             sessionStorage.setItem('edadVerificada', 'true');
             modalEdad.style.display = 'none';
-        });
-    }
-    // --- SOUNDTRACK PRIVÉ - MOTOR GLOBAL DIRECTO ---
-    (function() {
-        if (window.priveEngineLoaded) return;
+
         window.priveEngineLoaded = true;
 
         let bgAudio = document.getElementById('priveGlobalAudioEngine');
