@@ -204,23 +204,83 @@
         }
     }
 })();
-// --- AUTO-INYECCIÓN DE SOUNDTRACK PRIVÉ EN TODO EL SITIO ---
+// --- SOUNDTRACK PRIVÉ - DISEÑO ELEGANTE INTEGRADO ---
 (function() {
     window.addEventListener('DOMContentLoaded', () => {
         if (document.getElementById('privePlayerContainer')) return;
 
         const playerContainer = document.createElement('div');
         playerContainer.id = 'privePlayerContainer';
-        playerContainer.style.cssText = "position: fixed; bottom: 20px; left: 20px; z-index: 9999; background: rgba(18, 18, 18, 0.95); backdrop-filter: blur(6px); border: 1px solid #dfbc63; border-radius: 20px; padding: 8px 12px; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.6); font-family: sans-serif;";
+        playerContainer.style.cssText = `
+            position: fixed; 
+            bottom: 20px; 
+            left: 20px; 
+            z-index: 9999; 
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.95), rgba(10, 10, 10, 0.95)); 
+            border: 1px solid rgba(223, 188, 99, 0.4); 
+            border-radius: 50px; 
+            padding: 6px 14px 6px 12px; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7); 
+            font-family: 'Cinzel', 'Times New Roman', serif;
+            backdrop-filter: blur(8px);
+        `;
         
         playerContainer.innerHTML = `
-            <span style="color: #dfbc63; font-size: 0.75em; font-weight: 600;">🎧 Soundtrack</span>
-            <audio id="priveAudio" controls loop style="height: 30px; width: 140px;">
-                <source src="chill.mp3" type="audio/mpeg">
-                Tu navegador no soporta audio.
+            <audio id="priveAudio" loop preload="auto">
+                <source src="/masajistasprive/Masajistasprivepro/chill.mp3" type="audio/mpeg">
             </audio>
+            
+            <button id="privePlayBtn" style="
+                background: linear-gradient(135deg, #dfbc63, #b89742); 
+                color: #121212; 
+                border: none; 
+                border-radius: 50%; 
+                width: 30px; 
+                height: 30px; 
+                cursor: pointer; 
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+                font-size: 0.85em; 
+                box-shadow: 0 2px 8px rgba(223, 188, 99, 0.3);
+            ">▶</button>
+            
+            <div style="display: flex; flex-direction: column;">
+                <span style="color: #dfbc63; font-size: 0.7em; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">Soundtrack</span>
+                <span id="priveStatus" style="color: #888; font-size: 0.6em; letter-spacing: 0.5px;">Pausado</span>
+            </div>
         `;
         
         document.body.appendChild(playerContainer);
+
+        const audio = document.getElementById('priveAudio');
+        const btn = document.getElementById('privePlayBtn');
+        const status = document.getElementById('priveStatus');
+
+        btn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play().then(() => {
+                    btn.textContent = "⏸";
+                    status.textContent = "Reproduciendo";
+                    status.style.color = "#dfbc63";
+                }).catch(e => {
+                    console.log("Error de reproducción:", e);
+                    audio.load();
+                    audio.play().then(() => {
+                        btn.textContent = "⏸";
+                        status.textContent = "Reproduciendo";
+                        status.style.color = "#dfbc63";
+                    });
+                });
+            } else {
+                audio.pause();
+                btn.textContent = "▶";
+                status.textContent = "Pausado";
+                status.style.color = "#888";
+            }
+        });
     });
 })();
