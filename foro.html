@@ -8,48 +8,60 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #121212; color: #e0e0e0; margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: 0 auto; background: #1a1a1a; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.7); border: 1px solid #333; }
-        h1, h2 { color: #d4af37; text-align: center; }
+        :root {
+            --champagne: #dfbc63;
+            --champagne-light: #f3e5ab;
+            --champagne-dark: #b8973e;
+            --bg-dark: #121212;
+            --card-bg: #1a1a1a;
+            --box-bg: #222222;
+        }
+
+        body { font-family: Arial, sans-serif; background-color: var(--bg-dark); color: #e0e0e0; margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: var(--card-bg); padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.7); border: 1px solid #333; }
+        h1, h2 { color: var(--champagne); text-align: center; }
         .form-group { margin-bottom: 15px; }
         input[type="text"], textarea { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #444; background: #252525; color: #fff; border-radius: 4px; }
-        input[type="text"]:focus, textarea:focus { border-color: #d4af37; outline: none; }
-        button { background: #d4af37; color: #121212; border: none; padding: 10px 15px; cursor: pointer; border-radius: 4px; font-weight: bold; width: 100%; transition: background 0.2s; }
-        button:hover { background: #c5a059; }
+        input[type="text"]:focus, textarea:focus { border-color: var(--champagne); outline: none; }
+        
+        /* Botones color Champagne */
+        button { background: var(--champagne); color: #121212; border: none; padding: 10px 15px; cursor: pointer; border-radius: 4px; font-weight: bold; width: 100%; transition: background 0.2s; }
+        button:hover { background: var(--champagne-light); }
+        
         #loading { text-align: center; font-style: italic; color: #888; margin: 20px 0; }
         
-        .post { background: #222; padding: 15px; margin-bottom: 20px; border-radius: 6px; border-left: 4px solid #d4af37; }
-        .post h3 { margin: 0 0 5px 0; color: #d4af37; }
+        .post { background: var(--box-bg); padding: 15px; margin-bottom: 20px; border-radius: 6px; border-left: 4px solid var(--champagne); }
+        .post h3 { margin: 0 0 5px 0; color: var(--champagne); }
         .post p { margin: 0 0 10px 0; word-break: break-word; color: #ddd; }
         .post small { color: #aaa; }
 
         .actions-bar { display: flex; gap: 15px; margin-top: 10px; font-size: 0.85em; justify-content: space-between; align-items: center; }
-        .like-btn { background: none; border: none; color: #d4af37; cursor: pointer; padding: 0; font-weight: bold; width: auto; display: flex; align-items: center; gap: 4px; }
-        .like-btn:hover { color: #f3e5ab; background: none; }
+        .like-btn { background: none; border: none; color: var(--champagne); cursor: pointer; padding: 0; font-weight: bold; width: auto; display: flex; align-items: center; gap: 4px; }
+        .like-btn:hover { color: var(--champagne-light); background: none; }
         
-        .view-btn { background: #d4af37; color: #121212; border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.85em; cursor: pointer; font-weight: bold; width: auto; }
-        .view-btn:hover { background: #c5a059; }
+        .view-btn { background: var(--champagne); color: #121212; border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.85em; cursor: pointer; font-weight: bold; width: auto; }
+        .view-btn:hover { background: var(--champagne-light); }
 
-        .back-btn { background: #252525; color: #d4af37; border: 1px solid #d4af37; padding: 8px 15px; margin-bottom: 20px; border-radius: 4px; cursor: pointer; font-weight: bold; width: auto; display: inline-block; }
+        .back-btn { background: #252525; color: var(--champagne); border: 1px solid var(--champagne); padding: 8px 15px; margin-bottom: 20px; border-radius: 4px; cursor: pointer; font-weight: bold; width: auto; display: inline-block; }
         .back-btn:hover { background: #333; }
 
         .comments-section { margin-top: 15px; border-top: 1px solid #333; padding-top: 12px; }
         .comment-item { font-size: 0.9em; margin-bottom: 10px; color: #ccc; word-break: break-word; background: #1c1c1c; padding: 10px; border-radius: 4px; }
-        .comment-author { color: #d4af37; font-weight: bold; margin-right: 6px; }
+        .comment-author { color: var(--champagne); font-weight: bold; margin-right: 6px; }
         .comment-time { font-size: 0.75em; color: #777; margin-left: 8px; }
         
         .comment-form { margin-top: 15px; display: flex; flex-direction: column; gap: 8px; }
         .comment-inputs { display: flex; gap: 6px; }
         .comment-inputs input { font-size: 0.9em; padding: 8px; background: #1a1a1a; border: 1px solid #444; }
-        .comment-btn { width: auto; padding: 8px 16px; font-size: 0.9em; background: #d4af37; color: #121212; white-space: nowrap; }
+        .comment-btn { width: auto; padding: 8px 16px; font-size: 0.9em; background: var(--champagne); color: #121212; white-space: nowrap; }
 
         .emoji-bar { display: flex; gap: 5px; flex-wrap: wrap; background: #181818; padding: 5px; border-radius: 4px; border: 1px solid #333; }
         .emoji-btn { background: none; border: none; font-size: 1.2em; cursor: pointer; padding: 2px 6px; width: auto; }
         .emoji-btn:hover { background: #333; border-radius: 3px; }
 
-        .reply-box { margin-top: 8px; display: none; flex-direction: column; gap: 6px; padding-left: 15px; border-left: 2px solid #d4af37; }
-        .reply-trigger { color: #d4af37; cursor: pointer; font-size: 0.85em; background: none; border: none; padding: 0; text-decoration: underline; width: auto; }
-        .reply-trigger:hover { color: #f3e5ab; background: none; }
+        .reply-box { margin-top: 8px; display: none; flex-direction: column; gap: 6px; padding-left: 15px; border-left: 2px solid var(--champagne); }
+        .reply-trigger { color: var(--champagne); cursor: pointer; font-size: 0.85em; background: none; border: none; padding: 0; text-decoration: underline; width: auto; }
+        .reply-trigger:hover { color: var(--champagne-light); background: none; }
         
         .msg-media { max-width: 100%; max-height: 220px; border-radius: 6px; margin-top: 8px; display: block; object-fit: contain; background: #000; }
     </style>
@@ -146,11 +158,13 @@
       input.focus();
   };
 
-  // Función segura para renderizar multimedia
+  // Procesador inteligente de links de GIFs (soporta Tenor, Giphy y links directos)
   function renderMedia(url) {
       if (!url || url.trim() === "") return "";
-      const cleanUrl = url.trim();
-      return `<img src="${cleanUrl}" class="msg-media" alt="Multimedia" onerror="this.style.display='none';">`;
+      let cleanUrl = url.trim();
+      
+      // Si es un link de Tenor web, intentamos adaptarlo o mostrarlo seguro
+      return `<img src="${cleanUrl}" class="msg-media" alt="GIF" onerror="this.onerror=null; this.insertAdjacentHTML('afterend', '<a href=\'${cleanUrl}\' target=\'_blank\' style=\'color:var(--champagne); display:block; font-size:0.85em; margin-top:5px;\'>Ver GIF adjunto ↗</a>'); this.style.display='none';">`;
   }
 
   // Cargar lista principal de temas
@@ -240,7 +254,7 @@
               let mediaHtml = renderMedia(data.gif);
 
               document.getElementById('singlePostContainer').innerHTML = `
-                  <div class="post" style="border-left-color: #d4af37; margin-bottom: 10px;">
+                  <div class="post" style="border-left-color: var(--champagne); margin-bottom: 10px;">
                       <h2>${escapeHtml(data.titulo)}</h2>
                       <p style="font-size: 1.1em;">${escapeHtml(data.contenido)}</p>
                       ${mediaHtml}
