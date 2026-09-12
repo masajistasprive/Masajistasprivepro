@@ -43,11 +43,9 @@
         .foro-header { text-align: center; margin-bottom: 40px; }
         .foro-header h1 { color: #dfc285; font-size: 32px; font-weight: 600; text-transform: uppercase; margin-bottom: 10px; }
         .foro-header p { color: #aaa; font-size: 14px; font-weight: 300; }
-        .thread-card { background: #141414; border: 1px solid rgba(223, 194, 133, 0.25); border-radius: 6px; padding: 22px; margin-bottom: 20px; transition: 0.3s; }
-        .thread-card:hover { border-color: #dfc285; background: #181818; }
+        .thread-card { background: #141414; border: 1px solid rgba(223, 194, 133, 0.25); border-radius: 6px; padding: 22px; margin-bottom: 20px; }
         .thread-category { color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; display: block; margin-bottom: 6px; }
-        .thread-title { color: #ffffff; font-size: 22px; font-weight: 600; text-decoration: none; display: block; margin-bottom: 10px; cursor: pointer; }
-        .thread-title:hover { color: #dfc285; }
+        .thread-title { color: #ffffff; font-size: 22px; font-weight: 600; text-decoration: none; display: block; margin-bottom: 10px; }
         .thread-snippet { color: #bcbbb5; font-size: 14px; font-weight: 300; margin-bottom: 15px; }
         .thread-meta { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #777; border-top: 1px solid rgba(255, 255, 255, 0.06); padding-top: 12px; font-weight: 300; }
         
@@ -77,8 +75,6 @@
         .modal-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
         .btn-cancelar { background: transparent; color: #aaa; border: 1px solid #444; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 13px; }
         .btn-enviar { background: #dfc285; color: #0d0d0d; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 13px; text-transform: uppercase; }
-        .respuesta-card { background: #1a1a1a; border-left: 3px solid #dfc285; padding: 12px 15px; border-radius: 4px; margin-bottom: 10px; font-size: 13px; color: #ccc; }
-        .respuesta-meta { font-size: 11px; color: #888; margin-bottom: 5px; display: flex; justify-content: space-between; }
         footer { text-align: center; padding: 30px 20px; color: #666; font-size: 12px; border-top: 1px solid rgba(255,255,255,0.06); margin-top: 50px; font-weight: 300; }
     </style>
 </head>
@@ -99,26 +95,26 @@
         </div>
 
         <div style="text-align: right;">
-            <button class="btn-nuevo" onclick="abrirModalCrear()">+ Iniciar Debate</button>
+            <button class="btn-nuevo" onclick="abrirModal()">+ Iniciar Debate</button>
         </div>
 
         <div id="lista-hilos">
-            <p style="color: #888; text-align: center; font-size: 14px;">Conectando con la comunidad...</p>
+            <p style="color: #888; text-align: center; font-size: 14px;">Cargando debates...</p>
         </div>
     </div>
 
-    <!-- Modal: Crear Debate (Sin onsubmit en form, el botón maneja la acción directa) -->
-    <div class="modal-overlay" id="modalCrear">
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalDebate">
         <div class="modal-content">
             <h3>Iniciar Nuevo Debate</h3>
-            <div id="formDebate">
+            <div>
                 <div class="form-group">
                     <label>Tu Seudónimo / Nombre</label>
-                    <input type="text" id="autorDebate" class="form-control" placeholder="Ej: Visitante_Discreto" required>
+                    <input type="text" id="inputAutor" class="form-control" placeholder="Ej: Visitante_Discreto" required>
                 </div>
                 <div class="form-group">
                     <label>Categoría</label>
-                    <select id="catDebate" class="form-control">
+                    <select id="inputCat" class="form-control">
                         <option value="Recomendaciones & Zonas">Recomendaciones & Zonas</option>
                         <option value="Bienestar & Técnicas">Bienestar & Técnicas</option>
                         <option value="General">General</option>
@@ -126,48 +122,15 @@
                 </div>
                 <div class="form-group">
                     <label>Título del Debate</label>
-                    <input type="text" id="tituloDebate" class="form-control" placeholder="¿De qué querés hablar?" required>
+                    <input type="text" id="inputTitulo" class="form-control" placeholder="¿De qué querés hablar?" required>
                 </div>
                 <div class="form-group">
                     <label>Mensaje o Descripción</label>
-                    <textarea id="textoDebate" class="form-control" rows="4" placeholder="Escribí tu consulta o reflexión..." required></textarea>
+                    <textarea id="inputTexto" class="form-control" rows="4" placeholder="Escribí tu consulta o reflexión..." required></textarea>
                 </div>
                 <div class="modal-buttons">
-                    <button type="button" class="btn-cancelar" onclick="cerrarModalCrear()">Cancelar</button>
-                    <button type="button" class="btn-enviar" onclick="publicarDebateDirecto()">Publicar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="modalHilo">
-        <div class="modal-content">
-            <span id="hiloCatModal" class="thread-category"></span>
-            <h3 id="hiloTituloModal" style="text-align: left; margin-bottom: 10px;"></h3>
-            <p id="hiloTextoModal" style="color: #ccc; font-size: 14px; margin-bottom: 15px;"></p>
-            <div style="font-size: 12px; color: #888; margin-bottom: 25px; border-bottom: 1px solid #333; padding-bottom: 10px;">
-                Iniciado por: <span id="hiloAutorModal" style="color: #dfc285;"></span>
-            </div>
-
-            <h4 style="color: #dfc285; font-size: 16px; margin-bottom: 15px;">Respuestas de la Comunidad</h4>
-            
-            <div id="contenedorRespuestas" style="margin-bottom: 20px;">
-                <p style="color: #666; font-size: 13px;">Cargando respuestas...</p>
-            </div>
-
-            <div style="border-top: 1px solid #333; padding-top: 15px;">
-                <input type="hidden" id="hiloIdActual">
-                <div class="form-group">
-                    <label>Tu Seudónimo</label>
-                    <input type="text" id="autorRespuesta" class="form-control" placeholder="Tu apodo" required>
-                </div>
-                <div class="form-group">
-                    <label>Tu Respuesta</label>
-                    <textarea id="textoRespuesta" class="form-control" rows="3" placeholder="Escribí tu comentario..." required></textarea>
-                </div>
-                <div class="modal-buttons">
-                    <button type="button" class="btn-cancelar" onclick="cerrarModalHilo()">Cerrar</button>
-                    <button type="button" class="btn-enviar" onclick="enviarRespuestaDirecta()">Comentar</button>
+                    <button type="button" class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
+                    <button type="button" class="btn-enviar" onclick="guardarDebate()">Publicar</button>
                 </div>
             </div>
         </div>
@@ -193,48 +156,52 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        let hiloActualId = null;
 
-        window.abrirModalCrear = function() { document.getElementById('modalCrear').style.display = 'flex'; }
-        window.cerrarModalCrear = function() { document.getElementById('modalCrear').style.display = 'none'; }
-        window.cerrarModalHilo = function() { document.getElementById('modalHilo').style.display = 'none'; }
+        window.abrirModal = function() {
+            document.getElementById('modalDebate').style.display = 'flex';
+        }
 
-        async function cargarDebates() {
-            const lista = document.getElementById('lista-hilos');
+        window.cerrarModal = function() {
+            document.getElementById('modalDebate').style.display = 'none';
+        }
+
+        async function cargarForo() {
+            const contenedor = document.getElementById('lista-hilos');
             try {
                 const querySnapshot = await getDocs(collection(db, "foro_debates"));
-                lista.innerHTML = '';
+                contenedor.innerHTML = '';
+                
                 if (querySnapshot.empty) {
-                    lista.innerHTML = '<p style="color: #888; text-align: center; font-size: 14px;">Aún no hay debates creados. ¡Sé el primero en iniciar uno!</p>';
+                    contenedor.innerHTML = '<p style="color: #888; text-align: center; font-size: 14px;">Aún no hay debates creados. ¡Sé el primero en iniciar uno!</p>';
                     return;
                 }
-                querySnapshot.forEach((docH) => {
-                    const h = docH.data();
-                    const idH = docH.id;
-                    const tarjeta = document.createElement('div');
-                    tarjeta.className = 'thread-card';
-                    tarjeta.innerHTML = `
-                        <span class="thread-category">${h.categoria || 'General'}</span>
-                        <a class="thread-title" onclick="abrirHilo('${idH}', '${(h.titulo || '').replace(/'/g, "\\'")}', '${(h.texto || '').replace(/'/g, "\\'")}', '${h.autor || 'Anónimo'}', '${h.categoria || 'General'}')">${h.titulo}</a>
-                        <p class="thread-snippet">${h.texto}</p>
+
+                querySnapshot.forEach((doc) => {
+                    const item = doc.data();
+                    const card = document.createElement('div');
+                    card.className = 'thread-card';
+                    card.innerHTML = `
+                        <span class="thread-category">${item.categoria || 'General'}</span>
+                        <a class="thread-title">${item.titulo}</a>
+                        <p class="thread-snippet">${item.texto}</p>
                         <div class="thread-meta">
-                            <span class="thread-author">Por: ${h.autor || 'Anónimo'}</span>
+                            <span class="thread-author">Por: ${item.autor}</span>
                             <span>Comunidad Activa</span>
                         </div>
                     `;
-                    lista.appendChild(tarjeta);
+                    contenedor.appendChild(card);
                 });
-            } catch (error) {
-                console.error("Error al cargar debates: ", error);
-                lista.innerHTML = '<p style="color: #888; text-align: center; font-size: 14px;">Error de conexión con Firebase.</p>';
+            } catch (err) {
+                console.error("Error al cargar:", err);
+                contenedor.innerHTML = '<p style="color: #ff6b6b; text-align: center; font-size: 14px;">Error al conectar con la base de datos.</p>';
             }
         }
 
-        window.publicarDebateDirecto = async function() {
-            const autor = document.getElementById('autorDebate').value.trim();
-            const categoria = document.getElementById('catDebate').value;
-            const titulo = document.getElementById('tituloDebate').value.trim();
-            const texto = document.getElementById('textoDebate').value.trim();
+        window.guardarDebate = async function() {
+            const autor = document.getElementById('inputAutor').value.trim();
+            const categoria = document.getElementById('inputCat').value;
+            const titulo = document.getElementById('inputTitulo').value.trim();
+            const texto = document.getElementById('inputTexto').value.trim();
 
             if (!autor || !titulo || !texto) {
                 alert("Por favor completá todos los campos.");
@@ -247,79 +214,22 @@
                     categoria: categoria,
                     titulo: titulo,
                     texto: texto,
-                    fechaStr: new Date().toLocaleString()
+                    fecha: new Date().toISOString()
                 });
 
-                document.getElementById('autorDebate').value = '';
-                document.getElementById('tituloDebate').value = '';
-                document.getElementById('textoDebate').value = '';
-                document.getElementById('modalCrear').style.display = 'none';
+                document.getElementById('inputAutor').value = '';
+                document.getElementById('inputTitulo').value = '';
+                document.getElementById('inputTexto').value = '';
+                cerrarModal();
                 
-                cargarDebates();
-            } catch (error) {
-                console.error("Error al guardar debate: ", error);
-                alert("Error al guardar: " + error.message);
-            }
-        };
-
-        window.abrirHilo = function(id, titulo, texto, autor, categoria) {
-            hiloActualId = id;
-            document.getElementById('hiloIdActual').value = id;
-            document.getElementById('hiloCatModal').innerText = categoria;
-            document.getElementById('hiloTituloModal').innerText = titulo;
-            document.getElementById('hiloTextoModal').innerText = texto;
-            document.getElementById('hiloAutorModal').innerText = autor;
-            document.getElementById('modalHilo').style.display = 'flex';
-            cargarRespuestas(id);
-        }
-
-        async function cargarRespuestas(hiloId) {
-            const contenedor = document.getElementById('contenedorRespuestas');
-            contenedor.innerHTML = '<p style="color: #666; font-size: 13px;">Cargando respuestas...</p>';
-            try {
-                const querySnapshot = await getDocs(collection(db, "foro_debates", hiloId, "respuestas"));
-                contenedor.innerHTML = '';
-                if (querySnapshot.empty) {
-                    contenedor.innerHTML = '<p style="color: #666; font-size: 13px; font-style: italic;">Aún no hay comentarios. Sé el primero en responder.</p>';
-                    return;
-                }
-                querySnapshot.forEach((docR) => {
-                    const r = docR.data();
-                    const div = document.createElement('div');
-                    div.className = 'respuesta-card';
-                    div.innerHTML = `<div class="respuesta-meta"><span style="color: #dfc285; font-weight: bold;">${r.autor || 'Anónimo'}</span><span>${r.fechaStr || 'Hace un momento'}</span></div><div>${r.texto}</div>`;
-                    contenedor.appendChild(div);
-                });
-            } catch (error) {
-                console.error("Error al cargar respuestas: ", error);
+                cargarForo();
+            } catch (err) {
+                console.error("Error al guardar:", err);
+                alert("No se pudo guardar el debate.");
             }
         }
 
-        window.enviarRespuestaDirecta = async function() {
-            const autor = document.getElementById('autorRespuesta').value.trim();
-            const texto = document.getElementById('textoRespuesta').value.trim();
-            if (!hiloActualId || !autor || !texto) {
-                alert("Completá tu seudónimo y tu respuesta.");
-                return;
-            }
-
-            try {
-                await addDoc(collection(db, "foro_debates", hiloActualId, "respuestas"), {
-                    autor: autor,
-                    texto: texto,
-                    fechaStr: new Date().toLocaleString()
-                });
-                document.getElementById('autorRespuesta').value = '';
-                document.getElementById('textoRespuesta').value = '';
-                cargarRespuestas(hiloActualId);
-            } catch (error) {
-                console.error("Error al enviar respuesta: ", error);
-                alert("Error al enviar respuesta: " + error.message);
-            }
-        };
-
-        // Carga inicial
-        cargarDebates();
+        cargarForo();
     </script>
 </body>
 </html>
