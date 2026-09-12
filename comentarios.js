@@ -216,7 +216,7 @@
         playerContainer.innerHTML = `
             <span style="color: #dfbc63; font-size: 0.75em; font-weight: 600;">🎧 Chill</span>
             <audio id="priveAudio" controls loop style="height: 30px; width: 140px;">
-                <source src="https://actions.google.com/sounds/v1/ambiences/rain_heavy.ogg" type="audio/ogg">
+                <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf756.mp3?filename=deep-ambient-chill-11082.mp3" type="audio/mpeg">
                 Tu navegador no soporta audio.
             </audio>
         `;
