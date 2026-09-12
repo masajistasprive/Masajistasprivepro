@@ -204,13 +204,12 @@
         }
     }
 })();
-// --- SOUNDTRACK PRIVÉ - GLAMOUR CON MEMORIA PERSISTENTE ---
+// --- SOUNDTRACK PRIVÉ - MIKRO MÍNIMALISTA Y SUTIL ---
 (function() {
-    // Evitar múltiples instancias del script en la misma página
     if (window.priveSoundtrackLoaded) return;
     window.priveSoundtrackLoaded = true;
 
-    // Crear o recuperar el elemento de audio globalmente en el DOM para persistir la sesión
+    // Crear el elemento de audio persistente global
     let audio = document.getElementById('priveAudioGlobal');
     if (!audio) {
         audio = document.createElement('audio');
@@ -221,122 +220,97 @@
         document.body.appendChild(audio);
     }
 
-    // Restaurar el tiempo y estado previo desde localStorage al cargar
     window.addEventListener('DOMContentLoaded', () => {
-        let savedTime = localStorage.getItem('priveAudioTime');
-        let isPlaying = localStorage.getItem('priveAudioPlaying') === 'true';
+        // Si ya existe el mini widget, no duplicarlo
+        if (document.getElementById('priveMicroPlayer')) return;
 
-        if (savedTime) {
-            audio.currentTime = parseFloat(savedTime);
+        // Crear una pastilla flotante súper discreta y elegante
+        const widget = document.createElement('div');
+        widget.id = 'priveMicroPlayer';
+        widget.style.cssText = `
+            position: fixed;
+            bottom: 15px;
+            left: 15px;
+            z-index: 99999;
+            background: rgba(15, 15, 15, 0.9);
+            border: 1px solid rgba(223, 188, 99, 0.3);
+            border-radius: 30px;
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            font-family: 'Cinzel', 'Times New Roman', serif;
+        `;
+
+        widget.innerHTML = `
+            <button id="priveMiniBtn" style="
+                background: #dfbc63;
+                color: #111;
+                border: none;
+                border-radius: 50%;
+                width: 24px;
+                height: 24px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.75em;
+                font-weight: bold;
+                padding: 0;
+            "><span id="priveMiniIcon" style="margin-left: 1px;">▶</span></button>
+            <span style="color: #dfbc63; font-size: 0.68em; letter-spacing: 1px; text-transform: uppercase; font-weight: 500;">Soundtrack</span>
+        `;
+
+        document.body.appendChild(widget);
+
+        const btn = document.getElementById('priveMiniBtn');
+        const icon = document.getElementById('priveMiniIcon');
+
+        // Sincronizar estado visual inicial
+        if (!audio.paused) {
+            icon.textContent = "⏸";
         }
 
-        if (isPlaying) {
-            audio.play().then(() => {
-                updateUIState(true);
-            }).catch(e => {
-                console.log("Autoplay bloqueado por políticas del navegador:", e);
-                updateUIState(false);
-            });
-        }
-
-        // Actualizar la interfaz en la página actual
-        buildPlayerInterface();
+        btn.onclick = () => {
+            if (audio.paused) {
+                audio.play().then(() => {
+                    icon.textContent = "⏸";
+                    localStorage.setItem('priveAudioPlaying', 'true');
+                }).catch(e => {
+                    console.log("Error al reproducir:", e);
+                    audio.load();
+                    audio.play().then(() => {
+                        icon.textContent = "⏸";
+                        localStorage.setItem('priveAudioPlaying', 'true');
+                    });
+                });
+            } else {
+                audio.pause();
+                icon.textContent = "▶";
+                localStorage.setItem('priveAudioPlaying', 'false');
+            }
+        };
     });
 
-    // Guardar el tiempo actual continuamente mientras se reproduce
+    // Restaurar reproducción si venía sonando de otra página
+    window.addEventListener('load', () => {
+        if (localStorage.getItem('priveAudioPlaying') === 'true' && audio.paused) {
+            audio.play().catch(e => console.log("Autoplay prevenido por navegador"));
+        }
+    });
+
+    // Guardar segundo actual continuamente
     setInterval(() => {
         if (!audio.paused) {
             localStorage.setItem('priveAudioTime', audio.currentTime);
         }
     }, 1000);
 
-    function buildPlayerInterface() {
-        let targetContainer = document.getElementById('seccion-reproductor-prive');
-        
-        const playerHTML = `
-            <div style="background: linear-gradient(145deg, #161616, #0d0d0d); border: 1px solid rgba(223, 188, 99, 0.4); border-radius: 16px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); font-family: 'Cinzel', 'Times New Roman', serif; text-align: center; position: relative; overflow: hidden; margin: 10px 0;">
-                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, #dfbc63, transparent);"></div>
-                
-                <span style="color: #dfbc63; font-size: 0.85em; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; display: block; margin-bottom: 6px;">Soundtrack Privé</span>
-                <span style="color: #999; font-size: 0.72em; display: block; margin-bottom: 15px; letter-spacing: 0.5px;">Atmósfera sonora exclusiva para acompañar tu navegación</span>
-
-                <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
-                    <button id="priveCustomPlayBtn" style="
-                        background: linear-gradient(135deg, #dfbc63, #b89742); 
-                        color: #121212; 
-                        border: none; 
-                        border-radius: 50px; 
-                        padding: 10px 24px; 
-                        cursor: pointer; 
-                        font-weight: bold; 
-                        font-size: 0.85em; 
-                        letter-spacing: 1px;
-                        display: flex; 
-                        align-items: center; 
-                        gap: 8px;
-                        box-shadow: 0 4px 15px rgba(223, 188, 99, 0.3);
-                        transition: all 0.3s ease;
-                    ">
-                        <span id="priveIcon" style="font-size: 1.1em;">${audio.paused ? '▶' : '⏸'}</span> 
-                        <span id="priveBtnText">${audio.paused ? 'REPRODUCIR' : 'PAUSAR'}</span>
-                    </button>
-                </div>
-                
-                <div id="priveStatusText" style="color: ${audio.paused ? '#dfbc63' : '#dfbc63'}; font-size: 0.65em; margin-top: 12px; letter-spacing: 1px; text-transform: uppercase; opacity: 0.8;">
-                    ${audio.paused ? 'Sistema en espera' : 'Reproduciendo ambiente'}
-                </div>
-            </div>
-        `;
-
-        if (targetContainer) {
-            targetContainer.innerHTML = playerHTML;
-        } else if (!document.getElementById('privePlayerContainer')) {
-            const playerContainer = document.createElement('div');
-            playerContainer.id = 'privePlayerContainer';
-            playerContainer.style.cssText = "position: fixed; bottom: 20px; left: 20px; z-index: 9999;";
-            playerContainer.innerHTML = playerHTML;
-            document.body.appendChild(playerContainer);
-        }
-
-        const playBtn = document.getElementById('priveCustomPlayBtn');
-        if (playBtn) {
-            playBtn.onclick = () => {
-                if (audio.paused) {
-                    audio.play().then(() => {
-                        localStorage.setItem('priveAudioPlaying', 'true');
-                        updateUIState(true);
-                    }).catch(e => {
-                        console.log("Error al reproducir:", e);
-                        audio.load();
-                        audio.play().then(() => {
-                            localStorage.setItem('priveAudioPlaying', 'true');
-                            updateUIState(true);
-                        });
-                    });
-                } else {
-                    audio.pause();
-                    localStorage.setItem('priveAudioPlaying', 'false');
-                    updateUIState(false);
-                }
-            };
-        }
-    }
-
-    function updateUIState(isPlaying) {
-        const icon = document.getElementById('priveIcon');
-        const btnText = document.getElementById('priveBtnText');
-        const statusText = document.getElementById('priveStatusText');
-
-        if (icon && btnText && statusText) {
-            if (isPlaying) {
-                icon.textContent = "⏸";
-                btnText.textContent = "PAUSAR";
-                statusText.textContent = "Reproduciendo ambiente";
-            } else {
-                icon.textContent = "▶";
-                btnText.textContent = "REPRODUCIR";
-                statusText.textContent = "En pausa";
-            }
-        }
+    // Recuperar tiempo al iniciar
+    let savedTime = localStorage.getItem('priveAudioTime');
+    if (savedTime) {
+        audio.currentTime = parseFloat(savedTime);
     }
 })();
