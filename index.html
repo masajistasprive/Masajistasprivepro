@@ -388,37 +388,27 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- SECCIÓN: CUADERNO PRIVÉ (BLOG INTERACTIVO) -->
+    <!-- SECCIÓN: CUADERNO PRIVÉ (ROTADOR DIARIO DE ARTÍCULOS) -->
     <!-- ========================================== -->
     <section style="max-width: 900px; margin: 40px auto; padding: 0 20px;">
         <div style="text-align: center; margin-bottom: 35px;">
             <span style="color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 3px; font-weight: 500; display: block; margin-bottom: 8px;">Editorial & Bienestar</span>
             <h2 style="font-size: 30px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; color: #dfc285; font-family: 'Cormorant Garamond', serif;">Cuaderno Privé</h2>
-            <p style="color: #999; font-size: 14px; font-weight: 300;">Artículos, reflexiones y secretos para elevar tu experiencia de relajación.</p>
+            <p style="color: #999; font-size: 14px; font-weight: 300;">Crónicas urbanas, secretos de gabinete y el arte del relax absoluto en CABA.</p>
         </div>
 
-        <div style="display: grid; gap: 20px;">
-            <div class="blog-card" onclick="abrirArticulo('El poder del tacto: Cómo aliviar las contracturas por estrés laboral', 'El ritmo de vida actual y las horas frente a la pantalla generan una acumulación silenciosa de tensión en la zona cervical y la espalda alta. Un buen masaje descontracturante no es solo un mimo, sino una necesidad fisiológica para restablecer la circulación y liberar endorfinas que reducen el cortisol acumulado por el estrés diario.')">
-                <span style="color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; display: block; margin-bottom: 6px;">Bienestar & Salud</span>
-                <h3 style="color: #ffffff; font-size: 22px; font-weight: 600; margin-bottom: 10px; font-family: 'Cormorant Garamond', serif;">El poder del tacto: Cómo aliviar las contracturas por estrés laboral</h3>
-                <p style="color: #bcbbb5; font-size: 14px; font-weight: 300; margin-bottom: 15px;">Descubrí por qué la acumulación de tensión en la espalda afecta tu rendimiento diario y cómo un buen masaje descontracturante redefine tu energía.</p>
-                <span style="color: #dfc285; font-size: 13px; font-weight: 600; letter-spacing: 1px;">Leer artículo completo &rarr;</span>
-            </div>
-
-            <div class="blog-card" onclick="abrirArticulo('Aromas que transforman: El arte de preparar la mente antes de la sesión', 'La aromaterapia actúa directamente sobre el sistema límbico, la zona del cerebro encargada de las emociones y la memoria. Combinar notas de lavanda, sándalo o azahar antes de ingresar al gabinete potencia de forma exponencial el estado de desconexión profunda y paz mental.')">
-                <span style="color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; display: block; margin-bottom: 6px;">Aromaterapia & Entorno</span>
-                <h3 style="color: #ffffff; font-size: 22px; font-weight: 600; margin-bottom: 10px; font-family: 'Cormorant Garamond', serif;">Aromas que transforman: El arte de preparar la mente antes de la sesión</h3>
-                <p style="color: #bcbbb5; font-size: 14px; font-weight: 300; margin-bottom: 15px;">Pequeños hábitos de desconexión digital y ambientación consciente que podés aplicar antes de encontrarte con tu masajista.</p>
-                <span style="color: #dfc285; font-size: 13px; font-weight: 600; letter-spacing: 1px;">Leer artículo completo &rarr;</span>
-            </div>
+        <!-- Contenedor donde el script inyectará los 2 artículos del día -->
+        <div id="cuaderno-rotativo" style="display: grid; gap: 20px;">
+            <!-- Se carga dinámicamente -->
         </div>
     </section>
 
     <!-- Modal de Lectura para el Blog -->
     <div id="modalArticulo" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); justify-content: center; align-items: center; z-index: 9999; padding: 20px;">
-        <div style="background: #141414; border: 1px solid #dfc285; border-radius: 8px; width: 100%; max-width: 600px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+        <div style="background: #141414; border: 1px solid #dfc285; border-radius: 8px; width: 100%; max-width: 650px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); max-height: 85vh; overflow-y: auto;">
+            <span id="categoriaArticuloModal" style="color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; display: block; margin-bottom: 6px;"></span>
             <h3 id="tituloArticuloModal" style="color: #dfc285; font-size: 24px; margin-bottom: 15px; font-family: 'Cormorant Garamond', serif;"></h3>
-            <p id="textoArticuloModal" style="color: #ccc; font-size: 14px; line-height: 1.8; margin-bottom: 25px; font-weight: 300; font-family: 'Montserrat', sans-serif;"></p>
+            <p id="textoArticuloModal" style="color: #ccc; font-size: 14px; line-height: 1.8; margin-bottom: 25px; font-weight: 300; font-family: 'Montserrat', sans-serif; white-space: pre-line;"></p>
             <div style="text-align: right;">
                 <button type="button" onclick="cerrarArticulo()" style="background: #dfc285; color: #0d0d0d; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-weight: 600; text-transform: uppercase; font-family: 'Montserrat', sans-serif;">Cerrar</button>
             </div>
@@ -449,8 +439,74 @@
         </div>
     </footer>
 
-    <!-- Scripts Generales -->
+    <!-- Scripts Generales y Rotador Diario de Artículos -->
     <script>
+        // Banco de Artículos Exclusivos (Escapados correctamente para evitar errores de sintaxis)
+        const bancoArticulos = [
+            {
+                categoria: "Bienestar & CABA",
+                titulo: "El ritual post-oficina: Cómo desconectar del microcentro en diez minutos",
+                extracto: "El ruido de la City porteña, el subte colapsado y las pantallas cargan de tensión invisible la zona cervical. Claves para entender por qué una pausa programada en gabinete cambia por completo la noche.",
+                cuerpo: "El ritmo de Buenos Aires tiene una exigencia particular. Salir de una oficina en Microcentro o Tribunales a las 18:00 horas implica someter al cuerpo a un nivel de cortisol elevado de forma crónica.\n\nLa desconexión no ocurre sola al llegar a casa; el cerebro sigue procesando pendientes. Ingresar a un espacio climatizado, con iluminación tenue, aromas de sándalo y música ambiental adecuada permite un reseteo físico inmediato. El tacto profesional sobre los puntos gatillo no es un lujo estético, es una necesidad fisiológica para evitar que el estrés se convierta en migrañas o contracturas crónicas."
+            },
+            {
+                categoria: "Técnicas & Conexión",
+                titulo: "Más allá del masaje: La importancia de la atmósfera y la confianza previa",
+                extracto: "Un buen encuentro de relax se construye desde el primer mensaje de coordinación. Qué factores determinan que una sesión pase de ser correcta a ser absolutamente inolvidable.",
+                cuerpo: "La experiencia de un masaje de alto nivel depende en un 50% de la técnica manual y en el otro 50% del entorno y la sintonía entre el profesional y quien busca el espacio.\n\nLa discreción, la pulcritud absoluta del gabinete y la claridad en los tiempos de la sesión generan un marco de seguridad mental indispensable. Cuando el cliente logra apagar el teléfono y entregarse por completo a los sentidos, la circulación se reactiva y la liberación de endorfinas se multiplica exponencialmente."
+            },
+            {
+                categoria: "Zonas & Tendencias",
+                titulo: "Tribunales vs. Palermo: ¿Cómo eligen los porteños su espacio ideal de relax?",
+                extracto: "Un recorrido por las zonas más buscadas de CABA para encontrar refugio en medio de la rutina semanal. Perfiles, discreción y accesibilidad.",
+                cuerpo: "Mientras que los gabinetes ubicados en la zona de Tribunales y Congreso concentran un público corporativo que busca escapar de la locura laboral del horario bancario, los espacios en Palermo o Caballito apuntan a una dinámica más residencial y de fin de semana.\n\nLo interesante de este mapa urbano es cómo cada profesional adaptó su espacio privado para ofrecer una atmósfera de búnker privado, ajeno al pulso acelerado de la avenida Corrientes o Santa Fe. La elección de la zona ya no responde solo a la cercanía, sino al tipo de desconexión que se busca."
+            },
+            {
+                categoria: "Cultura & Sensaciones",
+                titulo: "El arte del tacto consciente: Por qué el estrés moderno se combate con contacto físico",
+                extracto: "Vivimos hiperconectados digitalmente pero con una sequedad de contacto real alarmante. La ciencia detrás de la descontracturación profunda.",
+                cuerpo: "La 'hambre de piel' es un fenómeno psicológico documentado en las grandes urbes: pasamos horas tocando pantallas de vidrio pero semanas enteras sin recibir un estímulo táctil neutro y profesional.\n\nLas sesiones de masajes sensuales y terapéuticos cumplen un rol doble en la sociedad actual: por un lado alientan el alivio físico de las cargas acumuladas, y por el otro brindan un espacio de pausa donde el cuerpo vuelve a habitarse a través de la temperatura, la presión exacta de las manos y el ritmo pausado de la respiración."
+            },
+            {
+                categoria: "Secretos de Gabinete",
+                titulo: "Aromas y aceites esenciales: Qué notas elegir según tu estado de ánimo",
+                extracto: "Lavanda, almizcle, sándalo o cítricos. Cómo el olfato prepara el terreno neuronal antes de que comience la sesión de masajes.",
+                cuerpo: "El sistema límbico es la puerta de entrada más rápida a las emociones en nuestro cerebro. Un entorno que huele a lavanda o almizcle le comunica instantáneamente al sistema nervioso que el peligro terminó y que comenzó el momento de bajar las defensas.\n\nElegir el aceite adecuado no es una cuestión menor: las notas amaderadas aportan profundidad y cable a tierra, ideales para cortar con la ansiedad mental, mientras que los florales sutiles potencian la relajación liviana. La combinación de estos detalles marca la diferencia entre un masaje común y una vivencia premium."
+            }
+        ];
+
+        // Función para rotar artículos automáticamente según el día del año
+        function cargarArticulosDelDia() {
+            const hoy = new Date();
+            const diaDelAnio = Math.floor((hoy - new Date(hoy.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+            
+            const index1 = diaDelAnio % bancoArticulos.length;
+            const index2 = (diaDelAnio + 2) % bancoArticulos.length;
+
+            const art1 = bancoArticulos[index1];
+            const art2 = bancoArticulos[index2];
+
+            const contenedor = document.getElementById('cuaderno-rotativo');
+            contenedor.innerHTML = `
+                <div class="blog-card" onclick="abrirArticulo('${art1.titulo.replace(/'/g, "\\'")}', '${art1.cuerpo.replace(/'/g, "\\'").replace(/\n/g, '\\n')}', '${art1.categoria}')">
+                    <span style="color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; display: block; margin-bottom: 6px;">${art1.categoria}</span>
+                    <h3 style="color: #ffffff; font-size: 22px; font-weight: 600; margin-bottom: 10px; font-family: 'Cormorant Garamond', serif;">${art1.titulo}</h3>
+                    <p style="color: #bcbbb5; font-size: 14px; font-weight: 300; margin-bottom: 15px;">${art1.extracto}</p>
+                    <span style="color: #dfc285; font-size: 13px; font-weight: 600; letter-spacing: 1px;">Leer artículo completo &rarr;</span>
+                </div>
+
+                <div class="blog-card" onclick="abrirArticulo('${art2.titulo.replace(/'/g, "\\'")}', '${art2.cuerpo.replace(/'/g, "\\'").replace(/\n/g, '\\n')}', '${art2.categoria}')">
+                    <span style="color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; display: block; margin-bottom: 6px;">${art2.categoria}</span>
+                    <h3 style="color: #ffffff; font-size: 22px; font-weight: 600; margin-bottom: 10px; font-family: 'Cormorant Garamond', serif;">${art2.titulo}</h3>
+                    <p style="color: #bcbbb5; font-size: 14px; font-weight: 300; margin-bottom: 15px;">${art2.extracto}</p>
+                    <span style="color: #dfc285; font-size: 13px; font-weight: 600; letter-spacing: 1px;">Leer artículo completo &rarr;</span>
+                </div>
+            `;
+        }
+
+        window.addEventListener('DOMContentLoaded', cargarArticulosDelDia);
+
+        // Control de Píldoras de Categorías
         const pills = document.querySelectorAll('.pill-btn');
         const cards = document.querySelectorAll('.card-link');
         pills.forEach(pill => {
@@ -468,7 +524,9 @@
             });
         });
 
-        function abrirArticulo(titulo, texto) {
+        // Funciones del Modal de Artículos
+        function abrirArticulo(titulo, texto, categoria) {
+            document.getElementById('categoriaArticuloModal').innerText = categoria;
             document.getElementById('tituloArticuloModal').innerText = titulo;
             document.getElementById('textoArticuloModal').innerText = texto;
             document.getElementById('modalArticulo').style.display = 'flex';
@@ -478,6 +536,7 @@
             document.getElementById('modalArticulo').style.display = 'none';
         }
 
+        // Cotización del Dólar en Tiempo Real
         async function obtenerDolar() {
             try {
                 const response = await fetch('https://dolarapi.com/v1/dolares/blue');
@@ -491,6 +550,7 @@
         }
         obtenerDolar();
 
+        // Verificación de Edad (+18)
         const modalEdad = document.getElementById('modal-edad');
         const btnMayor = document.getElementById('btn-mayor');
 
