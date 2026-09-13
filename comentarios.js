@@ -33,7 +33,7 @@
     document.head.appendChild(styleAnim);
 
     window.addEventListener('DOMContentLoaded', () => {
-        // 1. Visor de pantalla completa (Lightbox) para fotos con marca de agua integrada
+        // 1. Visor de pantalla completa (Lightbox) para fotos con marca de agua centrada
         const fotosGaleria = document.querySelectorAll('.perfil-galeria-grid img, .foto-principal, .galeria-miniaturas img');
         
         if (!document.getElementById('priveLightbox')) {
@@ -43,7 +43,7 @@
                 display: none;
                 position: fixed;
                 top: 0; left: 0; width: 100%; height: 100%;
-                background: rgba(0, 0, 0, 0.95);
+                background: rgba(0, 0, 0, 0.96);
                 z-index: 999999;
                 justify-content: center;
                 align-items: center;
@@ -51,9 +51,9 @@
                 cursor: zoom-out;
             `;
             lightbox.innerHTML = `
-                <div style="position: relative; display: inline-block; max-width: 90%; max-height: 85vh;">
-                    <img id="priveLightboxImg" style="display: block; max-width: 100%; max-height: 85vh; border-radius: 8px; border: 1px solid rgba(223,194,133,0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.9); object-fit: contain;">
-                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 160px; height: 70px; background-image: url('img/logo.png'); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: 0.4; pointer-events: none;"></div>
+                <div style="position: relative; display: flex; justify-content: center; align-items: center; max-width: 92vw; max-height: 88vh;">
+                    <img id="priveLightboxImg" style="display: block; max-width: 92vw; max-height: 88vh; border-radius: 8px; border: 1px solid rgba(223,194,133,0.4); box-shadow: 0 15px 40px rgba(0,0,0,0.95); object-fit: contain;">
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 180px; height: 80px; background-image: url('img/logo.png'); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: 0.45; pointer-events: none; z-index: 1000000;"></div>
                 </div>
             `;
             document.body.appendChild(lightbox);
