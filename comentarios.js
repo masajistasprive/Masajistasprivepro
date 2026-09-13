@@ -12,9 +12,9 @@
     });
 })();
 
-// comentarios.js - Motor Dinámico Global, Visor con Marca de Agua, Comentarios y Botón WhatsApp Elegante Titilante
+// comentarios.js - Motor Dinámico Global, Visor con Marca de Agua Forzada, Comentarios y Clip de Adjunto
 (function() {
-    // Inyectar animación CSS para el efecto titilante del botón de WhatsApp
+    // Inyectar animación CSS para el efecto titilante del botón de WhatsApp y estilos del Visor
     const styleAnim = document.createElement('style');
     styleAnim.innerHTML = `
         @keyframes privePulseGlow {
@@ -29,31 +29,31 @@
         .btn-whatsapp-titilante:hover {
             transform: scale(1.04) !important;
         }
+        #priveLightbox {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.96) !important;
+            z-index: 9999999 !important;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(12px);
+            cursor: zoom-out;
+        }
     `;
     document.head.appendChild(styleAnim);
 
     window.addEventListener('DOMContentLoaded', () => {
-        // 1. Visor de pantalla completa (Lightbox) para fotos con marca de agua centrada
+        // 1. Visor de pantalla completa (Lightbox) con Marca de Agua superpuesta fija
         const fotosGaleria = document.querySelectorAll('.perfil-galeria-grid img, .foto-principal, .galeria-miniaturas img');
         
         if (!document.getElementById('priveLightbox')) {
             const lightbox = document.createElement('div');
             lightbox.id = 'priveLightbox';
-            lightbox.style.cssText = `
-                display: none;
-                position: fixed;
-                top: 0; left: 0; width: 100%; height: 100%;
-                background: rgba(0, 0, 0, 0.96);
-                z-index: 999999;
-                justify-content: center;
-                align-items: center;
-                backdrop-filter: blur(10px);
-                cursor: zoom-out;
-            `;
             lightbox.innerHTML = `
-                <div style="position: relative; display: flex; justify-content: center; align-items: center; max-width: 92vw; max-height: 88vh;">
-                    <img id="priveLightboxImg" style="display: block; max-width: 92vw; max-height: 88vh; border-radius: 8px; border: 1px solid rgba(223,194,133,0.4); box-shadow: 0 15px 40px rgba(0,0,0,0.95); object-fit: contain;">
-                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 180px; height: 80px; background-image: url('img/logo.png'); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: 0.45; pointer-events: none; z-index: 1000000;"></div>
+                <div style="position: relative; display: flex; justify-content: center; align-items: center; max-width: 90vw; max-height: 85vh;">
+                    <img id="priveLightboxImg" style="display: block; max-width: 90vw; max-height: 85vh; border-radius: 8px; border: 1px solid rgba(223,194,133,0.4); box-shadow: 0 20px 50px rgba(0,0,0,0.95); object-fit: contain;">
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 180px; height: 80px; background-image: url('img/logo.png'); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: 0.5; pointer-events: none; z-index: 10000000;"></div>
                 </div>
             `;
             document.body.appendChild(lightbox);
@@ -97,7 +97,6 @@
                 border-radius: 6px !important;
             `;
             
-            // Sacar el botón de la caja de info y ubicarlo antes de la sección de comentarios
             const seccionComentarios = document.getElementById('seccion-comentarios');
             if (seccionComentarios) {
                 mainContainer.insertBefore(btnWa, seccionComentarios);
@@ -105,7 +104,6 @@
                 mainContainer.appendChild(btnWa);
             }
 
-            // Mensaje horario inteligente
             const horaActual = new Date().getHours();
             let momento = "hoy";
             if (horaActual >= 6 && horaActual < 12) momento = "para esta mañana";
@@ -125,6 +123,7 @@
     const contenedorDestino = document.getElementById('seccion-comentarios');
     if (!contenedorDestino) return;
 
+    // Caja de comentarios con botón de adjuntar minimalista en forma de Clip (📎)
     contenedorDestino.innerHTML = `
         <div style="width: 100%; box-sizing: border-box; margin: 20px auto 10px auto; padding: 22px 15px; background: #141414; border: 1px solid rgba(223, 194, 133, 0.25); border-radius: 10px; font-family: 'Montserrat', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
             <h3 style="color: #dfc285; text-align: center; font-size: 20px; margin-bottom: 20px; font-family: 'Cormorant Garamond', serif; letter-spacing: 1.5px;">Experiencias y Comentarios</h3>
@@ -141,8 +140,9 @@
                     <button type="button" onclick="window.agregarEmojiPerfil('❤️')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Corazón">❤️</button>
                     <button type="button" onclick="window.agregarEmojiPerfil('⭐')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Estrella">⭐</button>
                     
-                    <label style="color: #dfc285; cursor: pointer; font-size: 11px; display: inline-flex; align-items: center; gap: 5px; background: rgba(223,194,133,0.1); padding: 6px 10px; border-radius: 4px; border: 1px solid rgba(223, 194, 133, 0.4); margin-left: auto; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">
-                        📷 Adjuntar foto <input type="file" id="pImageFile" accept="image/*" onchange="window.previewPerfilFile()" style="display:none;">
+                    <!-- Botón de adjunto con icono de clip minimalista -->
+                    <label title="Adjuntar foto" style="color: #dfc285; cursor: pointer; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; background: rgba(223,194,133,0.1); width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(223, 194, 133, 0.4); margin-left: auto; transition: all 0.3s ease;">
+                        📎 <input type="file" id="pImageFile" accept="image/*" onchange="window.previewPerfilFile()" style="display:none;">
                     </label>
                 </div>
                 <span id="pFileName" style="font-size: 11px; color: #dfc285; font-style: italic; padding-left: 2px;"></span>
