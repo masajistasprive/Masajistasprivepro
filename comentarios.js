@@ -1,10 +1,64 @@
-// comentarios.js - Sistema unificado de experiencias para Masajistas Privé
+// comentarios.js - Motor Dinámico Global para Masajistas Privé (Comentarios, Emojis, Adjuntos, Visor y WhatsApp)
 (function() {
-    // Buscar si la página tiene definido un ID de perfil, si no usa el nombre del archivo HTML
+    // 1. Automatizar el Visor de Pantalla Completa (Lightbox) para cualquier foto de la ficha
+    window.addEventListener('DOMContentLoaded', () => {
+        const fotosGaleria = document.querySelectorAll('.perfil-galeria-grid img, .foto-principal, .galeria-miniaturas img');
+        
+        if (!document.getElementById('priveLightbox')) {
+            const lightbox = document.createElement('div');
+            lightbox.id = 'priveLightbox';
+            lightbox.style.cssText = `
+                display: none;
+                position: fixed;
+                top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0, 0, 0, 0.92);
+                z-index: 999999;
+                justify-content: center;
+                align-items: center;
+                backdrop-filter: blur(8px);
+                cursor: zoom-out;
+            `;
+            lightbox.innerHTML = `
+                <img id="priveLightboxImg" style="max-width: 90%; max-height: 85vh; border-radius: 8px; border: 1px solid rgba(223,194,133,0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.8); object-fit: contain;">
+            `;
+            document.body.appendChild(lightbox);
+
+            lightbox.onclick = () => {
+                lightbox.style.display = 'none';
+            };
+        }
+
+        fotosGaleria.forEach(img => {
+            img.style.cursor = 'zoom-in';
+            img.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const lb = document.getElementById('priveLightbox');
+                const lbImg = document.getElementById('priveLightboxImg');
+                lbImg.src = img.src;
+                lb.style.display = 'flex';
+            });
+        });
+
+        // 2. Optimizar el Botón de WhatsApp con Contexto Horario Inteligente
+        const btnWa = document.querySelector('.btn-whatsapp');
+        if (btnWa) {
+            const horaActual = new Date().getHours();
+            let momento = "hoy";
+            if (horaActual >= 6 && horaActual < 12) momento = "para esta mañana";
+            else if (horaActual >= 12 && horaActual < 20) momento = "para esta tarde";
+            else momento = "para esta noche";
+
+            const nombreMasajista = document.querySelector('.perfil-titulo-seccion h2')?.textContent || "Perfil";
+            const baseUrl = btnWa.getAttribute('href').split('?')[0];
+            const nuevoMensaje = `Hola ${nombreMasajista}, vi tu perfil en Masajistas Privé y quería consultar disponibilidad ${momento}.`;
+            btnWa.setAttribute('href', `${baseUrl}?text=${encodeURIComponent(nuevoMensaje)}`);
+        }
+    });
+
+    // 3. Sistema de Comentarios Completo (Emojis, Adjuntos, Likes y Destacados)
     let perfilId = typeof ID_PERFIL_ACTUAL !== 'undefined' ? ID_PERFIL_ACTUAL : window.location.pathname.split("/").pop().replace(".html", "");
     if (!perfilId || perfilId === "") perfilId = "general";
 
-    // Inyectar los estilos y la estructura HTML automáticamente donde esté el contenedor
     const contenedorDestino = document.getElementById('seccion-comentarios');
     if (!contenedorDestino) return;
 
@@ -13,15 +67,16 @@
             <h3 style="color: #dfc285; text-align: center; font-size: 1.3em; margin-bottom: 15px; font-family: 'Cormorant Garamond', serif; letter-spacing: 1px;">Experiencias y Comentarios</h3>
             
             <div style="display: flex; flex-direction: column; gap: 10px;">
-                <input type="text" id="pAuthor" placeholder="Tu nombre o apodo" style="width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid rgba(223, 194, 133, 0.3); background: #141414; color: #fff; border-radius: 6px;">
+                <input type="text" id="pAuthor" placeholder="Tu nombre o apodo" style="width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid rgba(223, 194, 133, 0.3); background: #141414; color: #fff; border-radius: 6px; font-family: 'Montserrat', sans-serif;">
                 
-                <textarea id="pText" rows="3" placeholder="Escribe tu experiencia..." style="width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid rgba(223, 194, 133, 0.3); background: #141414; color: #fff; border-radius: 6px;"></textarea>
+                <textarea id="pText" rows="3" placeholder="Escribe tu experiencia..." style="width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid rgba(223, 194, 133, 0.3); background: #141414; color: #fff; border-radius: 6px; font-family: 'Montserrat', sans-serif; resize: vertical;"></textarea>
                 
-                <div style="display: flex; gap: 8px; align-items: center; background: #141414; padding: 8px; border-radius: 6px; border: 1px solid rgba(223, 194, 133, 0.3);">
-                    <button type="button" onclick="window.agregarEmojiPerfil('😊')" style="background:none; border:none; font-size:1.2em; cursor:pointer;">😊</button>
-                    <button type="button" onclick="window.agregarEmojiPerfil('👍')" style="background:none; border:none; font-size:1.2em; cursor:pointer;">👍</button>
-                    <button type="button" onclick="window.agregarEmojiPerfil('🔥')" style="background:none; border:none; font-size:1.2em; cursor:pointer;">🔥</button>
-                    <button type="button" onclick="window.agregarEmojiPerfil('❤️')" style="background:none; border:none; font-size:1.2em; cursor:pointer;">❤️</button>
+                <div style="display: flex; gap: 8px; align-items: center; background: #141414; padding: 8px; border-radius: 6px; border: 1px solid rgba(223, 194, 133, 0.3); flex-wrap: wrap;">
+                    <button type="button" onclick="window.agregarEmojiPerfil('😊')" style="background:none; border:none; font-size:1.2em; cursor:pointer;" title="Sonrisa">😊</button>
+                    <button type="button" onclick="window.agregarEmojiPerfil('👍')" style="background:none; border:none; font-size:1.2em; cursor:pointer;" title="Pulgar arriba">👍</button>
+                    <button type="button" onclick="window.agregarEmojiPerfil('🔥')" style="background:none; border:none; font-size:1.2em; cursor:pointer;" title="Fuego">🔥</button>
+                    <button type="button" onclick="window.agregarEmojiPerfil('❤️')" style="background:none; border:none; font-size:1.2em; cursor:pointer;" title="Corazón">❤️</button>
+                    <button type="button" onclick="window.agregarEmojiPerfil('⭐')" style="background:none; border:none; font-size:1.2em; cursor:pointer;" title="Estrella">⭐</button>
                     
                     <label style="color: #dfc285; cursor: pointer; font-size: 0.85em; display: flex; align-items: center; gap: 4px; background: #1f1f1f; padding: 6px 10px; border-radius: 4px; border: 1px solid rgba(223, 194, 133, 0.3); margin-left: auto;">
                         📷 Adjuntar foto <input type="file" id="pImageFile" accept="image/*" onchange="window.previewPerfilFile()" style="display:none;">
@@ -29,7 +84,7 @@
                 </div>
                 <span id="pFileName" style="font-size: 0.75em; color: #dfc285; font-style: italic;"></span>
 
-                <button onclick="window.enviarComentarioPerfil()" style="background: linear-gradient(135deg, #dfc285, #c5a059); color: #0d0d0d; border: none; padding: 12px; cursor: pointer; border-radius: 6px; font-weight: bold; width: 100%; font-size: 0.95em; text-transform: uppercase; letter-spacing: 1px;">Publicar Experiencia</button>
+                <button onclick="window.enviarComentarioPerfil()" style="background: linear-gradient(135deg, #dfc285, #c5a059); color: #0d0d0d; border: none; padding: 12px; cursor: pointer; border-radius: 6px; font-weight: bold; width: 100%; font-size: 0.95em; text-transform: uppercase; letter-spacing: 1px; font-family: 'Montserrat', sans-serif; box-shadow: 0 4px 15px rgba(223,194,133,0.2);">Publicar Experiencia</button>
             </div>
 
             <div id="pCommentsContainer" style="margin-top: 20px;">
@@ -42,7 +97,6 @@
         </div>
     `;
 
-    // Cargar Firebase dinámicamente si no está cargado
     if (typeof firebase === 'undefined') {
         const scriptApp = document.createElement('script');
         scriptApp.src = "https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js";
@@ -136,26 +190,34 @@
 
             let lista = [];
             snapshot.forEach(doc => lista.push({ id: doc.id, ...doc.data() }));
-            lista.sort((a, b) => (b.fecha?.toMillis() || 0) - (a.fecha?.toMillis() || 0));
+            
+            // Ordenamiento inteligente: Destaca los que tienen más likes o fotos arriba
+            lista.sort((a, b) => {
+                const scoreA = (a.likes || 0) + (a.image ? 5 : 0);
+                const scoreB = (b.likes || 0) + (b.image ? 5 : 0);
+                if (scoreB !== scoreA) return scoreB - scoreA;
+                return (b.fecha?.toMillis() || 0) - (a.fecha?.toMillis() || 0);
+            });
 
             lista.forEach(data => {
                 const fechaStr = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : 'Hace un momento';
                 const likes = data.likes || 0;
-                const imgHtml = data.image ? `<img src="${data.image}" style="max-width: 140px; max-height: 140px; border-radius: 6px; margin-top: 6px; display: block; object-fit: cover; border: 1px solid rgba(223,194,133,0.3);" alt="Adjunto">` : '';
+                const imgHtml = data.image ? `<img src="${data.image}" style="max-width: 160px; max-height: 160px; border-radius: 6px; margin-top: 8px; display: block; object-fit: cover; border: 1px solid rgba(223,194,133,0.4); cursor: pointer;" onclick="window.open(this.src)" alt="Adjunto">` : '';
                 const deleteBtn = isAdminPerfil ? `<button onclick="window.borrarComentarioPerfil('${data.id}', '${perfilId}')" style="background:none; border:none; color:#ff5555; cursor:pointer; font-size:0.8em; font-weight:bold; float:right;">🗑️ Eliminar</button>` : '';
 
                 const div = document.createElement('div');
-                div.style.cssText = "font-size: 0.9em; margin-bottom: 12px; color: #ccc; word-break: break-word; background: #141414; padding: 12px; border-radius: 6px; position: relative; border-left: 3px solid #dfc285; border: 1px solid rgba(223,194,133,0.15);";
+                div.style.cssText = "font-size: 0.9em; margin-bottom: 12px; color: #ccc; word-break: break-word; background: #141414; padding: 14px; border-radius: 6px; position: relative; border-left: 3px solid #dfc285; border: 1px solid rgba(223,194,133,0.15);";
                 div.innerHTML = `
                     ${deleteBtn}
                     <div>
                         <span style="color: #dfc285; font-weight: bold; margin-right: 6px;">${escapeHtmlPerfil(data.autor)}:</span>
                         <span>${escapeHtmlPerfil(data.contenido)}</span>
                         ${imgHtml}
-                        <span style="font-size: 0.75em; color: #777; margin-left: 8px; display: block; margin-top: 4px;">${fechaStr}</span>
+                        <span style="font-size: 0.75em; color: #777; margin-left: 8px; display: block; margin-top: 6px;">${fechaStr}</span>
                     </div>
-                    <div style="margin-top: 10px; border-top: 1px solid #222; padding-top: 6px;">
+                    <div style="margin-top: 10px; border-top: 1px solid #222; padding-top: 6px; display: flex; align-items: center; justify-content: space-between;">
                         <button onclick="window.darLikePerfil('${data.id}', ${likes}, '${perfilId}')" style="background:none; border:none; color:#dfc285; cursor:pointer; font-size:0.85em; font-weight:bold; display:flex; align-items:center; gap:4px;">👍 Me gusta (<span id="plikes-${data.id}">${likes}</span>)</button>
+                        ${data.image ? '<span style="font-size: 0.7em; color: #dfc285; background: rgba(223,194,133,0.1); padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(223,194,133,0.3);">★ Destacado</span>' : ''}
                     </div>
                 `;
                 container.appendChild(div);
