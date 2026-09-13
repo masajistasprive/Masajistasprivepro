@@ -487,3 +487,81 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-info h2 {
     color: #fff;
     border-color: #fff;
 }
+/* ========================================================== */
+/* LICENCIATURA EN DISEÑO: MEJORAS VISUALES DE ALTA GAMA       */
+/* ========================================================== */
+
+/* 1. Atmósfera de Fondo: Degradé radial que imita lino/cuero negro mate */
+body {
+    background: radial-gradient(circle at 50% 0%, #161616 0%, #0d0d0d 75%) !important;
+    background-attachment: fixed !important;
+}
+
+/* 2. Micro-animaciones de entrada fluidas (Cubic-Bezier Editorial) */
+.card, .blog-card, .story-item, .dolar-card {
+    animation: editorialFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, background 0.3s ease !important;
+}
+
+.card:hover, .blog-card:hover {
+    transform: translateY(-3px);
+}
+
+@keyframes editorialFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 3. Glassmorphism Profundo (Efecto Cristal Ahumado en Modales y Visores) */
+#priveLightbox, #modalArticulo, .modal-edad-overlay {
+    backdrop-filter: blur(12px) saturate(120%) !important;
+    background: rgba(8, 8, 8, 0.88) !important;
+}
+
+/* 4. Ritmo Tipográfico y Espacio Negativo (Whitespace de Lujo) */
+.card-gradient-overlay {
+    padding: 20px 18px !important; /* Más aire interno para que no se comprima el texto */
+}
+
+.section-heading {
+    margin-top: 3.5rem !important;
+    margin-bottom: 1.25rem !important;
+    font-weight: 500 !important;
+}
+
+/* Refinamiento sutil de bordes dorados para unificar piezas */
+.card, .blog-card, .dolar-card, .perfil-info {
+    border: 1px solid rgba(223, 194, 133, 0.2) !important;
+}
+
+.card:hover {
+    border-color: rgba(223, 194, 133, 0.6) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(223, 194, 133, 0.05) !important;
+}
+/* --- CORRECCIÓN DEFINITIVA DE DISEÑO EN PERFILES --- */
+.btn-whatsapp {
+    position: relative !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    clear: both !important;
+    margin: 25px 0 !important;
+    box-sizing: border-box !important;
+    z-index: 1 !important;
+}
+
+.perfil-info {
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+#seccion-comentarios div {
+    box-sizing: border-box !important;
+}
+
