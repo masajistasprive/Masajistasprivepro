@@ -12,7 +12,7 @@
     });
 })();
 
-// comentarios.js - Motor Dinámico Global, Visor, Comentarios y Botón WhatsApp Elegante Titilante
+// comentarios.js - Motor Dinámico Global, Visor con Marca de Agua, Comentarios y Botón WhatsApp Elegante Titilante
 (function() {
     // Inyectar animación CSS para el efecto titilante del botón de WhatsApp
     const styleAnim = document.createElement('style');
@@ -33,7 +33,7 @@
     document.head.appendChild(styleAnim);
 
     window.addEventListener('DOMContentLoaded', () => {
-        // 1. Visor de pantalla completa (Lightbox) para fotos
+        // 1. Visor de pantalla completa (Lightbox) para fotos con marca de agua integrada
         const fotosGaleria = document.querySelectorAll('.perfil-galeria-grid img, .foto-principal, .galeria-miniaturas img');
         
         if (!document.getElementById('priveLightbox')) {
@@ -43,15 +43,18 @@
                 display: none;
                 position: fixed;
                 top: 0; left: 0; width: 100%; height: 100%;
-                background: rgba(0, 0, 0, 0.92);
+                background: rgba(0, 0, 0, 0.95);
                 z-index: 999999;
                 justify-content: center;
                 align-items: center;
-                backdrop-filter: blur(8px);
+                backdrop-filter: blur(10px);
                 cursor: zoom-out;
             `;
             lightbox.innerHTML = `
-                <img id="priveLightboxImg" style="max-width: 90%; max-height: 85vh; border-radius: 8px; border: 1px solid rgba(223,194,133,0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.8); object-fit: contain;">
+                <div style="position: relative; display: inline-block; max-width: 90%; max-height: 85vh;">
+                    <img id="priveLightboxImg" style="display: block; max-width: 100%; max-height: 85vh; border-radius: 8px; border: 1px solid rgba(223,194,133,0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.9); object-fit: contain;">
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 160px; height: 70px; background-image: url('img/logo.png'); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: 0.4; pointer-events: none;"></div>
+                </div>
             `;
             document.body.appendChild(lightbox);
 
@@ -325,3 +328,4 @@
         }
     }
 })();
+
