@@ -1,3 +1,17 @@
+// Script de emergencia global: Eliminar cualquier burbuja de música residual en los perfiles
+(function() {
+    window.addEventListener('DOMContentLoaded', () => {
+        const burbujasMusica = document.querySelectorAll('#priveUltraSutilBtn, #privePlayerContainer, #priveMicroPlayer, #seccion-reproductor-prive');
+        burbujasMusica.forEach(el => el.remove());
+
+        const audioEngine = document.getElementById('priveGlobalAudioEngine');
+        if (audioEngine) {
+            audioEngine.pause();
+            audioEngine.remove();
+        }
+    });
+})();
+
 // comentarios.js - Motor Dinámico Global para Masajistas Privé (Comentarios, Emojis, Adjuntos, Visor y WhatsApp)
 (function() {
     // 1. Automatizar el Visor de Pantalla Completa (Lightbox) para cualquier foto de la ficha
