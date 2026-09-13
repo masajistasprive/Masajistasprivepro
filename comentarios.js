@@ -9,27 +9,27 @@
     if (!contenedorDestino) return;
 
     contenedorDestino.innerHTML = `
-        <div style="max-width: 600px; margin: 0 auto 30px auto; padding: 0 15px; font-family: Arial, sans-serif;">
-            <h3 style="color: #dfbc63; text-align: center; font-size: 1.3em; margin-bottom: 15px;">Experiencias y Comentarios</h3>
+        <div style="max-width: 600px; margin: 0 auto 30px auto; padding: 0 15px; font-family: 'Montserrat', sans-serif;">
+            <h3 style="color: #dfc285; text-align: center; font-size: 1.3em; margin-bottom: 15px; font-family: 'Cormorant Garamond', serif; letter-spacing: 1px;">Experiencias y Comentarios</h3>
             
             <div style="display: flex; flex-direction: column; gap: 10px;">
-                <input type="text" id="pAuthor" placeholder="Tu nombre o apodo" style="width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #444; background: #1a1a1a; color: #fff; border-radius: 4px;">
+                <input type="text" id="pAuthor" placeholder="Tu nombre o apodo" style="width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid rgba(223, 194, 133, 0.3); background: #141414; color: #fff; border-radius: 6px;">
                 
-                <textarea id="pText" rows="3" placeholder="Escribe tu experiencia..." style="width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #444; background: #1a1a1a; color: #fff; border-radius: 4px;"></textarea>
+                <textarea id="pText" rows="3" placeholder="Escribe tu experiencia..." style="width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid rgba(223, 194, 133, 0.3); background: #141414; color: #fff; border-radius: 6px;"></textarea>
                 
-                <div style="display: flex; gap: 8px; align-items: center; background: #1a1a1a; padding: 6px; border-radius: 4px; border: 1px solid #444;">
+                <div style="display: flex; gap: 8px; align-items: center; background: #141414; padding: 8px; border-radius: 6px; border: 1px solid rgba(223, 194, 133, 0.3);">
                     <button type="button" onclick="window.agregarEmojiPerfil('😊')" style="background:none; border:none; font-size:1.2em; cursor:pointer;">😊</button>
                     <button type="button" onclick="window.agregarEmojiPerfil('👍')" style="background:none; border:none; font-size:1.2em; cursor:pointer;">👍</button>
                     <button type="button" onclick="window.agregarEmojiPerfil('🔥')" style="background:none; border:none; font-size:1.2em; cursor:pointer;">🔥</button>
                     <button type="button" onclick="window.agregarEmojiPerfil('❤️')" style="background:none; border:none; font-size:1.2em; cursor:pointer;">❤️</button>
                     
-                    <label style="color: #dfbc63; cursor: pointer; font-size: 0.85em; display: flex; align-items: center; gap: 4px; background: #252525; padding: 6px 10px; border-radius: 4px; border: 1px solid #444; margin-left: auto;">
+                    <label style="color: #dfc285; cursor: pointer; font-size: 0.85em; display: flex; align-items: center; gap: 4px; background: #1f1f1f; padding: 6px 10px; border-radius: 4px; border: 1px solid rgba(223, 194, 133, 0.3); margin-left: auto;">
                         📷 Adjuntar foto <input type="file" id="pImageFile" accept="image/*" onchange="window.previewPerfilFile()" style="display:none;">
                     </label>
                 </div>
-                <span id="pFileName" style="font-size: 0.75em; color: #dfbc63; font-style: italic;"></span>
+                <span id="pFileName" style="font-size: 0.75em; color: #dfc285; font-style: italic;"></span>
 
-                <button onclick="window.enviarComentarioPerfil()" style="background: #dfbc63; color: #121212; border: none; padding: 12px; cursor: pointer; border-radius: 4px; font-weight: bold; width: 100%; font-size: 1em;">PUBLICAR EXPERIENCIA</button>
+                <button onclick="window.enviarComentarioPerfil()" style="background: linear-gradient(135deg, #dfc285, #c5a059); color: #0d0d0d; border: none; padding: 12px; cursor: pointer; border-radius: 6px; font-weight: bold; width: 100%; font-size: 0.95em; text-transform: uppercase; letter-spacing: 1px;">Publicar Experiencia</button>
             </div>
 
             <div id="pCommentsContainer" style="margin-top: 20px;">
@@ -37,7 +37,7 @@
             </div>
 
             <div style="text-align: center; margin-top: 30px; font-size: 0.75em;">
-                <span onclick="window.activarAdminPerfil()" style="cursor: pointer; color: #444;" onmouseover="this.style.color='#dfbc63'" onmouseout="this.style.color='#444'">Admin</span>
+                <span onclick="window.activarAdminPerfil()" style="cursor: pointer; color: #444;" onmouseover="this.style.color='#dfc285'" onmouseout="this.style.color='#444'">Admin</span>
             </div>
         </div>
     `;
@@ -141,21 +141,21 @@
             lista.forEach(data => {
                 const fechaStr = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : 'Hace un momento';
                 const likes = data.likes || 0;
-                const imgHtml = data.image ? `<img src="${data.image}" style="max-width: 140px; max-height: 140px; border-radius: 6px; margin-top: 6px; display: block; object-fit: cover; border: 1px solid #444;" alt="Adjunto">` : '';
+                const imgHtml = data.image ? `<img src="${data.image}" style="max-width: 140px; max-height: 140px; border-radius: 6px; margin-top: 6px; display: block; object-fit: cover; border: 1px solid rgba(223,194,133,0.3);" alt="Adjunto">` : '';
                 const deleteBtn = isAdminPerfil ? `<button onclick="window.borrarComentarioPerfil('${data.id}', '${perfilId}')" style="background:none; border:none; color:#ff5555; cursor:pointer; font-size:0.8em; font-weight:bold; float:right;">🗑️ Eliminar</button>` : '';
 
                 const div = document.createElement('div');
-                div.style.cssText = "font-size: 0.9em; margin-bottom: 12px; color: #ccc; word-break: break-word; background: #1c1c1c; padding: 12px; border-radius: 6px; position: relative; border-left: 3px solid #dfbc63;";
+                div.style.cssText = "font-size: 0.9em; margin-bottom: 12px; color: #ccc; word-break: break-word; background: #141414; padding: 12px; border-radius: 6px; position: relative; border-left: 3px solid #dfc285; border: 1px solid rgba(223,194,133,0.15);";
                 div.innerHTML = `
                     ${deleteBtn}
                     <div>
-                        <span style="color: #dfbc63; font-weight: bold; margin-right: 6px;">${escapeHtmlPerfil(data.autor)}:</span>
+                        <span style="color: #dfc285; font-weight: bold; margin-right: 6px;">${escapeHtmlPerfil(data.autor)}:</span>
                         <span>${escapeHtmlPerfil(data.contenido)}</span>
                         ${imgHtml}
                         <span style="font-size: 0.75em; color: #777; margin-left: 8px; display: block; margin-top: 4px;">${fechaStr}</span>
                     </div>
-                    <div style="margin-top: 10px; border-top: 1px solid #333; padding-top: 6px;">
-                        <button onclick="window.darLikePerfil('${data.id}', ${likes}, '${perfilId}')" style="background:none; border:none; color:#dfbc63; cursor:pointer; font-size:0.85em; font-weight:bold; display:flex; align-items:center; gap:4px;">👍 Me gusta (<span id="plikes-${data.id}">${likes}</span>)</button>
+                    <div style="margin-top: 10px; border-top: 1px solid #222; padding-top: 6px;">
+                        <button onclick="window.darLikePerfil('${data.id}', ${likes}, '${perfilId}')" style="background:none; border:none; color:#dfc285; cursor:pointer; font-size:0.85em; font-weight:bold; display:flex; align-items:center; gap:4px;">👍 Me gusta (<span id="plikes-${data.id}">${likes}</span>)</button>
                     </div>
                 `;
                 container.appendChild(div);
@@ -204,191 +204,4 @@
         }
     }
 })();
-// --- SOUNDTRACK PRIVÉ - ULTRA SUTIL & PERSISTENTE ---
-(function() {
-    if (window.privePlayerInited) return;
-    window.privePlayerInited = true;
 
-    // Crear reproductor de audio global persistente
-    let bgAudio = document.getElementById('priveGlobalAudioEngine');
-    if (!bgAudio) {
-        bgAudio = document.createElement('audio');
-        bgAudio.id = 'priveGlobalAudioEngine';
-        bgAudio.loop = true;
-        bgAudio.preload = 'auto';
-        bgAudio.innerHTML = '<source src="/masajistasprive/Masajistasprivepro/chill.mp3" type="audio/mpeg">';
-        document.body.appendChild(bgAudio);
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-        // Eliminar cualquier residuo viejo que haya quedado en la página
-        const oldBox = document.getElementById('seccion-reproductor-prive');
-        if (oldBox) oldBox.innerHTML = '';
-        const oldFloat = document.getElementById('privePlayerContainer');
-        if (oldFloat) oldFloat.remove();
-        const oldMicro = document.getElementById('priveMicroPlayer');
-        if (oldMicro) oldMicro.remove();
-
-        // Crear un único botón flotante ultra sutil y minimalista
-        const floatingBtn = document.createElement('div');
-        floatingBtn.id = 'priveUltraSutilBtn';
-        floatingBtn.style.cssText = `
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            z-index: 999999;
-            background: rgba(18, 18, 18, 0.85);
-            border: 1px solid #dfbc63;
-            border-radius: 50px;
-            width: 42px;
-            height: 42px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
-            backdrop-filter: blur(6px);
-            transition: transform 0.2s ease;
-        `;
-
-        floatingBtn.innerHTML = `
-            <span id="priveIconSymbol" style="color: #dfbc63; font-size: 1.1em; line-height: 1;">${bgAudio.paused ? '🎵' : '⏸'}</span>
-        `;
-
-        document.body.appendChild(floatingBtn);
-
-        // Restaurar tiempo guardado
-        let savedTime = localStorage.getItem('priveAudioCurrentTime');
-        if (savedTime) bgAudio.currentTime = parseFloat(savedTime);
-
-        // Si ya venía sonando, mantenerlo
-        if (localStorage.getItem('priveStatePlaying') === 'true' && bgAudio.paused) {
-            bgAudio.play().then(() => {
-                document.getElementById('priveIconSymbol').textContent = '⏸';
-            }).catch(e => console.log("Bloqueo de autoplay:", e));
-        }
-
-        // Control de reproducción al hacer clic en el botón sutil
-        floatingBtn.onclick = () => {
-            if (bgAudio.paused) {
-                bgAudio.play().then(() => {
-                    document.getElementById('priveIconSymbol').textContent = '⏸';
-                    localStorage.setItem('priveStatePlaying', 'true');
-                }).catch(err => {
-                    console.log("Error al reproducir:", err);
-                    bgAudio.load();
-                    bgAudio.play().then(() => {
-                        document.getElementById('priveIconSymbol').textContent = '⏸';
-                        localStorage.setItem('priveStatePlaying', 'true');
-                    });
-                });
-            } else {
-                bgAudio.pause();
-                document.getElementById('priveIconSymbol').textContent = '🎵';
-                localStorage.setItem('priveStatePlaying', 'false');
-            }
-        };
-    });
-
-    // Guardar el segundo actual continuamente en segundo plano
-    setInterval(() => {
-        if (!bgAudio.paused) {
-            localStorage.setItem('priveAudioCurrentTime', bgAudio.currentTime);
-        }
-    }, 1000);
-})();
-// --- SOUNDTRACK PRIVÉ - MOTOR GLOBAL PERSISTENTE ---
-(function() {
-    if (window.priveEngineLoaded) return;
-    window.priveEngineLoaded = true;
-
-    let bgAudio = document.getElementById('priveGlobalAudioEngine');
-    if (!bgAudio) {
-        bgAudio = window.top.document.getElementById('priveGlobalAudioEngine');
-    }
-    if (!bgAudio) {
-        bgAudio = document.createElement('audio');
-        bgAudio.id = 'priveGlobalAudioEngine';
-        bgAudio.loop = true;
-        bgAudio.preload = 'auto';
-        
-        let audioSource = document.createElement('source');
-        audioSource.src = 'chill.mp3';
-        audioSource.type = 'audio/mpeg';
-        bgAudio.appendChild(audioSource);
-        document.body.appendChild(bgAudio);
-    }
-
-    function injectFloatingButton() {
-        if (document.getElementById('priveUltraSutilBtn')) return;
-
-        const floatingBtn = document.createElement('div');
-        floatingBtn.id = 'priveUltraSutilBtn';
-        floatingBtn.style.cssText = `
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            z-index: 999999;
-            background: rgba(18, 18, 18, 0.9);
-            border: 1px solid #dfbc63;
-            border-radius: 50px;
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.7);
-            backdrop-filter: blur(6px);
-        `;
-
-        const isPlayingNow = !bgAudio.paused;
-        floatingBtn.innerHTML = `<span id="priveIconSymbol" style="color: #dfbc63; font-size: 1.15em; line-height: 1;">${isPlayingNow ? '⏸' : '🎵'}</span>`;
-        document.body.appendChild(floatingBtn);
-
-        floatingBtn.onclick = () => {
-            if (bgAudio.paused) {
-                bgAudio.play().then(() => {
-                    document.getElementById('priveIconSymbol').textContent = '⏸';
-                    localStorage.setItem('priveStatePlaying', 'true');
-                }).catch(err => {
-                    bgAudio.load();
-                    bgAudio.play().then(() => {
-                        document.getElementById('priveIconSymbol').textContent = '⏸';
-                        localStorage.setItem('priveStatePlaying', 'true');
-                    });
-                });
-            } else {
-                bgAudio.pause();
-                document.getElementById('priveIconSymbol').textContent = '🎵';
-                localStorage.setItem('priveStatePlaying', 'false');
-            }
-        };
-    }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', injectFloatingButton);
-    } else {
-        injectFloatingButton();
-    }
-
-    window.addEventListener('load', () => {
-        let savedTime = localStorage.getItem('priveAudioCurrentTime');
-        if (savedTime && !isNaN(savedTime)) {
-            bgAudio.currentTime = parseFloat(savedTime);
-        }
-
-        if (localStorage.getItem('priveStatePlaying') === 'true' && bgAudio.paused) {
-            bgAudio.play().then(() => {
-                const icon = document.getElementById('priveIconSymbol');
-                if (icon) icon.textContent = '⏸';
-            }).catch(e => console.log("Autoplay restringido"));
-        }
-    });
-
-    setInterval(() => {
-        if (!bgAudio.paused) {
-            localStorage.setItem('priveAudioCurrentTime', bgAudio.currentTime);
-        }
-    }, 1000);
-})();
