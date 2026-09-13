@@ -564,4 +564,57 @@ body {
 #seccion-comentarios div {
     box-sizing: border-box !important;
 }
+/* --- GLOBOS DE CATEGORÍAS CON IMÁGENES --- */
+.globos-categorias-container {
+    display: flex;
+    gap: 18px;
+    overflow-x: auto;
+    padding: 15px 5%;
+    scrollbar-width: none;
+    background: #0d0d0d;
+    margin-bottom: 10px;
+}
+.globos-categorias-container::-webkit-scrollbar { 
+    display: none; 
+}
+.globo-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+.globo-item:hover {
+    transform: translateY(-3px);
+}
+.globo-ring {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    padding: 2.5px;
+    background: linear-gradient(135deg, #dfc285, #8a733e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+}
+.globo-ring img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center top;
+    border: 2px solid #0d0d0d;
+}
+.globo-item span {
+    color: #e5e0d8;
+    font-size: 11px;
+    margin-top: 6px;
+    font-weight: 500;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 0.5px;
+    text-align: center;
+}
 
