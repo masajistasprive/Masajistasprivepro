@@ -22,6 +22,7 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-info h2 {
 }
 
 /* Header principal */
+/* Header principal optimizado (Sin logo izquierdo y logo central grande) */
 .header-prive {
     display: flex;
     justify-content: space-between;
@@ -34,14 +35,22 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-info h2 {
     z-index: 1000;
     min-height: 85px;
 }
-.header-monograma { height: 32px; width: auto; }
-.header-center { display: flex; justify-content: center; align-items: center; }
+.header-left { 
+    display: none !important; 
+}
+.header-center { 
+    display: flex; 
+    justify-content: flex-start; 
+    align-items: center; 
+    flex-grow: 1;
+}
 .header-logo-grande, .header-logo-img {
-    height: 75px !important;
-    max-height: 80px !important;
+    height: 120px !important;
+    max-height: 130px !important;
     width: auto !important;
     object-fit: contain !important;
 }
+
 
 /* Botones sofisticados (Foro y Volver) */
 .btn-foro-prive, .header-right .btn-buscar {
