@@ -16,6 +16,12 @@ body {
     letter-spacing: 0.3px;
 }
 
+/* Forzar que ningún enlace o botón agarre el azul feo del navegador */
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
 h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-seccion h2 {
     font-family: 'Cormorant Garamond', serif !important;
     font-weight: 600 !important;
@@ -55,14 +61,14 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     object-fit: contain !important;
 }
 
-/* Botón de Foro Extendido: Foro Masajistas Privé */
+/* Botón de Foro Centrado y Elegante */
 .btn-foro-prive {
     background: rgba(18, 18, 20, 0.7) !important;
     backdrop-filter: blur(12px) !important;
     -webkit-backdrop-filter: blur(12px) !important;
     border: 1px solid rgba(223, 194, 133, 0.35) !important;
     color: #dfc285 !important;
-    padding: 8px 14px !important;
+    padding: 8px 16px !important;
     border-radius: 30px !important;
     font-size: 10px !important;
     text-transform: uppercase !important;
@@ -71,11 +77,19 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     font-family: 'Montserrat', sans-serif !important;
     font-weight: 500 !important;
     display: inline-flex !important;
+    flex-direction: column !important;
     align-items: center !important;
-    gap: 6px !important;
+    justify-content: center !important;
+    text-align: center !important;
+    gap: 2px !important;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    white-space: nowrap !important;
+    line-height: 1.3 !important;
+}
+.btn-foro-prive span {
+    background: linear-gradient(135deg, #f5ebd0 0%, #dfc285 50%, #b8934f 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
 }
 .btn-foro-prive:hover {
     background: rgba(223, 194, 133, 0.12) !important;
@@ -84,28 +98,10 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     box-shadow: 0 6px 25px rgba(223, 194, 133, 0.15) !important;
 }
 
-.header-right .btn-buscar {
-    background: linear-gradient(135deg, rgba(223, 194, 133, 0.15), rgba(223, 194, 133, 0.05)) !important;
-    border: 1px solid #dfc285 !important;
+/* Botones de Anuncios y Enlaces del Footer en color champagne (Adiós azul) */
+.btn-ad, .footer-social-link, .ad-content a {
     color: #dfc285 !important;
-    padding: 6px 14px !important;
-    border-radius: 30px !important;
-    font-size: 11px !important;
-    text-transform: uppercase !important;
-    letter-spacing: 1.5px !important;
     text-decoration: none !important;
-    font-family: 'Montserrat', sans-serif !important;
-    font-weight: 500 !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 6px !important;
-    box-shadow: 0 4px 15px rgba(223, 194, 133, 0.15) !important;
-    transition: all 0.3s ease !important;
-}
-.header-right .btn-buscar:hover {
-    background: #dfc285 !important;
-    color: #0d0d0d !important;
-    box-shadow: 0 4px 20px rgba(223, 194, 133, 0.4) !important;
 }
 
 /* ========================================================= */
@@ -450,7 +446,7 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
 }
 
 /* ========================================================= */
-/* MODAL DE ADVERTENCIA DE EDAD (+18)                        */
+/* MODAL DE EDAD Y OTROS                                     */
 /* ========================================================= */
 .modal-edad-overlay {
     position: fixed;
