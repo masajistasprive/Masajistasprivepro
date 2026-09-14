@@ -33,7 +33,7 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
 }
 
 /* ========================================================= */
-/* HEADER PRINCIPAL Y BOTÓN FORO (CORREGIDO Y CENTRADO)      */
+/* HEADER PRINCIPAL Y BOTÓN FORO                             */
 /* ========================================================= */
 .header-prive {
     display: flex;
@@ -99,13 +99,31 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
 }
 
 /* ========================================================= */
-/* HISTORIAS Y PASTILLAS DE CATEGORÍAS                       */
+/* SECCIÓN DESTACADAS Y GLOBOS                               */
 /* ========================================================= */
+.destacadas-container-wrapper {
+    padding: 15px 4% 5px 4%;
+    background: rgba(15, 17, 21, 0.5);
+    border-bottom: 1px solid rgba(223, 194, 133, 0.1);
+}
+
+.destacadas-titulo {
+    font-family: 'Cormorant Garamond', serif !important;
+    font-size: 19px !important;
+    font-weight: 600 !important;
+    letter-spacing: 2px !important;
+    text-transform: uppercase !important;
+    margin: 0 0 10px 4px !important;
+    background: linear-gradient(135deg, #f5ebd0 0%, #dfc285 50%, #b8934f 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+}
+
 .stories-container {
     display: flex;
     gap: 15px;
     overflow-x: auto;
-    padding: 10px 5%;
+    padding: 5px 0 10px 0;
     scrollbar-width: none;
 }
 .stories-container::-webkit-scrollbar { display: none; }
@@ -141,6 +159,9 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     font-weight: 400;
 }
 
+/* ========================================================= */
+/* PASTILLAS DE CATEGORÍAS (PILLS)                           */
+/* ========================================================= */
 .pills-container {
     display: flex;
     gap: 12px;
@@ -366,7 +387,7 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
 }
 
 /* ========================================================= */
-/* GALERÍA DE PERFIL INDIVIDUAL (CORREGIDA Y PROLIJA)        */
+/* GALERÍA DE PERFIL INDIVIDUAL                              */
 /* ========================================================= */
 .perfil-container {
     max-width: 650px !important;
@@ -388,7 +409,6 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     margin-bottom: 25px !important;
 }
 
-/* Foto principal grande arriba en perfil */
 .perfil-galeria-grid .foto-principal {
     width: 100% !important;
     height: 480px !important;
@@ -401,7 +421,6 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     display: block !important;
 }
 
-/* Marca de agua centrada en foto principal de perfil */
 .perfil-galeria-grid::before {
     content: "" !important;
     position: absolute !important;
@@ -419,7 +438,6 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     z-index: 10 !important;
 }
 
-/* Miniaturas abajo */
 .galeria-miniaturas {
     display: flex !important;
     gap: 10px !important;
@@ -590,26 +608,42 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
 }
 .modal-edad-content h2 {
     font-size: 24px;
-    margin-bottom: 15
+    margin-bottom: 15px;
+    letter-spacing: 2px;
 }
-/* ========================================================= */
-/* SECCIÓN DESTACADAS (GLOBOS DE LAS CHICAS)                 */
-/* ========================================================= */
-.destacadas-section {
-    padding: 15px 5% 5px 5%;
-    background: rgba(15, 17, 21, 0.4);
-    border-bottom: 1px solid rgba(223, 194, 133, 0.08);
+.modal-edad-content p {
+    font-family: 'Montserrat', sans-serif;
+    color: #ded9d0;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 25px;
 }
-
-.destacadas-titulo {
-    font-family: 'Cormorant Garamond', serif !important;
-    font-size: 18px !important;
-    font-weight: 600 !important;
-    letter-spacing: 2px !important;
-    text-transform: uppercase !important;
-    margin: 0 0 10px 0 !important;
-    background: linear-gradient(135deg, #f5ebd0 0%, #dfc285 50%, #b8934f 100%) !important;
-    -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
+.modal-edad-botones {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.btn-ingresar {
+    background: #dfc285;
+    color: #0d0d0d;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+.btn-salir {
+    background: transparent;
+    color: #888;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
