@@ -399,7 +399,7 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
 }
 
 /* ========================================================= */
-/* TARJETA DE DÓLAR CENTRADA                                 */
+/* TARJETA DE DÓLAR CENTRADA Y CORREGIDA                     */
 /* ========================================================= */
 .dolar-card {
     background: rgba(22, 22, 24, 0.65) !important;
@@ -412,25 +412,34 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     max-width: 500px !important;
     margin: 40px auto !important;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+#dolar-info {
+    text-align: center !important;
+    width: 100% !important;
 }
 
 /* ========================================================= */
-/* FOOTER Y REDES SOCIALES EN DORADO                         */
+/* FOOTER Y REDES SOCIALES SUTILES AL PIE                    */
 /* ========================================================= */
 .footer {
     text-align: center;
-    padding: 50px 20px;
+    padding: 40px 20px 30px 20px;
     border-top: 1px solid rgba(255,255,255,0.05);
     margin-top: 50px;
     background: #0b0b0b;
 }
 
 .footer-container {
-    max-width: 800px;
+    max-width: 700px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 20px;
     align-items: center;
     text-align: center;
 }
@@ -439,32 +448,32 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
 }
 
 .footer-icons-row {
     display: flex;
-    gap: 20px;
+    gap: 15px;
     justify-content: center;
     align-items: center;
-    margin-top: 5px;
+    margin-top: 2px;
 }
 
 .footer-icon-link {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 38px;
-    height: 38px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
-    background: rgba(223, 194, 133, 0.08);
-    border: 1px solid rgba(223, 194, 133, 0.3);
+    background: rgba(223, 194, 133, 0.05);
+    border: 1px solid rgba(223, 194, 133, 0.2);
     transition: all 0.3s ease;
 }
 
 .footer-icon-link svg {
-    width: 18px;
-    height: 18px;
+    width: 14px;
+    height: 14px;
     fill: #dfc285;
     transition: transform 0.3s ease;
 }
@@ -473,7 +482,7 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     background: #dfc285;
     border-color: #dfc285;
     transform: translateY(-2px);
-    box-shadow: 0 0 15px rgba(223, 194, 133, 0.4);
+    box-shadow: 0 0 12px rgba(223, 194, 133, 0.4);
 }
 
 .footer-icon-link:hover svg {
