@@ -7,85 +7,152 @@
     <!-- Firebase App (compat) y Firestore -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --champagne: #dfbc63;
-            --champagne-light: #f3e5ab;
-            --bg-dark: #121212;
-            --card-bg: #1a1a1a;
-            --box-bg: #222222;
+            --champagne: #dfc285;
+            --champagne-light: #f5ebd0;
+            --bg-dark: #0d0d0e;
+            --card-bg: rgba(22, 22, 24, 0.7);
+            --box-bg: rgba(28, 28, 30, 0.8);
         }
 
-        body { font-family: Arial, sans-serif; background-color: var(--bg-dark); color: #e0e0e0; margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: 0 auto; background: var(--card-bg); padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.7); border: 1px solid #333; }
-        h1, h2 { color: var(--champagne); text-align: center; }
-        .form-group { margin-bottom: 15px; }
-        input[type="text"], textarea { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #444; background: #252525; color: #fff; border-radius: 4px; }
-        input[type="text"]:focus, textarea:focus { border-color: var(--champagne); outline: none; }
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            background: radial-gradient(circle at 50% 0%, #1a1814 0%, #0d0d0e 65%, #080808 100%) !important;
+            background-attachment: fixed !important;
+            color: #e0e0e0; 
+            margin: 0; 
+            padding: 20px; 
+        }
         
-        button { background: var(--champagne); color: #121212; border: none; padding: 10px 15px; cursor: pointer; border-radius: 4px; font-weight: bold; width: 100%; transition: background 0.2s; }
-        button:hover { background: var(--champagne-light); }
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background: var(--card-bg); 
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 25px; 
+            border-radius: 12px; 
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8); 
+            border: 1px solid rgba(223, 194, 133, 0.22); 
+        }
+
+        h1, h2 { 
+            background: linear-gradient(135deg, #f5ebd0 0%, #dfc285 50%, #b8934f 100%) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            text-align: center; 
+            font-family: 'Cormorant Garamond', serif;
+            letter-spacing: 1.5px;
+        }
+
+        .form-group { margin-bottom: 15px; }
+        
+        input[type="text"], textarea { 
+            width: 100%; 
+            padding: 12px 15px; 
+            box-sizing: border-box; 
+            border: 1px solid rgba(223, 194, 133, 0.3); 
+            background: #161618; 
+            color: #fff; 
+            border-radius: 6px; 
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+        }
+        input[type="text"]:focus, textarea:focus { border-color: var(--champagne); outline: none; box-shadow: 0 0 10px rgba(223,194,133,0.2); }
+        
+        button { 
+            background: linear-gradient(135deg, #dfc285, #c5a059); 
+            color: #0d0d0d; 
+            border: none; 
+            padding: 12px 15px; 
+            cursor: pointer; 
+            border-radius: 6px; 
+            font-weight: 600; 
+            width: 100%; 
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-size: 12px;
+            box-shadow: 0 4px 15px rgba(223,194,133,0.2);
+        }
+        button:hover { background: var(--champagne-light); transform: translateY(-1px); }
         
         #loading { text-align: center; font-style: italic; color: #888; margin: 20px 0; }
         
         /* Estilo compacto de índice para el listado de temas */
-        .post-index-item { background: var(--box-bg); padding: 14px 18px; margin-bottom: 12px; border-radius: 6px; border-left: 4px solid var(--champagne); display: flex; justify-content: space-between; align-items: center; gap: 15px; transition: background 0.2s; }
-        .post-index-item:hover { background: #282828; }
+        .post-index-item { 
+            background: var(--box-bg); 
+            backdrop-filter: blur(8px);
+            padding: 16px 18px; 
+            margin-bottom: 12px; 
+            border-radius: 8px; 
+            border-left: 4px solid var(--champagne); 
+            border-top: 1px solid rgba(223,194,133,0.15);
+            border-right: 1px solid rgba(223,194,133,0.15);
+            border-bottom: 1px solid rgba(223,194,133,0.15);
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            gap: 15px; 
+            transition: all 0.3s ease; 
+        }
+        .post-index-item:hover { background: #222226; transform: translateY(-2px); border-color: rgba(223,194,133,0.4); }
         .post-index-info { flex-grow: 1; cursor: pointer; }
-        .post-index-info h3 { margin: 0 0 5px 0; color: var(--champagne); font-size: 1.1em; }
-        .post-index-info small { color: #aaa; }
+        .post-index-info h3 { margin: 0 0 6px 0; color: var(--champagne); font-size: 1.15em; font-family: 'Cormorant Garamond', serif; letter-spacing: 0.5px; }
+        .post-index-info small { color: #aaa; font-size: 12px; }
 
-        .post { background: var(--box-bg); padding: 15px; margin-bottom: 20px; border-radius: 6px; border-left: 4px solid var(--champagne); position: relative; }
-        .post h2 { margin: 0 0 8px 0; color: var(--champagne); text-align: left; font-size: 1.4em; }
-        .post p { margin: 0 0 10px 0; word-break: break-word; color: #ddd; }
+        .post { background: var(--box-bg); padding: 20px; margin-bottom: 20px; border-radius: 8px; border-left: 4px solid var(--champagne); position: relative; border: 1px solid rgba(223,194,133,0.15); }
+        .post h2 { margin: 0 0 10px 0; text-align: left; font-size: 1.5em; }
+        .post p { margin: 0 0 10px 0; word-break: break-word; color: #ddd; line-height: 1.5; }
         .post small { color: #aaa; }
 
-        .actions-bar { display: flex; gap: 15px; margin-top: 10px; font-size: 0.85em; justify-content: space-between; align-items: center; }
-        .like-btn { background: none; border: none; color: var(--champagne); cursor: pointer; padding: 0; font-weight: bold; width: auto; display: flex; align-items: center; gap: 4px; }
+        .actions-bar { display: flex; gap: 15px; margin-top: 15px; font-size: 0.85em; justify-content: space-between; align-items: center; }
+        .like-btn { background: none; border: none; color: var(--champagne); cursor: pointer; padding: 0; font-weight: bold; width: auto; display: flex; align-items: center; gap: 5px; }
         .like-btn:hover { color: var(--champagne-light); background: none; }
         
-        .view-btn { background: var(--champagne); color: #121212; border: none; padding: 8px 14px; border-radius: 6px; font-size: 0.85em; cursor: pointer; font-weight: bold; width: auto; white-space: nowrap; }
+        .view-btn { background: linear-gradient(135deg, #dfc285, #c5a059); color: #0d0d0d; border: none; padding: 8px 16px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 600; width: auto; white-space: nowrap; text-transform: uppercase; letter-spacing: 1px; }
         .view-btn:hover { background: var(--champagne-light); }
 
-        .back-btn { background: #252525; color: var(--champagne); border: 1px solid var(--champagne); padding: 8px 15px; margin-bottom: 20px; border-radius: 4px; cursor: pointer; font-weight: bold; width: auto; display: inline-block; }
-        .back-btn:hover { background: #333; }
+        .back-btn { background: #1a1a1c; color: var(--champagne); border: 1px solid var(--champagne); padding: 8px 16px; margin-bottom: 20px; border-radius: 6px; cursor: pointer; font-weight: 600; width: auto; display: inline-block; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; }
+        .back-btn:hover { background: #26262a; }
 
-        .admin-only { display: none !important; }
-        .delete-btn { background: none; border: none; color: #ff5555; cursor: pointer; font-size: 0.8em; padding: 0; font-weight: bold; width: auto; float: right; }
+        .delete-btn { background: none; border: none; color: #ff5555; cursor: pointer; font-size: 0.8em; padding: 0; font-weight: bold; width: auto; float: right; text-transform: uppercase; }
         .delete-btn:hover { color: #ff8888; background: none; }
 
-        .comments-section { margin-top: 15px; border-top: 1px solid #333; padding-top: 12px; }
-        .comment-item { font-size: 0.9em; margin-bottom: 12px; color: #ccc; word-break: break-word; background: #1c1c1c; padding: 10px; border-radius: 6px; position: relative; }
+        .comments-section { margin-top: 20px; border-top: 1px solid rgba(223,194,133,0.2); padding-top: 15px; }
+        .comment-item { font-size: 13px; margin-bottom: 12px; color: #ccc; word-break: break-word; background: #161618; padding: 12px; border-radius: 6px; position: relative; border: 1px solid rgba(223,194,133,0.1); border-left: 3px solid var(--champagne); }
         .comment-author { color: var(--champagne); font-weight: bold; margin-right: 6px; }
-        .comment-time { font-size: 0.75em; color: #777; margin-left: 8px; }
+        .comment-time { font-size: 11px; color: #777; margin-left: 8px; display: block; margin-top: 6px; }
         
-        .comment-form { margin-top: 15px; display: flex; flex-direction: column; gap: 8px; }
-        .comment-inputs { display: flex; gap: 6px; }
-        .comment-inputs input { font-size: 0.9em; padding: 8px; background: #1a1a1a; border: 1px solid #444; }
-        .comment-btn { width: auto; padding: 8px 16px; font-size: 0.9em; background: var(--champagne); color: #121212; white-space: nowrap; }
+        .comment-form { margin-top: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .comment-inputs { display: flex; gap: 8px; }
+        .comment-inputs input { font-size: 13px; padding: 10px; background: #161618; border: 1px solid rgba(223,194,133,0.3); }
+        .comment-btn { width: auto; padding: 10px 18px; font-size: 11px; }
 
-        .emoji-bar { display: flex; gap: 5px; flex-wrap: wrap; background: #181818; padding: 5px; border-radius: 4px; border: 1px solid #333; align-items: center; }
+        .emoji-bar { display: flex; gap: 6px; flex-wrap: wrap; background: #161618; padding: 8px; border-radius: 6px; border: 1px solid rgba(223,194,133,0.3); align-items: center; }
         .emoji-btn { background: none; border: none; font-size: 1.2em; cursor: pointer; padding: 2px 6px; width: auto; }
-        .emoji-btn:hover { background: #333; border-radius: 3px; }
+        .emoji-btn:hover { background: #252529; border-radius: 4px; }
 
-        .file-upload-label { color: var(--champagne); cursor: pointer; font-size: 0.85em; display: flex; align-items: center; gap: 4px; background: #252525; padding: 4px 8px; border-radius: 4px; border: 1px solid #444; width: auto; }
-        .file-upload-label:hover { background: #333; }
+        .file-upload-label { color: var(--champagne); cursor: pointer; font-size: 12px; display: inline-flex; align-items: center; justify-content: center; background: rgba(223,194,133,0.1); width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(223, 194, 133, 0.4); margin-left: auto; transition: all 0.3s ease; }
+        .file-upload-label:hover { background: rgba(223,194,133,0.2); }
         input[type="file"] { display: none; }
 
-        .reply-box { margin-top: 8px; display: none; flex-direction: column; gap: 6px; padding-left: 15px; border-left: 2px solid var(--champagne); }
-        .reply-trigger { color: var(--champagne); cursor: pointer; font-size: 0.85em; background: none; border: none; padding: 0; text-decoration: underline; width: auto; }
+        .reply-box { margin-top: 10px; display: none; flex-direction: column; gap: 8px; padding-left: 15px; border-left: 2px solid var(--champagne); }
+        .reply-trigger { color: var(--champagne); cursor: pointer; font-size: 12px; background: none; border: none; padding: 0; text-decoration: underline; width: auto; }
         .reply-trigger:hover { color: var(--champagne-light); background: none; }
         
-        .msg-media { max-width: 140px; max-height: 140px; border-radius: 6px; margin-top: 6px; display: block; object-fit: cover; background: #000; border: 1px solid #444; }
-        .post-media { max-width: 100%; max-height: 250px; border-radius: 6px; margin-top: 8px; display: block; object-fit: contain; background: #000; }
+        .msg-media { max-width: 140px; max-height: 140px; border-radius: 6px; margin-top: 8px; display: block; object-fit: cover; background: #000; border: 1px solid rgba(223,194,133,0.3); }
+        .post-media { max-width: 100%; max-height: 250px; border-radius: 6px; margin-top: 10px; display: block; object-fit: contain; background: #000; border: 1px solid rgba(223,194,133,0.3); }
         
-        .file-preview-text { font-size: 0.75em; color: var(--champagne); margin-left: 5px; font-style: italic; }
+        .file-preview-text { font-size: 11px; color: var(--champagne); margin-left: 5px; font-style: italic; }
 
-        .admin-footer { text-align: center; margin-top: 30px; font-size: 0.8em; color: #555; }
+        .admin-footer { text-align: center; margin-top: 30px; font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 1px; }
         .admin-link { color: #555; text-decoration: none; cursor: pointer; }
         .admin-link:hover { color: var(--champagne); }
 
-        /* Logo Imponente Gigante */
+        /* Logo Gigante Imponente */
         .logo-foro {
             height: 120px !important;
             max-height: 130px !important;
@@ -114,22 +181,22 @@
         </div>
         <div class="form-group">
             <textarea id="contenidoInput" rows="4" placeholder="Escribí tu mensaje aquí..."></textarea>
-            <div class="emoji-bar" style="margin-top: 5px;">
-                <button class="emoji-btn" onclick="agregarEmoji('contenidoInput', '😊')">😊</button>
-                <button class="emoji-btn" onclick="agregarEmoji('contenidoInput', '👍')">👍</button>
-                <button class="emoji-btn" onclick="agregarEmoji('contenidoInput', '🔥')">🔥</button>
-                <button class="emoji-btn" onclick="agregarEmoji('contenidoInput', '❤️')">❤️</button>
-                <button class="emoji-btn" onclick="agregarEmoji('contenidoInput', '👏')">👏</button>
-                <button class="emoji-btn" onclick="agregarEmoji('contenidoInput', '✨')">✨</button>
-                <label class="file-upload-label">
-                    📷 Adjuntar foto <input type="file" id="mainImageFile" accept="image/*" onchange="previewFile('mainImageFile', 'mainFileName')">
+            <div class="emoji-bar" style="margin-top: 8px;">
+                <button type="button" class="emoji-btn" onclick="agregarEmoji('contenidoInput', '😊')">😊</button>
+                <button type="button" class="emoji-btn" onclick="agregarEmoji('contenidoInput', '👍')">👍</button>
+                <button type="button" class="emoji-btn" onclick="agregarEmoji('contenidoInput', '🔥')">🔥</button>
+                <button type="button" class="emoji-btn" onclick="agregarEmoji('contenidoInput', '❤️')">❤️</button>
+                <button type="button" class="emoji-btn" onclick="agregarEmoji('contenidoInput', '👏')">👏</button>
+                <button type="button" class="emoji-btn" onclick="agregarEmoji('contenidoInput', '✨')">✨</button>
+                <label class="file-upload-label" title="Adjuntar foto">
+                    📎 <input type="file" id="mainImageFile" accept="image/*" onchange="previewFile('mainImageFile', 'mainFileName')">
                 </label>
-                <span id="mainFileName" class="file-preview-text"></span>
             </div>
+            <span id="mainFileName" class="file-preview-text"></span>
         </div>
         <button id="publicarBtn">Publicar Tema</button>
 
-        <hr style="border: 0; border-top: 1px solid #333; margin: 30px 0;">
+        <hr style="border: 0; border-top: 1px solid rgba(223,194,133,0.2); margin: 30px 0;">
 
         <h2>Temas del Foro</h2>
         <div id="loading">Cargando temas...</div>
@@ -142,7 +209,7 @@
         <div id="singlePostContainer"></div>
         
         <div class="comments-section">
-            <h3>Comentarios y Respuestas</h3>
+            <h3 style="text-align: left; font-size: 1.2em; margin-bottom: 15px;">Comentarios y Respuestas</h3>
             <div id="singleCommentsContainer"></div>
             
             <div class="comment-form">
@@ -151,15 +218,15 @@
                     <input type="text" id="activeCommentText" placeholder="Escribir comentario..." style="flex: 2.5;">
                 </div>
                 <div class="emoji-bar">
-                    <button class="emoji-btn" onclick="agregarEmoji('activeCommentText', '😊')">😊</button>
-                    <button class="emoji-btn" onclick="agregarEmoji('activeCommentText', '👍')">👍</button>
-                    <button class="emoji-btn" onclick="agregarEmoji('activeCommentText', '🔥')">🔥</button>
-                    <button class="emoji-btn" onclick="agregarEmoji('activeCommentText', '❤️')">❤️</button>
-                    <label class="file-upload-label">
-                        📷 Adjuntar <input type="file" id="activeImageFile" accept="image/*" onchange="previewFile('activeImageFile', 'activeFileName')">
+                    <button type="button" class="emoji-btn" onclick="agregarEmoji('activeCommentText', '😊')">😊</button>
+                    <button type="button" class="emoji-btn" onclick="agregarEmoji('activeCommentText', '👍')">👍</button>
+                    <button type="button" class="emoji-btn" onclick="agregarEmoji('activeCommentText', '🔥')">🔥</button>
+                    <button type="button" class="emoji-btn" onclick="agregarEmoji('activeCommentText', '❤️')">❤️</button>
+                    <label class="file-upload-label" title="Adjuntar foto">
+                        📎 <input type="file" id="activeImageFile" accept="image/*" onchange="previewFile('activeImageFile', 'activeFileName')">
                     </label>
-                    <span id="activeFileName" class="file-preview-text"></span>
                 </div>
+                <span id="activeFileName" class="file-preview-text"></span>
                 <button class="comment-btn" onclick="enviarComentarioActivo()">Comentar</button>
             </div>
         </div>
@@ -218,7 +285,7 @@
       const input = document.getElementById(inputId);
       const nameSpan = document.getElementById(nameId);
       if (input.files && input.files[0]) {
-          nameSpan.textContent = "✓ " + input.files[0].name;
+          nameSpan.textContent = "✓ Archivo adjunto: " + input.files[0].name;
       } else {
           nameSpan.textContent = "";
       }
@@ -259,7 +326,6 @@
       reader.readAsDataURL(file);
   }
 
-  // Cargar listado en formato índice compacto
   db.collection("temas").onSnapshot((snapshot) => {
       loadingDiv.style.display = 'none';
       postsContainer.innerHTML = "";
@@ -302,7 +368,6 @@
       });
   });
 
-  // Publicar tema principal
   publicarBtn.addEventListener('click', () => {
       const autor = document.getElementById('autorInput').value.trim();
       const titulo = document.getElementById('tituloInput').value.trim();
@@ -362,7 +427,6 @@
       }
   };
 
-  // Abrir hilo individual al hacer clic
   window.abrirHilo = function(postId) {
       currentPostId = postId;
       document.getElementById('listView').style.display = 'none';
@@ -435,8 +499,8 @@
                   <div id="reply-box-${rId}" class="reply-box">
                       <input type="text" id="rAuthor-${rId}" placeholder="Nombre" style="font-size: 0.85em; padding: 6px;">
                       <input type="text" id="rText-${rId}" placeholder="Responder a ${escapeHtml(rData.autor)}..." style="font-size: 0.85em; padding: 6px;">
-                      <label class="file-upload-label" style="font-size:0.8em; width:fit-content;">
-                          📷 Foto <input type="file" id="rFile-${rId}" accept="image/*" onchange="previewFile('rFile-${rId}', 'rFileName-${rId}')">
+                      <label class="file-upload-label" style="font-size:0.8em; width:30px; height:30px;" title="Adjuntar foto">
+                          📎 <input type="file" id="rFile-${rId}" accept="image/*" onchange="previewFile('rFile-${rId}', 'rFileName-${rId}')">
                       </label>
                       <span id="rFileName-${rId}" class="file-preview-text"></span>
                       <button class="comment-btn" onclick="enviarRespuestaAComentario('${postId}', '${rId}', '${escapeHtml(rData.autor)}')">Enviar</button>
