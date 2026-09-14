@@ -521,4 +521,56 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     color: #fff;
     border-color: #fff;
 }
+/* ========================================================= */
+/* PASTILLAS DE CATEGORÍAS (PILLS) - ESTILO LUJO SILENCIOSO  */
+/* ========================================================= */
+.pills-container {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 20px 5%;
+    scrollbar-width: none;
+    justify-content: flex-start;
+    border-bottom: 1px solid rgba(223, 194, 133, 0.1);
+    margin-bottom: 10px;
+}
+@media(min-width: 768px) {
+    .pills-container {
+        justify-content: center;
+    }
+}
+.pills-container::-webkit-scrollbar { display: none; }
+
+.pill-btn {
+    background: rgba(22, 22, 24, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(223, 194, 133, 0.25);
+    color: #b3aea4;
+    padding: 10px 22px;
+    border-radius: 30px;
+    font-size: 11px;
+    cursor: pointer;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.pill-btn:hover {
+    border-color: rgba(223, 194, 133, 0.6);
+    color: #f5ebd0;
+    transform: translateY(-1px);
+}
+
+.pill-btn.active {
+    background: linear-gradient(135deg, #f5ebd0 0%, #dfc285 50%, #b8934f 100%) !important;
+    color: #0d0d0d !important;
+    border-color: #dfc285 !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 20px rgba(223, 194, 133, 0.3) !important;
+}
 
