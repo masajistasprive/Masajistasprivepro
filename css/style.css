@@ -489,4 +489,88 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     color: #fff;
     border-color: #fff;
 }
+/* Tarjeta de Anuncio / Espacio Disponible Estilizada */
+.card-ad-link {
+    text-decoration: none !important;
+    display: block !important;
+    height: 100% !important;
+}
+
+.card-ad {
+    background: rgba(22, 22, 24, 0.65) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px dashed rgba(223, 194, 133, 0.35) !important;
+    border-radius: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 30px 20px !important;
+    text-align: center !important;
+    min-height: 280px !important;
+    position: relative !important;
+    overflow: hidden !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Marca de agua del logo de fondo en las tarjetas vacías */
+.card-ad::before {
+    content: "" !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 160px !important;
+    height: 80px !important;
+    background-image: url('../img/logo.png') !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    opacity: 0.2 !important;
+    pointer-events: none !important;
+    z-index: 1 !important;
+}
+
+.ad-content {
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+.card-ad:hover {
+    border-color: rgba(223, 194, 133, 0.8) !important;
+    transform: translateY(-3px) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(223, 194, 133, 0.15) !important;
+}
+
+.ad-content h3 {
+    font-family: 'Cormorant Garamond', serif !important;
+    font-size: 20px !important;
+    margin-bottom: 8px !important;
+    background: linear-gradient(135deg, #f5ebd0 0%, #dfc285 50%, #b8934f 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+}
+
+.ad-content p {
+    color: #b3aea4 !important;
+    font-size: 12px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    letter-spacing: 1px !important;
+    text-transform: uppercase !important;
+    margin-bottom: 15px !important;
+}
+
+.btn-ad {
+    display: inline-block !important;
+    background: linear-gradient(135deg, #f5ebd0 0%, #dfc285 50%, #b8934f 100%) !important;
+    color: #0d0d0d !important;
+    padding: 8px 18px !important;
+    border-radius: 20px !important;
+    font-size: 10px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1.5px !important;
+    font-weight: 600 !important;
+    font-family: 'Montserrat', sans-serif !important;
+    box-shadow: 0 4px 15px rgba(223, 194, 133, 0.2) !important;
+}
 
