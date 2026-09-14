@@ -102,18 +102,18 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
 /* SECCIÓN DESTACADAS Y GLOBOS                               */
 /* ========================================================= */
 .destacadas-container-wrapper {
-    padding: 15px 4% 5px 4%;
-    background: rgba(15, 17, 21, 0.5);
-    border-bottom: 1px solid rgba(223, 194, 133, 0.1);
+    padding: 15px 4% 10px 4%;
+    background: rgba(15, 17, 21, 0.6);
+    border-bottom: 1px solid rgba(223, 194, 133, 0.12);
 }
 
 .destacadas-titulo {
     font-family: 'Cormorant Garamond', serif !important;
-    font-size: 19px !important;
+    font-size: 18px !important;
     font-weight: 600 !important;
     letter-spacing: 2px !important;
     text-transform: uppercase !important;
-    margin: 0 0 10px 4px !important;
+    margin: 0 0 10px 2px !important;
     background: linear-gradient(135deg, #f5ebd0 0%, #dfc285 50%, #b8934f 100%) !important;
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
@@ -121,9 +121,9 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
 
 .stories-container {
     display: flex;
-    gap: 15px;
+    gap: 14px;
     overflow-x: auto;
-    padding: 5px 0 10px 0;
+    padding: 2px 0;
     scrollbar-width: none;
 }
 .stories-container::-webkit-scrollbar { display: none; }
@@ -135,8 +135,8 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     flex-shrink: 0;
 }
 .story-ring {
-    width: 65px;
-    height: 65px;
+    width: 62px;
+    height: 62px;
     border-radius: 50%;
     padding: 2px;
     background: linear-gradient(135deg, #dfc285, #8a733e);
@@ -149,13 +149,13 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     height: 100%;
     border-radius: 50%;
     object-fit: cover;
-    object-position: center 20%;
+    object-position: center top;
     border: 2px solid #0d0d0d;
 }
 .story-item span {
     color: #e5e0d8;
     font-size: 11px;
-    margin-top: 5px;
+    margin-top: 4px;
     font-weight: 400;
 }
 
