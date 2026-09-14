@@ -12,9 +12,9 @@
     });
 })();
 
-// comentarios.js - Motor Dinámico Global, Visor Funcional Global, Comentarios y Blindaje Inteligente
+// comentarios.js - Motor Global, Visor Fluido, Comentarios y Blindaje Inteligente
 (function() {
-    // 1. BLINDAJE SELECTIVO: Prevenir click derecho, arrastre y atajos
+    // 1. Blindaje contra click derecho y atajos de inspección
     document.addEventListener('contextmenu', (e) => {
         if (e.target.tagName === 'IMG') {
             e.preventDefault();
@@ -40,7 +40,7 @@
         }
     });
 
-    // Inyectar animación CSS para el botón de WhatsApp y estilos del Visor
+    // Inyectar estilos para el botón de WhatsApp y el Visor (Lightbox)
     const styleAnim = document.createElement('style');
     styleAnim.innerHTML = `
         img {
@@ -77,8 +77,8 @@
     `;
     document.head.appendChild(styleAnim);
 
-    // Función global para activar el visor en cualquier imagen de perfil
-    function activarVisorGlobal() {
+    // 2. Visor de pantalla completa funcional y fluido
+    function inicializarVisor() {
         if (!document.getElementById('priveLightbox')) {
             const lightbox = document.createElement('div');
             lightbox.id = 'priveLightbox';
@@ -96,14 +96,15 @@
             };
         }
 
-        // Seleccionar todas las imágenes dentro de perfiles y galerías
-        const fotosGaleria = document.querySelectorAll('.perfil-galeria-grid img, .foto-principal, .galeria-miniaturas img, .grid-perfiles .card-image img');
-        
-        fotosGaleria.forEach(img => {
-            if (!img.dataset.visorListener) {
-                img.dataset.visorListener = "true";
-                img.style.cursor = 'zoom-in';
+        // Vincular clic a todas las fotos de perfiles, galerías e index
+        const selectorFotos = '.perfil-galeria-grid img, .foto-principal, .galeria-miniaturas img, .grid-perfiles .card-image img, .story-ring img';
+        document.querySelectorAll(selectorFotos).forEach(img => {
+            img.style.cursor = 'zoom-in';
+            // Eliminar eventos previos duplicados clonando o reemplazando el nodo si fuera necesario, o simplemente asegurando el listener
+            if (!img.dataset.listenerAsignado) {
+                img.dataset.listenerAsignado = "true";
                 img.addEventListener('click', (e) => {
+                    e.preventDefault();
                     e.stopPropagation();
                     const lb = document.getElementById('priveLightbox');
                     const lbImg = document.getElementById('priveLightboxImg');
@@ -115,11 +116,10 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-        activarVisorGlobal();
-        // Por seguridad, reintentar un segundo después por si hay contenido dinámico
-        setTimeout(activarVisorGlobal, 1000);
+        inicializarVisor();
+        setTimeout(inicializarVisor, 800); // Doble pasada por si hay contenido asíncrono
 
-        // Reposicionar y animar el botón de WhatsApp con saludo dinámico
+        // 3. Reposicionar y animar el botón de WhatsApp con saludo dinámico
         const btnWa = document.querySelector('.btn-whatsapp');
         const mainContainer = document.querySelector('.perfil-container');
         
@@ -292,7 +292,7 @@
 
             if (snapshot.empty) {
                 container.innerHTML = "<p style='color: #777; font-size: 13px; text-align: center; font-style: italic;'>No hay experiencias aún. ¡Sé el primero en dejar una!</p>";
-                activarVisorGlobal();
+                inicializarVisor();
                 return;
             }
 
@@ -330,8 +330,7 @@
                 container.appendChild(div);
             });
 
-            // Reactivar el visor para las nuevas imágenes cargadas en los comentarios
-            activarVisorGlobal();
+            inicializarVisor();
         });
 
         window.enviarComentarioPerfil = function() {
