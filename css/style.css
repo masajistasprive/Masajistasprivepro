@@ -1,35 +1,10 @@
 /* ========================================================= */
-/* BLINDAJE ANTI-DESCARGA TOTAL (INCLUYENDO PERFILES)        */
-/* ========================================================= */
-img {
-    -webkit-touch-callout: none !important;
-    -webkit-user-select: none !important;
-    user-select: none !important;
-    -webkit-user-drag: none !important;
-}
-
-/* Capa transparente de protección sobre las fotos de perfil y grilla */
-.card-image, .perfil-galeria-grid {
-    position: relative !important;
-}
-
-.card-image::after, .perfil-galeria-grid::after {
-    content: "" !important;
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    z-index: 25 !important;
-    background: transparent !important;
-}
-/* ========================================================= */
 /* ELIMINAR BACHES BLANCOS EN EL SCROLL (OVERSCROLL)         */
 /* ========================================================= */
 html {
     background-color: #080808 !important;
     color-scheme: dark !important;
-    overscroll-behavior-y: none !important; /* Evita el rebote blanco en Chrome/Android */
+    overscroll-behavior-y: none !important;
 }
 
 body {
@@ -38,6 +13,7 @@ body {
     overscroll-behavior-y: none !important;
     min-height: 100vh;
 }
+
 /* ========================================================= */
 /* ESTILOS GLOBALES Y TIPOGRAFÍA EXCLUSIVA                   */
 /* ========================================================= */
@@ -686,15 +662,14 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     text-transform: uppercase;
     letter-spacing: 1px;
 }
+
 /* ========================================================= */
-/* BLINDAJE TÁCTIL ANTI-GUARDADO EN CELULARES                */
+/* BLINDAJE TÁCTIL SEGURO (SIN BLOQUEAR SCROLL NI MINIATURAS)*/
 /* ========================================================= */
-.card-image img, 
-.perfil-galeria-grid img, 
-.galeria-miniaturas img, 
-.story-ring img {
-    -webkit-touch-callout: none !important; /* Desactiva el menú contextual flotante en iOS y Android */
+img {
+    -webkit-touch-callout: none !important;
     -webkit-user-select: none !important;
     user-select: none !important;
+    -webkit-user-drag: none !important;
 }
 
