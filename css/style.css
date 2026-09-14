@@ -626,4 +626,71 @@ body {
     letter-spacing: 0.5px;
     text-align: center;
 }
+/* ========================================================= */
+/* MEJORAS VISUALES DE ALTA GAMA (SILENT LUXURY / GLASS)     */
+/* ========================================================= */
+
+/* 1. Fondo atmosférico profundo */
+body {
+    background: radial-gradient(circle at 50% 0%, #1a1814 0%, #0d0d0e 65%, #080808 100%) !important;
+    background-attachment: fixed !important;
+}
+
+/* 2. Títulos en oro metálico cepillado */
+h1, h2, .section-heading, .perfil-titulo-seccion h2 {
+    background: linear-gradient(135deg, #f5ebd0 0%, #dfc285 50%, #b8934f 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    text-shadow: 0 4px 20px rgba(223, 194, 133, 0.15);
+}
+
+/* 3. Tarjetas con efecto Glassmorphism y borde pulido */
+.card {
+    background: rgba(22, 22, 24, 0.65) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(223, 194, 133, 0.22) !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+    animation: priveFadeUp 0.6s ease-out both;
+}
+
+.card:hover {
+    transform: translateY(-5px) scale(1.01) !important;
+    border-color: rgba(223, 194, 133, 0.6) !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(223, 194, 133, 0.2) !important;
+}
+
+/* 4. Badges y detalles refinados */
+.badge-verificado {
+    background: linear-gradient(135deg, rgba(223, 194, 133, 0.25), rgba(184, 147, 79, 0.1)) !important;
+    border: 1px solid rgba(223, 194, 133, 0.5) !important;
+    backdrop-filter: blur(8px) !important;
+    border-radius: 20px !important;
+    letter-spacing: 1px !important;
+}
+
+/* 5. Globos de categorías con aura luminosa suave */
+.globo-ring {
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.globo-item:hover .globo-ring {
+    transform: scale(1.06) !important;
+    box-shadow: 0 0 18px rgba(223, 194, 133, 0.5) !important;
+}
+
+/* 6. Animación suave de entrada */
+@keyframes priveFadeUp {
+    0% {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
