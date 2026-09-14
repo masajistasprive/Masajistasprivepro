@@ -12,9 +12,9 @@
     });
 })();
 
-// comentarios.js - Motor Dinámico Global, Visor con Marca de Agua, Comentarios y Blindaje Inteligente
+// comentarios.js - Motor Dinámico Global, Visor Funcional Global, Comentarios y Blindaje Inteligente
 (function() {
-    // 1. BLINDAJE SELECTIVO: Prevenir click derecho, arrastre y atajos, permitiendo clics limpios en fotos
+    // 1. BLINDAJE SELECTIVO: Prevenir click derecho, arrastre y atajos
     document.addEventListener('contextmenu', (e) => {
         if (e.target.tagName === 'IMG') {
             e.preventDefault();
@@ -77,10 +77,8 @@
     `;
     document.head.appendChild(styleAnim);
 
-    window.addEventListener('DOMContentLoaded', () => {
-        // 2. Visor de pantalla completa (Lightbox) funcional con Marca de Agua de lujo
-        const fotosGaleria = document.querySelectorAll('.perfil-galeria-grid img, .foto-principal, .galeria-miniaturas img');
-        
+    // Función global para activar el visor en cualquier imagen de perfil
+    function activarVisorGlobal() {
         if (!document.getElementById('priveLightbox')) {
             const lightbox = document.createElement('div');
             lightbox.id = 'priveLightbox';
@@ -98,18 +96,30 @@
             };
         }
 
+        // Seleccionar todas las imágenes dentro de perfiles y galerías
+        const fotosGaleria = document.querySelectorAll('.perfil-galeria-grid img, .foto-principal, .galeria-miniaturas img, .grid-perfiles .card-image img');
+        
         fotosGaleria.forEach(img => {
-            img.style.cursor = 'zoom-in';
-            img.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const lb = document.getElementById('priveLightbox');
-                const lbImg = document.getElementById('priveLightboxImg');
-                lbImg.src = img.src;
-                lb.style.display = 'flex';
-            });
+            if (!img.dataset.visorListener) {
+                img.dataset.visorListener = "true";
+                img.style.cursor = 'zoom-in';
+                img.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const lb = document.getElementById('priveLightbox');
+                    const lbImg = document.getElementById('priveLightboxImg');
+                    lbImg.src = img.src;
+                    lb.style.display = 'flex';
+                });
+            }
         });
+    }
 
-        // 3. Reposicionar y animar el botón de WhatsApp con saludo dinámico
+    window.addEventListener('DOMContentLoaded', () => {
+        activarVisorGlobal();
+        // Por seguridad, reintentar un segundo después por si hay contenido dinámico
+        setTimeout(activarVisorGlobal, 1000);
+
+        // Reposicionar y animar el botón de WhatsApp con saludo dinámico
         const btnWa = document.querySelector('.btn-whatsapp');
         const mainContainer = document.querySelector('.perfil-container');
         
@@ -282,6 +292,7 @@
 
             if (snapshot.empty) {
                 container.innerHTML = "<p style='color: #777; font-size: 13px; text-align: center; font-style: italic;'>No hay experiencias aún. ¡Sé el primero en dejar una!</p>";
+                activarVisorGlobal();
                 return;
             }
 
@@ -298,7 +309,7 @@
             lista.forEach(data => {
                 const fechaStr = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : 'Hace un momento';
                 const likes = data.likes || 0;
-                const imgHtml = data.image ? `<img src="${data.image}" style="max-width: 100%; max-height: 180px; border-radius: 6px; margin-top: 10px; display: block; object-fit: cover; border: 1px solid rgba(223,194,133,0.4); cursor: pointer;" onclick="window.open(this.src)" alt="Adjunto">` : '';
+                const imgHtml = data.image ? `<img src="${data.image}" style="max-width: 100%; max-height: 180px; border-radius: 6px; margin-top: 10px; display: block; object-fit: cover; border: 1px solid rgba(223,194,133,0.4); cursor: pointer;" alt="Adjunto">` : '';
                 const deleteBtn = isAdminPerfil ? `<button onclick="window.borrarComentarioPerfil('${data.id}', '${perfilId}')" style="background:none; border:none; color:#ff5555; cursor:pointer; font-size:11px; font-weight:bold; float:right; text-transform: uppercase;">🗑️ Eliminar</button>` : '';
 
                 const div = document.createElement('div');
@@ -318,6 +329,9 @@
                 `;
                 container.appendChild(div);
             });
+
+            // Reactivar el visor para las nuevas imágenes cargadas en los comentarios
+            activarVisorGlobal();
         });
 
         window.enviarComentarioPerfil = function() {
