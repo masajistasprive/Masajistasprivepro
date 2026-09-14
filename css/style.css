@@ -1,4 +1,19 @@
 /* ========================================================= */
+/* ELIMINAR BACHES BLANCOS EN EL SCROLL (OVERSCROLL)         */
+/* ========================================================= */
+html {
+    background-color: #080808 !important;
+    color-scheme: dark !important;
+    overscroll-behavior-y: none !important; /* Evita el rebote blanco en Chrome/Android */
+}
+
+body {
+    background: #080808 !important;
+    background-color: #080808 !important;
+    overscroll-behavior-y: none !important;
+    min-height: 100vh;
+}
+/* ========================================================= */
 /* ESTILOS GLOBALES Y TIPOGRAFÍA EXCLUSIVA                   */
 /* ========================================================= */
 * {
