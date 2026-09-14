@@ -42,7 +42,8 @@
         </div>
         <div class="header-right">
             <a href="foro.html" class="btn-foro-prive">
-                🗨Foro Masajistas Privé
+                <span>💬 FORO</span>
+                <span>MASAJISTAS PRIVÉ</span>
             </a>
         </div>
     </header>
@@ -71,8 +72,7 @@
         </a>
     </div>
 
-    <!-- Globos de Categorías -->
-        <!-- Globos de Categorías (Genéricos y Temáticos) -->
+    <!-- Globos de Categorías (Genéricos y Temáticos) -->
     <div class="globos-categorias-container" id="globosCategorias">
         <!-- Terapéuticos: Camilla con velas -->
         <div class="globo-item" onclick="filtrarPorGlobo('terapeuticas')">
@@ -89,13 +89,20 @@
             <div class="globo-ring"><img src="https://images.unsplash.com/photo-1519824145371-296894a0daa9?auto=format&fit=crop&w=300&q=80" alt="Masculinos"></div>
             <span>Masculinos</span>
         </div>
-        <!-- Fantasías: Estética de cuero / arnés / detalle oscuro -->
+        <!-- Fantasías: Antifaz de BDSM / Estética de cuero -->
         <div class="globo-item" onclick="filtrarPorGlobo('fantasias')">
             <div class="globo-ring"><img src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=300&q=80" alt="Fantasías"></div>
             <span>Fantasías</span>
         </div>
     </div>
 
+    <!-- Botones de Categorías en Píldora -->
+    <nav class="pills-container">
+        <button class="pill-btn active" data-filter="todas">Todas</button>
+        <button class="pill-btn" data-filter="terapeuticas">Terapéuticas</button>
+        <button class="pill-btn" data-filter="sensuales">Sensuales</button>
+        <button class="pill-btn" data-filter="masculinos">Masculinos</button>
+    </nav>
 
     <!-- Grilla Principal por Categorías -->
     <main class="container">
@@ -410,7 +417,6 @@
 
         window.addEventListener('DOMContentLoaded', cargarArticulosDelDia);
 
-        // Control de Píldoras de Categorías y Globos
         const pills = document.querySelectorAll('.pill-btn');
         const cards = document.querySelectorAll('.card-link');
         
