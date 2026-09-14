@@ -28,8 +28,15 @@
         
         #loading { text-align: center; font-style: italic; color: #888; margin: 20px 0; }
         
+        /* Estilo compacto de índice para el listado de temas */
+        .post-index-item { background: var(--box-bg); padding: 14px 18px; margin-bottom: 12px; border-radius: 6px; border-left: 4px solid var(--champagne); display: flex; justify-content: space-between; align-items: center; gap: 15px; transition: background 0.2s; }
+        .post-index-item:hover { background: #282828; }
+        .post-index-info { flex-grow: 1; cursor: pointer; }
+        .post-index-info h3 { margin: 0 0 5px 0; color: var(--champagne); font-size: 1.1em; }
+        .post-index-info small { color: #aaa; }
+
         .post { background: var(--box-bg); padding: 15px; margin-bottom: 20px; border-radius: 6px; border-left: 4px solid var(--champagne); position: relative; }
-        .post h3 { margin: 0 0 5px 0; color: var(--champagne); }
+        .post h2 { margin: 0 0 8px 0; color: var(--champagne); text-align: left; font-size: 1.4em; }
         .post p { margin: 0 0 10px 0; word-break: break-word; color: #ddd; }
         .post small { color: #aaa; }
 
@@ -37,13 +44,12 @@
         .like-btn { background: none; border: none; color: var(--champagne); cursor: pointer; padding: 0; font-weight: bold; width: auto; display: flex; align-items: center; gap: 4px; }
         .like-btn:hover { color: var(--champagne-light); background: none; }
         
-        .view-btn { background: var(--champagne); color: #121212; border: none; padding: 6px 12px; border-radius: 8px; font-size: 0.85em; cursor: pointer; font-weight: bold; width: auto; }
+        .view-btn { background: var(--champagne); color: #121212; border: none; padding: 8px 14px; border-radius: 6px; font-size: 0.85em; cursor: pointer; font-weight: bold; width: auto; white-space: nowrap; }
         .view-btn:hover { background: var(--champagne-light); }
 
         .back-btn { background: #252525; color: var(--champagne); border: 1px solid var(--champagne); padding: 8px 15px; margin-bottom: 20px; border-radius: 4px; cursor: pointer; font-weight: bold; width: auto; display: inline-block; }
         .back-btn:hover { background: #333; }
 
-        /* Ocultos por defecto hasta que ingreses como admin */
         .admin-only { display: none !important; }
         .delete-btn { background: none; border: none; color: #ff5555; cursor: pointer; font-size: 0.8em; padding: 0; font-weight: bold; width: auto; float: right; }
         .delete-btn:hover { color: #ff8888; background: none; }
@@ -75,7 +81,6 @@
         
         .file-preview-text { font-size: 0.75em; color: var(--champagne); margin-left: 5px; font-style: italic; }
 
-        /* Estilo discreto para el acceso admin al pie de página */
         .admin-footer { text-align: center; margin-top: 30px; font-size: 0.8em; color: #555; }
         .admin-link { color: #555; text-decoration: none; cursor: pointer; }
         .admin-link:hover { color: var(--champagne); }
@@ -90,7 +95,7 @@
 <div class="container">
     <h1>Foro Masajistas Privé</h1>
 
-    <!-- VISTA 1: LISTA DE TEMAS -->
+    <!-- VISTA 1: LISTA DE TEMAS (ÍNDICE COMPACTO) -->
     <div id="listView">
         <div class="form-group">
             <h2>Crear nuevo tema</h2>
@@ -175,25 +180,6 @@
   let currentPostId = null;
   let isAdmin = false;
 
-  // Función para activar el modo admin con contraseña
-  window.activarAdmin = function() {
-      const pass = prompt("Ingresá la contraseña de administrador:");
-      if (pass === "martinpalermo09") { // Podes cambiar esta clave cuando quieras
-          isAdmin = true;
-          alert("Modo administrador activado.");
-          location.reload(); // Recarga para mostrar los botones de borrar
-      } else if (pass !== null) {
-          alert("Contraseña incorrecta.");
-      }
-  };
-
-  // Guardar estado de admin en la sesión para no pedir contraseña a cada rato
-  if (sessionStorage.getItem("priveAdmin") === "true") {
-      isAdmin = true;
-  }
-
-  // Interceptar la activación para guardarla en sesión
-  const originalActivarAdmin = window.activarAdmin;
   window.activarAdmin = function() {
       const pass = prompt("Ingresá la contraseña de administrador:");
       if (pass === "martinpalermo09") {
@@ -205,6 +191,10 @@
           alert("Contraseña incorrecta.");
       }
   };
+
+  if (sessionStorage.getItem("priveAdmin") === "true") {
+      isAdmin = true;
+  }
 
   const loadingDiv = document.getElementById('loading');
   const postsContainer = document.getElementById('postsContainer');
@@ -261,7 +251,7 @@
       reader.readAsDataURL(file);
   }
 
-  // Cargar lista principal de temas
+  // Cargar listado en formato índice compacto
   db.collection("temas").onSnapshot((snapshot) => {
       loadingDiv.style.display = 'none';
       postsContainer.innerHTML = "";
@@ -284,24 +274,20 @@
 
       docs.forEach((data) => {
           const postId = data.id;
-          const fechaFormateada = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : 'Hace un momento';
-          const likesCount = data.likes || 0;
+          const fechaFormateada = data.fecha ? new Date(data.fecha.toDate()).toLocaleDateString() : 'Reciente';
           
-          let mediaHtml = data.image ? `<img src="${data.image}" class="post-media" alt="Imagen">` : '';
-          let deleteBtnHtml = isAdmin ? `<button class="delete-btn" onclick="borrarTema('${postId}')">🗑️ Eliminar tema</button>` : '';
+          let deleteBtnHtml = isAdmin ? `<button class="delete-btn" onclick="borrarTema('${postId}')" style="margin-left: 10px;">🗑️</button>` : '';
 
           const postElement = document.createElement('div');
-          postElement.className = 'post';
+          postElement.className = 'post-index-item';
           postElement.innerHTML = `
-              ${deleteBtnHtml}
-              <h3>${escapeHtml(data.titulo)}</h3>
-              <p>${escapeHtml(data.contenido)}</p>
-              ${mediaHtml}
-              <small>Publicado por <b>${escapeHtml(data.autor)}</b> el ${fechaFormateada}</small>
-              
-              <div class="actions-bar">
-                  <button class="like-btn" onclick="darLikePost('${postId}', ${likesCount})">👍 Me gusta (<span id="likes-count-${postId}">${likesCount}</span>)</button>
-                  <button class="view-btn" onclick="abrirHilo('${postId}')">Ver Debate / Responder</button>
+              <div class="post-index-info" onclick="abrirHilo('${postId}')">
+                  <h3>💬 ${escapeHtml(data.titulo)}</h3>
+                  <small>Por <b>${escapeHtml(data.autor)}</b> — ${fechaFormateada}</small>
+              </div>
+              <div style="display: flex; align-items: center;">
+                  <button class="view-btn" onclick="abrirHilo('${postId}')">Ver Debate</button>
+                  ${deleteBtnHtml}
               </div>
           `;
           postsContainer.appendChild(postElement);
@@ -348,7 +334,6 @@
       });
   });
 
-  // Borrar Tema completo
   window.borrarTema = function(postId) {
       if (confirm("¿Estás seguro de eliminar este tema y todas sus respuestas?")) {
           db.collection("temas").doc(postId).delete().then(() => {
@@ -361,7 +346,6 @@
       }
   };
 
-  // Borrar Comentario individual
   window.borrarComentario = function(postId, replyId) {
       if (confirm("¿Estás seguro de eliminar este comentario?")) {
           db.collection("temas").doc(postId).collection("respuestas").doc(replyId).delete().catch((error) => {
@@ -370,7 +354,7 @@
       }
   };
 
-  // Abrir hilo individual
+  // Abrir hilo individual al hacer clic
   window.abrirHilo = function(postId) {
       currentPostId = postId;
       document.getElementById('listView').style.display = 'none';
