@@ -661,4 +661,15 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     text-transform: uppercase;
     letter-spacing: 1px;
 }
+/* ========================================================= */
+/* BLINDAJE TÁCTIL ANTI-GUARDADO EN CELULARES                */
+/* ========================================================= */
+.card-image img, 
+.perfil-galeria-grid img, 
+.galeria-miniaturas img, 
+.story-ring img {
+    -webkit-touch-callout: none !important; /* Desactiva el menú contextual flotante en iOS y Android */
+    -webkit-user-select: none !important;
+    user-select: none !important;
+}
 
