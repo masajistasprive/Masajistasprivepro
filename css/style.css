@@ -17,7 +17,6 @@ body {
     letter-spacing: 0.3px;
 }
 
-/* Forzar que ningún enlace agarre el color azul predeterminado del navegador */
 a, a:visited, a:hover, a:active {
     color: inherit;
     text-decoration: none;
@@ -34,7 +33,7 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
 }
 
 /* ========================================================= */
-/* HEADER PRINCIPAL Y BOTÓN FORO                             */
+/* HEADER PRINCIPAL Y BOTÓN FORO (CORREGIDO Y CENTRADO)      */
 /* ========================================================= */
 .header-prive {
     display: flex;
@@ -64,18 +63,17 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     object-fit: contain !important;
 }
 
-/* Botón de Foro Centrado y Elegante */
 .btn-foro-prive {
-    background: rgba(18, 18, 20, 0.7) !important;
+    background: rgba(18, 18, 20, 0.85) !important;
     backdrop-filter: blur(12px) !important;
     -webkit-backdrop-filter: blur(12px) !important;
-    border: 1px solid rgba(223, 194, 133, 0.35) !important;
+    border: 1px solid rgba(223, 194, 133, 0.4) !important;
     color: #dfc285 !important;
-    padding: 8px 16px !important;
+    padding: 8px 14px !important;
     border-radius: 30px !important;
-    font-size: 10px !important;
+    font-size: 9.5px !important;
     text-transform: uppercase !important;
-    letter-spacing: 1.5px !important;
+    letter-spacing: 1px !important;
     text-decoration: none !important;
     font-family: 'Montserrat', sans-serif !important;
     font-weight: 500 !important;
@@ -84,10 +82,10 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     align-items: center !important;
     justify-content: center !important;
     text-align: center !important;
-    gap: 2px !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+    gap: 1px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6) !important;
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    line-height: 1.3 !important;
+    white-space: nowrap !important;
 }
 .btn-foro-prive span {
     background: linear-gradient(135deg, #f5ebd0 0%, #dfc285 50%, #b8934f 100%) !important;
@@ -95,14 +93,13 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     -webkit-text-fill-color: transparent !important;
 }
 .btn-foro-prive:hover {
-    background: rgba(223, 194, 133, 0.12) !important;
-    border-color: rgba(223, 194, 133, 0.8) !important;
+    background: rgba(223, 194, 133, 0.15) !important;
+    border-color: rgba(223, 194, 133, 0.9) !important;
     transform: translateY(-1px) !important;
-    box-shadow: 0 6px 25px rgba(223, 194, 133, 0.15) !important;
 }
 
 /* ========================================================= */
-/* HISTORIAS Y PASTILLAS DE CATEGORÍAS (PILLS FACHERAS)      */
+/* HISTORIAS Y PASTILLAS DE CATEGORÍAS                       */
 /* ========================================================= */
 .stories-container {
     display: flex;
@@ -179,13 +176,10 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
 }
-
 .pill-btn:hover {
     border-color: rgba(223, 194, 133, 0.6);
     color: #f5ebd0;
-    transform: translateY(-1px);
 }
-
 .pill-btn.active {
     background: linear-gradient(135deg, #f5ebd0 0%, #dfc285 50%, #b8934f 100%) !important;
     color: #0d0d0d !important;
@@ -226,13 +220,7 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
     height: 100% !important;
 }
-.grid-perfiles .card:hover {
-    transform: translateY(-5px) scale(1.01) !important;
-    border-color: rgba(223, 194, 133, 0.6) !important;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(223, 194, 133, 0.2) !important;
-}
 
-/* Tarjeta de Anuncio / Espacio Disponible Estilizada */
 .card-ad-link {
     text-decoration: none !important;
     display: block !important;
@@ -253,9 +241,7 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     min-height: 280px !important;
     position: relative !important;
     overflow: hidden !important;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
-
 .card-ad::before {
     content: "" !important;
     position: absolute !important;
@@ -272,36 +258,21 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     pointer-events: none !important;
     z-index: 1 !important;
 }
-
 .ad-content {
     position: relative !important;
     z-index: 2 !important;
 }
-
-.card-ad:hover {
-    border-color: rgba(223, 194, 133, 0.8) !important;
-    transform: translateY(-3px) !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(223, 194, 133, 0.15) !important;
-}
-
 .ad-content h3 {
     font-family: 'Cormorant Garamond', serif !important;
     font-size: 20px !important;
     margin-bottom: 8px !important;
-    background: linear-gradient(135deg, #f5ebd0 0%, #dfc285 50%, #b8934f 100%) !important;
-    -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
 }
-
 .ad-content p {
     color: #b3aea4 !important;
     font-size: 12px !important;
-    font-family: 'Montserrat', sans-serif !important;
-    letter-spacing: 1px !important;
     text-transform: uppercase !important;
     margin-bottom: 15px !important;
 }
-
 .btn-ad {
     display: inline-block !important;
     background: linear-gradient(135deg, #f5ebd0 0%, #dfc285 50%, #b8934f 100%) !important;
@@ -312,8 +283,6 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     text-transform: uppercase !important;
     letter-spacing: 1.5px !important;
     font-weight: 600 !important;
-    font-family: 'Montserrat', sans-serif !important;
-    box-shadow: 0 4px 15px rgba(223, 194, 133, 0.2) !important;
 }
 
 /* ========================================================= */
@@ -322,15 +291,15 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
 .grid-perfiles .card-image {
     position: relative !important;
     overflow: hidden !important;
+    height: 320px !important;
 }
-
 .grid-perfiles .card-image img {
     width: 100% !important;
     height: 100% !important;
-    object-fit: contain !important;
+    object-fit: cover !important;
+    object-position: center top !important;
     background-color: #111111 !important;
 }
-
 .grid-perfiles .card-image::before {
     content: "" !important;
     position: absolute !important;
@@ -397,7 +366,7 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
 }
 
 /* ========================================================= */
-/* GALERÍA DE PERFIL INDIVIDUAL (FOTO GRANDE ARRIBA Y ABAJO MINIATURAS) */
+/* GALERÍA DE PERFIL INDIVIDUAL (CORREGIDA Y PROLIJA)        */
 /* ========================================================= */
 .perfil-container {
     max-width: 650px !important;
@@ -419,7 +388,7 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     margin-bottom: 25px !important;
 }
 
-/* Foto principal grande arriba */
+/* Foto principal grande arriba en perfil */
 .perfil-galeria-grid .foto-principal {
     width: 100% !important;
     height: 480px !important;
@@ -432,7 +401,7 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     display: block !important;
 }
 
-/* Marca de agua centrada en la foto principal de perfil */
+/* Marca de agua centrada en foto principal de perfil */
 .perfil-galeria-grid::before {
     content: "" !important;
     position: absolute !important;
@@ -450,7 +419,7 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     z-index: 10 !important;
 }
 
-/* Contenedor de miniaturas ordenadas abajo */
+/* Miniaturas abajo */
 .galeria-miniaturas {
     display: flex !important;
     gap: 10px !important;
@@ -458,15 +427,6 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     width: 100% !important;
     padding-bottom: 5px !important;
 }
-
-.galeria-miniaturas::-webkit-scrollbar {
-    height: 4px;
-}
-.galeria-miniaturas::-webkit-scrollbar-thumb {
-    background: rgba(223, 194, 133, 0.3);
-    border-radius: 4px;
-}
-
 .galeria-miniaturas img {
     width: 80px !important;
     height: 85px !important;
@@ -478,12 +438,6 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     border: 1px solid rgba(223, 194, 133, 0.25) !important;
     cursor: pointer !important;
     flex-shrink: 0 !important;
-    transition: border-color 0.3s ease, transform 0.3s ease;
-}
-
-.galeria-miniaturas img:hover {
-    border-color: #dfc285 !important;
-    transform: scale(1.03);
 }
 
 .perfil-titulo-seccion {
@@ -523,7 +477,7 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
 }
 
 /* ========================================================= */
-/* TARJETA DE DÓLAR CENTRADA                                 */
+/* DÓLAR Y FOOTER SUTIL                                      */
 /* ========================================================= */
 .dolar-card {
     background: rgba(22, 22, 24, 0.65) !important;
@@ -541,15 +495,11 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     align-items: center !important;
     justify-content: center !important;
 }
-
 #dolar-info {
     text-align: center !important;
     width: 100% !important;
 }
 
-/* ========================================================= */
-/* FOOTER Y REDES SOCIALES SUTILES AL PIE                    */
-/* ========================================================= */
 .footer {
     text-align: center;
     padding: 40px 20px 30px 20px;
@@ -557,7 +507,6 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     margin-top: 50px;
     background: #0b0b0b;
 }
-
 .footer-container {
     max-width: 700px;
     margin: 0 auto;
@@ -567,14 +516,12 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     align-items: center;
     text-align: center;
 }
-
 .footer-socials {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 8px;
 }
-
 .footer-icons-row {
     display: flex;
     gap: 15px;
@@ -582,7 +529,6 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     align-items: center;
     margin-top: 2px;
 }
-
 .footer-icon-link {
     display: flex;
     align-items: center;
@@ -594,25 +540,20 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     border: 1px solid rgba(223, 194, 133, 0.2);
     transition: all 0.3s ease;
 }
-
 .footer-icon-link svg {
     width: 14px;
     height: 14px;
     fill: #dfc285;
     transition: transform 0.3s ease;
 }
-
 .footer-icon-link:hover {
     background: #dfc285;
     border-color: #dfc285;
     transform: translateY(-2px);
-    box-shadow: 0 0 12px rgba(223, 194, 133, 0.4);
 }
-
 .footer-icon-link:hover svg {
     fill: #0d0d0d;
 }
-
 .footer-legal {
     font-size: 11px;
     color: #777;
@@ -649,51 +590,5 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
 }
 .modal-edad-content h2 {
     font-size: 24px;
-    margin-bottom: 15px;
-    letter-spacing: 2px;
-}
-.modal-edad-content p {
-    font-family: 'Montserrat', sans-serif;
-    color: #ded9d0;
-    font-size: 13px;
-    line-height: 1.6;
-    margin-bottom: 25px;
-}
-.modal-edad-botones {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-.btn-ingresar {
-    background: #dfc285;
-    color: #0d0d0d;
-    border: none;
-    padding: 12px;
-    border-radius: 6px;
-    font-weight: 600;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-.btn-ingresar:hover {
-    background: #f3d699;
-}
-.btn-salir {
-    background: transparent;
-    color: #888;
-    border: 1px solid rgba(255,255,255,0.1);
-    padding: 10px;
-    border-radius: 6px;
-    font-size: 11px;
-    text-decoration: none;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: color 0.3s, border-color 0.3s;
-}
-.btn-salir:hover {
-    color: #fff;
-    border-color: #fff;
-}
+    margin-bottom: 15
 
