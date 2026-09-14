@@ -9,119 +9,14 @@
     <!-- Fuentes elegantes Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     
-    <style>
-        body {
-            font-family: 'Montserrat', sans-serif !important;
-            background-color: #0d0d0d !important;
-            color: #e5e0d8;
-        }
-        h1, h2, h3, .section-heading, .card-gradient-overlay h3 {
-            font-family: 'Cormorant Garamond', serif !important;
-            letter-spacing: 1.5px;
-        }
-        .section-heading, .blog-title, h2 {
-            color: #dfc285 !important;
-        }
-        .blog-card {
-            background: #141414;
-            border: 1px solid rgba(223, 194, 133, 0.25);
-            border-radius: 6px;
-            padding: 25px;
-            margin-bottom: 20px;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-        .blog-card:hover {
-            border-color: #dfc285;
-            background: #181818;
-        }
-        
-        /* Botón de Foro Sofisticado, Fino y Atractivo */
-        .btn-foro-prive {
-            background: linear-gradient(135deg, rgba(223, 194, 133, 0.15), rgba(223, 194, 133, 0.05));
-            border: 1px solid #dfc285;
-            color: #dfc285;
-            padding: 8px 18px;
-            border-radius: 30px;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-decoration: none;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 15px rgba(223, 194, 133, 0.15);
-            transition: all 0.3s ease;
-        }
-        .btn-foro-prive:hover {
-            background: #dfc285;
-            color: #0d0d0d;
-            box-shadow: 0 4px 20px rgba(223, 194, 133, 0.4);
-            transform: translateY(-1px);
-        }
-
-        /* Footer Ordenado: Redes a un costado y textos alineados */
-        .footer-container {
-            max-width: 900px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            text-align: left;
-        }
-        @media(min-width: 600px) {
-            .footer-container {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-            }
-        }
-        .footer-socials {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .footer-social-link {
-            color: #dfc285;
-            text-decoration: none;
-            font-size: 12px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            font-weight: 400;
-            opacity: 0.75;
-            transition: opacity 0.2s;
-        }
-        .footer-social-link:hover {
-            opacity: 1;
-        }
-        .footer-legal {
-            font-size: 11px;
-            color: #777;
-            line-height: 1.6;
-            max-width: 550px;
-        }
-        
-        .dolar-card {
-            background: #141414;
-            border: 1px solid rgba(223, 194, 133, 0.25);
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            max-width: 900px;
-            margin: 30px auto;
-        }
-    </style>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-DXX740HP41"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-DXX740HP41');
     </script>
 </head>
@@ -139,16 +34,16 @@
         </div>
     </div>
 
-    <!-- Cabecera limpia y sofisticada -->
+    <!-- Cabecera limpia y sofisticada con Logo Grande -->
     <header class="header-prive">
-        <div class="header-left">
-            <img src="img/monograma.png" alt="Monograma" class="header-monograma">
-        </div>
+        <div class="header-left" style="display: none !important;"></div>
         <div class="header-center">
             <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">
         </div>
         <div class="header-right">
-            <a href="foro.html" class="btn-foro-prive">💬 Foro</a>
+            <a href="foro.html" class="btn-foro-prive">
+                📣 Foro Privé
+            </a>
         </div>
     </header>
 
@@ -175,8 +70,26 @@
             <span>Sol</span>
         </a>
     </div>
+
     <!-- Globos de Categorías -->
-    <div class="globos-categorias-container" id="globosCategorias"></div>
+    <div class="globos-categorias-container" id="globosCategorias">
+        <div class="globo-item" onclick="filtrarPorGlobo('terapeuticas')">
+            <div class="globo-ring"><img src="img/jennyfer1.jpg" alt="Terapéuticos"></div>
+            <span>Terapéuticos</span>
+        </div>
+        <div class="globo-item" onclick="filtrarPorGlobo('sensuales')">
+            <div class="globo-ring"><img src="img/deby1.jpg" alt="Sensuales"></div>
+            <span>Sensuales</span>
+        </div>
+        <div class="globo-item" onclick="filtrarPorGlobo('masculinos')">
+            <div class="globo-ring"><img src="img/matias1.jpg" alt="Masculinos"></div>
+            <span>Masculinos</span>
+        </div>
+        <div class="globo-item" onclick="filtrarPorGlobo('fantasias')">
+            <div class="globo-ring"><img src="img/sol1.jpg" alt="Fantasías"></div>
+            <span>Fantasías</span>
+        </div>
+    </div>
 
     <!-- Botones de Categorías en Píldora -->
     <nav class="pills-container">
@@ -368,7 +281,7 @@
 
         <!-- ================= FANTASÍAS ================= -->
         <h2 class="section-heading" data-section="fantasias" style="margin-top: 2rem;">Fantasías</h2>
-        <div class="grid-perfiles">
+        <div class="grid-perfiles" data-categoria="fantasias">
             <div class="card-ad" style="border: 1px dashed rgba(223,194,133,0.3);">
                 <div class="ad-content">
                     <h3 style="color: #dfc285;">Sección de Fantasías</h3>
@@ -399,10 +312,7 @@
             <p style="color: #999; font-size: 14px; font-weight: 300;">Crónicas urbanas, secretos de gabinete y el arte del relax absoluto en CABA.</p>
         </div>
 
-        <!-- Contenedor donde el script inyectará los 2 artículos del día -->
-        <div id="cuaderno-rotativo" style="display: grid; gap: 20px;">
-            <!-- Se carga dinámicamente -->
-        </div>
+        <div id="cuaderno-rotativo" style="display: grid; gap: 20px;"></div>
     </section>
 
     <!-- Modal de Lectura para el Blog -->
@@ -420,8 +330,6 @@
     <!-- Footer Sofisticado y Ordenado -->
     <footer class="footer" style="padding: 50px 20px; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 50px; background: #0b0b0b;">
         <div class="footer-container">
-            
-            <!-- Columna Izquierda: Redes Sociales a un costado -->
             <div class="footer-socials">
                 <span style="color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px; font-weight: 500;">Síguenos</span>
                 <a href="https://instagram.com/masajistasprive" target="_blank" class="footer-social-link">Instagram</a>
@@ -431,19 +339,16 @@
                 <a href="https://whatsapp.com/channel/0029VbDhx91BA1f3Cob1BR1J" target="_blank" class="footer-social-link">WhatsApp</a>
             </div>
 
-            <!-- Columna Central: Textos Legales -->
             <div class="footer-legal">
                 <p>Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.</p>
                 <p style="margin-top: 6px;">Todo el contenido, marcas y logotipos pertenecen a sus respectivos dueños.</p>
                 <p class="copyright" style="margin-top: 10px; color: #dfc285; font-size: 12px;">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
             </div>
-
         </div>
     </footer>
 
     <!-- Scripts Generales y Rotador Diario de Artículos -->
     <script>
-        // Banco de Artículos Exclusivos (Escapados correctamente para evitar errores de sintaxis)
         const bancoArticulos = [
             {
                 categoria: "Bienestar & CABA",
@@ -477,7 +382,6 @@
             }
         ];
 
-        // Función para rotar artículos automáticamente según el día del año
         function cargarArticulosDelDia() {
             const hoy = new Date();
             const diaDelAnio = Math.floor((hoy - new Date(hoy.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
@@ -508,25 +412,42 @@
 
         window.addEventListener('DOMContentLoaded', cargarArticulosDelDia);
 
-        // Control de Píldoras de Categorías
+        // Control de Píldoras de Categorías y Globos
         const pills = document.querySelectorAll('.pill-btn');
         const cards = document.querySelectorAll('.card-link');
+        
+        function filtrarSeccion(filter) {
+            pills.forEach(p => {
+                if(p.getAttribute('data-filter') === filter) {
+                    p.classList.add('active');
+                } else {
+                    p.classList.remove('active');
+                }
+            });
+
+            cards.forEach(card => {
+                if (filter === 'todas' || card.getAttribute('data-categoria') === filter) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
         pills.forEach(pill => {
             pill.addEventListener('click', () => {
-                pills.forEach(p => p.classList.remove('active'));
-                pill.classList.add('active');
-                const filter = pill.getAttribute('data-filter');
-                cards.forEach(card => {
-                    if (filter === 'todas' || card.getAttribute('data-categoria') === filter) {
-                        card.style.display = 'block';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
+                filtrarSeccion(pill.getAttribute('data-filter'));
             });
         });
 
-        // Funciones del Modal de Artículos
+        window.filtrarPorGlobo = function(categoria) {
+            filtrarSeccion(categoria);
+            const seccionDestino = document.querySelector(`[data-section="${categoria}"]`);
+            if (seccionDestino) {
+                seccionDestino.scrollIntoView({ behavior: 'smooth' });
+            }
+        };
+
         function abrirArticulo(titulo, texto, categoria) {
             document.getElementById('categoriaArticuloModal').innerText = categoria;
             document.getElementById('tituloArticuloModal').innerText = titulo;
@@ -538,7 +459,6 @@
             document.getElementById('modalArticulo').style.display = 'none';
         }
 
-        // Cotización del Dólar en Tiempo Real
         async function obtenerDolar() {
             try {
                 const response = await fetch('https://dolarapi.com/v1/dolares/blue');
@@ -552,7 +472,6 @@
         }
         obtenerDolar();
 
-        // Verificación de Edad (+18)
         const modalEdad = document.getElementById('modal-edad');
         const btnMayor = document.getElementById('btn-mayor');
 
