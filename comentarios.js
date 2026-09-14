@@ -12,20 +12,22 @@
     });
 })();
 
-// comentarios.js - Motor Dinámico Global, Visor con Marca de Agua Forzada, Comentarios, Clip de Adjunto y Blindaje Antirrobo
+// comentarios.js - Motor Dinámico Global, Visor con Marca de Agua, Comentarios y Blindaje Inteligente
 (function() {
-    // 1. BLINDAJE ANTIRROBO: Prevenir click derecho, arrastre y atajos de inspección en todo el documento
+    // 1. BLINDAJE SELECTIVO: Prevenir click derecho, arrastre y atajos, permitiendo clics limpios en fotos
     document.addEventListener('contextmenu', (e) => {
-        e.preventDefault();
-        return false;
-    }, { capture: true });
+        if (e.target.tagName === 'IMG') {
+            e.preventDefault();
+            return false;
+        }
+    });
 
     document.addEventListener('dragstart', (e) => {
         if (e.target.tagName === 'IMG') {
             e.preventDefault();
             return false;
         }
-    }, { capture: true });
+    });
 
     document.addEventListener('keydown', (e) => {
         if (
@@ -38,12 +40,10 @@
         }
     });
 
-    // Inyectar animación CSS para el botón de WhatsApp, estilos del Visor y Blindaje Táctil
+    // Inyectar animación CSS para el botón de WhatsApp y estilos del Visor
     const styleAnim = document.createElement('style');
     styleAnim.innerHTML = `
-        /* Blindaje para celulares: desactiva el menú nativo al mantener presionado */
         img {
-            -webkit-touch-callout: none !important;
             -webkit-user-select: none !important;
             user-select: none !important;
             -webkit-user-drag: none !important;
@@ -78,7 +78,7 @@
     document.head.appendChild(styleAnim);
 
     window.addEventListener('DOMContentLoaded', () => {
-        // 2. Visor de pantalla completa (Lightbox) con Marca de Agua superpuesta y Escudo Invisible Antirrobo
+        // 2. Visor de pantalla completa (Lightbox) funcional con Marca de Agua de lujo
         const fotosGaleria = document.querySelectorAll('.perfil-galeria-grid img, .foto-principal, .galeria-miniaturas img');
         
         if (!document.getElementById('priveLightbox')) {
@@ -88,11 +88,7 @@
                 <div style="position: relative; display: flex; justify-content: center; align-items: center; max-width: 90vw; max-height: 85vh;">
                     <img id="priveLightboxImg" style="display: block; max-width: 90vw; max-height: 85vh; border-radius: 8px; border: 1px solid rgba(223,194,133,0.4); box-shadow: 0 20px 50px rgba(0,0,0,0.95); object-fit: contain; pointer-events: none;">
                     
-                    <!-- Marca de Agua Centrada -->
                     <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 180px; height: 80px; background-image: url('img/logo.png'); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: 0.5; pointer-events: none; z-index: 10000000;"></div>
-                    
-                    <!-- Escudo transparente: absorbe toques largos en móviles y evita descarga -->
-                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000001; background: transparent; cursor: zoom-out;"></div>
                 </div>
             `;
             document.body.appendChild(lightbox);
@@ -113,7 +109,7 @@
             });
         });
 
-        // 3. Reposicionar y animar el botón de WhatsApp elegantemente
+        // 3. Reposicionar y animar el botón de WhatsApp con saludo dinámico
         const btnWa = document.querySelector('.btn-whatsapp');
         const mainContainer = document.querySelector('.perfil-container');
         
@@ -162,7 +158,7 @@
     const contenedorDestino = document.getElementById('seccion-comentarios');
     if (!contenedorDestino) return;
 
-    // Caja de comentarios con botón de adjuntar minimalista en forma de Clip (📎)
+    // Caja de comentarios con botón de adjuntar minimalista (Clip 📎)
     contenedorDestino.innerHTML = `
         <div style="width: 100%; box-sizing: border-box; margin: 20px auto 10px auto; padding: 22px 15px; background: #141414; border: 1px solid rgba(223, 194, 133, 0.25); border-radius: 10px; font-family: 'Montserrat', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
             <h3 style="color: #dfc285; text-align: center; font-size: 20px; margin-bottom: 20px; font-family: 'Cormorant Garamond', serif; letter-spacing: 1.5px;">Experiencias y Comentarios</h3>
@@ -179,7 +175,6 @@
                     <button type="button" onclick="window.agregarEmojiPerfil('❤️')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Corazón">❤️</button>
                     <button type="button" onclick="window.agregarEmojiPerfil('⭐')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Estrella">⭐</button>
                     
-                    <!-- Botón de adjunto con icono de clip minimalista -->
                     <label title="Adjuntar foto" style="color: #dfc285; cursor: pointer; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; background: rgba(223,194,133,0.1); width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(223, 194, 133, 0.4); margin-left: auto; transition: all 0.3s ease;">
                         📎 <input type="file" id="pImageFile" accept="image/*" onchange="window.previewPerfilFile()" style="display:none;">
                     </label>
