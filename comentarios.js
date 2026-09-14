@@ -12,9 +12,9 @@
     });
 })();
 
-// comentarios.js - Motor Global, Miniaturas Interactivas, Visor con Marca de Agua y Blindaje
+// comentarios.js - Motor Global, Miniaturas Fluidas, Visor con Marca de Agua y Scroll Nativo Libre
 (function() {
-    // 1. Blindaje contra click derecho y atajos de inspección en imágenes
+    // 1. Blindaje seguro: solo previene click derecho y atajos, sin tocar el scroll táctil ni las miniaturas
     document.addEventListener('contextmenu', (e) => {
         if (e.target.tagName === 'IMG') {
             e.preventDefault();
@@ -77,7 +77,7 @@
     `;
     document.head.appendChild(styleAnim);
 
-    // 2. Gestión de Miniaturas y Visor de Pantalla Completa
+    // 2. Sistema inteligente de Miniaturas e Interacción de Fotos
     function inicializarInteraccionFotos() {
         if (!document.getElementById('priveLightbox')) {
             const lightbox = document.createElement('div');
@@ -96,64 +96,51 @@
             };
         }
 
-        // A. Hacer que las miniaturas cambien la foto principal al hacerles clic (si el HTML usa onclick tradicional, esto lo refuerza o respeta)
-        const miniaturas = document.querySelectorAll('.galeria-miniaturas img');
         const fotoPrincipal = document.querySelector('.perfil-galeria-grid .foto-principal');
+        const miniaturas = document.querySelectorAll('.galeria-miniaturas img');
 
+        // A. Clic en las miniaturas: Cambian la foto principal al instante de forma limpia
         miniaturas.forEach(mini => {
             mini.style.cursor = 'pointer';
-            if (!mini.dataset.miniaturaAsignada) {
-                mini.dataset.miniaturaAsignada = "true";
-                mini.addEventListener('click', (e) => {
-                    // Si no tiene un onclick propio en el HTML, cambiamos la foto principal automáticamente
-                    if (fotoPrincipal && !mini.getAttribute('onclick')) {
-                        e.preventDefault();
-                        fotoPrincipal.src = mini.src;
-                    }
-                });
-            }
-        });
-
-        // B. Vincular el visor de pantalla completa a la foto principal y miniaturas
-        const selectorFotos = '.perfil-galeria-grid .foto-principal, .galeria-miniaturas img, .grid-perfiles .card-image img, .story-ring img';
-        document.querySelectorAll(selectorFotos).forEach(img => {
-            img.style.cursor = 'zoom-in';
-            if (!img.dataset.visorAsignado) {
-                img.dataset.visorAsignado = "true";
-                img.addEventListener('click', (e) => {
-                    // Si es miniatura y cambia la foto principal, permitimos el cambio, pero si hacen doble clic o toque sostenido abre el visor.
-                    // Para que abra directo al primer toque en el visor (excepto miniaturas que cambian foto), diferenciamos:
-                    if (img.closest('.galeria-miniaturas') && fotoPrincipal && !img.getAttribute('onclick')) {
-                        return; // Deja que actúe el cambio de miniatura
-                    }
+            mini.onclick = function(e) {
+                if (fotoPrincipal) {
                     e.preventDefault();
                     e.stopPropagation();
-                    const lb = document.getElementById('priveLightbox');
-                    const lbImg = document.getElementById('priveLightboxImg');
-                    // Si hacen clic en la foto principal, muestra la principal actual
-                    lbImg.src = img.src;
-                    lb.style.display = 'flex';
-                });
-            }
+                    fotoPrincipal.src = this.src;
+                }
+            };
         });
 
-        // Permitir abrir la foto principal directamente al hacerle clic
-        if (fotoPrincipal && !fotoPrincipal.dataset.visorDirecto) {
-            fotoPrincipal.dataset.visorDirecto = "true";
-            fotoPrincipal.addEventListener('click', (e) => {
+        // B. Clic en la foto principal: Abre el visor en grande
+        if (fotoPrincipal) {
+            fotoPrincipal.style.cursor = 'zoom-in';
+            fotoPrincipal.onclick = function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 const lb = document.getElementById('priveLightbox');
                 const lbImg = document.getElementById('priveLightboxImg');
-                lbImg.src = fotoPrincipal.src;
+                lbImg.src = this.src;
                 lb.style.display = 'flex';
-            });
+            };
         }
+
+        // C. Fotos de la grilla principal del index
+        document.querySelectorAll('.grid-perfiles .card-image img, .story-ring img').forEach(img => {
+            img.style.cursor = 'zoom-in';
+            img.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const lb = document.getElementById('priveLightbox');
+                const lbImg = document.getElementById('priveLightboxImg');
+                lbImg.src = this.src;
+                lb.style.display = 'flex';
+            };
+        });
     }
 
     window.addEventListener('DOMContentLoaded', () => {
         inicializarInteraccionFotos();
-        setTimeout(inicializarInteraccionFotos, 600);
+        setTimeout(inicializarInteraccionFotos, 500);
 
         // 3. Reposicionar y animar el botón de WhatsApp con saludo dinámico
         const btnWa = document.querySelector('.btn-whatsapp');
