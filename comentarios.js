@@ -12,9 +12,9 @@
     });
 })();
 
-// comentarios.js - Motor Global, Miniaturas Fluidas, Visor con Marca de Agua y Scroll Nativo Libre
+// comentarios.js - Motor Global, Visor con Marca de Agua y Comentarios
 (function() {
-    // 1. Blindaje seguro: solo previene click derecho y atajos, sin tocar el scroll táctil ni las miniaturas
+    // 1. Blindaje seguro contra click derecho y atajos (sin tocar gestos táctiles ni miniaturas)
     document.addEventListener('contextmenu', (e) => {
         if (e.target.tagName === 'IMG') {
             e.preventDefault();
@@ -77,8 +77,8 @@
     `;
     document.head.appendChild(styleAnim);
 
-    // 2. Sistema inteligente de Miniaturas e Interacción de Fotos
-    function inicializarInteraccionFotos() {
+    // 2. Visor de Pantalla Completa (Lightbox) para la foto principal y grillas
+    function inicializarVisorFotos() {
         if (!document.getElementById('priveLightbox')) {
             const lightbox = document.createElement('div');
             lightbox.id = 'priveLightbox';
@@ -96,36 +96,10 @@
             };
         }
 
-        const fotoPrincipal = document.querySelector('.perfil-galeria-grid .foto-principal');
-        const miniaturas = document.querySelectorAll('.galeria-miniaturas img');
+        // Seleccionamos únicamente la foto principal de los perfiles y las de la grilla principal
+        const fotosConVisor = document.querySelectorAll('.perfil-galeria-grid .foto-principal, .grid-perfiles .card-image img, .story-ring img');
 
-        // A. Clic en las miniaturas: Cambian la foto principal al instante de forma limpia
-        miniaturas.forEach(mini => {
-            mini.style.cursor = 'pointer';
-            mini.onclick = function(e) {
-                if (fotoPrincipal) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    fotoPrincipal.src = this.src;
-                }
-            };
-        });
-
-        // B. Clic en la foto principal: Abre el visor en grande
-        if (fotoPrincipal) {
-            fotoPrincipal.style.cursor = 'zoom-in';
-            fotoPrincipal.onclick = function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                const lb = document.getElementById('priveLightbox');
-                const lbImg = document.getElementById('priveLightboxImg');
-                lbImg.src = this.src;
-                lb.style.display = 'flex';
-            };
-        }
-
-        // C. Fotos de la grilla principal del index
-        document.querySelectorAll('.grid-perfiles .card-image img, .story-ring img').forEach(img => {
+        fotosConVisor.forEach(img => {
             img.style.cursor = 'zoom-in';
             img.onclick = function(e) {
                 e.preventDefault();
@@ -139,8 +113,8 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-        inicializarInteraccionFotos();
-        setTimeout(inicializarInteraccionFotos, 500);
+        inicializarVisorFotos();
+        setTimeout(inicializarVisorFotos, 600);
 
         // 3. Reposicionar y animar el botón de WhatsApp con saludo dinámico
         const btnWa = document.querySelector('.btn-whatsapp');
@@ -315,7 +289,7 @@
 
             if (snapshot.empty) {
                 container.innerHTML = "<p style='color: #777; font-size: 13px; text-align: center; font-style: italic;'>No hay experiencias aún. ¡Sé el primero en dejar una!</p>";
-                inicializarInteraccionFotos();
+                inicializarVisorFotos();
                 return;
             }
 
@@ -353,7 +327,7 @@
                 container.appendChild(div);
             });
 
-            inicializarInteraccionFotos();
+            inicializarVisorFotos();
         });
 
         window.enviarComentarioPerfil = function() {
