@@ -49,6 +49,28 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
 }
 
 /* ========================================================= */
+/* ADAPTACIÓN MAJESTUOSA PARA ESCRITORIO (PC)               */
+/* ========================================================= */
+@media (min-width: 1024px) {
+    body {
+        max-width: 1200px;
+        margin: 0 auto;
+        box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
+        border-left: 1px solid rgba(223, 194, 133, 0.1);
+        border-right: 1px solid rgba(223, 194, 133, 0.1);
+    }
+    
+    .grid-perfiles {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 20px !important;
+    }
+
+    .perfil-container {
+        max-width: 750px !important;
+    }
+}
+
+/* ========================================================= */
 /* HEADER PRINCIPAL Y BOTÓN FORO                             */
 /* ========================================================= */
 .header-prive {
@@ -664,7 +686,7 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
 }
 
 /* ========================================================= */
-/* BLINDAJE TÁCTIL SEGURO (SIN BLOQUEAR SCROLL NI MINIATURAS)*/
+/* BLINDAJE ANTIRROBO INTELIGENTE (PC Y MÓVIL)                */
 /* ========================================================= */
 img {
     -webkit-touch-callout: none !important;
