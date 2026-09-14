@@ -12,11 +12,43 @@
     });
 })();
 
-// comentarios.js - Motor Dinámico Global, Visor con Marca de Agua Forzada, Comentarios y Clip de Adjunto
+// comentarios.js - Motor Dinámico Global, Visor con Marca de Agua Forzada, Comentarios, Clip de Adjunto y Blindaje Antirrobo
 (function() {
-    // Inyectar animación CSS para el efecto titilante del botón de WhatsApp y estilos del Visor
+    // 1. BLINDAJE ANTIRROBO: Prevenir click derecho, arrastre y atajos de inspección en todo el documento
+    document.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        return false;
+    }, { capture: true });
+
+    document.addEventListener('dragstart', (e) => {
+        if (e.target.tagName === 'IMG') {
+            e.preventDefault();
+            return false;
+        }
+    }, { capture: true });
+
+    document.addEventListener('keydown', (e) => {
+        if (
+            e.key === 'F12' ||
+            (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+            (e.ctrlKey && (e.key === 'U' || e.key === 'S' || e.key === 'P'))
+        ) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    // Inyectar animación CSS para el botón de WhatsApp, estilos del Visor y Blindaje Táctil
     const styleAnim = document.createElement('style');
     styleAnim.innerHTML = `
+        /* Blindaje para celulares: desactiva el menú nativo al mantener presionado */
+        img {
+            -webkit-touch-callout: none !important;
+            -webkit-user-select: none !important;
+            user-select: none !important;
+            -webkit-user-drag: none !important;
+        }
+
         @keyframes privePulseGlow {
             0% { transform: scale(1); box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); }
             50% { transform: scale(1.02); box-shadow: 0 6px 25px rgba(37, 211, 102, 0.8), 0 0 15px rgba(223, 194, 133, 0.5); }
@@ -39,12 +71,14 @@
             align-items: center;
             backdrop-filter: blur(12px);
             cursor: zoom-out;
+            user-select: none;
+            -webkit-user-select: none;
         }
     `;
     document.head.appendChild(styleAnim);
 
     window.addEventListener('DOMContentLoaded', () => {
-        // 1. Visor de pantalla completa (Lightbox) con Marca de Agua superpuesta fija
+        // 2. Visor de pantalla completa (Lightbox) con Marca de Agua superpuesta y Escudo Invisible Antirrobo
         const fotosGaleria = document.querySelectorAll('.perfil-galeria-grid img, .foto-principal, .galeria-miniaturas img');
         
         if (!document.getElementById('priveLightbox')) {
@@ -52,8 +86,13 @@
             lightbox.id = 'priveLightbox';
             lightbox.innerHTML = `
                 <div style="position: relative; display: flex; justify-content: center; align-items: center; max-width: 90vw; max-height: 85vh;">
-                    <img id="priveLightboxImg" style="display: block; max-width: 90vw; max-height: 85vh; border-radius: 8px; border: 1px solid rgba(223,194,133,0.4); box-shadow: 0 20px 50px rgba(0,0,0,0.95); object-fit: contain;">
+                    <img id="priveLightboxImg" style="display: block; max-width: 90vw; max-height: 85vh; border-radius: 8px; border: 1px solid rgba(223,194,133,0.4); box-shadow: 0 20px 50px rgba(0,0,0,0.95); object-fit: contain; pointer-events: none;">
+                    
+                    <!-- Marca de Agua Centrada -->
                     <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 180px; height: 80px; background-image: url('img/logo.png'); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: 0.5; pointer-events: none; z-index: 10000000;"></div>
+                    
+                    <!-- Escudo transparente: absorbe toques largos en móviles y evita descarga -->
+                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000001; background: transparent; cursor: zoom-out;"></div>
                 </div>
             `;
             document.body.appendChild(lightbox);
@@ -74,7 +113,7 @@
             });
         });
 
-        // 2. Reposicionar y animar el botón de WhatsApp elegantemente
+        // 3. Reposicionar y animar el botón de WhatsApp elegantemente
         const btnWa = document.querySelector('.btn-whatsapp');
         const mainContainer = document.querySelector('.perfil-container');
         
