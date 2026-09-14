@@ -483,5 +483,29 @@
             });
         }
     </script>
+        <!-- Script de Blindaje Anti-Descarga / Anti-Click Derecho -->
+    <script>
+        // Deshabilitar click derecho en todo el sitio
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // Bloquear combinaciones de teclado comunes para inspeccionar o guardar (F12, Ctrl+U, Ctrl+S, Ctrl+Shift+I, etc.)
+        document.addEventListener('keydown', event => {
+            if (
+                event.key === 'F12' ||
+                (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'J' || event.key === 'C')) ||
+                (event.ctrlKey && (event.key === 'U' || event.key === 'S' || event.key === 'P'))
+            ) {
+                event.preventDefault();
+                return false;
+            }
+        });
+
+        // Deshabilitar el arrastre de imágenes para que no las puedan soltar en el escritorio
+        document.addEventListener('dragstart', event => {
+            if (event.target.tagName === 'IMG') {
+                event.preventDefault();
+            }
+        });
+    </script>
 </body>
 </html>
