@@ -31,6 +31,7 @@ body {
     margin: 0;
     padding: 0;
     letter-spacing: 0.3px;
+    width: 100% !important;
 }
 
 a, a:visited, a:hover, a:active {
@@ -49,20 +50,18 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
 }
 
 /* ========================================================= */
-/* ADAPTACIÓN MAJESTUOSA PARA ESCRITORIO (PC)               */
+/* ADAPTACIÓN FLUIDA Y ELEGANTE PARA ESCRITORIO (PC)         */
 /* ========================================================= */
 @media (min-width: 1024px) {
-    body {
-        max-width: 1200px;
-        margin: 0 auto;
-        box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
-        border-left: 1px solid rgba(223, 194, 133, 0.1);
-        border-right: 1px solid rgba(223, 194, 133, 0.1);
+    .container:not(.perfil-container) {
+        max-width: 1400px !important;
+        margin: 0 auto !important;
+        padding: 20px 5% !important;
     }
     
     .grid-perfiles {
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 20px !important;
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 24px !important;
     }
 
     .perfil-container {
@@ -84,6 +83,7 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     top: 0;
     z-index: 1000;
     min-height: 85px;
+    width: 100%;
 }
 .header-left { 
     display: none !important; 
@@ -562,6 +562,7 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     border-top: 1px solid rgba(255,255,255,0.05);
     margin-top: 50px;
     background: #0b0b0b;
+    width: 100%;
 }
 .footer-container {
     max-width: 700px;
