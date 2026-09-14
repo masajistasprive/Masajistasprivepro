@@ -144,7 +144,6 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     font-weight: 400;
 }
 
-/* Pastillas de categorías minimalistas y elegantes */
 .pills-container {
     display: flex;
     gap: 12px;
@@ -196,7 +195,7 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
 }
 
 /* ========================================================= */
-/* GRILLA DEL INICIO (INDEX) - 2 COLUMNAS ESTRICTAS          */
+/* GRILLAS Y TARJETAS                                        */
 /* ========================================================= */
 .container:not(.perfil-container) { 
     padding: 10px 4%; 
@@ -216,7 +215,6 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     text-decoration: none !important; 
 }
 
-/* Tarjetas con efecto Glassmorphism y borde pulido */
 .grid-perfiles .card, .grid-perfiles .card-ad {
     background: rgba(22, 22, 24, 0.65) !important;
     backdrop-filter: blur(12px) !important;
@@ -234,8 +232,92 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(223, 194, 133, 0.2) !important;
 }
 
+/* Tarjeta de Anuncio / Espacio Disponible Estilizada */
+.card-ad-link {
+    text-decoration: none !important;
+    display: block !important;
+    height: 100% !important;
+}
+
+.card-ad {
+    background: rgba(22, 22, 24, 0.65) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px dashed rgba(223, 194, 133, 0.35) !important;
+    border-radius: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 30px 20px !important;
+    text-align: center !important;
+    min-height: 280px !important;
+    position: relative !important;
+    overflow: hidden !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.card-ad::before {
+    content: "" !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 160px !important;
+    height: 80px !important;
+    background-image: url('../img/logo.png') !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    opacity: 0.2 !important;
+    pointer-events: none !important;
+    z-index: 1 !important;
+}
+
+.ad-content {
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+.card-ad:hover {
+    border-color: rgba(223, 194, 133, 0.8) !important;
+    transform: translateY(-3px) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(223, 194, 133, 0.15) !important;
+}
+
+.ad-content h3 {
+    font-family: 'Cormorant Garamond', serif !important;
+    font-size: 20px !important;
+    margin-bottom: 8px !important;
+    background: linear-gradient(135deg, #f5ebd0 0%, #dfc285 50%, #b8934f 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+}
+
+.ad-content p {
+    color: #b3aea4 !important;
+    font-size: 12px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    letter-spacing: 1px !important;
+    text-transform: uppercase !important;
+    margin-bottom: 15px !important;
+}
+
+.btn-ad {
+    display: inline-block !important;
+    background: linear-gradient(135deg, #f5ebd0 0%, #dfc285 50%, #b8934f 100%) !important;
+    color: #0d0d0d !important;
+    padding: 8px 18px !important;
+    border-radius: 20px !important;
+    font-size: 10px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1.5px !important;
+    font-weight: 600 !important;
+    font-family: 'Montserrat', sans-serif !important;
+    box-shadow: 0 4px 15px rgba(223, 194, 133, 0.2) !important;
+}
+
 /* ========================================================= */
-/* FOTOS SIN CORTES Y MARCA DE AGUA GLOBAL                   */
+/* FOTOS Y MARCA DE AGUA                                     */
 /* ========================================================= */
 .grid-perfiles .card-image, 
 .perfil-galeria-grid {
@@ -248,15 +330,6 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     height: 100% !important;
     object-fit: contain !important;
     background-color: #111111 !important;
-}
-
-.perfil-galeria-grid .foto-principal {
-    width: 100% !important;
-    height: 420px !important;
-    object-fit: contain !important;
-    background-color: #111111 !important;
-    border-radius: 8px !important;
-    border: 1px solid rgba(223, 194, 133, 0.2);
 }
 
 .grid-perfiles .card-image::before,
@@ -325,92 +398,93 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     font-size: 10px; 
 }
 
-.btn-ad, .ad-content a {
-    color: #0d0d0d !important;
-    background: #dfc285 !important;
-}
-
 /* ========================================================= */
-/* PÁGINAS DE PERFIL INDIVIDUAL Y FOOTER                     */
+/* TARJETA DE DÓLAR CENTRADA                                 */
 /* ========================================================= */
-.perfil-container {
-    max-width: 650px !important;
-    margin: 30px auto !important;
-    background: rgba(22, 22, 24, 0.8) !important;
+.dolar-card {
+    background: rgba(22, 22, 24, 0.65) !important;
     backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
     border: 1px solid rgba(223, 194, 133, 0.25) !important;
     border-radius: 12px !important;
-    padding: 25px !important;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.6) !important;
-}
-.perfil-galeria-grid {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 15px !important;
-    margin-bottom: 25px !important;
-}
-.galeria-miniaturas {
-    display: flex !important;
-    gap: 10px !important;
-    overflow-x: auto !important;
-}
-.galeria-miniaturas img {
-    width: 23% !important;
-    height: 85px !important;
-    object-fit: contain !important;
-    background-color: #111111 !important;
-    border-radius: 6px !important;
-    border: 1px solid rgba(223, 194, 133, 0.25) !important;
-    cursor: pointer !important;
-    flex-shrink: 0 !important;
-}
-.perfil-titulo-seccion {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-.perfil-titulo-seccion h2 {
-    font-size: 28px !important;
-    margin: 0 !important;
-}
-.perfil-info p, .perfil-info span, .detalle-item, .perfil-descripcion p, .perfil-descripcion li {
-    font-family: 'Montserrat', sans-serif !important;
-    color: #ded9d0 !important;
-    font-size: 13.5px !important;
-    font-weight: 300 !important;
-    line-height: 1.8 !important;
-    letter-spacing: 0.5px !important;
-}
-.btn-whatsapp {
-    display: block !important;
-    width: 100% !important;
-    background: #25d366 !important;
-    color: #fff !important;
+    padding: 25px 20px !important;
     text-align: center !important;
-    padding: 14px !important;
-    border-radius: 6px !important;
-    text-decoration: none !important;
-    font-weight: 600 !important;
-    font-size: 14px !important;
-    text-transform: uppercase !important;
-    letter-spacing: 1px !important;
-    margin-top: 25px !important;
-    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3) !important;
+    max-width: 500px !important;
+    margin: 40px auto !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
 }
 
+/* ========================================================= */
+/* FOOTER Y REDES SOCIALES EN DORADO                         */
+/* ========================================================= */
 .footer {
     text-align: center;
-    padding: 30px 20px;
-    font-size: 11px;
-    color: #777;
+    padding: 50px 20px;
     border-top: 1px solid rgba(255,255,255,0.05);
-    margin-top: 40px;
+    margin-top: 50px;
     background: #0b0b0b;
 }
-.footer-social-link {
-    color: #dfc285 !important;
+
+.footer-container {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+    text-align: center;
+}
+
+.footer-socials {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.footer-icons-row {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.footer-icon-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(223, 194, 133, 0.08);
+    border: 1px solid rgba(223, 194, 133, 0.3);
+    transition: all 0.3s ease;
+}
+
+.footer-icon-link svg {
+    width: 18px;
+    height: 18px;
+    fill: #dfc285;
+    transition: transform 0.3s ease;
+}
+
+.footer-icon-link:hover {
+    background: #dfc285;
+    border-color: #dfc285;
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(223, 194, 133, 0.4);
+}
+
+.footer-icon-link:hover svg {
+    fill: #0d0d0d;
+}
+
+.footer-legal {
+    font-size: 11px;
+    color: #777;
+    line-height: 1.6;
+    max-width: 550px;
 }
 
 /* ========================================================= */
@@ -488,89 +562,5 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
 .btn-salir:hover {
     color: #fff;
     border-color: #fff;
-}
-/* Tarjeta de Anuncio / Espacio Disponible Estilizada */
-.card-ad-link {
-    text-decoration: none !important;
-    display: block !important;
-    height: 100% !important;
-}
-
-.card-ad {
-    background: rgba(22, 22, 24, 0.65) !important;
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
-    border: 1px dashed rgba(223, 194, 133, 0.35) !important;
-    border-radius: 12px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 30px 20px !important;
-    text-align: center !important;
-    min-height: 280px !important;
-    position: relative !important;
-    overflow: hidden !important;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
-}
-
-/* Marca de agua del logo de fondo en las tarjetas vacías */
-.card-ad::before {
-    content: "" !important;
-    position: absolute !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    width: 160px !important;
-    height: 80px !important;
-    background-image: url('../img/logo.png') !important;
-    background-size: contain !important;
-    background-repeat: no-repeat !important;
-    background-position: center !important;
-    opacity: 0.2 !important;
-    pointer-events: none !important;
-    z-index: 1 !important;
-}
-
-.ad-content {
-    position: relative !important;
-    z-index: 2 !important;
-}
-
-.card-ad:hover {
-    border-color: rgba(223, 194, 133, 0.8) !important;
-    transform: translateY(-3px) !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(223, 194, 133, 0.15) !important;
-}
-
-.ad-content h3 {
-    font-family: 'Cormorant Garamond', serif !important;
-    font-size: 20px !important;
-    margin-bottom: 8px !important;
-    background: linear-gradient(135deg, #f5ebd0 0%, #dfc285 50%, #b8934f 100%) !important;
-    -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
-}
-
-.ad-content p {
-    color: #b3aea4 !important;
-    font-size: 12px !important;
-    font-family: 'Montserrat', sans-serif !important;
-    letter-spacing: 1px !important;
-    text-transform: uppercase !important;
-    margin-bottom: 15px !important;
-}
-
-.btn-ad {
-    display: inline-block !important;
-    background: linear-gradient(135deg, #f5ebd0 0%, #dfc285 50%, #b8934f 100%) !important;
-    color: #0d0d0d !important;
-    padding: 8px 18px !important;
-    border-radius: 20px !important;
-    font-size: 10px !important;
-    text-transform: uppercase !important;
-    letter-spacing: 1.5px !important;
-    font-weight: 600 !important;
-    font-family: 'Montserrat', sans-serif !important;
-    box-shadow: 0 4px 15px rgba(223, 194, 133, 0.2) !important;
 }
 
