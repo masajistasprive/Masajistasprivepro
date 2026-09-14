@@ -443,5 +443,28 @@
                 const response = await fetch('https://dolarapi.com/v1/dolares/blue');
                 const data = await response.json();
                 document.getElementById('dolar-info').innerHTML = `
-                    <span style="color: #dfc285; font-weight: 60
+                    <span style="color: #dfc285; font-weight: 600;">Dólar Blue</span> — Compra: $${data.compra} | Venta: $${data.venta}
+                `;
+            } catch (error) {
+                document.getElementById('dolar-info').innerHTML = "No se pudo cargar la cotización en este momento.";
+            }
+        }
+        obtenerDolar();
+
+        const modalEdad = document.getElementById('modal-edad');
+        const btnMayor = document.getElementById('btn-mayor');
+
+        if (sessionStorage.getItem('edadVerificada') === 'true') {
+            if (modalEdad) modalEdad.style.display = 'none';
+        }
+
+        if (btnMayor && modalEdad) {
+            btnMayor.addEventListener('click', () => {
+                sessionStorage.setItem('edadVerificada', 'true');
+                modalEdad.style.display = 'none';
+            });
+        }
+    </script>
+</body>
+</html>
 
