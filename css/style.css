@@ -568,7 +568,7 @@ img {
 }
 
 /* ========================================================= */
-/* ADAPTACIÓN EXCLUSIVA PARA PC (4 COLUMNAS Y GLOBOS GRANDES)*/
+/* ADAPTACIÓN EXCLUSIVA PARA PC (4 COLUMNAS Y PROPORCIÓN REAL)*/
 /* ========================================================= */
 @media (min-width: 1024px) {
     .container:not(.perfil-container) {
@@ -577,15 +577,31 @@ img {
         padding: 20px 4% !important;
     }
 
-    /* Exactamente de a 4 columnas espaciosas */
+    /* Grilla de perfiles: 4 columnas ordenadas */
     .grid-perfiles {
         grid-template-columns: repeat(4, 1fr) !important;
         gap: 24px !important;
     }
 
-    /* Perfiles completos y verticales en PC (altura ideal que evita cortes) */
+    /* Tarjetas principales de la grilla en PC con altura vertical proporcional y sin aplastarse */
     .grid-perfiles .card-image {
-        height: 450px !important;
+        height: 520px !important;
+    }
+    
+    .grid-perfiles .card-image img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        object-position: center top !important;
+    }
+
+    /* Foto principal dentro de los perfiles individuales en PC */
+    .perfil-galeria-grid .foto-principal {
+        width: 100% !important;
+        height: 550px !important;
+        max-height: 70vh !important;
+        object-fit: cover !important;
+        object-position: center top !important;
     }
 
     /* Globos destacados (stories) más grandes y majestuosos en PC */
