@@ -8,21 +8,25 @@
 
 body {
     font-family: 'Montserrat', sans-serif !important;
-    background-color: #0d0d0d !important;
+    background: radial-gradient(circle at 50% 0%, #1a1814 0%, #0d0d0e 65%, #080808 100%) !important;
+    background-attachment: fixed !important;
     color: #e5e0d8;
     margin: 0;
     padding: 0;
     letter-spacing: 0.3px;
 }
 
-h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-info h2 {
+h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-seccion h2 {
     font-family: 'Cormorant Garamond', serif !important;
     font-weight: 600 !important;
     letter-spacing: 1.5px !important;
+    background: linear-gradient(135deg, #f5ebd0 0%, #dfc285 50%, #b8934f 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    text-shadow: 0 4px 20px rgba(223, 194, 133, 0.15);
 }
 
 /* Header principal */
-/* Header principal optimizado (Sin logo izquierdo y logo central grande) */
 .header-prive {
     display: flex;
     justify-content: space-between;
@@ -51,9 +55,36 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-info h2 {
     object-fit: contain !important;
 }
 
+/* Botón de Foro imponente y refinado con Megáfono */
+.btn-foro-prive {
+    background: linear-gradient(135deg, rgba(223, 194, 133, 0.2), rgba(184, 147, 79, 0.08)) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(223, 194, 133, 0.5) !important;
+    color: #dfc285 !important;
+    padding: 10px 22px !important;
+    border-radius: 40px !important;
+    font-size: 12px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 2px !important;
+    text-decoration: none !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6), 0 0 15px rgba(223, 194, 133, 0.1) !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.btn-foro-prive:hover {
+    background: #dfc285 !important;
+    color: #0d0d0d !important;
+    border-color: #dfc285 !important;
+    transform: translateY(-2px) scale(1.03) !important;
+    box-shadow: 0 8px 30px rgba(223, 194, 133, 0.35) !important;
+}
 
-/* Botones sofisticados (Foro y Volver) */
-.btn-foro-prive, .header-right .btn-buscar {
+.header-right .btn-buscar {
     background: linear-gradient(135deg, rgba(223, 194, 133, 0.15), rgba(223, 194, 133, 0.05)) !important;
     border: 1px solid #dfc285 !important;
     color: #dfc285 !important;
@@ -71,7 +102,7 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-info h2 {
     box-shadow: 0 4px 15px rgba(223, 194, 133, 0.15) !important;
     transition: all 0.3s ease !important;
 }
-.header-right .btn-buscar:hover, .btn-foro-prive:hover {
+.header-right .btn-buscar:hover {
     background: #dfc285 !important;
     color: #0d0d0d !important;
     box-shadow: 0 4px 20px rgba(223, 194, 133, 0.4) !important;
@@ -110,6 +141,7 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-info h2 {
     height: 100%;
     border-radius: 50%;
     object-fit: cover;
+    object-position: center 20%;
     border: 2px solid #0d0d0d;
 }
 .story-item span {
@@ -146,14 +178,73 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-info h2 {
 }
 
 /* ========================================================= */
+/* GLOBOS DE CATEGORÍAS CON IMÁGENES                         */
+/* ========================================================= */
+.globos-categorias-container {
+    display: flex;
+    gap: 18px;
+    overflow-x: auto;
+    padding: 15px 5%;
+    scrollbar-width: none;
+    background: #0d0d0d;
+    margin-bottom: 10px;
+}
+.globos-categorias-container::-webkit-scrollbar { 
+    display: none; 
+}
+.globo-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+.globo-item:hover {
+    transform: translateY(-3px);
+}
+.globo-ring {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    padding: 2.5px;
+    background: linear-gradient(135deg, #dfc285, #8a733e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+.globo-item:hover .globo-ring {
+    transform: scale(1.06) !important;
+    box-shadow: 0 0 18px rgba(223, 194, 133, 0.5) !important;
+}
+.globo-ring img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center top;
+    border: 2px solid #0d0d0d;
+}
+.globo-item span {
+    color: #e5e0d8;
+    font-size: 11px;
+    margin-top: 6px;
+    font-weight: 500;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 0.5px;
+    text-align: center;
+}
+
+/* ========================================================= */
 /* GRILLA DEL INICIO (INDEX) - 2 COLUMNAS ESTRICTAS          */
 /* ========================================================= */
 .container:not(.perfil-container) { 
     padding: 10px 4%; 
 }
 .section-heading {
-    font-family: 'Cormorant Garamond', serif !important;
-    color: #dfc285 !important;
     font-size: 22px;
     letter-spacing: 1.5px;
     margin: 25px 0 15px 0;
@@ -167,21 +258,27 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-info h2 {
 .card-link { 
     text-decoration: none !important; 
 }
+
+/* Tarjetas con efecto Glassmorphism y borde pulido */
 .grid-perfiles .card, .grid-perfiles .card-ad {
-    background: #141414 !important;
-    border: 1px solid rgba(223, 194, 133, 0.2) !important;
-    border-radius: 8px !important;
+    background: rgba(22, 22, 24, 0.65) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(223, 194, 133, 0.22) !important;
+    border-radius: 12px !important;
     overflow: hidden !important;
-    transition: transform 0.3s, border-color 0.3s !important;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
     height: 100% !important;
 }
 .grid-perfiles .card:hover {
-    transform: translateY(-2px);
-    border-color: #dfc285;
+    transform: translateY(-5px) scale(1.01) !important;
+    border-color: rgba(223, 194, 133, 0.6) !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(223, 194, 133, 0.2) !important;
 }
 
 /* ========================================================= */
-/* FOTOS SIN CORTES Y MARCA DE AGUA GLOBAL (LOGO.PNG)        */
+/* FOTOS SIN CORTES Y MARCA DE AGUA GLOBAL                   */
 /* ========================================================= */
 .grid-perfiles .card-image, 
 .perfil-galeria-grid {
@@ -189,7 +286,6 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-info h2 {
     overflow: hidden !important;
 }
 
-/* Evita cortes en las fotos (object-fit: contain) con fondo oscuro */
 .grid-perfiles .card-image img {
     width: 100% !important;
     height: 100% !important;
@@ -206,7 +302,6 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-info h2 {
     border: 1px solid rgba(223, 194, 133, 0.2);
 }
 
-/* Marca de agua centrada y visible en tarjetas y foto principal */
 .grid-perfiles .card-image::before,
 .perfil-galeria-grid::before {
     content: "" !important;
@@ -225,17 +320,17 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-info h2 {
     z-index: 10 !important;
 }
 
-/* Insignia de verificado al lado del nombre */
 .badge-verificado {
     position: static !important;
     display: inline-block !important;
     margin-left: 6px !important;
     vertical-align: middle !important;
-    background: rgba(223, 194, 133, 0.1) !important;
+    background: linear-gradient(135deg, rgba(223, 194, 133, 0.25), rgba(184, 147, 79, 0.1)) !important;
     color: #dfc285 !important;
-    border: 1px solid rgba(223, 194, 133, 0.3) !important;
+    border: 1px solid rgba(223, 194, 133, 0.5) !important;
+    backdrop-filter: blur(8px) !important;
     padding: 2px 6px !important;
-    border-radius: 4px !important;
+    border-radius: 20px !important;
     font-size: 8px !important;
     text-transform: uppercase !important;
     letter-spacing: 1px !important;
@@ -258,7 +353,6 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-info h2 {
     display: inline-flex;
     align-items: center;
     flex-wrap: wrap;
-    font-family: 'Cormorant Garamond', serif;
     text-shadow: 0 2px 4px rgba(0,0,0,0.8);
 }
 .zona {
@@ -274,43 +368,14 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-info h2 {
     font-size: 10px; 
 }
 
-/* Tarjeta de anuncio (Ad) */
-.card-ad {
-    background: #141414 !important;
-    border: 1px dashed rgba(223, 194, 133, 0.3) !important;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    text-align: center;
-    min-height: 250px;
-}
-.ad-content h3 {
-    color: #dfc285;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 18px;
-    margin-bottom: 10px;
-}
-.btn-ad {
-    background: #dfc285;
-    color: #0d0d0d;
-    padding: 6px 14px;
-    border-radius: 4px;
-    font-size: 11px;
-    text-decoration: none;
-    font-weight: 600;
-    display: inline-block;
-    text-transform: uppercase;
-}
-
 /* ========================================================= */
 /* PÁGINAS DE PERFIL INDIVIDUAL                              */
 /* ========================================================= */
 .perfil-container {
     max-width: 650px !important;
     margin: 30px auto !important;
-    background: #141414 !important;
+    background: rgba(22, 22, 24, 0.8) !important;
+    backdrop-filter: blur(12px) !important;
     border: 1px solid rgba(223, 194, 133, 0.25) !important;
     border-radius: 12px !important;
     padding: 25px !important;
@@ -330,11 +395,12 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-info h2 {
 .galeria-miniaturas img {
     width: 23% !important;
     height: 85px !important;
-    object-fit: cover !important;
+    object-fit: contain !important;
+    background-color: #111111 !important;
     border-radius: 6px !important;
-    border: 1px solid rgba(223, 194, 133, 0.25);
+    border: 1px solid rgba(223, 194, 133, 0.25) !important;
     cursor: pointer !important;
-    flex-shrink: 0;
+    flex-shrink: 0 !important;
 }
 .perfil-titulo-seccion {
     display: flex;
@@ -345,7 +411,6 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-info h2 {
 }
 .perfil-titulo-seccion h2 {
     font-size: 28px !important;
-    color: #dfc285 !important;
     margin: 0 !important;
 }
 .perfil-info p, .perfil-info span, .detalle-item, .perfil-descripcion p, .perfil-descripcion li {
@@ -355,13 +420,6 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-info h2 {
     font-weight: 300 !important;
     line-height: 1.8 !important;
     letter-spacing: 0.5px !important;
-}
-.perfil-descripcion h3 {
-    font-family: 'Cormorant Garamond', serif !important;
-    color: #dfc285 !important;
-    font-size: 20px !important;
-    letter-spacing: 1.5px !important;
-    margin-bottom: 8px !important;
 }
 .btn-whatsapp {
     display: block !important;
@@ -390,34 +448,7 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-info h2 {
     margin-top: 40px;
     background: #0b0b0b;
 }
-/* ========================================================= */
-/* CENTRADO PERFECTO EN CÍRCULOS SUPERIORES (HISTORIAS)     */
-/* ========================================================= */
-.story-ring img {
-    object-fit: cover !important;
-    object-position: center 20% !important; /* Enfoca la parte superior / rostros en los círculos */
-}
-/* ========================================================= */
-/* CORRECCIÓN DE MINIATURAS EN PERFILES INDIVIDUALES         */
-/* ========================================================= */
-.galeria-miniaturas img {
-    object-fit: cover !important;
-    object-position: center center !important;
-    background-color: transparent !important;
-}
-/* ========================================================= */
-/* MINIATURAS SIN CORTES (GALERÍA DE PERFIL)                 */
-/* ========================================================= */
-.galeria-miniaturas img {
-    width: 23% !important;
-    height: 85px !important;
-    object-fit: contain !important; /* Muestra la foto entera sin recortar nada */
-    background-color: #111111 !important; /* Relleno prolijo si la foto es vertical */
-    border-radius: 6px !important;
-    border: 1px solid rgba(223, 194, 133, 0.25) !important;
-    cursor: pointer !important;
-    flex-shrink: 0 !important;
-}
+
 /* ========================================================= */
 /* MODAL DE ADVERTENCIA DE EDAD (+18)                        */
 /* ========================================================= */
@@ -446,8 +477,6 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-info h2 {
     box-shadow: 0 15px 35px rgba(0,0,0,0.8);
 }
 .modal-edad-content h2 {
-    font-family: 'Cormorant Garamond', serif;
-    color: #dfc285;
     font-size: 24px;
     margin-bottom: 15px;
     letter-spacing: 2px;
@@ -495,202 +524,5 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-info h2 {
 .btn-salir:hover {
     color: #fff;
     border-color: #fff;
-}
-/* ========================================================== */
-/* LICENCIATURA EN DISEÑO: MEJORAS VISUALES DE ALTA GAMA       */
-/* ========================================================== */
-
-/* 1. Atmósfera de Fondo: Degradé radial que imita lino/cuero negro mate */
-body {
-    background: radial-gradient(circle at 50% 0%, #161616 0%, #0d0d0d 75%) !important;
-    background-attachment: fixed !important;
-}
-
-/* 2. Micro-animaciones de entrada fluidas (Cubic-Bezier Editorial) */
-.card, .blog-card, .story-item, .dolar-card {
-    animation: editorialFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, background 0.3s ease !important;
-}
-
-.card:hover, .blog-card:hover {
-    transform: translateY(-3px);
-}
-
-@keyframes editorialFadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* 3. Glassmorphism Profundo (Efecto Cristal Ahumado en Modales y Visores) */
-#priveLightbox, #modalArticulo, .modal-edad-overlay {
-    backdrop-filter: blur(12px) saturate(120%) !important;
-    background: rgba(8, 8, 8, 0.88) !important;
-}
-
-/* 4. Ritmo Tipográfico y Espacio Negativo (Whitespace de Lujo) */
-.card-gradient-overlay {
-    padding: 20px 18px !important; /* Más aire interno para que no se comprima el texto */
-}
-
-.section-heading {
-    margin-top: 3.5rem !important;
-    margin-bottom: 1.25rem !important;
-    font-weight: 500 !important;
-}
-
-/* Refinamiento sutil de bordes dorados para unificar piezas */
-.card, .blog-card, .dolar-card, .perfil-info {
-    border: 1px solid rgba(223, 194, 133, 0.2) !important;
-}
-
-.card:hover {
-    border-color: rgba(223, 194, 133, 0.6) !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(223, 194, 133, 0.05) !important;
-}
-/* --- CORRECCIÓN DEFINITIVA DE DISEÑO EN PERFILES --- */
-.btn-whatsapp {
-    position: relative !important;
-    display: block !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    clear: both !important;
-    margin: 25px 0 !important;
-    box-sizing: border-box !important;
-    z-index: 1 !important;
-}
-
-.perfil-info {
-    position: relative !important;
-    overflow: hidden !important;
-}
-
-#seccion-comentarios div {
-    box-sizing: border-box !important;
-}
-/* --- GLOBOS DE CATEGORÍAS CON IMÁGENES --- */
-.globos-categorias-container {
-    display: flex;
-    gap: 18px;
-    overflow-x: auto;
-    padding: 15px 5%;
-    scrollbar-width: none;
-    background: #0d0d0d;
-    margin-bottom: 10px;
-}
-.globos-categorias-container::-webkit-scrollbar { 
-    display: none; 
-}
-.globo-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-decoration: none;
-    flex-shrink: 0;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-.globo-item:hover {
-    transform: translateY(-3px);
-}
-.globo-ring {
-    width: 75px;
-    height: 75px;
-    border-radius: 50%;
-    padding: 2.5px;
-    background: linear-gradient(135deg, #dfc285, #8a733e);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
-}
-.globo-ring img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-    object-position: center top;
-    border: 2px solid #0d0d0d;
-}
-.globo-item span {
-    color: #e5e0d8;
-    font-size: 11px;
-    margin-top: 6px;
-    font-weight: 500;
-    font-family: 'Montserrat', sans-serif;
-    letter-spacing: 0.5px;
-    text-align: center;
-}
-/* ========================================================= */
-/* MEJORAS VISUALES DE ALTA GAMA (SILENT LUXURY / GLASS)     */
-/* ========================================================= */
-
-/* 1. Fondo atmosférico profundo */
-body {
-    background: radial-gradient(circle at 50% 0%, #1a1814 0%, #0d0d0e 65%, #080808 100%) !important;
-    background-attachment: fixed !important;
-}
-
-/* 2. Títulos en oro metálico cepillado */
-h1, h2, .section-heading, .perfil-titulo-seccion h2 {
-    background: linear-gradient(135deg, #f5ebd0 0%, #dfc285 50%, #b8934f 100%) !important;
-    -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
-    text-shadow: 0 4px 20px rgba(223, 194, 133, 0.15);
-}
-
-/* 3. Tarjetas con efecto Glassmorphism y borde pulido */
-.card {
-    background: rgba(22, 22, 24, 0.65) !important;
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
-    border: 1px solid rgba(223, 194, 133, 0.22) !important;
-    border-radius: 12px !important;
-    overflow: hidden !important;
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
-    animation: priveFadeUp 0.6s ease-out both;
-}
-
-.card:hover {
-    transform: translateY(-5px) scale(1.01) !important;
-    border-color: rgba(223, 194, 133, 0.6) !important;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(223, 194, 133, 0.2) !important;
-}
-
-/* 4. Badges y detalles refinados */
-.badge-verificado {
-    background: linear-gradient(135deg, rgba(223, 194, 133, 0.25), rgba(184, 147, 79, 0.1)) !important;
-    border: 1px solid rgba(223, 194, 133, 0.5) !important;
-    backdrop-filter: blur(8px) !important;
-    border-radius: 20px !important;
-    letter-spacing: 1px !important;
-}
-
-/* 5. Globos de categorías con aura luminosa suave */
-.globo-ring {
-    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
-}
-
-.globo-item:hover .globo-ring {
-    transform: scale(1.06) !important;
-    box-shadow: 0 0 18px rgba(223, 194, 133, 0.5) !important;
-}
-
-/* 6. Animación suave de entrada */
-@keyframes priveFadeUp {
-    0% {
-        opacity: 0;
-        transform: translateY(18px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
