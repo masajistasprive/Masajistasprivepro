@@ -695,4 +695,41 @@ img {
     user-select: none !important;
     -webkit-user-drag: none !important;
 }
+/* ========================================================= */
+/* ADAPTACIÓN EXCLUSIVA PARA PC (GRILLAS Y GLOBOS DESTACADOS) */
+/* ========================================================= */
+@media (min-width: 1024px) {
+    /* Forzar contenedor amplio y fluido en PC */
+    .container:not(.perfil-container) {
+        max-width: 1450px !important;
+        margin: 0 auto !important;
+        padding: 20px 4% !important;
+    }
+
+    /* Grilla de perfiles: Exactamente de a 4 columnas espaciosas */
+    .grid-perfiles {
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 22px !important;
+    }
+
+    /* Perfiles completos y verticales en PC (altura óptima) */
+    .grid-perfiles .card-image {
+        height: 380px !important;
+    }
+
+    /* Globos destacados (stories) más grandes y elegantes en PC */
+    .story-ring {
+        width: 85px !important;
+        height: 85px !important;
+    }
+    
+    .destacadas-container-wrapper {
+        padding: 20px 4% 15px 4% !important;
+    }
+
+    .story-item span {
+        font-size: 13px !important;
+        margin-top: 6px !important;
+    }
+}
 
