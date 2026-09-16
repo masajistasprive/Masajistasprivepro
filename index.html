@@ -86,6 +86,7 @@
 
     <main class="container">
 
+        <!-- Sección Terapéuticas -->
         <h2 class="section-heading" data-section="terapeuticas">Masajistas Terapéuticas</h2>
         <div class="grid-perfiles">
             <a href="jennyfer.html" class="card-link" data-categoria="terapeuticas">
@@ -164,6 +165,7 @@
             </a>
         </div>
 
+        <!-- Sección Sensuales (Incluye a Pamela, Sol, Lupita, etc.) -->
         <h2 class="section-heading" data-section="sensuales" style="margin-top: 2rem;">Masajistas Sensuales</h2>
         <div class="grid-perfiles">
             <a href="deby.html" class="card-link" data-categoria="sensuales">
@@ -243,8 +245,7 @@
                         </div>
                     </div>
                 </article>
-                        <h2 class="section-heading" data-section="sensuales" style="margin-top: 2rem;">Sensuales</h2>
-        <div class="grid-perfiles">
+            </a>
             <a href="pamela.html" class="card-link" data-categoria="sensuales">
                 <article class="card">
                     <div class="card-image">
@@ -257,9 +258,8 @@
                         </div>
                     </div>
                 </article>
-            
             </a>
-            <a href="https://wa.me/5491131774848?text=Hola,%20quiero%20publicar%20mi%20anuncio%20en%20Masajistas%20Prive" target="_blank" class="card-ad-link" data-categoria="sensuales">
+            <a href="https://wa.me/5491131774848?text=Hola,%20quiero%20consultar%20sobre%20la%20seccion%20de%20Sensuales" target="_blank" class="card-ad-link" data-categoria="sensuales">
                 <article class="card-ad">
                     <div class="ad-content">
                         <h3>Espacio Disponible</h3>
@@ -270,6 +270,7 @@
             </a>
         </div>
 
+        <!-- Sección Masculinos -->
         <h2 class="section-heading" data-section="masculinos" style="margin-top: 2rem;">Masajistas Masculinos</h2>
         <div class="grid-perfiles">
             <a href="matias.html" class="card-link" data-categoria="masculinos">
@@ -296,8 +297,9 @@
             </a>
         </div>
 
-                </article>
-            </a>
+        <!-- Sección Fantasías (Solo cartel disponible) -->
+        <h2 class="section-heading" data-section="fantasias" style="margin-top: 2rem;">Fantasías</h2>
+        <div class="grid-perfiles">
             <a href="https://wa.me/5491131774848?text=Hola,%20quiero%20consultar%20sobre%20la%20seccion%20de%20Fantasias" target="_blank" class="card-ad-link" data-categoria="fantasias">
                 <article class="card-ad">
                     <div class="ad-content">
@@ -498,12 +500,11 @@
             });
         }
     </script>
-        <!-- Script de Blindaje Anti-Descarga / Anti-Click Derecho -->
+    
+    <!-- Script de Blindaje Anti-Descarga / Anti-Click Derecho -->
     <script>
-        // Deshabilitar click derecho en todo el sitio
         document.addEventListener('contextmenu', event => event.preventDefault());
 
-        // Bloquear combinaciones de teclado comunes para inspeccionar o guardar (F12, Ctrl+U, Ctrl+S, Ctrl+Shift+I, etc.)
         document.addEventListener('keydown', event => {
             if (
                 event.key === 'F12' ||
@@ -515,7 +516,6 @@
             }
         });
 
-        // Deshabilitar el arrastre de imágenes para que no las puedan soltar en el escritorio
         document.addEventListener('dragstart', event => {
             if (event.target.tagName === 'IMG') {
                 event.preventDefault();
@@ -524,3 +524,4 @@
     </script>
 </body>
 </html>
+
