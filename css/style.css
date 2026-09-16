@@ -4,13 +4,13 @@
 html {
     background-color: #080808 !important;
     color-scheme: dark !important;
-    overscroll-behavior-y: none !important;
+    overscroll-behavior-y: auto !important;
 }
 
 body {
     background: #080808 !important;
     background-color: #080808 !important;
-    overscroll-behavior-y: none !important;
+    overscroll-behavior-y: auto !important;
     min-height: 100vh;
     width: 100% !important;
     margin: 0;
