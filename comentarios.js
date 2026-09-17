@@ -12,7 +12,7 @@
     });
 })();
 
-// comentarios.js - Motor Global, Visor con Marca de Agua y Comentarios
+// comentarios.js - Motor Global, Visor con Marca de Agua, Slider Táctil y Comentarios
 (function() {
     // 1. Blindaje seguro contra click derecho y atajos (sin tocar gestos táctiles ni miniaturas)
     document.addEventListener('contextmenu', (e) => {
@@ -77,7 +77,48 @@
     `;
     document.head.appendChild(styleAnim);
 
-    // 2. Visor de Pantalla Completa (Lightbox) para la foto principal y grillas
+    // 2. Slider Táctil Seguro (Deslizar foto principal con el dedo en celulares)
+    function inicializarSliderTactil() {
+        const fotoPrincipal = document.getElementById('fotoPrincipal');
+        if (!fotoPrincipal) return;
+
+        const miniaturasImgs = document.querySelectorAll('.galeria-miniaturas img');
+        if (miniaturasImgs.length === 0) return;
+
+        let galeriaImgs = [];
+        miniaturasImgs.forEach(img => galeriaImgs.push(img.src));
+
+        let indiceActual = galeriaImgs.indexOf(fotoPrincipal.getAttribute('src'));
+        if (indiceActual === -1) indiceActual = 0;
+
+        function cambiarFoto(dir) {
+            indiceActual += dir;
+            if (indiceActual < 0) indiceActual = galeriaImgs.length - 1;
+            if (indiceActual >= galeriaImgs.length) indiceActual = 0;
+            
+            fotoPrincipal.style.opacity = '0.3';
+            setTimeout(() => {
+                fotoPrincipal.src = galeriaImgs[indiceActual];
+                fotoPrincipal.style.opacity = '1';
+            }, 120);
+        }
+
+        let touchStartX = 0;
+        fotoPrincipal.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        fotoPrincipal.addEventListener('touchend', e => {
+            let touchEndX = e.changedTouches[0].screenX;
+            if (touchEndX < touchStartX - 45) {
+                cambiarFoto(1);  // Deslizar izquierda -> Siguiente
+            } else if (touchEndX > touchStartX + 45) {
+                cambiarFoto(-1); // Deslizar derecha -> Anterior
+            }
+        }, { passive: true });
+    }
+
+    // 3. Visor de Pantalla Completa (Lightbox) para la foto principal y grillas
     function inicializarVisorFotos() {
         if (!document.getElementById('priveLightbox')) {
             const lightbox = document.createElement('div');
@@ -96,7 +137,6 @@
             };
         }
 
-        // Seleccionamos únicamente la foto principal de los perfiles y las de la grilla principal
         const fotosConVisor = document.querySelectorAll('.perfil-galeria-grid .foto-principal, .grid-perfiles .card-image img, .story-ring img');
 
         fotosConVisor.forEach(img => {
@@ -113,10 +153,14 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+        inicializarSliderTactil();
         inicializarVisorFotos();
-        setTimeout(inicializarVisorFotos, 600);
+        setTimeout(() => {
+            inicializarSliderTactil();
+            inicializarVisorFotos();
+        }, 600);
 
-        // 3. Reposicionar y animar el botón de WhatsApp con saludo dinámico
+        // Reposicionar y animar el botón de WhatsApp con saludo dinámico
         const btnWa = document.querySelector('.btn-whatsapp');
         const mainContainer = document.querySelector('.perfil-container');
         
