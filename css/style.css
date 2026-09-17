@@ -376,6 +376,12 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     margin-bottom: 25px !important;
 }
 
+/* Contenedor de la foto principal adaptado para las flechas del slider */
+.contenedor-foto-principal {
+    position: relative !important;
+    width: 100% !important;
+}
+
 .perfil-galeria-grid .foto-principal {
     width: 100% !important;
     height: 480px !important;
@@ -386,7 +392,31 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     border-radius: 8px !important;
     border: 1px solid rgba(223, 194, 133, 0.3) !important;
     display: block !important;
+    transition: opacity 0.2s ease-in-out !important;
 }
+
+/* Estilos de los botones / flechas del slider inyectado */
+.slider-btn {
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    background: rgba(0, 0, 0, 0.6) !important;
+    color: #dfc285 !important;
+    border: 1px solid rgba(223, 194, 133, 0.4) !important;
+    padding: 14px 12px !important;
+    cursor: pointer !important;
+    border-radius: 50% !important;
+    font-size: 14px !important;
+    z-index: 20 !important;
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+    transition: background 0.3s, transform 0.2s !important;
+}
+.slider-btn:active {
+    transform: translateY(-50%) scale(0.92) !important;
+}
+.prev-btn { left: 12px !important; }
+.next-btn { right: 12px !important; }
 
 .perfil-galeria-grid::before {
     content: "" !important;
@@ -619,4 +649,3 @@ img {
         margin-top: 8px !important;
     }
 }
-
