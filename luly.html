@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luly | Masajistas Privé</title>
+    <link rel="stylesheet" href="css/style.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="icon" type="image/png" href="img/monograma.png">
+    <link rel="apple-touch-icon" href="img/monograma.png">
+</head>
+<body>
+
+    <header class="header-prive">
+        <div class="header-left">
+            <a href="index.html" class="btn-volver">&larr; Volver</a>
+        </div>
+        <div class="header-center">
+            <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">
+        </div>
+        <div class="header-right" style="display: none !important;"></div>
+    </header>
+
+    <main class="perfil-container">
+        
+        <div class="perfil-titulo-seccion">
+            <h2>Luly</h2>
+            <span class="badge-verificado">✓ Privé Verificado</span>
+        </div>
+
+        <div class="perfil-info-basica">
+            <p>📍 <strong>Zona:</strong> CABA</p>
+            <p>🏠 <strong>Modalidad:</strong> Gabinete propio / Independiente</p>
+        </div>
+
+        <!-- Galería de Fotos (Foto Principal + Miniaturas) -->
+        <div class="perfil-galeria-grid">
+            <div class="foto-principal-container">
+                <img src="img/luly1.jpg" alt="Luly" id="fotoPrincipal" class="foto-principal" fetchpriority="high">
+            </div>
+            
+            <div class="galeria-miniaturas">
+                <img src="img/luly1.jpg" alt="Luly miniatura 1" class="activa" onclick="cambiarFotoPerfil('img/luly1.jpg', this)">
+                <img src="img/luly2.jpg" alt="Luly miniatura 2" onclick="cambiarFotoPerfil('img/luly2.jpg', this)">
+                <img src="img/luly3.jpg" alt="Luly miniatura 3" onclick="cambiarFotoPerfil('img/luly3.jpg', this)">
+                <img src="img/luly4.jpg" alt="Luly miniatura 4" onclick="cambiarFotoPerfil('img/luly4.jpg', this)">
+            </div>
+        </div>
+
+        <!-- Descripción y Servicios -->
+        <div class="perfil-descripcion">
+            <h3>Sobre mí y Servicios</h3>
+            <p><strong>Masajista Profesional Matriculada auxiliar en kinesiología.</strong></p>
+            <p>Te invito a que creemos una sesión de masajes única, acorde a tus necesidades. Soy una masajista de ascendencia alemana.</p>
+            <p>Realizo masajes relajantes, descontracturantes, sensitivos, antiestrés, deportivos y reductores. No dudes en contactarme y agendá tu turno 💆‍♀️💆‍♂️✅😊</p>
+            
+            <h4 style="color: #dfc285; margin-top: 20px; font-family: 'Cormorant Garamond', serif; font-size: 18px;">Comodidades del Gabinete</h4>
+            <ul style="color: #ccc; font-size: 14px; line-height: 1.6; margin-left: 20px; font-weight: 300;">
+                <li>Ducha y toallas limpias</li>
+                <li>Gabinete amplio y cómodo</li>
+                <li>Aire acondicionado / Calefacción</li>
+                <li>Entrada independiente</li>
+            </ul>
+
+            <h4 style="color: #dfc285; margin-top: 20px; font-family: 'Cormorant Garamond', serif; font-size: 18px;">Horarios Laborales</h4>
+            <p style="color: #ccc; font-size: 14px;">Lunes a Viernes de 11:00 a 20:00 hs.</p>
+        </div>
+
+        <!-- Botón de WhatsApp con el número real de Luly -->
+        <a href="https://wa.me/5491124773887?text=Hola%20Luly,%20vi%20tu%20perfil%20en%20Masajistas%20Privé%20y%20quería%20consultar%20disponibilidad." target="_blank" class="btn-whatsapp">
+            💬 CONTACTAR POR WHATSAPP
+        </a>
+
+        <!-- Contenedor donde comentarios.js inyectará la caja de opiniones -->
+        <div id="seccion-comentarios"></div>
+
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-legal">
+                <p>Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.</p>
+                <p class="copyright" style="margin-top: 10px; color: #dfc285; font-size: 12px;">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script simple para cambiar las fotos con las miniaturas -->
+    <script>
+        function cambiarFotoPerfil(nuevaSrc, elementoMin) {
+            const fotoPrin = document.getElementById('fotoPrincipal');
+            fotoPrin.style.opacity = '0.3';
+            setTimeout(() => {
+                fotoPrin.src = nuevaSrc;
+                fotoPrin.style.opacity = '1';
+            }, 120);
+
+            document.querySelectorAll('.galeria-miniaturas img').forEach(img => img.classList.remove('activa'));
+            if(elementoMin) elementoMin.classList.add('activa');
+        }
+    </script>
+
+    <!-- Script global de comentarios, visor y blindajes -->
+    <script src="comentarios.js"></script>
+</body>
+</html>
