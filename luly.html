@@ -27,17 +27,7 @@
 
     <main class="perfil-container">
         
-        <div class="perfil-titulo-seccion">
-            <h2>Luly</h2>
-            <span class="badge-verificado">✓ Privé Verificado</span>
-        </div>
-
-        <div class="perfil-info-basica">
-            <p>📍 <strong>Zona:</strong> CABA</p>
-            <p>🏠 <strong>Modalidad:</strong> Gabinete propio / Independiente</p>
-        </div>
-
-        <!-- Galería de Fotos (Foto Principal + Miniaturas) -->
+        <!-- Galería de Fotos (Foto Principal + Miniaturas) PRIMERO -->
         <div class="perfil-galeria-grid">
             <div class="foto-principal-container">
                 <img src="img/luly1.jpg" alt="Luly" id="fotoPrincipal" class="foto-principal" fetchpriority="high">
@@ -49,6 +39,17 @@
                 <img src="img/luly3.jpg" alt="Luly miniatura 3" onclick="cambiarFotoPerfil('img/luly3.jpg', this)">
                 <img src="img/luly4.jpg" alt="Luly miniatura 4" onclick="cambiarFotoPerfil('img/luly4.jpg', this)">
             </div>
+        </div>
+
+        <!-- Nombre y Verificado DESPUÉS de las miniaturas, igual a Zaira -->
+        <div class="perfil-titulo-seccion">
+            <h2>Luly</h2>
+            <span class="badge-verificado">✓ Privé Verificado</span>
+        </div>
+
+        <div class="perfil-info-basica">
+            <p>📍 <strong>Zona:</strong> CABA</p>
+            <p>🏠 <strong>Modalidad:</strong> Gabinete propio / Independiente</p>
         </div>
 
         <!-- Descripción y Servicios -->
