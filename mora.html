@@ -1,20 +1,94 @@
-<h1>Mora | Tribunales</h1>
-<p><strong>Masajista Profesional</strong></p>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mora | Masajistas Privé</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="perfil-body">
 
-<h2>Servicios</h2>
-<ul>
-    <li>Masajes relajantes, energizantes, sedativos y descontracturantes.</li>
-    <li>Atención a ambos sexos.</li>
-    <li>Modalidad: Sobre camilla o tatami.</li>
-    <li>Productos: Cremas o aceites neutros.</li>
-</ul>
+    <!-- Header Estilo App de Lujo con Logo Grande -->
+    <header class="header-prive">
+        <div class="header-left">
+            <img src="img/monograma.png" alt="Monograma" class="header-monograma">
+        </div>
+        <div class="header-center">
+            <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">
+        </div>
+        <div class="header-right">
+            <a href="index.html" class="btn-buscar">← Volver</a>
+        </div>
+    </header>
 
-<h2>Instalaciones y Confort</h2>
-<p>Consultorio privado climatizado a pasitos del Obelisco (Tribunales) o atención en hotel de pasajeros. Música ambientada y agradables aromas. Absoluta discreción.</p>
+    <main class="container perfil-container">
+        
+        <!-- Galería de 4 Fotos -->
+        <div class="perfil-galeria-grid">
+            <img src="img/mora1.jpg" alt="Mora" class="foto-principal" id="fotoPrincipal">
+            <div class="galeria-miniaturas">
+                <img src="img/mora1.jpg" alt="Mora 1" onclick="cambiarFoto(this)">
+                <img src="img/mora2.jpg" alt="Mora 2" onclick="cambiarFoto(this)">
+                <img src="img/mora3.jpg" alt="Mora 3" onclick="cambiarFoto(this)">
+                <img src="img/mora4.jpg" alt="Mora 4" onclick="cambiarFoto(this)">
+            </div>
+        </div>
 
-<h2>Información Útil</h2>
-<ul>
-    <li><strong>Zona:</strong> Tribunales / CABA</li>
-    <li><strong>Medios de pago:</strong> Todos los medios de pago.</li>
-    <li><strong>Contacto:</strong> 11 3176-1080 (Solo se atienden números que puedan ser identificados).</li>
-</ul>
+        <!-- Información de Mora -->
+        <div class="perfil-info">
+            <div class="perfil-titulo-seccion">
+                <h2>Mora</h2>
+                <span class="badge-verificado">✓ Privé Verificado</span>
+            </div>
+
+            <p class="perfil-ubicacion">📍 Zona: <strong>Tribunales (A pasitos del Obelisco)</strong></p>
+            <p class="perfil-modalidad">🏠 Modalidad: <strong>Consultorio / Hotel de pasajeros</strong></p>
+
+            <div class="perfil-descripcion">
+                <h3>Sobre mí y Servicios</h3>
+                <p>Masajista Profesional. Buena atención, música ambientada y agradables aromas. Absoluta discreción.</p>
+                <div style="margin-top: 0.5rem; color: #94a3b8; font-size: 0.9rem;">
+                    <strong>Técnicas:</strong> Masajes relajantes, energizantes, sedativos y descontracturantes.
+                </div>
+            </div>
+
+            <div class="perfil-detalles">
+                <div class="detalle-item">
+                    <span>Modalidad:</span> Sobre camilla o tatami. Utilizando cremas o aceites neutros.
+                </div>
+                <div class="detalle-item">
+                    <span>Atención:</span> Ambos sexos (Consultorio propio o hotel de pasajeros).
+                </div>
+                <div class="detalle-item">
+                    <span>Pagos:</span> Todos los medios de pago.
+                </div>
+                <div class="detalle-item" style="color: #dfbc63; font-size: 0.85rem;">
+                    ⚠️ Solo se atienden números que puedan ser identificados.
+                </div>
+            </div>
+
+            <a href="https://wa.me/5491131761080?text=Hola%20Mora,%20vi%20tu%20perfil%20en%20Masajistas%20Privé" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
+                💬 Contactar por WhatsApp
+            </a>
+        </div>
+
+    </main>
+
+    <div id="seccion-comentarios"></div>
+
+    <footer class="footer">
+        <p>Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.</p>
+        <p class="copyright">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        function cambiarFoto(element) {
+            const fotoPrincipal = document.getElementById('fotoPrincipal');
+            fotoPrincipal.src = element.src;
+        }
+    </script>
+    <script src="comentarios.js"></script>
+
+</body>
+</html>
