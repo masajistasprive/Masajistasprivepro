@@ -88,7 +88,7 @@
 
         <!-- Sección Terapéuticas -->
         <h2 class="section-heading" data-section="terapeuticas">Masajistas Terapéuticas</h2>
-        <div class="grid-perfiles">
+        <div class="grid-perfiles" id="grid-terapeuticas">
             <a href="jennyfer.html" class="card-link" data-categoria="terapeuticas">
                 <article class="card">
                     <div class="card-image">
@@ -193,7 +193,7 @@
 
         <!-- Sección Sensuales -->
         <h2 class="section-heading" data-section="sensuales" style="margin-top: 2rem;">Masajistas Sensuales</h2>
-        <div class="grid-perfiles">
+        <div class="grid-perfiles" id="grid-sensuales">
             <a href="deby.html" class="card-link" data-categoria="sensuales">
                 <article class="card">
                     <div class="card-image">
@@ -324,7 +324,7 @@
 
         <!-- Sección Masculinos -->
         <h2 class="section-heading" data-section="masculinos" style="margin-top: 2rem;">Masajistas Masculinos</h2>
-        <div class="grid-perfiles">
+        <div class="grid-perfiles" id="grid-masculinos">
             <a href="matias.html" class="card-link" data-categoria="masculinos">
                 <article class="card">
                     <div class="card-image">
@@ -351,7 +351,7 @@
 
         <!-- Sección Fantasías -->
         <h2 class="section-heading" data-section="fantasias" style="margin-top: 2rem;">Fantasías</h2>
-        <div class="grid-perfiles">
+        <div class="grid-perfiles" id="grid-fantasias">
             <a href="https://wa.me/5491131774848?text=Hola,%20quiero%20consultar%20sobre%20la%20seccion%20de%20Fantasias" target="_blank" class="card-ad-link" data-categoria="fantasias">
                 <article class="card-ad">
                     <div class="ad-content">
@@ -485,7 +485,33 @@
             `;
         }
 
-        window.addEventListener('DOMContentLoaded', cargarArticulosDelDia);
+        // Función para barajar los perfiles aleatoriamente dejando fijo el anuncio al final
+        function barajarSeccion(gridId) {
+            const grid = document.getElementById(gridId);
+            if (!grid) return;
+
+            const tarjetas = Array.from(grid.querySelectorAll('.card-link:not(.card-ad-link)'));
+            const anuncio = grid.querySelector('.card-ad-link');
+
+            for (let i = tarjetas.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [tarjetas[i], tarjetas[j]] = [tarjetas[j], tarjetas[i]];
+            }
+
+            grid.innerHTML = '';
+            tarjetas.forEach(tarjeta => grid.appendChild(tarjeta));
+            if (anuncio) {
+                grid.appendChild(anuncio);
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            cargarArticulosDelDia();
+            barajarSeccion('grid-terapeuticas');
+            barajarSeccion('grid-sensuales');
+            barajarSeccion('grid-masculinos');
+            barajarSeccion('grid-fantasias');
+        });
 
         const pills = document.querySelectorAll('.pill-btn');
         const cards = document.querySelectorAll('.card-link');
