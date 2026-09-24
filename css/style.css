@@ -138,28 +138,33 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     flex-shrink: 0;
 }
 .story-ring {
-    width: 62px;
-    height: 62px;
+    width: 85px !important; /* Tamaño premium para móvil */
+    height: 85px !important;
     border-radius: 50%;
-    padding: 2px;
-    background: linear-gradient(135deg, #dfc285, #8a733e);
+    padding: 3px !important; /* Anillo dorado más grueso */
+    background: linear-gradient(135deg, #f5ebd0 0%, #dfc285 50%, #b8934f 100%) !important;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 4px 15px rgba(223, 194, 133, 0.4) !important; /* Resplandor dorado de fondo */
 }
+
 .story-ring img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-    object-position: center top;
-    border: 2px solid #0d0d0d;
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    object-position: center top !important;
+    border: 3px solid #080808 !important; /* Borde oscuro interno para mayor contraste */
 }
+
 .story-item span {
-    color: #e5e0d8;
-    font-size: 11px;
-    margin-top: 4px;
-    font-weight: 400;
+    color: #dfc285 !important; /* Nombres en dorado en vez de blanco */
+    font-size: 12px !important;
+    margin-top: 6px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px !important;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8) !important;
 }
 
 /* ========================================================= */
@@ -626,9 +631,10 @@ img {
         object-position: center top !important;
     }
 
+    /* Globos destacados (stories) más grandes y majestuosos en PC */
     .story-ring {
-        width: 95px !important;
-        height: 95px !important;
+        width: 115px !important;
+        height: 115px !important;
     }
     
     .destacadas-container-wrapper {
@@ -636,7 +642,7 @@ img {
     }
 
     .story-item span {
-        font-size: 13.5px !important;
+        font-size: 14px !important;
         margin-top: 8px !important;
     }
 }
