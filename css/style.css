@@ -286,11 +286,12 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     font-weight: 600 !important;
 }
 
-/* Fotos en cuadrícula móvil */
+/* Fotos en cuadrícula móvil y PC (Proporción vertical perfecta asegurada) */
 .grid-perfiles .card-image {
     position: relative !important;
     overflow: hidden !important;
-    height: 320px !important;
+    aspect-ratio: 4 / 5 !important; /* MAGIA: Bloquea la foto para que siempre sea vertical */
+    height: auto !important; /* Anula cualquier altura que intente aplastarlas */
 }
 .grid-perfiles .card-image img {
     width: 100% !important;
@@ -611,11 +612,6 @@ img {
     .grid-perfiles {
         grid-template-columns: repeat(4, 1fr) !important;
         gap: 24px !important;
-    }
-
-    /* Las tarjetas recuperan su altura vertical (no se aplastan) */
-    .grid-perfiles .card-image {
-        height: 480px !important;
     }
     
     .grid-perfiles .card-image img {
