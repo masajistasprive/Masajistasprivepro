@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+Document.addEventListener('DOMContentLoaded', () => {
     // 1. Generar automáticamente los Globos de Categorías arriba de todo
     const containerGlobos = document.getElementById('globosCategorias');
     if (containerGlobos) {
@@ -106,3 +106,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+/* ========================================================= */
+/* LÓGICA DEL SLIDER INTERACTIVO DE FOTOS EN PERFILES        */
+/* ========================================================= */
+window.cambiarFoto = function(element) {
+    const fotoPrincipal = document.getElementById('fotoPrincipal');
+    if (!fotoPrincipal) return;
+    
+    // Transición suave al cambiar de imagen
+    fotoPrincipal.style.opacity = '0.3';
+    setTimeout(() => {
+        fotoPrincipal.src = element.src;
+        fotoPrincipal.style.opacity = '1';
+    }, 150);
+
+    // Marca visualmente la miniatura seleccionada
+    const miniaturas = document.querySelectorAll('.galeria-miniaturas img');
+    miniaturas.forEach(img => img.classList.remove('active-thumb'));
+    element.classList.add('active-thumb');
+};
