@@ -354,7 +354,7 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
 .modalidad-tag { color: #aaa; font-size: 10px; }
 
 /* ========================================================= */
-/* GALERÍA DE PERFIL INDIVIDUAL                              */
+/* GALERÍA DE PERFIL INDIVIDUAL (SLIDER INTERACTIVO)         */
 /* ========================================================= */
 .perfil-container {
     max-width: 650px !important;
@@ -386,6 +386,7 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     border-radius: 8px !important;
     border: 1px solid rgba(223, 194, 133, 0.3) !important;
     display: block !important;
+    transition: opacity 0.25s ease-in-out !important;
 }
 
 .perfil-galeria-grid::before {
@@ -410,8 +411,22 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     gap: 10px !important;
     overflow-x: auto !important;
     width: 100% !important;
-    padding-bottom: 5px !important;
+    padding-bottom: 8px !important;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(223, 194, 133, 0.4) transparent;
 }
+.galeria-miniaturas::-webkit-scrollbar {
+    height: 6px;
+}
+.galeria-miniaturas::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+.galeria-miniaturas::-webkit-scrollbar-thumb {
+    background: rgba(223, 194, 133, 0.4);
+    border-radius: 4px;
+}
+
 .galeria-miniaturas img {
     width: 80px !important;
     height: 85px !important;
@@ -423,6 +438,16 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     border: 1px solid rgba(223, 194, 133, 0.25) !important;
     cursor: pointer !important;
     flex-shrink: 0 !important;
+    transition: all 0.2s ease !important;
+    opacity: 0.7;
+}
+
+.galeria-miniaturas img:hover,
+.galeria-miniaturas img.active-thumb {
+    opacity: 1 !important;
+    border-color: #dfc285 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(223, 194, 133, 0.3);
 }
 
 .perfil-titulo-seccion {
@@ -577,13 +602,11 @@ img {
         padding: 20px 4% !important;
     }
 
-    /* Grilla de perfiles: 4 columnas ordenadas */
     .grid-perfiles {
         grid-template-columns: repeat(4, 1fr) !important;
         gap: 24px !important;
     }
 
-    /* Tarjetas principales de la grilla en PC con altura vertical proporcional y sin aplastarse */
     .grid-perfiles .card-image {
         height: 520px !important;
     }
@@ -595,7 +618,6 @@ img {
         object-position: center top !important;
     }
 
-    /* Foto principal dentro de los perfiles individuales en PC */
     .perfil-galeria-grid .foto-principal {
         width: 100% !important;
         height: 550px !important;
@@ -604,7 +626,6 @@ img {
         object-position: center top !important;
     }
 
-    /* Globos destacados (stories) más grandes y majestuosos en PC */
     .story-ring {
         width: 95px !important;
         height: 95px !important;
@@ -618,4 +639,4 @@ img {
         font-size: 13.5px !important;
         margin-top: 8px !important;
     }
-    }
+}
