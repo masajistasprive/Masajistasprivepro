@@ -598,22 +598,24 @@ img {
 }
 
 /* ========================================================= */
-/* ADAPTACIÓN EXCLUSIVA PARA PC (4 COLUMNAS Y PROPORCIÓN REAL)*/
+/* ADAPTACIÓN EXCLUSIVA PARA PC, NOTEBOOKS Y VISTA ESCRITORIO*/
 /* ========================================================= */
-@media (min-width: 1024px) {
+@media (min-width: 850px) {
     .container:not(.perfil-container) {
         max-width: 1600px !important;
         margin: 0 auto !important;
         padding: 20px 4% !important;
     }
 
+    /* Grilla pasa a 4 columnas */
     .grid-perfiles {
         grid-template-columns: repeat(4, 1fr) !important;
         gap: 24px !important;
     }
 
+    /* Las tarjetas recuperan su altura vertical (no se aplastan) */
     .grid-perfiles .card-image {
-        height: 520px !important;
+        height: 480px !important;
     }
     
     .grid-perfiles .card-image img {
@@ -631,16 +633,22 @@ img {
         object-position: center top !important;
     }
 
-    /* Globos destacados (stories) más grandes y majestuosos en PC */
+    /* Globos destacados se centran y agrandan a tamaño PC */
+    .destacadas-container-wrapper {
+        padding: 25px 4% 20px 4% !important;
+        text-align: center;
+    }
+    
+    .stories-container {
+        justify-content: center !important;
+    }
+
     .story-ring {
         width: 115px !important;
         height: 115px !important;
+        padding: 4px !important;
     }
     
-    .destacadas-container-wrapper {
-        padding: 25px 4% 20px 4% !important;
-    }
-
     .story-item span {
         font-size: 14px !important;
         margin-top: 8px !important;
