@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Renata | Masajistas Privé</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="perfil-body">
+
+    <!-- Header Estilo App de Lujo con Logo Grande -->
+    <header class="header-prive">
+        <div class="header-left">
+            <img src="img/monograma.png" alt="Monograma" class="header-monograma">
+        </div>
+        <div class="header-center">
+            <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">
+        </div>
+        <div class="header-right">
+            <a href="index.html" class="btn-buscar">← Volver</a>
+        </div>
+    </header>
+
+    <main class="container perfil-container">
+        
+        <!-- Galería de 4 Fotos -->
+        <div class="perfil-galeria-grid">
+            <img src="img/renata1.jpg" alt="Renata" class="foto-principal" id="fotoPrincipal">
+            <div class="galeria-miniaturas">
+                <img src="img/renata1.jpg" alt="Renata 1" onclick="cambiarFoto(this)">
+                <img src="img/renata2.jpg" alt="Renata 2" onclick="cambiarFoto(this)">
+                <img src="img/renata3.jpg" alt="Renata 3" onclick="cambiarFoto(this)">
+                <img src="img/renata4.jpg" alt="Renata 4" onclick="cambiarFoto(this)">
+            </div>
+        </div>
+
+        <!-- Información de Renata -->
+        <div class="perfil-info">
+            <div class="perfil-titulo-seccion">
+                <h2>Renata</h2>
+                <span class="badge-verificado">✓ Privé Verificado</span>
+            </div>
+
+            <p class="perfil-ubicacion">📍 Zona: <strong>Microcentro / Puerto Madero (Roque Sáenz Peña y Florida)</strong></p>
+            <p class="perfil-modalidad">🏠 Modalidad: <strong>Depto propio / Hoteles turísticos</strong></p>
+
+            <div class="perfil-descripcion">
+                <h3>Sobre mí y Servicios</h3>
+                <p>Masajista independiente. Espacio exclusivo y discreto en edificio con seguridad, en una de las mejores zonas turísticas de Buenos Aires. Atención personalizada únicamente con turnos coordinados.</p>
+                <div style="margin-top: 0.5rem; color: #94a3b8; font-size: 0.9rem;">
+                    <strong>Técnicas:</strong> Masajes descontracturantes, relajantes, eróticos, con final feliz.
+                </div>
+                <div style="margin-top: 0.5rem; color: #94a3b8; font-size: 0.9rem;">
+                    <strong>Equipamiento:</strong> Camilla, ducha, aire acondicionado y calefacción.
+                </div>
+            </div>
+
+            <div class="perfil-detalles">
+                <div class="detalle-item">
+                    <span>Horarios:</span> Domingos a jueves de 11:00 a 00:00 hs.
+                </div>
+                <div class="detalle-item">
+                    <span>Atención:</span> Con turno previo.
+                </div>
+            </div>
+
+            <a href="https://wa.me/5491168277207?text=Hola%20Renata,%20vi%20tu%20perfil%20en%20Masajistas%20Privé" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
+                💬 Contactar por WhatsApp
+            </a>
+        </div>
+
+        <div id="seccion-comentarios"></div>
+
+    </main>
+
+    <footer class="footer">
+        <p>Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.</p>
+        <p class="copyright">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        function cambiarFoto(element) {
+            const fotoPrincipal = document.getElementById('fotoPrincipal');
+            fotoPrincipal.src = element.src;
+        }
+    </script>
+    <script src="comentarios.js"></script>
+
+    <!-- --- SOUNDTRACK PRIVÉ - MOTOR GLOBAL FLOTANTE --- -->
+    <script>
+        (function() {
+            if (window.priveEngineLoaded) return;
+            window.priveEngineLoaded = true;
+
+            let bgAudio = document.getElementById('priveGlobalAudioEngine');
+            if (!bgAudio) {
+                bgAudio = window.top.document.getElementById('priveGlobalAudioEngine');
+            }
+            if (!bgAudio) {
+                bgAudio = document.createElement('audio');
+                bgAudio.id = 'priveGlobalAudioEngine';
+                bgAudio.loop = true;
+                bgAudio.preload = 'auto';
+                
+                let audioSource = document.createElement('source');
+                audioSource.src = 'chill.mp3';
+                audioSource.type = 'audio/mpeg';
+                bgAudio.appendChild(audioSource);
+                document.body.appendChild(bgAudio);
+            }
+
+            function injectFloatingButton() {
+                if (document.getElementById('priveUltraSutilBtn')) return;
+
+                const floatingBtn = document.createElement('div');
+                floatingBtn.id = 'priveUltraSutilBtn';
+                floatingBtn.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    left: 20px;
+                    z-index: 999999;
+                    background: rgba(18, 18, 18, 0.9);
+                    border: 1px solid #dfbc63;
+                    border-radius: 50px;
+                    width: 44px;
+                    height: 44px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.7);
+                    backdrop-filter: blur(6px);
+                `;
+
+                const isPlayingNow = !bgAudio.paused;
+                floatingBtn.innerHTML = `<span id="priveIconSymbol" style="color: #dfbc63; font-size: 1.15em; line-height: 1;">${isPlayingNow ? '⏸' : '🎵'}</span>`;
+                document.body.appendChild(floatingBtn);
+
+                floatingBtn.onclick = () => {
+                    if (bgAudio.paused) {
+                        bgAudio.play().then(() => {
+                            document.getElementById('priveIconSymbol').textContent = '⏸';
+                            localStorage.setItem('priveStatePlaying', 'true');
+                        }).catch(err => {
+                            bgAudio.load();
+                            bgAudio.play().then(() => {
+                                document.getElementById('priveIconSymbol').textContent = '⏸';
+                                localStorage.setItem('priveStatePlaying', 'true');
+                            });
+                        });
+                    } else {
+                        bgAudio.pause();
+                        document.getElementById('priveIconSymbol').textContent = '🎵';
+                        localStorage.setItem('priveStatePlaying', 'false');
+                    }
+                };
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', injectFloatingButton);
+            } else {
+                injectFloatingButton();
+            }
+
+            window.addEventListener('load', () => {
+                let savedTime = localStorage.getItem('priveAudioCurrentTime');
+                if (savedTime && !isNaN(savedTime)) {
+                    bgAudio.currentTime = parseFloat(savedTime);
+                }
+
+                if (localStorage.getItem('priveStatePlaying') === 'true' && bgAudio.paused) {
+                    bgAudio.play().then(() => {
+                        const icon = document.getElementById('priveIconSymbol');
+                        if (icon) icon.textContent = '⏸';
+                    }).catch(e => console.log("Autoplay restringido"));
+                }
+            });
+
+            setInterval(() => {
+                if (!bgAudio.paused) {
+                    localStorage.setItem('priveAudioCurrentTime', bgAudio.currentTime);
+                }
+            }, 1000);
+        })();
+    </script>
+
+</body>
+</html>
