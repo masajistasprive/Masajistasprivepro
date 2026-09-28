@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Masajistas Privé</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body { background: #080808; color: #e0e0e0; font-family: 'Montserrat', sans-serif; padding: 20px; }
+        .admin-container { max-width: 900px; margin: 0 auto; background: rgba(22, 22, 24, 0.9); padding: 30px; border-radius: 12px; border: 1px solid rgba(223, 194, 133, 0.3); }
+        h1 { font-family: 'Cormorant Garamond', serif; color: #dfc285; text-align: center; }
+        .perfil-row { display: flex; justify-content: space-between; align-items: center; background: #141414; padding: 15px; margin-bottom: 12px; border-radius: 8px; border: 1px solid rgba(223,194,133,0.15); }
+        .btn-accion { padding: 8px 14px; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; font-size: 11px; text-transform: uppercase; }
+        .btn-activo { background: #25d366; color: #0d0d0d; }
+        .btn-pausado { background: #ff5555; color: #fff; }
+        #loginBox { text-align: center; padding: 50px; }
+        input[type="password"] { padding: 12px; border-radius: 6px; border: 1px solid #dfc285; background: #1a1a1a; color: #fff; margin-right: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="admin-container">
+        <h1>Panel de Control de Anunciantes</h1>
+        
+        <div id="loginBox">
+            <p>Ingresa la contraseña de administración:</p>
+            <input type="password" id="adminPass" placeholder="Contraseña">
+            <button onclick="verificarAdmin()" class="btn-accion btn-activo" style="padding: 12px 20px;">Entrar</button>
+        </div>
+
+        <div id="dashboard" style="display: none; margin-top: 20px;">
+            <p style="color: #888; font-size: 13px; margin-bottom: 20px;">Desde aquí podés pausar perfiles vencidos de forma inmediata.</p>
+            <div id="listaPerfilesAdmin">Cargando perfiles...</div>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
+            authDomain: "masajistasprivepro.firebaseapp.com",
+            projectId: "masajistasprivepro",
+            storageBucket: "masajistasprivepro.firebasestorage.app",
+            messagingSenderId: "768677270509",
+            appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
+            measurementId: "G-SBN70C32JF"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        function verificarAdmin() {
+            const pass = document.getElementById('adminPass').value;
+            if (pass === "prive2026") { // Tu contraseña de admin
+                document.getElementById('loginBox').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                cargarPerfilesAdmin();
+            } else {
+                alert("Contraseña incorrecta.");
+            }
+        }
+
+        function cargarPerfilesAdmin() {
+            const contenedor = document.getElementById('listaPerfilesAdmin');
+            
+            // Escuchamos la colección de estados de perfiles en Firebase
+            db.collection("config_perfiles").onSnapshot((snapshot) => {
+                contenedor.innerHTML = "";
+                
+                // Lista de perfiles de ejemplo (puedes agregar los nombres de tus 15 modelos)
+                const perfilesBase = ["celeste", "valentina", "sofia", "camila", "martina"]; 
+
+                perfilesBase.forEach(idPerfil => {
+                    let estado = "activo"; // por defecto
+                    let docSnap = snapshot.docs.find(d => d.id === idPerfil);
+                    if (docSnap) {
+                        estado = docSnap.data().estado || "activo";
+                    }
+
+                    const div = document.createElement('div');
+                    div.className = 'perfil-row';
+                    div.innerHTML = `
+                        <div>
+                            <strong style="color: #dfc285; font-size: 16px; text-transform: capitalize;">${idPerfil}</strong>
+                            <br><small style="color: #888;">Estado actual: <b>${estado.toUpperCase()}</b></small>
+                        </div>
+                        <div>
+                            ${estado === 'activo' 
+                                ? `<button onclick="cambiarEstado('${idPerfil}', 'pausado')" class="btn-accion btn-pausado">Pausar / Ocultar</button>` 
+                                : `<button onclick="cambiarEstado('${idPerfil}', 'activo')" class="btn-accion btn-activo">Activar Perfil</button>`
+                            }
+                        </div>
+                    `;
+                    contenedor.appendChild(div);
+                });
+            });
+        }
+
+        window.cambiarEstado = function(idPerfil, nuevoEstado) {
+            db.collection("config_perfiles").doc(idPerfil).set({
+                estado: nuevoEstado
+            }, { merge: true }).then(() => {
+                alert(`El perfil de ${idPerfil} ahora está ${nuevoEstado}.`);
+            });
+        };
+    </script>
+</body>
+</html>
