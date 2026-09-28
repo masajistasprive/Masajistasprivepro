@@ -160,7 +160,7 @@
             inicializarVisorFotos();
         }, 600);
 
-        // Reposicionar y animar el botón de WhatsApp con saludo dinámico
+        // Reposicionar y animar el botón de WhatsApp con mensaje ATEMPORAL
         const btnWa = document.querySelector('.btn-whatsapp');
         const mainContainer = document.querySelector('.perfil-container');
         
@@ -190,15 +190,11 @@
                 mainContainer.appendChild(btnWa);
             }
 
-            const horaActual = new Date().getHours();
-            let momento = "hoy";
-            if (horaActual >= 6 && horaActual < 12) momento = "para esta mañana";
-            else if (horaActual >= 12 && horaActual < 20) momento = "para esta tarde";
-            else momento = "para esta noche";
-
             const nombreMasajista = document.querySelector('.perfil-titulo-seccion h2')?.textContent || "Perfil";
             const baseUrl = btnWa.getAttribute('href').split('?')[0];
-            const nuevoMensaje = `Hola ${nombreMasajista}, vi tu perfil en Masajistas Privé y quería consultar disponibilidad ${momento}.`;
+            
+            // MENSAJE ATEMPORAL Y NEUTRO
+            const nuevoMensaje = `Hola ${nombreMasajista}, vi tu perfil en Masajistas Privé y quiero consultar disponibilidad.`;
             btnWa.setAttribute('href', `${baseUrl}?text=${encodeURIComponent(nuevoMensaje)}`);
         }
     });
@@ -416,29 +412,22 @@
         }
     }
 })();
+
 /* ========================================================= */
 /* INYECCIÓN AUTOMÁTICA DE SCHEMA.ORG (ESTRELLITAS EN GOOGLE)*/
 /* ========================================================= */
 window.addEventListener('DOMContentLoaded', () => {
-    // Busca el título del perfil para saber en qué página estamos
     const tituloElemento = document.querySelector('.perfil-titulo-seccion h2');
-    
-    // Si no encuentra el título, significa que no estamos en un perfil (ej: la home), así que no hace nada
     if (!tituloElemento) return; 
 
     const nombreMasajista = tituloElemento.textContent.trim();
-    
-    // Toma la foto principal, si no la encuentra usa el logo por defecto
     const fotoPrincipal = document.getElementById('fotoPrincipal');
     const urlImagen = fotoPrincipal ? fotoPrincipal.src : "https://masajistasprive.com/img/logo.png";
     
-    // Truco: Generar rating (4.7 a 4.9) y votos (50 a 150) consistentes según el nombre
-    // Así Jennyfer siempre tendrá 4.9 y 85 votos, sin que cambie al recargar
-    const ratingDec = nombreMasajista.length % 3; // Da 0, 1 o 2
+    const ratingDec = nombreMasajista.length % 3;
     const rating = (4.7 + (ratingDec * 0.1)).toFixed(1); 
     const reviewCount = 45 + (nombreMasajista.length * 7); 
 
-    // Arma la estructura de datos que pide Google
     const schemaJSON = {
         "@context": "https://schema.org/",
         "@type": "HealthAndBeautyBusiness",
@@ -454,7 +443,6 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Crea la etiqueta invisible y la inyecta en el <head>
     const scriptSchema = document.createElement('script');
     scriptSchema.type = 'application/ld+json';
     scriptSchema.text = JSON.stringify(schemaJSON);
