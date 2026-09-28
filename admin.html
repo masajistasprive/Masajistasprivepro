@@ -23,7 +23,7 @@
 <body>
 
     <div class="admin-container">
-        <h1>Panel de Control Automático</h1>
+        <h1>Panel de Control Maestro</h1>
         
         <div id="loginBox">
             <p>Ingresa la contraseña de administración:</p>
@@ -32,8 +32,8 @@
         </div>
 
         <div id="dashboard" style="display: none; margin-top: 20px;">
-            <p style="color: #888; font-size: 13px; margin-bottom: 20px;">Perfiles detectados automáticamente en la plataforma:</p>
-            <div id="listaPerfilesAdmin">Cargando perfiles automáticamente...</div>
+            <p style="color: #888; font-size: 13px; margin-bottom: 20px;">Gestión completa de perfiles, estados y métricas de visitas:</p>
+            <div id="listaPerfilesAdmin">Cargando perfiles y métricas...</div>
         </div>
     </div>
 
@@ -54,36 +54,33 @@
         const db = firebase.firestore();
 
         function verificarAdmin() {
-            const pass = document.getElementById('adminPass').value;
+            const pass = document.getElementById('adminPass'].value;
             if (pass === "prive2026") {
                 document.getElementById('loginBox').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'block';
-                cargarPerfilesAutomaticos();
+                cargarPanelMaestro();
             } else {
                 alert("Contraseña incorrecta.");
             }
         }
 
-        async function cargarPerfilesAutomaticos() {
+        async function cargarPanelMaestro() {
             const contenedor = document.getElementById('listaPerfilesAdmin');
-            contenedor.innerHTML = "<p style='color: #dfc285;'>Buscando perfiles activos...</p>";
+            contenedor.innerHTML = "<p style='color: #dfc285;'>Sincronizando perfiles y estadísticas...</p>";
 
             try {
-                // Recolectamos IDs únicos desde las estadísticas de visitas y los comentarios
-                let idsPerfiles = new Set();
+                // 1. LISTA OFICIAL DE TUS PERFILES (Basada en tus archivos actuales: celeste, daniela, deby, etc.)
+                // Podés agregar o sacar nombres de acá cuando crees nuevos perfiles en el futuro.
+                const perfilesOficiales = ["celeste", "daniela", "deby", "valentina", "sofia", "camila", "martina"];
 
+                // 2. Traemos las visitas guardadas en Firebase
                 const snapVisitas = await db.collection("estadisticas_visitas").get();
-                snapVisitas.forEach(doc => idsPerfiles.add(doc.id));
+                let visitasMap = {};
+                snapVisitas.forEach(doc => {
+                    visitasMap[doc.id] = doc.data().visitas || 0;
+                });
 
-                const snapComentarios = await db.collection("perfiles_comentarios").get();
-                snapComentarios.forEach(doc => idsPerfiles.add(doc.id));
-
-                if (idsPerfiles.size === 0) {
-                    contenedor.innerHTML = "<p style='color: #777;'>Aún no hay perfiles con visitas o comentarios registrados.</p>";
-                    return;
-                }
-
-                // Consultamos los estados actuales guardados
+                // 3. Traemos los estados actuales (activo / pausado) de Firebase
                 const snapConfig = await db.collection("config_perfiles").get();
                 let estadosMap = {};
                 snapConfig.forEach(doc => {
@@ -92,22 +89,17 @@
 
                 contenedor.innerHTML = "";
 
-                idsPerfiles.forEach(idPerfil => {
+                // 4. Renderizamos cada perfil oficial
+                perfilesOficiales.forEach(idPerfil => {
                     let estado = estadosMap[idPerfil] || "activo";
-                    let visitasTotal = 0;
-                    
-                    // Buscar si hay visitas registradas para mostrar el dato
-                    let docVisita = snapVisitas.docs.find(d => d.id === idPerfil);
-                    if (docVisita && docVisita.data().visitas) {
-                        visitasTotal = docVisita.data().visitas;
-                    }
+                    let totalVisitas = visitasMap[idPerfil] || 0;
 
                     const div = document.createElement('div');
                     div.className = 'perfil-row';
                     div.innerHTML = `
                         <div>
                             <strong style="color: #dfc285; font-size: 16px; text-transform: capitalize;">${idPerfil}</strong>
-                            <br><small style="color: #888;">Visitas totales: <b style="color:#fff;">${visitasTotal}</b> | Estado: <b style="${estado==='activo'?'color:#25d366':'color:#ff5555'}">${estado.toUpperCase()}</b></small>
+                            <br><small style="color: #888;">Visitas totales: <b style="color:#fff;">${totalVisitas}</b> | Estado: <b style="${estado==='activo'?'color:#25d366':'color:#ff5555'}">${estado.toUpperCase()}</b></small>
                         </div>
                         <div>
                             ${estado === 'activo' 
@@ -121,7 +113,7 @@
 
             } catch (e) {
                 console.error(e);
-                contenedor.innerHTML = "<p style='color: #ff5555;'>Error al cargar los perfiles automáticamente.</p>";
+                contenedor.innerHTML = "<p style='color: #ff5555;'>Error al sincronizar el panel.</p>";
             }
         }
 
@@ -130,7 +122,7 @@
                 estado: nuevoEstado
             }, { merge: true }).then(() => {
                 alert(`El perfil de ${idPerfil} ahora está ${nuevoEstado}.`);
-                cargarPerfilesAutomaticos(); // Recarga la lista sola
+                cargarPanelMaestro(); // Recarga la lista sola al instante
             });
         };
     </script>
