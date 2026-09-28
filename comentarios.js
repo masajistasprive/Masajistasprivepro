@@ -448,28 +448,54 @@ window.addEventListener('DOMContentLoaded', () => {
     scriptSchema.text = JSON.stringify(schemaJSON);
     document.head.appendChild(scriptSchema);
 });
+
 /* ========================================================= */
-/* CONTADOR AUTOMÁTICO DE VISITAS GLOBAL POR PERFIL           */
+/* CONTADOR AUTOMÁTICO DE VISITAS GLOBAL POR PERFIL (ROBUSTO) */
 /* ========================================================= */
-window.addEventListener('DOMContentLoaded', () => {
-    // Si no estamos en un perfil (ej: la home), no hace nada
+function registrarVisitaPerfil() {
     const tituloElemento = document.querySelector('.perfil-titulo-seccion h2');
     if (!tituloElemento) return;
 
-    // Detecta el ID del perfil actual según el nombre del archivo (ej: celeste)
-    let currentId = window.location.pathname.split("/").pop().replace(".html", "");
+    let currentId = window.location.pathname.split("/").pop().replace(".html", "").trim();
     if (!currentId || currentId === "") return;
 
-    // Asegura que Firebase esté inicializado y suma +1 visita de forma silenciosa
-    if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
-        const dbVisitas = firebase.firestore();
-        dbVisitas.collection("estadisticas_visitas").doc(currentId).set({
-            nombre: tituloElemento.textContent.trim(),
-            visitas: firebase.firestore.FieldValue.increment(1),
-            ultimaVisita: firebase.firestore.FieldValue.serverTimestamp()
-        }, { merge: true }).catch(err => {
-            console.error("Error al registrar visita:", err);
-        });
-    }
-});
+    const ejecutarIncremento = () => {
+        try {
+            if (typeof firebase !== 'undefined') {
+                if (!firebase.apps.length) {
+                    firebase.initializeApp({
+                        apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
+                        authDomain: "masajistasprivepro.firebaseapp.com",
+                        projectId: "masajistasprivepro",
+                        storageBucket: "masajistasprivepro.firebasestorage.app",
+                        messagingSenderId: "768677270509",
+                        appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
+                        measurementId: "G-SBN70C32JF"
+                    });
+                }
+                const dbVisitas = firebase.firestore();
+                dbVisitas.collection("estadisticas_visitas").doc(currentId).set({
+                    nombre: tituloElemento.textContent.trim(),
+                    visitas: firebase.firestore.FieldValue.increment(1),
+                    ultimaVisita: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true }).then(() => {
+                    console.log("Visita registrada con éxito para:", currentId);
+                }).catch(err => {
+                    console.error("Error al registrar visita en Firestore:", err);
+                });
+            } else {
+                setTimeout(ejecutarIncremento, 500);
+            }
+        } catch (e) {
+            console.error("Excepción en contador de visitas:", e);
+        }
+    };
 
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        ejecutarIncremento();
+    } else {
+        window.addEventListener('DOMContentLoaded', ejecutarIncremento);
+    }
+}
+
+registrarVisitaPerfil();
