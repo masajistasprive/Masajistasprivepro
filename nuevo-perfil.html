@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Fichas - Masajistas Privé</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body { background: #080808; color: #e0e0e0; font-family: 'Montserrat', sans-serif; padding: 20px; }
+        .gen-container { max-width: 800px; margin: 0 auto; background: rgba(22, 22, 24, 0.95); padding: 30px; border-radius: 12px; border: 1px solid rgba(223, 194, 133, 0.3); }
+        h1 { font-family: 'Cormorant Garamond', serif; color: #dfc285; text-align: center; margin-bottom: 25px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; color: #dfc285; font-size: 13px; text-transform: uppercase; margin-bottom: 5px; font-weight: 500; }
+        input, select, textarea { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid rgba(223,194,133,0.3); background: #141414; color: #fff; font-family: 'Montserrat', sans-serif; box-sizing: border-box; }
+        textarea { resize: vertical; height: 100px; }
+        .btn-gen { background: #dfc285; color: #0d0d0d; border: none; padding: 14px 20px; border-radius: 6px; font-weight: 700; cursor: pointer; text-transform: uppercase; width: 100%; font-size: 14px; margin-top: 10px; }
+        .btn-gen:hover { background: #f0d495; }
+        #resultadoArea { display: none; margin-top: 30px; background: #121212; padding: 20px; border-radius: 8px; border: 1px solid #25d366; }
+        pre { background: #050505; padding: 15px; border-radius: 6px; color: #a6e22e; overflow-x: auto; font-size: 12px; }
+        #loginBox { text-align: center; padding: 50px; }
+    </style>
+</head>
+<body>
+
+    <div class="gen-container">
+        <h1>Generador Express de Fichas Privé</h1>
+        
+        <div id="loginBox">
+            <p>Contraseña de creador:</p>
+            <input type="password" id="adminPass" placeholder="Contraseña" style="max-width: 300px; display: inline-block; margin-right: 10px;">
+            <button onclick="verificarAdmin()" class="btn-gen" style="width: auto; display: inline-block; padding: 12px 25px;">Entrar</button>
+        </div>
+
+        <div id="formGenerador" style="display: none;">
+            <div class="form-group">
+                <label>Nombre de la Modelo (ej: Romina)</label>
+                <input type="text" id="nombre" placeholder="Ej: Romina">
+            </div>
+            <div class="form-group">
+                <label>Categoría Web</label>
+                <select id="categoria">
+                    <option value="sensuales">Sensuales</option>
+                    <option value="terapeuticas">Terapéuticas</option>
+                    <option value="masculinos">Masculinos</option>
+                    <option value="fantasias">Fantasías</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Barrio / Zona (ej: PALERMO / RECOLETA)</label>
+                <input type="text" id="zona" placeholder="Ej: PALERMO">
+            </div>
+            <div class="form-group">
+                <label>Modalidad (ej: Departamento propio / Gabinete)</label>
+                <input type="text" id="modalidad" placeholder="Ej: Departamento propio">
+            </div>
+            <div class="form-group">
+                <label>Número de WhatsApp (con característica, ej: 5491112345678)</label>
+                <input type="text" id="whatsapp" placeholder="54911...">
+            </div>
+            <div class="form-group">
+                <label>Días y Horarios</label>
+                <input type="text" id="horarios" value="Lunes a Sábados de 10 a 21hs">
+            </div>
+            <div class="form-group">
+                <label>Servicios / Técnicas (separados por comas)</label>
+                <input type="text" id="servicios" value="Masajes descontracturantes, relajantes, aromaterapia">
+            </div>
+            <div class="form-group">
+                <label>Equipamiento</label>
+                <input type="text" id="equipamiento" value="Camilla profesional, ducha, aire acondicionado, música ambiental">
+            </div>
+            <div class="form-group">
+                <label>Cantidad de fotos disponibles (ej: 4 o hasta 10)</label>
+                <input type="number" id="cantFotos" value="4" min="1" max="10">
+            </div>
+
+            <button onclick="generarFicha()" class="btn-gen">Generar Ficha Automática 🚀</button>
+
+            <div id="resultadoArea">
+                <h3 style="color: #25d366; margin-top: 0;">¡Ficha generada con éxito!</h3>
+                <p style="font-size: 13px; color: #ccc;">1. Copiá este código y guardalo en tu compu/celu en un archivo con nombre <b id="nombreArchivoTxt">nombre.html</b> y subilo a GitHub.</p>
+                <pre id="codigoSalida"></pre>
+                
+                <h4 style="color: #dfc285; margin-top: 20px;">Código para la tarjeta del index.html:</h4>
+                <p style="font-size: 13px; color: #ccc;">2. Copiá esto y pegalo dentro de la sección correspondiente en tu index.html:</p>
+                <pre id="codigoIndexTxt"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function verificarAdmin() {
+            const pass = document.getElementById('adminPass').value;
+            if (pass === "prive2026") {
+                document.getElementById('loginBox').style.display = 'none';
+                document.getElementById('formGenerador').style.display = 'block';
+            } else {
+                alert("Contraseña incorrecta.");
+            }
+        }
+
+        function generarFicha() {
+            let nombre = document.getElementById('nombre').value.trim();
+            if (!nombre) {
+                alert("Por favor ingresá el nombre de la modelo.");
+                return;
+            }
+            let idArchivo = nombre.toLowerCase().replace(/á/g, 'a').replace(/é/g, 'e').replace(/í/g, 'i').replace(/ó/g, 'o').replace(/ú/g, 'u').replace(/\s+/g, '');
+            let categoria = document.getElementById('categoria').value;
+            let zona = document.getElementById('zona').value.toUpperCase();
+            let modalidad = document.getElementById('modalidad').value;
+            let whatsapp = document.getElementById('whatsapp').value.trim();
+            let horarios = document.getElementById('horarios').value;
+            let servicios = document.getElementById('servicios').value;
+            let equipamiento = document.getElementById('equipamiento').value;
+            let cantFotos = parseInt(document.getElementById('cantFotos').value) || 4;
+
+            let miniaturasHtml = "";
+            for (let i = 1; i <= cantFotos; i++) {
+                miniaturasHtml += `            <img src="img/${idArchivo}${i}.jpg" alt="${nombre} ${i}" onclick="document.getElementById('fotoPrincipal').src=this.src">\n`;
+            }
+
+            let htmlTemplate = `<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${nombre} — Masajistas Privé CABA</title>
+    <link rel="stylesheet" href="css/style.css?v=3.0">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="img/monograma.png">
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+</head>
+<body>
+
+    <header class="header-prive">
+        <div class="header-left">
+            <a href="index.html" class="btn-volver">&larr; Volver al Portal</a>
+        </div>
+        <div class="header-center">
+            <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">
+        </div>
+        <div class="header-right"></div>
+    </header>
+
+    <main class="perfil-container">
+        <div class="perfil-grid-layout">
+            
+            <div class="perfil-col-izquierda">
+                <div class="perfil-foto-principal-wrapper">
+                    <img id="fotoPrincipal" src="img/${idArchivo}1.jpg" alt="${nombre}" class="perfil-foto-principal">
+                    <span class="badge-marca-agua">MASAJISTAS PRIVÉ ©</span>
+                    <span class="badge-verificado-perfil">✓ Verificada</span>
+                </div>
+                <div class="galeria-miniaturas">
+${miniaturasHtml}        </div>
+            </div>
+
+            <div class="perfil-col-derecha">
+                <div class="perfil-titulo-seccion">
+                    <h2>${nombre}</h2>
+                    <span class="zona-badge">📍 ${zona}</span>
+                </div>
+
+                <div class="perfil-info-box">
+                    <div class="info-row">
+                        <span class="info-label">Modalidad:</span>
+                        <span class="info-val">${modalidad}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Horarios:</span>
+                        <span class="info-val">${horarios}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Técnicas:</span>
+                        <span class="info-val">${servicios}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Espacio:</span>
+                        <span class="info-val">${equipamiento}</span>
+                    </div>
+                </div>
+
+                <div class="perfil-cta-box">
+                    <a href="https://wa.me/${whatsapp}?text=Hola%20${nombre},%20vi%20tu%20perfil%20en%20Masajistas%20Privé%20y%20quiero%20consultar%20disponibilidad." target="_blank" class="btn-whatsapp-perfil">
+                        💬 Contactar por WhatsApp
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <section class="seccion-comentarios">
+            <h3>Comentarios y Opiniones</h3>
+            <div id="lista-comentarios">Cargando opiniones...</div>
+            <form id="form-comentario" class="form-comentario">
+                <input type="text" id="nombre-usuario" placeholder="Tu nombre o apodo" required>
+                <textarea id="texto-comentario" placeholder="Escribí tu opinión sobre la atención..." required></textarea>
+                <button type="submit" class="btn-enviar-comentario">Publicar Opinión</button>
+            </form>
+        </section>
+    </main>
+
+    <script src="js/comentarios.js"></script>
+</body>
+</html>`;
+
+            let indexSnippet = `            <a href="${idArchivo}.html" class="card-link" data-categoria="${categoria}">
+                <article class="card">
+                    <div class="card-image">
+                        <img src="img/${idArchivo}1.jpg" alt="${nombre}" loading="lazy">
+                        <span class="badge-verificado">✓ Verificado</span>
+                        <div class="card-gradient-overlay">
+                            <h3>${nombre}</h3>
+                            <span class="zona">📍 ${zona}</span>
+                            <span class="modalidad-tag">${modalidad}</span>
+                        </div>
+                    </div>
+                </article>
+            </a>`;
+
+            document.getElementById('nombreArchivoTxt').innerText = `${idArchivo}.html`;
+            document.getElementById('codigoSalida').innerText = htmlTemplate;
+            document.getElementById('codigoIndexTxt').innerText = indexSnippet;
+            document.getElementById('resultadoArea').style.display = 'block';
+            document.getElementById('resultadoArea').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
