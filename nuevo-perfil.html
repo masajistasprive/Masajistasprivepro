@@ -17,7 +17,7 @@
         .btn-gen { background: #dfc285; color: #0d0d0d; border: none; padding: 14px 20px; border-radius: 6px; font-weight: 700; cursor: pointer; text-transform: uppercase; width: 100%; font-size: 14px; margin-top: 10px; }
         .btn-gen:hover { background: #f0d495; }
         #resultadoArea { display: none; margin-top: 30px; background: #121212; padding: 20px; border-radius: 8px; border: 1px solid #25d366; }
-        pre { background: #050505; padding: 15px; border-radius: 6px; color: #a6e22e; overflow-x: auto; font-size: 12px; }
+        pre { background: #050505; padding: 15px; border-radius: 6px; color: #a6e22e; overflow-x: auto; font-size: 12px; white-space: pre-wrap; word-wrap: break-word; }
     </style>
 </head>
 <body>
@@ -78,7 +78,7 @@
 
             <div id="resultadoArea">
                 <h3 style="color: #25d366; margin-top: 0;">¡Ficha generada con éxito!</h3>
-                <p style="font-size: 13px; color: #ccc;">1. Copiá este código y guardalo en tu compu/celu en un archivo con nombre <b id="nombreArchivoTxt">nombre.html</b> y subilo a GitHub.</p>
+                <p style="font-size: 13px; color: #ccc;">1. Copiá este código y guardalo en un archivo con nombre <b id="nombreArchivoTxt">nombre.html</b> y subilo a GitHub.</p>
                 <pre id="codigoSalida"></pre>
                 
                 <h4 style="color: #dfc285; margin-top: 20px;">Código para la tarjeta del index.html:</h4>
@@ -117,110 +117,90 @@
 
             let miniaturasHtml = "";
             for (let i = 1; i <= cantFotos; i++) {
-                miniaturasHtml += `            <img src="img/${idArchivo}${i}.jpg" alt="${nombre} ${i}" onclick="document.getElementById('fotoPrincipal').src=this.src">\n`;
+                miniaturasHtml += '            <img src="img/' + idArchivo + i + '.jpg" alt="' + nombre + ' ' + i + '" onclick="document.getElementById(\'fotoPrincipal\').src=this.src">\n';
             }
 
-            let htmlTemplate = `<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${nombre} — Masajistas Privé CABA</title>
-    <link rel="stylesheet" href="css/style.css?v=3.0">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="img/monograma.png">
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-</head>
-<body>
+            let htmlTemplate = '<!DOCTYPE html>\n' +
+'<html lang="es">\n' +
+'<head>\n' +
+'    <meta charset="UTF-8">\n' +
+'    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
+'    <title>' + nombre + ' — Masajistas Privé CABA</title>\n' +
+'    <link rel="stylesheet" href="css/style.css?v=3.0">\n' +
+'    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">\n' +
+'    <link rel="icon" type="image/png" href="img/monograma.png">\n' +
+'    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"><\/script>\n' +
+'    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"><\/script>\n' +
+'</head>\n' +
+'<body>\n\n' +
+'    <header class="header-prive">\n' +
+'        <div class="header-left">\n' +
+'            <a href="index.html" class="btn-volver">&larr; Volver al Portal</a>\n' +
+'        </div>\n' +
+'        <div class="header-center">\n' +
+'            <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">\n' +
+'        </div>\n' +
+'        <div class="header-right"></div>\n' +
+'    </header>\n\n' +
+'    <main class="perfil-container">\n' +
+'        <div class="perfil-grid-layout">\n' +
+'            <div class="perfil-col-izquierda">\n' +
+'                <div class="perfil-foto-principal-wrapper">\n' +
+'                    <img id="fotoPrincipal" src="img/' + idArchivo + '1.jpg" alt="' + nombre + '" class="perfil-foto-principal">\n' +
+'                    <span class="badge-marca-agua">MASAJISTAS PRIVÉ ©</span>\n' +
+'                    <span class="badge-verificado-perfil">✓ Verificada</span>\n' +
+'                </div>\n' +
+'                <div class="galeria-miniaturas">\n' +
+miniaturasHtml +
+'                </div>\n' +
+'            </div>\n\n' +
+'            <div class="perfil-col-derecha">\n' +
+'                <div class="perfil-titulo-seccion">\n' +
+'                    <h2>' + nombre + '</h2>\n' +
+'                    <span class="zona-badge">📍 ' + zona + '</span>\n' +
+'                </div>\n\n' +
+'                <div class="perfil-info-box">\n' +
+'                    <div class="info-row"><span class="info-label">Modalidad:</span><span class="info-val">' + modalidad + '</span></div>\n' +
+'                    <div class="info-row"><span class="info-label">Horarios:</span><span class="info-val">' + horarios + '</span></div>\n' +
+'                    <div class="info-row"><span class="info-label">Técnicas:</span><span class="info-val">' + servicios + '</span></div>\n' +
+'                    <div class="info-row"><span class="info-label">Espacio:</span><span class="info-val">' + equipamiento + '</span></div>\n' +
+'                </div>\n\n' +
+'                <div class="perfil-cta-box">\n' +
+'                    <a href="https://wa.me/' + whatsapp + '?text=Hola%20' + encodeURIComponent(nombre) + ',%20vi%20tu%20perfil%20en%20Masajistas%20Privé%20y%20quiero%20consultar%20disponibilidad." target="_blank" class="btn-whatsapp-perfil">\n' +
+'                        💬 Contactar por WhatsApp\n' +
+'                    </a>\n' +
+'                </div>\n' +
+'            </div>\n' +
+'        </div>\n\n' +
+'        <section class="seccion-comentarios">\n' +
+'            <h3>Comentarios y Opiniones</h3>\n' +
+'            <div id="lista-comentarios">Cargando opiniones...</div>\n' +
+'            <form id="form-comentario" class="form-comentario">\n' +
+'                <input type="text" id="nombre-usuario" placeholder="Tu nombre o apodo" required>\n' +
+'                <textarea id="texto-comentario" placeholder="Escribí tu opinión sobre la atención..." required></textarea>\n' +
+'                <button type="submit" class="btn-enviar-comentario">Publicar Opinión</button>\n' +
+'            </form>\n' +
+'        </section>\n' +
+'    </main>\n\n' +
+'    <script src="js/comentarios.js"><\/script>\n' +
+'</body>\n' +
+'</html>';
 
-    <header class="header-prive">
-        <div class="header-left">
-            <a href="index.html" class="btn-volver">&larr; Volver al Portal</a>
-        </div>
-        <div class="header-center">
-            <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">
-        </div>
-        <div class="header-right"></div>
-    </header>
+            let indexSnippet = '            <a href="' + idArchivo + '.html" class="card-link" data-categoria="' + categoria + '">\n' +
+'                <article class="card">\n' +
+'                    <div class="card-image">\n' +
+'                        <img src="img/' + idArchivo + '1.jpg" alt="' + nombre + '" loading="lazy">\n' +
+'                        <span class="badge-verificado">✓ Verificado</span>\n' +
+'                        <div class="card-gradient-overlay">\n' +
+'                            <h3>' + nombre + '</h3>\n' +
+'                            <span class="zona">📍 ' + zona + '</span>\n' +
+'                            <span class="modalidad-tag">' + modalidad + '</span>\n' +
+'                        </div>\n' +
+'                    </div>\n' +
+'                </article>\n' +
+'            </a>';
 
-    <main class="perfil-container">
-        <div class="perfil-grid-layout">
-            
-            <div class="perfil-col-izquierda">
-                <div class="perfil-foto-principal-wrapper">
-                    <img id="fotoPrincipal" src="img/${idArchivo}1.jpg" alt="${nombre}" class="perfil-foto-principal">
-                    <span class="badge-marca-agua">MASAJISTAS PRIVÉ ©</span>
-                    <span class="badge-verificado-perfil">✓ Verificada</span>
-                </div>
-                <div class="galeria-miniaturas">
-${miniaturasHtml}        </div>
-            </div>
-
-            <div class="perfil-col-derecha">
-                <div class="perfil-titulo-seccion">
-                    <h2>${nombre}</h2>
-                    <span class="zona-badge">📍 ${zona}</span>
-                </div>
-
-                <div class="perfil-info-box">
-                    <div class="info-row">
-                        <span class="info-label">Modalidad:</span>
-                        <span class="info-val">${modalidad}</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Horarios:</span>
-                        <span class="info-val">${horarios}</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Técnicas:</span>
-                        <span class="info-val">${servicios}</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Espacio:</span>
-                        <span class="info-val">${equipamiento}</span>
-                    </div>
-                </div>
-
-                <div class="perfil-cta-box">
-                    <a href="https://wa.me/${whatsapp}?text=Hola%20${nombre},%20vi%20tu%20perfil%20en%20Masajistas%20Privé%20y%20quiero%20consultar%20disponibilidad." target="_blank" class="btn-whatsapp-perfil">
-                        💬 Contactar por WhatsApp
-                    </a>
-                </div>
-            </div>
-
-        </div>
-
-        <section class="seccion-comentarios">
-            <h3>Comentarios y Opiniones</h3>
-            <div id="lista-comentarios">Cargando opiniones...</div>
-            <form id="form-comentario" class="form-comentario">
-                <input type="text" id="nombre-usuario" placeholder="Tu nombre o apodo" required>
-                <textarea id="texto-comentario" placeholder="Escribí tu opinión sobre la atención..." required></textarea>
-                <button type="submit" class="btn-enviar-comentario">Publicar Opinión</button>
-            </form>
-        </section>
-    </main>
-
-    <script src="js/comentarios.js"></script>
-</body>
-</html>`;
-
-            let indexSnippet = `            <a href="${idArchivo}.html" class="card-link" data-categoria="${categoria}">
-                <article class="card">
-                    <div class="card-image">
-                        <img src="img/${idArchivo}1.jpg" alt="${nombre}" loading="lazy">
-                        <span class="badge-verificado">✓ Verificado</span>
-                        <div class="card-gradient-overlay">
-                            <h3>${nombre}</h3>
-                            <span class="zona">📍 ${zona}</span>
-                            <span class="modalidad-tag">${modalidad}</span>
-                        </div>
-                    </div>
-                </article>
-            </a>`;
-
-            document.getElementById('nombreArchivoTxt').innerText = `${idArchivo}.html`;
+            document.getElementById('nombreArchivoTxt').innerText = idArchivo + '.html';
             document.getElementById('codigoSalida').innerText = htmlTemplate;
             document.getElementById('codigoIndexTxt').innerText = indexSnippet;
             document.getElementById('resultadoArea').style.display = 'block';
