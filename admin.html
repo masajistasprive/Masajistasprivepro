@@ -12,7 +12,7 @@
         body { background: #080808; color: #e0e0e0; font-family: 'Montserrat', sans-serif; padding: 20px; }
         .admin-container { max-width: 900px; margin: 0 auto; background: rgba(22, 22, 24, 0.9); padding: 30px; border-radius: 12px; border: 1px solid rgba(223, 194, 133, 0.3); }
         h1 { font-family: 'Cormorant Garamond', serif; color: #dfc285; text-align: center; }
-        .perfil-row { display: flex; justify-content: space-between; align-items: center; background: #141414; padding: 15px; margin-bottom: 12px; border-radius: 8px; border: 1px solid rgba(223,194,133,0.15); }
+        .perfil-row { display: flex; justify-content: space-between; align-items: center; background: #141414; padding: 15px; margin-bottom: 12px; border-radius: 8px; border: 1px solid rgba(223,194,133,0.15); flex-wrap: wrap; gap: 10px; }
         .btn-accion { padding: 8px 14px; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; font-size: 11px; text-transform: uppercase; }
         .btn-activo { background: #25d366; color: #0d0d0d; }
         .btn-pausado { background: #ff5555; color: #fff; }
@@ -23,7 +23,7 @@
 <body>
 
     <div class="admin-container">
-        <h1>Panel de Control de Anunciantes</h1>
+        <h1>Panel de Control Automático</h1>
         
         <div id="loginBox">
             <p>Ingresa la contraseña de administración:</p>
@@ -32,8 +32,8 @@
         </div>
 
         <div id="dashboard" style="display: none; margin-top: 20px;">
-            <p style="color: #888; font-size: 13px; margin-bottom: 20px;">Desde aquí podés pausar perfiles vencidos de forma inmediata.</p>
-            <div id="listaPerfilesAdmin">Cargando perfiles...</div>
+            <p style="color: #888; font-size: 13px; margin-bottom: 20px;">Perfiles detectados automáticamente en la plataforma:</p>
+            <div id="listaPerfilesAdmin">Cargando perfiles automáticamente...</div>
         </div>
     </div>
 
@@ -47,35 +47,59 @@
             appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
             measurementId: "G-SBN70C32JF"
         };
-        firebase.initializeApp(firebaseConfig);
+        
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         const db = firebase.firestore();
 
         function verificarAdmin() {
             const pass = document.getElementById('adminPass').value;
-            if (pass === "prive2026") { // Tu contraseña de admin
+            if (pass === "prive2026") {
                 document.getElementById('loginBox').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'block';
-                cargarPerfilesAdmin();
+                cargarPerfilesAutomaticos();
             } else {
                 alert("Contraseña incorrecta.");
             }
         }
 
-        function cargarPerfilesAdmin() {
+        async function cargarPerfilesAutomaticos() {
             const contenedor = document.getElementById('listaPerfilesAdmin');
-            
-            // Escuchamos la colección de estados de perfiles en Firebase
-            db.collection("config_perfiles").onSnapshot((snapshot) => {
-                contenedor.innerHTML = "";
-                
-                // Lista de perfiles de ejemplo (puedes agregar los nombres de tus 15 modelos)
-                const perfilesBase = ["celeste", "valentina", "sofia", "camila", "martina"]; 
+            contenedor.innerHTML = "<p style='color: #dfc285;'>Buscando perfiles activos...</p>";
 
-                perfilesBase.forEach(idPerfil => {
-                    let estado = "activo"; // por defecto
-                    let docSnap = snapshot.docs.find(d => d.id === idPerfil);
-                    if (docSnap) {
-                        estado = docSnap.data().estado || "activo";
+            try {
+                // Recolectamos IDs únicos desde las estadísticas de visitas y los comentarios
+                let idsPerfiles = new Set();
+
+                const snapVisitas = await db.collection("estadisticas_visitas").get();
+                snapVisitas.forEach(doc => idsPerfiles.add(doc.id));
+
+                const snapComentarios = await db.collection("perfiles_comentarios").get();
+                snapComentarios.forEach(doc => idsPerfiles.add(doc.id));
+
+                if (idsPerfiles.size === 0) {
+                    contenedor.innerHTML = "<p style='color: #777;'>Aún no hay perfiles con visitas o comentarios registrados.</p>";
+                    return;
+                }
+
+                // Consultamos los estados actuales guardados
+                const snapConfig = await db.collection("config_perfiles").get();
+                let estadosMap = {};
+                snapConfig.forEach(doc => {
+                    estadosMap[doc.id] = doc.data().estado || "activo";
+                });
+
+                contenedor.innerHTML = "";
+
+                idsPerfiles.forEach(idPerfil => {
+                    let estado = estadosMap[idPerfil] || "activo";
+                    let visitasTotal = 0;
+                    
+                    // Buscar si hay visitas registradas para mostrar el dato
+                    let docVisita = snapVisitas.docs.find(d => d.id === idPerfil);
+                    if (docVisita && docVisita.data().visitas) {
+                        visitasTotal = docVisita.data().visitas;
                     }
 
                     const div = document.createElement('div');
@@ -83,7 +107,7 @@
                     div.innerHTML = `
                         <div>
                             <strong style="color: #dfc285; font-size: 16px; text-transform: capitalize;">${idPerfil}</strong>
-                            <br><small style="color: #888;">Estado actual: <b>${estado.toUpperCase()}</b></small>
+                            <br><small style="color: #888;">Visitas totales: <b style="color:#fff;">${visitasTotal}</b> | Estado: <b style="${estado==='activo'?'color:#25d366':'color:#ff5555'}">${estado.toUpperCase()}</b></small>
                         </div>
                         <div>
                             ${estado === 'activo' 
@@ -94,7 +118,11 @@
                     `;
                     contenedor.appendChild(div);
                 });
-            });
+
+            } catch (e) {
+                console.error(e);
+                contenedor.innerHTML = "<p style='color: #ff5555;'>Error al cargar los perfiles automáticamente.</p>";
+            }
         }
 
         window.cambiarEstado = function(idPerfil, nuevoEstado) {
@@ -102,6 +130,7 @@
                 estado: nuevoEstado
             }, { merge: true }).then(() => {
                 alert(`El perfil de ${idPerfil} ahora está ${nuevoEstado}.`);
+                cargarPerfilesAutomaticos(); // Recarga la lista sola
             });
         };
     </script>
