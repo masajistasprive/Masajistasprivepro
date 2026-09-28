@@ -448,3 +448,28 @@ window.addEventListener('DOMContentLoaded', () => {
     scriptSchema.text = JSON.stringify(schemaJSON);
     document.head.appendChild(scriptSchema);
 });
+/* ========================================================= */
+/* CONTADOR AUTOMÁTICO DE VISITAS GLOBAL POR PERFIL           */
+/* ========================================================= */
+window.addEventListener('DOMContentLoaded', () => {
+    // Si no estamos en un perfil (ej: la home), no hace nada
+    const tituloElemento = document.querySelector('.perfil-titulo-seccion h2');
+    if (!tituloElemento) return;
+
+    // Detecta el ID del perfil actual según el nombre del archivo (ej: celeste)
+    let currentId = window.location.pathname.split("/").pop().replace(".html", "");
+    if (!currentId || currentId === "") return;
+
+    // Asegura que Firebase esté inicializado y suma +1 visita de forma silenciosa
+    if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
+        const dbVisitas = firebase.firestore();
+        dbVisitas.collection("estadisticas_visitas").doc(currentId).set({
+            nombre: tituloElemento.textContent.trim(),
+            visitas: firebase.firestore.FieldValue.increment(1),
+            ultimaVisita: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true }).catch(err => {
+            console.error("Error al registrar visita:", err);
+        });
+    }
+});
+
