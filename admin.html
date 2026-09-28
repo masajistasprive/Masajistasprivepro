@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Administración - Masajistas Privé</title>
+    <title>Panel de Control Maestro - Masajistas Privé</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
@@ -32,8 +32,8 @@
         </div>
 
         <div id="dashboard" style="display: none; margin-top: 20px;">
-            <p style="color: #888; font-size: 13px; margin-bottom: 20px;">Gestión completa de perfiles, estados y métricas de visitas:</p>
-            <div id="listaPerfilesAdmin">Cargando perfiles y métricas...</div>
+            <p style="color: #888; font-size: 13px; margin-bottom: 20px;">Perfiles detectados automáticamente desde tu página principal:</p>
+            <div id="listaPerfilesAdmin">Escaneando perfiles del índice...</div>
         </div>
     </div>
 
@@ -54,24 +54,46 @@
         const db = firebase.firestore();
 
         function verificarAdmin() {
-            // CORREGIDO: Se cambió el corchete por paréntesis
             const pass = document.getElementById('adminPass').value;
             if (pass === "prive2026") {
                 document.getElementById('loginBox').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'block';
-                cargarPanelMaestro();
+                escanearIndexYConstruirPanel();
             } else {
                 alert("Contraseña incorrecta.");
             }
         }
 
-        async function cargarPanelMaestro() {
+        async function escanearIndexYConstruirPanel() {
             const contenedor = document.getElementById('listaPerfilesAdmin');
-            contenedor.innerHTML = "<p style='color: #dfc285;'>Sincronizando perfiles y estadísticas...</p>";
+            contenedor.innerHTML = "<p style='color: #dfc285;'>Leyendo perfiles publicados en el index...</p>";
 
             try {
-                const perfilesOficiales = ["celeste", "daniela", "deby", "valentina", "sofia", "camila", "martina"];
+                // 1. Descargamos el index.html en vivo para extraer los nombres de las chicas
+                const response = await fetch('index.html?' + new Date().getTime());
+                const htmlText = await response.text();
+                
+                const parser = new DOMParser();
+                const docHtml = parser.parseFromString(htmlText, 'text/html');
+                
+                // Buscamos todos los enlaces de las tarjetas de perfiles
+                const links = docHtml.querySelectorAll('.card-link');
+                let perfilesDetectados = new Set();
 
+                links.forEach(link => {
+                    let href = link.getAttribute('href');
+                    if (href && href.endsWith('.html') && !href.startsWith('http')) {
+                        let nombreId = href.replace('.html', '').trim();
+                        perfilesDetectados.add(nombreId);
+                    }
+                });
+
+                if (perfilesDetectados.size === 0) {
+                    contenedor.innerHTML = "<p style='color: #ff5555;'>No se encontraron perfiles en el index.</p>";
+                    return;
+                }
+
+                // 2. Traemos las visitas y estados de Firebase
                 const snapVisitas = await db.collection("estadisticas_visitas").get();
                 let visitasMap = {};
                 snapVisitas.forEach(doc => {
@@ -86,7 +108,8 @@
 
                 contenedor.innerHTML = "";
 
-                perfilesOficiales.forEach(idPerfil => {
+                // 3. Dibujamos la lista con los nombres reales que encontró en el index
+                perfilesDetectados.forEach(idPerfil => {
                     let estado = estadosMap[idPerfil] || "activo";
                     let totalVisitas = visitasMap[idPerfil] || 0;
 
@@ -109,7 +132,7 @@
 
             } catch (e) {
                 console.error(e);
-                contenedor.innerHTML = "<p style='color: #ff5555;'>Error al sincronizar el panel.</p>";
+                contenedor.innerHTML = "<p style='color: #ff5555;'>Error al escanear los perfiles del index.</p>";
             }
         }
 
@@ -118,7 +141,7 @@
                 estado: nuevoEstado
             }, { merge: true }).then(() => {
                 alert(`El perfil de ${idPerfil} ahora está ${nuevoEstado}.`);
-                cargarPanelMaestro();
+                escanearIndexYConstruirPanel();
             });
         };
     </script>
