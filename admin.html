@@ -54,7 +54,8 @@
         const db = firebase.firestore();
 
         function verificarAdmin() {
-            const pass = document.getElementById('adminPass'].value;
+            // CORREGIDO: Se cambió el corchete por paréntesis
+            const pass = document.getElementById('adminPass').value;
             if (pass === "prive2026") {
                 document.getElementById('loginBox').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'block';
@@ -69,18 +70,14 @@
             contenedor.innerHTML = "<p style='color: #dfc285;'>Sincronizando perfiles y estadísticas...</p>";
 
             try {
-                // 1. LISTA OFICIAL DE TUS PERFILES (Basada en tus archivos actuales: celeste, daniela, deby, etc.)
-                // Podés agregar o sacar nombres de acá cuando crees nuevos perfiles en el futuro.
                 const perfilesOficiales = ["celeste", "daniela", "deby", "valentina", "sofia", "camila", "martina"];
 
-                // 2. Traemos las visitas guardadas en Firebase
                 const snapVisitas = await db.collection("estadisticas_visitas").get();
                 let visitasMap = {};
                 snapVisitas.forEach(doc => {
                     visitasMap[doc.id] = doc.data().visitas || 0;
                 });
 
-                // 3. Traemos los estados actuales (activo / pausado) de Firebase
                 const snapConfig = await db.collection("config_perfiles").get();
                 let estadosMap = {};
                 snapConfig.forEach(doc => {
@@ -89,7 +86,6 @@
 
                 contenedor.innerHTML = "";
 
-                // 4. Renderizamos cada perfil oficial
                 perfilesOficiales.forEach(idPerfil => {
                     let estado = estadosMap[idPerfil] || "activo";
                     let totalVisitas = visitasMap[idPerfil] || 0;
@@ -122,7 +118,7 @@
                 estado: nuevoEstado
             }, { merge: true }).then(() => {
                 alert(`El perfil de ${idPerfil} ahora está ${nuevoEstado}.`);
-                cargarPanelMaestro(); // Recarga la lista sola al instante
+                cargarPanelMaestro();
             });
         };
     </script>
