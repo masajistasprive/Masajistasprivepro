@@ -12,7 +12,7 @@
     });
 })();
 
-// comentarios.js - Motor Global, Visor con Marca de Agua, Slider Táctil y Comentarios
+// comentarios.js - Motor Global, Visor con Marca de Agua, Slider Táctil, Comentarios y Estado de Pausa
 (function() {
     // 1. Blindaje seguro contra click derecho y atajos (sin tocar gestos táctiles ni miniaturas)
     document.addEventListener('contextmenu', (e) => {
@@ -202,10 +202,49 @@
     let perfilId = typeof ID_PERFIL_ACTUAL !== 'undefined' ? ID_PERFIL_ACTUAL : window.location.pathname.split("/").pop().replace(".html", "");
     if (!perfilId || perfilId === "") perfilId = "general";
 
+    // Inicializar Firebase y chequear estado de pausa
+    function verificarPausaYArrancar() {
+        if (typeof firebase === 'undefined') {
+            setTimeout(verificarPausaYArrancar, 300);
+            return;
+        }
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp({
+                apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
+                authDomain: "masajistasprivepro.firebaseapp.com",
+                projectId: "masajistasprivepro",
+                storageBucket: "masajistasprivepro.firebasestorage.app",
+                messagingSenderId: "768677270509",
+                appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
+                measurementId: "G-SBN70C32JF"
+            });
+        }
+        const dbPerfil = firebase.firestore();
+
+        // Verificar si el perfil está pausado en Firebase
+        dbPerfil.collection("perfiles_estado").doc(perfilId).get().then((doc) => {
+            if (doc.exists && doc.data().pausado === true) {
+                const btnWa = document.querySelector('.btn-whatsapp');
+                if (btnWa) {
+                    btnWa.outerHTML = `
+                        <div style="background: #1a1a1a; border: 1px solid #dfc285; padding: 15px; border-radius: 6px; text-align: center; margin: 30px 0 20px 0;">
+                            <p style="color: #dfc285; font-size: 13px; margin: 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Perfil Temporalmente Pausado</p>
+                        </div>
+                    `;
+                }
+            }
+        }).catch(err => console.log("Error al verificar estado:", err));
+
+        // Continuar con los comentarios y administrador
+        inicializarLogicaComentarios(dbPerfil, perfilId);
+    }
+
+    verificarPausaYArrancar();
+
     const contenedorDestino = document.getElementById('seccion-comentarios');
     if (!contenedorDestino) return;
 
-    // Caja de comentarios con botón de adjuntar minimalista (Clip 📎)
     contenedorDestino.innerHTML = `
         <div style="width: 100%; box-sizing: border-box; margin: 20px auto 10px auto; padding: 22px 15px; background: #141414; border: 1px solid rgba(223, 194, 133, 0.25); border-radius: 10px; font-family: 'Montserrat', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
             <h3 style="color: #dfc285; text-align: center; font-size: 20px; margin-bottom: 20px; font-family: 'Cormorant Garamond', serif; letter-spacing: 1.5px;">Experiencias y Comentarios</h3>
@@ -241,33 +280,7 @@
         </div>
     `;
 
-    if (typeof firebase === 'undefined') {
-        const scriptApp = document.createElement('script');
-        scriptApp.src = "https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js";
-        scriptApp.onload = () => {
-            const scriptFs = document.createElement('script');
-            scriptFs.src = "https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js";
-            scriptFs.onload = inicializarSistemaComentarios;
-            document.head.appendChild(scriptFs);
-        };
-        document.head.appendChild(scriptApp);
-    } else {
-        inicializarSistemaComentarios();
-    }
-
-    function inicializarSistemaComentarios() {
-        if (!firebase.apps.length) {
-            firebase.initializeApp({
-                apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
-                authDomain: "masajistasprivepro.firebaseapp.com",
-                projectId: "masajistasprivepro",
-                storageBucket: "masajistasprivepro.firebasestorage.app",
-                messagingSenderId: "768677270509",
-                appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
-                measurementId: "G-SBN70C32JF"
-            });
-        }
-        const dbPerfil = firebase.firestore();
+    function inicializarLogicaComentarios(dbPerfil, pId) {
         let isAdminPerfil = sessionStorage.getItem("priveAdmin") === "true";
 
         window.activarAdminPerfil = function() {
@@ -322,7 +335,7 @@
             reader.readAsDataURL(input.files[0]);
         }
 
-        dbPerfil.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").onSnapshot((snapshot) => {
+        dbPerfil.collection("perfiles_comentarios").doc(pId).collection("mensajes").onSnapshot((snapshot) => {
             const container = document.getElementById('pCommentsContainer');
             if (!container) return;
             container.innerHTML = "";
@@ -347,7 +360,7 @@
                 const fechaStr = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : 'Hace un momento';
                 const likes = data.likes || 0;
                 const imgHtml = data.image ? `<img src="${data.image}" style="max-width: 100%; max-height: 180px; border-radius: 6px; margin-top: 10px; display: block; object-fit: cover; border: 1px solid rgba(223,194,133,0.4); cursor: pointer;" alt="Adjunto">` : '';
-                const deleteBtn = isAdminPerfil ? `<button onclick="window.borrarComentarioPerfil('${data.id}', '${perfilId}')" style="background:none; border:none; color:#ff5555; cursor:pointer; font-size:11px; font-weight:bold; float:right; text-transform: uppercase;">🗑️ Eliminar</button>` : '';
+                const deleteBtn = isAdminPerfil ? `<button onclick="window.borrarComentarioPerfil('${data.id}', '${pId}')" style="background:none; border:none; color:#ff5555; cursor:pointer; font-size:11px; font-weight:bold; float:right; text-transform: uppercase;">🗑️ Eliminar</button>` : '';
 
                 const div = document.createElement('div');
                 div.style.cssText = "font-size: 13px; margin-bottom: 15px; color: #ccc; word-break: break-word; background: #1a1a1a; padding: 15px; border-radius: 6px; position: relative; border-left: 3px solid #dfc285; border: 1px solid rgba(223,194,133,0.15); width: 100%; box-sizing: border-box;";
@@ -360,7 +373,7 @@
                         <span style="font-size: 11px; color: #777; margin-left: 2px; display: block; margin-top: 8px;">${fechaStr}</span>
                     </div>
                     <div style="margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 8px; display: flex; align-items: center; justify-content: space-between;">
-                        <button onclick="window.darLikePerfil('${data.id}', ${likes}, '${perfilId}')" style="background:none; border:none; color:#dfc285; cursor:pointer; font-size:12px; font-weight:600; display:flex; align-items:center; gap:5px;">👍 Me gusta (<span id="plikes-${data.id}">${likes}</span>)</button>
+                        <button onclick="window.darLikePerfil('${data.id}', ${likes}, '${pId}')" style="background:none; border:none; color:#dfc285; cursor:pointer; font-size:12px; font-weight:600; display:flex; align-items:center; gap:5px;">👍 Me gusta (<span id="plikes-${data.id}">${likes}</span>)</button>
                         ${data.image ? '<span style="font-size: 10px; color: #dfc285; background: rgba(223,194,133,0.1); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(223,194,133,0.3); text-transform: uppercase; letter-spacing: 0.5px;">★ Destacado</span>' : ''}
                     </div>
                 `;
@@ -379,7 +392,7 @@
             }
 
             comprimirImagenPerfil((base64) => {
-                dbPerfil.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").add({
+                dbPerfil.collection("perfiles_comentarios").doc(pId).collection("mensajes").add({
                     autor: autor,
                     contenido: contenido,
                     image: base64 || "",
@@ -394,15 +407,15 @@
             });
         };
 
-        window.darLikePerfil = function(msgId, currentLikes, pId) {
-            dbPerfil.collection("perfiles_comentarios").doc(pId).collection("mensajes").doc(msgId).update({
+        window.darLikePerfil = function(msgId, currentLikes, targetId) {
+            dbPerfil.collection("perfiles_comentarios").doc(targetId).collection("mensajes").doc(msgId).update({
                 likes: currentLikes + 1
             });
         };
 
-        window.borrarComentarioPerfil = function(msgId, pId) {
+        window.borrarComentarioPerfil = function(msgId, targetId) {
             if (confirm("¿Estás seguro de eliminar este comentario?")) {
-                dbPerfil.collection("perfiles_comentarios").doc(pId).collection("mensajes").doc(msgId).delete();
+                dbPerfil.collection("perfiles_comentarios").doc(targetId).collection("mensajes").doc(msgId).delete();
             }
         };
 
