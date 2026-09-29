@@ -710,3 +710,31 @@ img {
     color: #dfc285;
     font-size: 14px;
 }
+
+/* Corrección definitiva para que la tarjeta de anuncio mida exactamente lo mismo que las fichas */
+.grid-perfiles {
+    align-items: stretch !important;
+}
+
+.grid-perfiles .card-link,
+.grid-perfiles .card-ad-link {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.grid-perfiles .card, 
+.grid-perfiles .card-ad {
+    flex: 1 !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    aspect-ratio: auto !important;
+}
+
+.grid-perfiles .card-ad {
+    padding: 20px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+}
