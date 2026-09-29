@@ -83,107 +83,97 @@
         document.getElementById('genForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const nombre = document.getElementById('nombre').value.trim();
-            const zona = document.getElementById('zona').value.trim();
-            const modalidad = document.getElementById('modalidad').value.trim();
-            const whatsapp = document.getElementById('whatsapp').value.trim();
-            const prefijo = document.getElementById('prefijoFoto').value.trim().toLowerCase();
-            const bio = document.getElementById('bio').value.trim();
-            const horarios = document.getElementById('horarios').value.trim();
+            var nombre = document.getElementById('nombre').value.trim();
+            var zona = document.getElementById('zona').value.trim();
+            var modalidad = document.getElementById('modalidad').value.trim();
+            var whatsapp = document.getElementById('whatsapp').value.trim();
+            var prefijo = document.getElementById('prefijoFoto').value.trim().toLowerCase();
+            var bio = document.getElementById('bio').value.trim();
+            var horarios = document.getElementById('horarios').value.trim();
 
-            const fileName = nombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '') + '.html';
+            var fileName = nombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '') + '.html';
             document.getElementById('fileNameDisplay').textContent = fileName;
 
-            const htmlGenerado = `<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${nombre} | Masajistas Privé</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body class="perfil-body">
-
-    <header class="header-prive">
-        <div class="header-left">
-            <img src="img/monograma.png" alt="Monograma" class="header-monograma">
-        </div>
-        <div class="header-center">
-            <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">
-        </div>
-        <div class="header-right">
-            <a href="index.html" class="btn-buscar">← Volver</a>
-        </div>
-    </header>
-
-    <main class="container perfil-container">
-        
-        <div class="perfil-galeria-grid">
-            <img src="img/${prefijo}1.jpg" alt="${nombre}" class="foto-principal" id="fotoPrincipal">
-            <div class="galeria-miniaturas">
-                <img src="img/${prefijo}1.jpg" alt="${nombre} 1" onclick="cambiarFoto(this)">
-                <img src="img/${prefijo}2.jpg" alt="${nombre} 2" onclick="cambiarFoto(this)">
-                <img src="img/${prefijo}3.jpg" alt="${nombre} 3" onclick="cambiarFoto(this)">
-                <img src="img/${prefijo}4.jpg" alt="${nombre} 4" onclick="cambiarFoto(this)">
-            </div>
-        </div>
-
-        <div class="perfil-info">
-            <div class="perfil-titulo-seccion">
-                <h2>${nombre}</h2>
-                <span class="badge-verificado">✓ Privé Verificado</span>
-            </div>
-
-            <p class="perfil-ubicacion">📍 Zona: <strong>${zona}</strong></p>
-            <p class="perfil-modalidad">🏠 Modalidad: <strong>${modalidad}</strong></p>
-
-            <div class="perfil-descripcion">
-                <h3>Sobre mí y Servicios</h3>
-                <p>${bio}</p>
-            </div>
-
-            <div class="perfil-detalles">
-                <div class="detalle-item">
-                    <span>Horarios:</span> ${horarios}
-                </div>
-            </div>
-
-            <a href="https://wa.me/${whatsapp}?text=Hola%20${nombre},%20vi%20tu%20perfil%20en%20Masajistas%20Privé" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
-                💬 Contactar por WhatsApp
-            </a>
-        </div>
-
-        <div id="seccion-comentarios"></div>
-    </main>
-
-    <footer class="footer">
-        <p>Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.</p>
-        <p class="copyright">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
-    </footer>
-
-    <script>
-        function cambiarFoto(element) {
-            const fotoPrincipal = document.getElementById('fotoPrincipal');
-            fotoPrincipal.src = element.src;
-        }
-    </script>
-    <script src="comentarios.js"></script>
-</body>
-</html>`;
+            var htmlGenerado = '<!DOCTYPE html>\n' +
+'<html lang="es">\n' +
+'<head>\n' +
+'    <meta charset="UTF-8">\n' +
+'    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
+'    <title>' + nombre + ' | Masajistas Privé</title>\n' +
+'    <link rel="stylesheet" href="css/style.css">\n' +
+'    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">\n' +
+'</head>\n' +
+'<body class="perfil-body">\n\n' +
+'    <header class="header-prive">\n' +
+'        <div class="header-left">\n' +
+'            <img src="img/monograma.png" alt="Monograma" class="header-monograma">\n' +
+'        </div>\n' +
+'        <div class="header-center">\n' +
+'            <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">\n' +
+'        </div>\n' +
+'        <div class="header-right">\n' +
+'            <a href="index.html" class="btn-buscar">← Volver</a>\n' +
+'        </div>\n' +
+'    </header>\n\n' +
+'    <main class="container perfil-container">\n' +
+'        <div class="perfil-galeria-grid">\n' +
+'            <img src="img/' + prefijo + '1.jpg" alt="' + nombre + '" class="foto-principal" id="fotoPrincipal">\n' +
+'            <div class="galeria-miniaturas">\n' +
+'                <img src="img/' + prefijo + '1.jpg" alt="' + nombre + ' 1" onclick="cambiarFoto(this)">\n' +
+'                <img src="img/' + prefijo + '2.jpg" alt="' + nombre + ' 2" onclick="cambiarFoto(this)">\n' +
+'                <img src="img/' + prefijo + '3.jpg" alt="' + nombre + ' 3" onclick="cambiarFoto(this)">\n' +
+'                <img src="img/' + prefijo + '4.jpg" alt="' + nombre + ' 4" onclick="cambiarFoto(this)">\n' +
+'            </div>\n' +
+'        </div>\n\n' +
+'        <div class="perfil-info">\n' +
+'            <div class="perfil-titulo-seccion">\n' +
+'                <h2>' + nombre + '</h2>\n' +
+'                <span class="badge-verificado">✓ Privé Verificado</span>\n' +
+'            </div>\n\n' +
+'            <p class="perfil-ubicacion">📍 Zona: <strong>' + zona + '</strong></p>\n' +
+'            <p class="perfil-modalidad">🏠 Modalidad: <strong>' + modalidad + '</strong></p>\n\n' +
+'            <div class="perfil-descripcion">\n' +
+'                <h3>Sobre mí y Servicios</h3>\n' +
+'                <p>' + bio + '</p>\n' +
+'            </div>\n\n' +
+'            <div class="perfil-detalles">\n' +
+'                <div class="detalle-item">\n' +
+'                    <span>Horarios:</span> ' + horarios + '\n' +
+'                </div>\n' +
+'            </div>\n\n' +
+'            <a href="https://wa.me/' + whatsapp + '?text=Hola%20' + encodeURIComponent(nombre) + ',%20vi%20tu%20perfil%20en%20Masajistas%20Privé" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">\n' +
+'                💬 Contactar por WhatsApp\n' +
+'            </a>\n' +
+'        </div>\n\n' +
+'        <div id="seccion-comentarios"></div>\n' +
+'    </main>\n\n' +
+'    <footer class="footer">\n' +
+'        <p>Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.</p>\n' +
+'        <p class="copyright">© 2026 Masajistas Privé. Todos los derechos reservados.</p>\n' +
+'    </footer>\n\n' +
+'    <script>\n' +
+'        function cambiarFoto(element) {\n' +
+'            var fotoPrincipal = document.getElementById("fotoPrincipal");\n' +
+'            fotoPrincipal.src = element.src;\n' +
+'        }\n' +
+'    </script>\n' +
+'    <script src="comentarios.js"></script>\n' +
+'</body>\n' +
+'</html>';
 
             document.getElementById('codeOutput').value = htmlGenerado;
-            const outputSec = document.getElementById('outputSection');
+            var outputSec = document.getElementById('outputSection');
             outputSec.style.display = 'block';
             outputSec.scrollIntoView({ behavior: 'smooth' });
         });
 
         document.getElementById('btnCopiar').addEventListener('click', function() {
-            const codeBox = document.getElementById('codeOutput');
+            var codeBox = document.getElementById('codeOutput');
             codeBox.select();
             document.execCommand('copy');
             this.textContent = '¡Copiado al portapapeles!';
-            setTimeout(() => { this.textContent = 'Copiar al Portapapeles'; }, 2000);
+            var btn = this;
+            setTimeout(function() { btn.textContent = 'Copiar al Portapapeles'; }, 2000);
         });
     </script>
 </body>
