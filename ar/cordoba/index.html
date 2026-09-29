@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masajistas Privé | Córdoba Capital</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Masajistas Privé - Córdoba</h1>
+        <p>Directorio de profesionales del bienestar y relax en Córdoba Capital.</p>
+    </header>
+
+    <main>
+        <!-- Aquí se montarán dinámicamente los perfiles y la interacción -->
+        <section id="perfiles-container">
+            <p>Cargando profesionales en la región...</p>
+        </section>
+
+        <!-- Sección de comentarios interactivos con Firebase -->
+        <section id="comentarios-section">
+            <h3>Opiniones y Consultas</h3>
+            <div id="lista-comentarios"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Masajistas Privé. <a href="../../terminos.html">Términos y Condiciones</a></p>
+    </footer>
+
+    <!-- Scripts de Firebase y lógica modular -->
+    <script type="module">
+        // Aquí conectaremos la lógica de Firebase pasando el locationId: "ar_cordoba"
+        const locationId = "ar_cordoba";
+        console.log("Iniciando portal para la locación:", locationId);
+    </script>
+</body>
+</html>
