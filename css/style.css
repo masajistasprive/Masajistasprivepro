@@ -681,3 +681,28 @@ img {
     color: #dfc285;
     font-size: 14px;
 }
+/* 1. Igualar la altura y proporción de la tarjeta de anuncio con las fichas normales */
+.grid-perfiles .card-ad {
+    height: 100% !important;
+    min-height: 380px !important; /* Ajustá este valor si querés que coincida exacto con la altura de tus fotos de perfil */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+}
+
+/* 2. Destacar los títulos de las categorías con letras más grandes y mayor separación visual */
+.section-heading {
+    font-size: 28px !important;
+    font-family: 'Cormorant Garamond', serif !important;
+    color: #dfc285 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 2.5px !important;
+    text-align: center !important;
+    margin-top: 45px !important;
+    margin-bottom: 25px !important;
+    border-bottom: 1px solid rgba(223, 194, 133, 0.2);
+    padding-bottom: 12px;
+}
+
