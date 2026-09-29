@@ -518,7 +518,6 @@
             }
         }
 
-        // Función nueva para barajar los globos VIP (Destacadas)
         function barajarDestacadas() {
             const contenedor = document.querySelector('.stories-container');
             if (!contenedor) return;
@@ -536,7 +535,7 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             cargarArticulosDelDia();
-            barajarDestacadas(); // <-- Acá ejecutamos la mezcla de los globos
+            barajarDestacadas();
             barajarSeccion('grid-terapeuticas');
             barajarSeccion('grid-sensuales');
             barajarSeccion('grid-masculinos');
@@ -545,6 +544,7 @@
 
         const pills = document.querySelectorAll('.pill-btn');
         const cards = document.querySelectorAll('.card-link');
+        const headings = document.querySelectorAll('.section-heading');
         
         function filtrarSeccion(filter) {
             pills.forEach(p => {
@@ -555,11 +555,22 @@
                 }
             });
 
+            // Filtrar tarjetas
             cards.forEach(card => {
                 if (filter === 'todas' || card.getAttribute('data-categoria') === filter) {
                     card.style.display = 'block';
                 } else {
                     card.style.display = 'none';
+                }
+            });
+
+            // Ocultar o mostrar los títulos de sección según el filtro activo
+            headings.forEach(heading => {
+                const sectionType = heading.getAttribute('data-section');
+                if (filter === 'todas' || sectionType === filter) {
+                    heading.style.display = 'block';
+                } else {
+                    heading.style.display = 'none';
                 }
             });
         }
