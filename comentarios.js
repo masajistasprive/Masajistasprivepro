@@ -14,7 +14,7 @@
 
 // comentarios.js - Motor Global, Visor con Marca de Agua, Slider Táctil, Comentarios y Estado de Pausa
 (function() {
-    // 1. Blindaje seguro contra click derecho y atajos (sin tocar gestos táctiles ni miniaturas)
+    // 1. Blindaje seguro contra click derecho y atajos
     document.addEventListener('contextmenu', (e) => {
         if (e.target.tagName === 'IMG') {
             e.preventDefault();
@@ -77,7 +77,7 @@
     `;
     document.head.appendChild(styleAnim);
 
-    // 2. Slider Táctil Seguro (Deslizar foto principal con el dedo en celulares)
+    // 2. Slider Táctil Seguro
     function inicializarSliderTactil() {
         const fotoPrincipal = document.getElementById('fotoPrincipal');
         if (!fotoPrincipal) return;
@@ -111,14 +111,14 @@
         fotoPrincipal.addEventListener('touchend', e => {
             let touchEndX = e.changedTouches[0].screenX;
             if (touchEndX < touchStartX - 45) {
-                cambiarFoto(1);  // Deslizar izquierda -> Siguiente
+                cambiarFoto(1);
             } else if (touchEndX > touchStartX + 45) {
-                cambiarFoto(-1); // Deslizar derecha -> Anterior
+                cambiarFoto(-1);
             }
         }, { passive: true });
     }
 
-    // 3. Visor de Pantalla Completa (Lightbox) para la foto principal y grillas
+    // 3. Visor de Pantalla Completa (Lightbox)
     function inicializarVisorFotos() {
         if (!document.getElementById('priveLightbox')) {
             const lightbox = document.createElement('div');
@@ -160,7 +160,6 @@
             inicializarVisorFotos();
         }, 600);
 
-        // Reposicionar y animar el botón de WhatsApp con mensaje ATEMPORAL
         const btnWa = document.querySelector('.btn-whatsapp');
         const mainContainer = document.querySelector('.perfil-container') || document.querySelector('main');
         
@@ -192,7 +191,6 @@
 
             const nombreMasajista = document.querySelector('.perfil-titulo-seccion h2')?.textContent || "Perfil";
             const baseUrl = btnWa.getAttribute('href').split('?')[0];
-            
             const nuevoMensaje = `Hola ${nombreMasajista}, vi tu perfil en Masajistas Privé y quiero consultar disponibilidad.`;
             btnWa.setAttribute('href', `${baseUrl}?text=${encodeURIComponent(nuevoMensaje)}`);
         }
@@ -213,13 +211,27 @@
         return "general";
     }
 
-    // Inicializar Firebase y chequear estado de pausa
-    function verificarPausaYArrancar() {
-        if (typeof firebase === 'undefined') {
-            setTimeout(verificarPausaYArrancar, 300);
+    // CARGA AUTOMÁTICA DE FIREBASE SI EL HTML NO LO TIENE INCLUIDO
+    function asegurarFirebaseYArrancar() {
+        if (typeof firebase !== 'undefined') {
+            iniciarMotorFirebase();
             return;
         }
 
+        const scriptApp = document.createElement('script');
+        scriptApp.src = "https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js";
+        scriptApp.onload = () => {
+            const scriptFs = document.createElement('script');
+            scriptFs.src = "https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js";
+            scriptFs.onload = () => {
+                iniciarMotorFirebase();
+            };
+            document.head.appendChild(scriptFs);
+        };
+        document.head.appendChild(scriptApp);
+    }
+
+    function iniciarMotorFirebase() {
         if (!firebase.apps.length) {
             firebase.initializeApp({
                 apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
@@ -234,7 +246,7 @@
         const dbPerfil = firebase.firestore();
         const perfilId = obtenerPerfilIdSeguro();
 
-        // Verificar si el perfil está pausado en Firebase
+        // Chequear pausa
         dbPerfil.collection("perfiles_estado").doc(perfilId).get().then((doc) => {
             if (doc.exists && doc.data().pausado === true) {
                 const btnWa = document.querySelector('.btn-whatsapp');
@@ -248,13 +260,12 @@
             }
         }).catch(err => console.log("Error al verificar estado:", err));
 
-        // Continuar con los comentarios y administrador
         inicializarLogicaComentarios(dbPerfil, perfilId);
     }
 
-    verificarPausaYArrancar();
+    asegurarFirebaseYArrancar();
 
-    // BUSCAR O CREAR AUTOMÁTICAMENTE LA SECCIÓN DE COMENTARIOS PARA QUE NUNCA FALTE
+    // INYECTAR LA SECCIÓN DE COMENTARIOS AUTOMÁTICAMENTE
     let contenedorDestino = document.getElementById('seccion-comentarios');
     if (!contenedorDestino) {
         const contenedorPrincipal = document.querySelector('.perfil-container') || document.querySelector('main') || document.body;
