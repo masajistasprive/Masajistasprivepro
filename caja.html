@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Caja - Masajistas Privé</title>
+    <style>
+        :root {
+            --bg-color: #0b0b0b;
+            --card-bg: #141414;
+            --gold: #d4af37;
+            --gold-light: #f3e5ab;
+            --text-main: #f5f5f5;
+            --text-muted: #aaaaaa;
+            --danger: #ff4d4d;
+            --success: #2ecc71;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #222;
+            padding-bottom: 15px;
+        }
+
+        h1 {
+            color: var(--gold);
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .back-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--gold);
+        }
+
+        /* Tarjeta de Resumen */
+        .card-summary {
+            background: linear-gradient(135deg, #1a1a1a, #111);
+            border: 1px solid var(--gold);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.1);
+        }
+
+        .summary-title {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .summary-amount {
+            font-size: 2.2rem;
+            color: var(--gold-light);
+            font-weight: bold;
+        }
+
+        /* Formulario de Carga */
+        .form-card {
+            background-color: var(--card-bg);
+            border: 1px solid #222;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-card h2 {
+            font-size: 1.1rem;
+            color: var(--gold);
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            background-color: #1f1f1f;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: var(--text-main);
+            font-size: 1rem;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .btn-submit {
+            background-color: var(--gold);
+            color: #000;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 1rem;
+            text-transform: uppercase;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--gold-light);
+        }
+
+        /* Listado de Movimientos */
+        .transactions-section h2 {
+            font-size: 1.1rem;
+            color: var(--gold);
+            margin-bottom: 15px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #222;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background-color: #1a1a1a;
+            color: var(--gold);
+            border-bottom: 1px solid #333;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        tr:not(:last-child) td {
+            border-bottom: 1px solid #1f1f1f;
+        }
+
+        .amount-col {
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .btn-delete {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: opacity 0.2s;
+        }
+
+        .btn-delete:hover {
+            opacity: 0.7;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Control de Caja</h1>
+            <a href="admin.html" class="back-link">&larr; Volver al Panel</a>
+        </header>
+
+        <!-- Resumen de Ingresos -->
+        <div class="card-summary">
+            <div class="summary-title">Total Ingresados (Alias Personal Pay)</div>
+            <div class="summary-amount" id="totalIngresos">$0</div>
+        </div>
+
+        <!-- Formulario para agregar movimiento -->
+        <div class="form-card">
+            <h2>Registrar Nuevo Ingreso</h2>
+            <form id="cajaForm">
+                <div class="form-group">
+                    <label for="fecha">Fecha</label>
+                    <input type="date" id="fecha" required>
+                </div>
+                <div class="form-group">
+                    <label for="perfil">Perfil / Concepto</label>
+                    <input type="text" id="perfil" placeholder="Ej: Jennyfer (Semanal) o Espacio" required>
+                </div>
+                <div class="form-group">
+                    <label for="monto">Monto ($)</label>
+                    <input type="number" id="monto" placeholder="Ej: 15000" required>
+                </div>
+                <button type="submit" class="btn-submit">Guardar Movimiento</button>
+            </form>
+        </div>
+
+        <!-- Listado -->
+        <div class="transactions-section">
+            <h2>Historial de Movimientos</h2>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Concepto / Perfil</th>
+                            <th>Monto</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaMovimientos">
+                        <!-- Se llena con JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cargar fecha actual por defecto en el input
+        document.getElementById('fecha').valueAsDate = new Date();
+
+        // Obtener movimientos de localStorage o iniciar array vacío
+        let movimientos = JSON.parse(localStorage.getItem('prive_caja')) || [];
+
+        const form = document.getElementById('cajaForm');
+        const tablaMovimientos = document.getElementById('tablaMovimientos');
+        const totalIngresos = document.getElementById('totalIngresos');
+
+        function actualizarCaja() {
+            tablaMovimientos.innerHTML = '';
+            let sumaTotal = 0;
+
+            if (movimientos.length === 0) {
+                tablaMovimientos.innerHTML = `<tr><td colspan="4" class="empty-state">No hay movimientos registrados todavía.</td></tr>`;
+                totalIngresos.textContent = '$0';
+                return;
+            }
+
+            movimientos.forEach((mov, index) => {
+                sumaTotal += Number(mov.monto);
+                
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${mov.fecha}</td>
+                    <td>${mov.perfil}</td>
+                    <td class="amount-col">+$${Number(mov.monto).toLocaleString('es-AR')}</td>
+                    <td><button class="btn-delete" onclick="eliminarMovimiento(${index})">Eliminar</button></td>
+                `;
+                tablaMovimientos.appendChild(tr);
+            });
+
+            totalIngresos.textContent = `$${sumaTotal.toLocaleString('es-AR')}`;
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const nuevoMov = {
+                fecha: document.getElementById('fecha').value,
+                perfil: document.getElementById('perfil').value,
+                monto: parseFloat(document.getElementById('monto').value)
+            };
+
+            movimientos.unshift(nuevoMov); // Agregar al principio
+            localStorage.setItem('prive_caja', JSON.stringify(movimientos));
+
+            form.reset();
+            document.getElementById('fecha').valueAsDate = new Date();
+            actualizarCaja();
+        });
+
+        window.eliminarMovimiento = function(index) {
+            if (confirm('¿Estás seguro de eliminar este registro?')) {
+                movimientos.splice(index, 1);
+                localStorage.setItem('prive_caja', JSON.stringify(movimientos));
+                actualizarCaja();
+            }
+        };
+
+        // Inicializar al cargar
+        actualizarCaja();
+    </script>
+</body>
+</html>
