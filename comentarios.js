@@ -12,142 +12,9 @@
     });
 })();
 
-// =========================================================
-// SISTEMA DE TRADUCCIÓN BILINGÜE LIMPIO Y CORPORATIVO
-// =========================================================
-const traduccionesPerfiles = {
-    es: {
-        volverBtn: "← Volver",
-        verificado: "✓ Privé Verificado",
-        zonaLabel: "📍 Zona:",
-        modalidadLabel: "🏠 Modalidad:",
-        descTitulo: "Descripción",
-        tecnicasLabel: "Técnicas de masaje:",
-        comodidadesTitulo: "Comodidades del Gabinete",
-        diasHorarios: "Días y horarios:",
-        equipamiento: "Equipamiento y servicios:",
-        mediosPago: "Medios de pago:",
-        modalidadTurnos: "Modalidad de turnos:",
-        btnWhatsapp: "💬 Contactar por WhatsApp",
-        experienciasTitulo: "Experiencias y Comentarios",
-        placeholderAutor: "Tu nombre o apodo",
-        placeholderTexto: "Escribe tu experiencia...",
-        btnPublicar: "Publicar Experiencia",
-        cargandoExperiencias: "Cargando experiencias...",
-        sinExperiencias: "No hay experiencias aún. ¡Sé el primero en dejar una!",
-        btnLike: "Me gusta",
-        destacado: "★ Destacado",
-        eliminar: "🗑️ Eliminar",
-        confirmarEliminar: "¿Estás seguro de eliminar este comentario?",
-        alertaCompletar: "Por favor completá tu nombre y tu experiencia.",
-        adjunto: "✓ Archivo adjunto: ",
-        footerTexto: "Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.",
-        footerCopy: "© 2026 Masajistas Privé. Todos los derechos reservados."
-    },
-    en: {
-        volverBtn: "← Back",
-        verificado: "✓ Privé Verified",
-        zonaLabel: "📍 Area:",
-        modalidadLabel: "🏠 Modality:",
-        descTitulo: "Description",
-        tecnicasLabel: "Massage techniques:",
-        comodidadesTitulo: "Studio Amenities",
-        diasHorarios: "Days and hours:",
-        equipamiento: "Equipment and services:",
-        mediosPago: "Payment methods:",
-        modalidadTurnos: "Booking modality:",
-        btnWhatsapp: "💬 Contact via WhatsApp",
-        experienciasTitulo: "Experiences & Comments",
-        placeholderAutor: "Your name or nickname",
-        placeholderTexto: "Write about your experience...",
-        btnPublicar: "Publish Experience",
-        cargandoExperiencias: "Loading experiences...",
-        sinExperiencias: "No experiences yet. Be the first to leave one!",
-        btnLike: "Like",
-        destacado: "★ Featured",
-        eliminar: "🗑️ Delete",
-        confirmarEliminar: "Are you sure you want to delete this comment?",
-        alertaCompletar: "Please fill in your name and experience.",
-        adjunto: "✓ Attached file: ",
-        footerTexto: "This is an exclusive site for adults (+18). The published advertisers are independent and have no employment, corporate, or dependency relationship with this portal.",
-        footerCopy: "© 2026 Masajistas Privé. All rights reserved."
-    }
-};
-
-function obtenerIdiomaPerfil() {
-    return localStorage.getItem('idiomaPrive') || 'es';
-}
-
-function cambiarIdiomaPerfil() {
-    const actual = obtenerIdiomaPerfil();
-    const nuevo = actual === 'es' ? 'en' : 'es';
-    localStorage.setItem('idiomaPrive', nuevo);
-    location.reload();
-}
-
-// INYECCIÓN Y ADAPTACIÓN DEL HEADER BILINGÜE
-window.addEventListener('DOMContentLoaded', () => {
-    const headerRight = document.querySelector('.header-right');
-    if (headerRight && !document.getElementById('btn-idioma')) {
-        headerRight.style.cssText = "display: flex; align-items: center; gap: 10px;";
-        const langActual = obtenerIdiomaPerfil();
-        const textoBtn = langActual === 'es' ? '🇺🇸 EN' : '🇦🇷 ES';
-        
-        const btnLang = document.createElement('button');
-        btnLang.id = 'btn-idioma';
-        btnLang.onclick = cambiarIdiomaPerfil;
-        btnLang.innerHTML = textoBtn;
-        btnLang.style.cssText = "background: transparent; border: 1px solid rgba(223, 194, 133, 0.4); color: #dfc285; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 10px; font-weight: 600; font-family: 'Montserrat', sans-serif; letter-spacing: 1px; transition: all 0.3s;";
-        
-        headerRight.insertBefore(btnLang, headerRight.firstChild);
-
-        const t = traduccionesPerfiles[langActual];
-        
-        const btnVolver = headerRight.querySelector('.btn-buscar');
-        if (btnVolver) btnVolver.textContent = t.volverBtn;
-
-        const badgeVerif = document.querySelector('.badge-verificado');
-        if (badgeVerif) badgeVerif.textContent = t.verificado;
-
-        const zonaEl = document.querySelector('.perfil-ubicacion strong');
-        if (zonaEl && zonaEl.previousSibling) {
-            document.querySelector('.perfil-ubicacion').innerHTML = `${t.zonaLabel} <strong>${zonaEl.textContent}</strong>`;
-        }
-
-        const modEl = document.querySelector('.perfil-modalidad strong');
-        if (modEl && modEl.previousSibling) {
-            document.querySelector('.perfil-modalidad').innerHTML = `${t.modalidadLabel} <strong>${modEl.textContent}</strong>`;
-        }
-
-        const descTitulo = document.querySelector('.perfil-descripcion h3');
-        if (descTitulo) descTitulo.textContent = t.descTitulo;
-
-        const detalles = document.querySelectorAll('.perfil-detalles .detalle-item');
-        detalles.forEach(item => {
-            const span = item.querySelector('span');
-            if (!span) return;
-            const textoSpan = span.textContent.toLowerCase();
-            if (textoSpan.includes('días') || textoSpan.includes('days') || textoSpan.includes('horarios') || textoSpan.includes('hours')) span.textContent = t.diasHorarios;
-            if (textoSpan.includes('equipamiento') || textoSpan.includes('equipment')) span.textContent = t.equipamiento;
-            if (textoSpan.includes('medios') || textoSpan.includes('payment') || textoSpan.includes('pagos')) span.textContent = t.mediosPago;
-            if (textoSpan.includes('modalidad') || textoSpan.includes('booking')) span.textContent = t.modalidadTurnos;
-        });
-
-        const btnWa = document.querySelector('.btn-whatsapp');
-        if (btnWa) btnWa.textContent = t.btnWhatsapp;
-
-        const footerPs = document.querySelectorAll('.footer p');
-        if (footerPs.length >= 2) {
-            footerPs[0].textContent = t.footerTexto;
-            footerPs[1].textContent = t.footerCopy;
-        }
-    }
-});
-
-// =========================================================
-// MOTOR GLOBAL: SLIDER TÁCTIL, VISOR Y COMENTARIOS
-// =========================================================
+// comentarios.js - Motor Global, Visor con Marca de Agua, Slider Táctil y Comentarios
 (function() {
+    // 1. Blindaje seguro contra click derecho y atajos (sin tocar gestos táctiles ni miniaturas)
     document.addEventListener('contextmenu', (e) => {
         if (e.target.tagName === 'IMG') {
             e.preventDefault();
@@ -173,6 +40,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Inyectar estilos para el botón de WhatsApp, animaciones y el Visor (Lightbox)
     const styleAnim = document.createElement('style');
     styleAnim.innerHTML = `
         img {
@@ -180,6 +48,7 @@ window.addEventListener('DOMContentLoaded', () => {
             user-select: none !important;
             -webkit-user-drag: none !important;
         }
+
         @keyframes privePulseGlow {
             0% { transform: scale(1); box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); }
             50% { transform: scale(1.02); box-shadow: 0 6px 25px rgba(37, 211, 102, 0.8), 0 0 15px rgba(223, 194, 133, 0.5); }
@@ -208,6 +77,48 @@ window.addEventListener('DOMContentLoaded', () => {
     `;
     document.head.appendChild(styleAnim);
 
+    // 2. Slider Táctil Seguro (Deslizar foto principal con el dedo en celulares)
+    function inicializarSliderTactil() {
+        const fotoPrincipal = document.getElementById('fotoPrincipal');
+        if (!fotoPrincipal) return;
+
+        const miniaturasImgs = document.querySelectorAll('.galeria-miniaturas img');
+        if (miniaturasImgs.length === 0) return;
+
+        let galeriaImgs = [];
+        miniaturasImgs.forEach(img => galeriaImgs.push(img.src));
+
+        let indiceActual = galeriaImgs.indexOf(fotoPrincipal.getAttribute('src'));
+        if (indiceActual === -1) indiceActual = 0;
+
+        function cambiarFoto(dir) {
+            indiceActual += dir;
+            if (indiceActual < 0) indiceActual = galeriaImgs.length - 1;
+            if (indiceActual >= galeriaImgs.length) indiceActual = 0;
+            
+            fotoPrincipal.style.opacity = '0.3';
+            setTimeout(() => {
+                fotoPrincipal.src = galeriaImgs[indiceActual];
+                fotoPrincipal.style.opacity = '1';
+            }, 120);
+        }
+
+        let touchStartX = 0;
+        fotoPrincipal.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        fotoPrincipal.addEventListener('touchend', e => {
+            let touchEndX = e.changedTouches[0].screenX;
+            if (touchEndX < touchStartX - 45) {
+                cambiarFoto(1);  // Deslizar izquierda -> Siguiente
+            } else if (touchEndX > touchStartX + 45) {
+                cambiarFoto(-1); // Deslizar derecha -> Anterior
+            }
+        }, { passive: true });
+    }
+
+    // 3. Visor de Pantalla Completa (Lightbox) para la foto principal y grillas
     function inicializarVisorFotos() {
         if (!document.getElementById('priveLightbox')) {
             const lightbox = document.createElement('div');
@@ -226,7 +137,7 @@ window.addEventListener('DOMContentLoaded', () => {
             };
         }
 
-        const fotosConVisor = document.querySelectorAll('.perfil-galeria-grid .foto-principal, .grid-perfiles .card-image img, .story-ring img, .galeria-miniaturas img');
+        const fotosConVisor = document.querySelectorAll('.perfil-galeria-grid .foto-principal, .grid-perfiles .card-image img, .story-ring img');
 
         fotosConVisor.forEach(img => {
             img.style.cursor = 'zoom-in';
@@ -242,11 +153,14 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+        inicializarSliderTactil();
         inicializarVisorFotos();
         setTimeout(() => {
+            inicializarSliderTactil();
             inicializarVisorFotos();
         }, 600);
 
+        // Reposicionar y animar el botón de WhatsApp con mensaje ATEMPORAL
         const btnWa = document.querySelector('.btn-whatsapp');
         const mainContainer = document.querySelector('.perfil-container');
         
@@ -279,11 +193,8 @@ window.addEventListener('DOMContentLoaded', () => {
             const nombreMasajista = document.querySelector('.perfil-titulo-seccion h2')?.textContent || "Perfil";
             const baseUrl = btnWa.getAttribute('href').split('?')[0];
             
-            const lang = obtenerIdiomaPerfil();
-            const nuevoMensaje = lang === 'en' 
-                ? `Hello ${nombreMasajista}, I saw your profile on Masajistas Privé and want to check availability.`
-                : `Hola ${nombreMasajista}, vi tu perfil en Masajistas Privé y quiero consultar disponibilidad.`;
-            
+            // MENSAJE ATEMPORAL Y NEUTRO
+            const nuevoMensaje = `Hola ${nombreMasajista}, vi tu perfil en Masajistas Privé y quiero consultar disponibilidad.`;
             btnWa.setAttribute('href', `${baseUrl}?text=${encodeURIComponent(nuevoMensaje)}`);
         }
     });
@@ -294,16 +205,15 @@ window.addEventListener('DOMContentLoaded', () => {
     const contenedorDestino = document.getElementById('seccion-comentarios');
     if (!contenedorDestino) return;
 
-    const t = traduccionesPerfiles[obtenerIdiomaPerfil()];
-
+    // Caja de comentarios con botón de adjuntar minimalista (Clip 📎)
     contenedorDestino.innerHTML = `
         <div style="width: 100%; box-sizing: border-box; margin: 20px auto 10px auto; padding: 22px 15px; background: #141414; border: 1px solid rgba(223, 194, 133, 0.25); border-radius: 10px; font-family: 'Montserrat', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-            <h3 style="color: #dfc285; text-align: center; font-size: 20px; margin-bottom: 20px; font-family: 'Cormorant Garamond', serif; letter-spacing: 1.5px;">${t.experienciasTitulo}</h3>
+            <h3 style="color: #dfc285; text-align: center; font-size: 20px; margin-bottom: 20px; font-family: 'Cormorant Garamond', serif; letter-spacing: 1.5px;">Experiencias y Comentarios</h3>
             
             <div style="display: flex; flex-direction: column; gap: 12px; width: 100%; box-sizing: border-box;">
-                <input type="text" id="pAuthor" placeholder="${t.placeholderAutor}" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a; color: #fff; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
+                <input type="text" id="pAuthor" placeholder="Tu nombre o apodo" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a; color: #fff; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
                 
-                <textarea id="pText" rows="3" placeholder="${t.placeholderTexto}" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a; color: #fff; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px; resize: vertical;"></textarea>
+                <textarea id="pText" rows="3" placeholder="Escribe tu experiencia..." style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a; color: #fff; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px; resize: vertical;"></textarea>
                 
                 <div style="display: flex; gap: 8px; align-items: center; background: #1a1a1a; padding: 10px 12px; border-radius: 6px; border: 1px solid rgba(223, 194, 133, 0.3); flex-wrap: wrap; width: 100%; box-sizing: border-box;">
                     <button type="button" onclick="window.agregarEmojiPerfil('😊')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Sonrisa">😊</button>
@@ -318,11 +228,11 @@ window.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <span id="pFileName" style="font-size: 11px; color: #dfc285; font-style: italic; padding-left: 2px;"></span>
 
-                <button onclick="window.enviarComentarioPerfil()" style="background: linear-gradient(135deg, #dfc285, #c5a059); color: #0d0d0d; border: none; padding: 14px; cursor: pointer; border-radius: 6px; font-weight: 600; width: 100% !important; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-family: 'Montserrat', sans-serif; box-shadow: 0 4px 15px rgba(223,194,133,0.25);">${t.btnPublicar}</button>
+                <button onclick="window.enviarComentarioPerfil()" style="background: linear-gradient(135deg, #dfc285, #c5a059); color: #0d0d0d; border: none; padding: 14px; cursor: pointer; border-radius: 6px; font-weight: 600; width: 100% !important; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-family: 'Montserrat', sans-serif; box-shadow: 0 4px 15px rgba(223,194,133,0.25);">Publicar Experiencia</button>
             </div>
 
             <div id="pCommentsContainer" style="margin-top: 25px; width: 100%; box-sizing: border-box;">
-                <p style="text-align: center; color: #888; font-size: 13px; font-style: italic;">${t.cargandoExperiencias}</p>
+                <p style="text-align: center; color: #888; font-size: 13px; font-style: italic;">Cargando experiencias...</p>
             </div>
 
             <div style="text-align: center; margin-top: 35px; font-size: 11px;">
@@ -380,9 +290,8 @@ window.addEventListener('DOMContentLoaded', () => {
         window.previewPerfilFile = function() {
             const input = document.getElementById('pImageFile');
             const span = document.getElementById('pFileName');
-            const tAct = traduccionesPerfiles[obtenerIdiomaPerfil()];
             if (input && input.files && input.files[0]) {
-                span.textContent = tAct.adjunto + input.files[0].name;
+                span.textContent = "✓ Archivo adjunto: " + input.files[0].name;
             } else if(span) {
                 span.textContent = "";
             }
@@ -418,10 +327,8 @@ window.addEventListener('DOMContentLoaded', () => {
             if (!container) return;
             container.innerHTML = "";
 
-            const tAct = traduccionesPerfiles[obtenerIdiomaPerfil()];
-
             if (snapshot.empty) {
-                container.innerHTML = `<p style='color: #777; font-size: 13px; text-align: center; font-style: italic;'>${tAct.sinExperiencias}</p>`;
+                container.innerHTML = "<p style='color: #777; font-size: 13px; text-align: center; font-style: italic;'>No hay experiencias aún. ¡Sé el primero en dejar una!</p>";
                 inicializarVisorFotos();
                 return;
             }
@@ -437,10 +344,10 @@ window.addEventListener('DOMContentLoaded', () => {
             });
 
             lista.forEach(data => {
-                const fechaStr = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : (obtenerIdiomaPerfil() === 'en' ? 'Just now' : 'Hace un momento');
+                const fechaStr = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : 'Hace un momento';
                 const likes = data.likes || 0;
                 const imgHtml = data.image ? `<img src="${data.image}" style="max-width: 100%; max-height: 180px; border-radius: 6px; margin-top: 10px; display: block; object-fit: cover; border: 1px solid rgba(223,194,133,0.4); cursor: pointer;" alt="Adjunto">` : '';
-                const deleteBtn = isAdminPerfil ? `<button onclick="window.borrarComentarioPerfil('${data.id}', '${perfilId}')" style="background:none; border:none; color:#ff5555; cursor:pointer; font-size:11px; font-weight:bold; float:right; text-transform: uppercase;">${tAct.eliminar}</button>` : '';
+                const deleteBtn = isAdminPerfil ? `<button onclick="window.borrarComentarioPerfil('${data.id}', '${perfilId}')" style="background:none; border:none; color:#ff5555; cursor:pointer; font-size:11px; font-weight:bold; float:right; text-transform: uppercase;">🗑️ Eliminar</button>` : '';
 
                 const div = document.createElement('div');
                 div.style.cssText = "font-size: 13px; margin-bottom: 15px; color: #ccc; word-break: break-word; background: #1a1a1a; padding: 15px; border-radius: 6px; position: relative; border-left: 3px solid #dfc285; border: 1px solid rgba(223,194,133,0.15); width: 100%; box-sizing: border-box;";
@@ -453,8 +360,8 @@ window.addEventListener('DOMContentLoaded', () => {
                         <span style="font-size: 11px; color: #777; margin-left: 2px; display: block; margin-top: 8px;">${fechaStr}</span>
                     </div>
                     <div style="margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 8px; display: flex; align-items: center; justify-content: space-between;">
-                        <button onclick="window.darLikePerfil('${data.id}', ${likes}, '${perfilId}')" style="background:none; border:none; color:#dfc285; cursor:pointer; font-size:12px; font-weight:600; display:flex; align-items:center; gap:5px;">👍 ${tAct.btnLike} (<span id="plikes-${data.id}">${likes}</span>)</button>
-                        ${data.image ? `<span style="font-size: 10px; color: #dfc285; background: rgba(223,194,133,0.1); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(223,194,133,0.3); text-transform: uppercase; letter-spacing: 0.5px;">${tAct.destacado}</span>` : ''}
+                        <button onclick="window.darLikePerfil('${data.id}', ${likes}, '${perfilId}')" style="background:none; border:none; color:#dfc285; cursor:pointer; font-size:12px; font-weight:600; display:flex; align-items:center; gap:5px;">👍 Me gusta (<span id="plikes-${data.id}">${likes}</span>)</button>
+                        ${data.image ? '<span style="font-size: 10px; color: #dfc285; background: rgba(223,194,133,0.1); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(223,194,133,0.3); text-transform: uppercase; letter-spacing: 0.5px;">★ Destacado</span>' : ''}
                     </div>
                 `;
                 container.appendChild(div);
@@ -466,9 +373,8 @@ window.addEventListener('DOMContentLoaded', () => {
         window.enviarComentarioPerfil = function() {
             const autor = document.getElementById('pAuthor').value.trim();
             const contenido = document.getElementById('pText').value.trim();
-            const tAct = traduccionesPerfiles[obtenerIdiomaPerfil()];
             if (!autor || !contenido) {
-                alert(tAct.alertaCompletar);
+                alert("Por favor completá tu nombre y tu experiencia.");
                 return;
             }
 
@@ -495,8 +401,7 @@ window.addEventListener('DOMContentLoaded', () => {
         };
 
         window.borrarComentarioPerfil = function(msgId, pId) {
-            const tAct = traduccionesPerfiles[obtenerIdiomaPerfil()];
-            if (confirm(tAct.confirmarEliminar)) {
+            if (confirm("¿Estás seguro de eliminar este comentario?")) {
                 dbPerfil.collection("perfiles_comentarios").doc(pId).collection("mensajes").doc(msgId).delete();
             }
         };
@@ -509,7 +414,7 @@ window.addEventListener('DOMContentLoaded', () => {
 })();
 
 /* ========================================================= */
-/* SCHEMA.ORG & CONTADOR DE VISITAS */
+/* INYECCIÓN AUTOMÁTICA DE SCHEMA.ORG (ESTRELLITAS EN GOOGLE)*/
 /* ========================================================= */
 window.addEventListener('DOMContentLoaded', () => {
     const tituloElemento = document.querySelector('.perfil-titulo-seccion h2');
@@ -544,6 +449,9 @@ window.addEventListener('DOMContentLoaded', () => {
     document.head.appendChild(scriptSchema);
 });
 
+/* ========================================================= */
+/* CONTADOR AUTOMÁTICO DE VISITAS GLOBAL POR PERFIL (ROBUSTO) */
+/* ========================================================= */
 function registrarVisitaPerfil() {
     const tituloElemento = document.querySelector('.perfil-titulo-seccion h2');
     if (!tituloElemento) return;
@@ -570,7 +478,11 @@ function registrarVisitaPerfil() {
                     nombre: tituloElemento.textContent.trim(),
                     visitas: firebase.firestore.FieldValue.increment(1),
                     ultimaVisita: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true }).catch(err => console.error("Error al registrar visita:", err));
+                }, { merge: true }).then(() => {
+                    console.log("Visita registrada con éxito para:", currentId);
+                }).catch(err => {
+                    console.error("Error al registrar visita en Firestore:", err);
+                });
             } else {
                 setTimeout(ejecutarIncremento, 500);
             }
