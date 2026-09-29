@@ -32,11 +32,11 @@
         .btn-action { background-color: var(--gold); color: #000; border: none; width: 100%; padding: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; text-transform: uppercase; margin-top: 15px; transition: background 0.3s; }
         .btn-action:hover { background-color: var(--gold-light); }
         .output-section { margin-top: 20px; display: none; }
-        textarea.code-output { background-color: #111; color: var(--success); font-family: monospace; font-size: 0.8rem; height: 150px; border: 1px solid #333; width: 100%; }
+        textarea.code-output { background-color: #111; color: var(--success); font-family: monospace; font-size: 0.8rem; height: 120px; border: 1px solid #333; width: 100%; margin-bottom: 10px; }
         .back-link { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; display: inline-block; margin-bottom: 15px; }
         .back-link:hover { color: var(--gold); }
 
-        /* Estilos en vivo del boceto con Comentarios incorporados */
+        /* Estilos en vivo del boceto */
         .preview-box { background: #0b0b0b; border: 1px solid #333; border-radius: 10px; padding: 15px; max-height: 80vh; overflow-y: auto; }
         .preview-box .header-prive { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; padding-bottom: 10px; margin-bottom: 15px; }
         .preview-box .foto-principal { width: 100%; height: 280px; object-fit: cover; border-radius: 8px; border: 1px solid #333; margin-bottom: 10px; }
@@ -48,9 +48,9 @@
         .preview-box p { font-size: 0.85rem; color: #ccc; margin-bottom: 8px; }
         .preview-box .perfil-descripcion { background: #141414; padding: 10px; border-radius: 6px; border: 1px solid #222; margin: 10px 0; }
         .preview-box .perfil-descripcion h3 { color: var(--gold); font-size: 0.9rem; margin-bottom: 5px; text-transform: uppercase; }
+        .preview-box .perfil-detalles { font-size: 0.85rem; color: #ccc; margin-bottom: 10px; }
+        .preview-box .detalle-item span { color: var(--gold); font-weight: 600; }
         .preview-box .btn-whatsapp { display: block; background-color: var(--success); color: #fff; text-decoration: none; padding: 10px; font-weight: bold; border-radius: 6px; text-align: center; font-size: 0.85rem; text-transform: uppercase; margin-top: 15px; margin-bottom: 15px; }
-        
-        /* Simulación visual de la sección de comentarios en el boceto */
         .preview-comentarios { border-top: 1px dashed #333; padding-top: 15px; margin-top: 15px; text-align: center; }
         .preview-comentarios-box { background: #141414; border: 1px solid #222; border-radius: 8px; padding: 12px; font-size: 0.8rem; color: #888; }
     </style>
@@ -70,6 +70,15 @@
                 <div class="form-group">
                     <label for="zona">Zona / Barrio</label>
                     <input type="text" id="zona" placeholder="Ej: Recoleta" value="Recoleta" required>
+                </div>
+                <div class="form-group">
+                    <label for="categoria">Categoría (para el Index)</label>
+                    <select id="categoria">
+                        <option value="terapeuticas">Masajistas Terapéuticas</option>
+                        <option value="sensuales" selected>Masajistas Sensuales</option>
+                        <option value="masculinos">Masajistas Masculinos</option>
+                        <option value="fantasias">Fantasías</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="modalidad">Modalidad</label>
@@ -104,14 +113,19 @@
                     <input type="text" id="horarios" value="Lunes a sábados de 9 a 21 hs." required>
                 </div>
 
-                <button type="submit" class="btn-action">Obtener Código HTML Final</button>
+                <button type="submit" class="btn-action">Obtener Códigos Finales</button>
             </form>
 
             <div class="output-section" id="outputSection">
-                <h2>Código Plano Generado</h2>
-                <p style="font-size: 0.8rem; color: var(--gold); margin-bottom: 8px;">Guardalo como <span id="fileNameDisplay" style="color:#fff"></span> y subilo a GitHub:</p>
-                <textarea class="code-output" id="codeOutput" readonly></textarea>
-                <button type="button" class="btn-action" id="btnCopiar" style="background-color: #333; color: #fff; margin-top: 5px;">Copiar al Portapapeles</button>
+                <h2>1. Código para la Ficha</h2>
+                <p style="font-size: 0.8rem; color: var(--gold); margin-bottom: 5px;">Creá el archivo <span id="fileNameDisplay" style="color:#fff"></span>:</p>
+                <textarea class="code-output" id="codeOutputPerfil" readonly></textarea>
+                <button type="button" class="btn-action" id="btnCopiarPerfil" style="background-color: #333; color: #fff; margin-top: 0; margin-bottom: 15px;">Copiar Código de Ficha</button>
+
+                <h2>2. Código para el Index</h2>
+                <p style="font-size: 0.8rem; color: var(--gold); margin-bottom: 5px;">Pegá esta tarjeta dentro de la grilla correspondiente en tu <code>index.html</code>:</p>
+                <textarea class="code-output" id="codeOutputIndex" readonly></textarea>
+                <button type="button" class="btn-action" id="btnCopiarIndex" style="background-color: #333; color: #fff; margin-top: 0;">Copiar Tarjeta para el Index</button>
             </div>
         </div>
 
@@ -120,9 +134,15 @@
                 <h2>Vista Previa en Vivo</h2>
                 <div class="preview-box">
                     <div class="header-prive">
-                        <span style="color:var(--gold); font-size:0.75rem;">MONOGRAMA</span>
-                        <span style="color:var(--gold); font-weight:bold; font-size:0.8rem;">MASAJISTAS PRIVÉ</span>
-                        <span style="color:#888; font-size:0.75rem;">← Volver</span>
+                        <div class="header-left">
+                            <span style="color:var(--gold); font-size:0.7rem;">Monograma</span>
+                        </div>
+                        <div class="header-center">
+                            <span style="color:var(--gold); font-weight:bold; font-size:0.75rem;">MASAJISTAS PRIVÉ</span>
+                        </div>
+                        <div class="header-right">
+                            <span style="color:#888; font-size:0.75rem;">← Volver</span>
+                        </div>
                     </div>
 
                     <div class="perfil-galeria-grid">
@@ -136,20 +156,23 @@
                             <span class="badge-verificado">✓ Privé Verificado</span>
                         </div>
 
-                        <p>📍 Zona: <strong id="prevZona">Recoleta</strong></p>
-                        <p>🏠 Modalidad: <strong id="prevModalidad">Departamento propio</strong></p>
+                        <p class="perfil-ubicacion">📍 Zona: <strong id="prevZona">Recoleta</strong></p>
+                        <p class="perfil-modalidad">🏠 Modalidad: <strong id="prevModalidad">Departamento propio</strong></p>
 
                         <div class="perfil-descripcion">
                             <h3>Sobre mí y Servicios</h3>
                             <p id="prevBio">Te invito a vivir una experiencia de relajación única...</p>
                         </div>
 
-                        <p><span>Horarios:</span> <span id="prevHorarios">Lunes a sábados de 9 a 21 hs.</span></p>
+                        <div class="perfil-detalles">
+                            <div class="detalle-item">
+                                <span>Horarios:</span> <span id="prevHorarios">Lunes a sábados de 9 a 21 hs.</span>
+                            </div>
+                        </div>
 
                         <a href="#" class="btn-whatsapp">💬 Contactar por WhatsApp</a>
                     </div>
 
-                    <!-- Sección de Comentarios incorporada en el boceto -->
                     <div class="preview-comentarios">
                         <div class="preview-comentarios-box">
                             💬 [ Sección de Comentarios (comentarios.js) ]
@@ -160,7 +183,7 @@
         </div>
     </div>
 
-    <!-- Plantilla oficial basada exactamente en el archivo de Pamela -->
+    <!-- Plantilla oficial idéntica al archivo de Pamela -->
     <script type="text/template" id="plantillaFicha"><![CDATA[<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -242,6 +265,7 @@
     <script>
         const inputNombre = document.getElementById('nombre');
         const inputZona = document.getElementById('zona');
+        const selectCategoria = document.getElementById('categoria');
         const inputModalidad = document.getElementById('modalidad');
         const inputWhatsapp = document.getElementById('whatsapp');
         const inputPrefijo = document.getElementById('prefijoFoto');
@@ -277,12 +301,18 @@
             let minisHTML = '';
             for (let i = 1; i <= cant; i++) {
                 let rutaImg = 'img/' + pref + i + '.jpg';
+                minisHTML += '<img src="' + rutaImg + '" onclick="document.getElementById(\'prevFotoPrincipal\'].src=\'' + rutaImg + '\'" onerror="this.src=\'img/logo.png\'">';
+            }
+            // Corrección limpia para el evento onclick del boceto
+            minisHTML = '';
+            for (let i = 1; i <= cant; i++) {
+                let rutaImg = 'img/' + pref + i + '.jpg';
                 minisHTML += '<img src="' + rutaImg + '" onclick="document.getElementById(\'prevFotoPrincipal\').src=\'' + rutaImg + '\'" onerror="this.src=\'img/logo.png\'">';
             }
             prevMiniaturas.innerHTML = minisHTML;
         }
 
-        [inputNombre, inputZona, inputModalidad, inputWhatsapp, inputPrefijo, selectNumFotos, inputBio, inputHorarios].forEach(el => {
+        [inputNombre, inputZona, selectCategoria, inputModalidad, inputWhatsapp, inputPrefijo, selectNumFotos, inputBio, inputHorarios].forEach(el => {
             el.addEventListener('input', actualizarBoceto);
             el.addEventListener('change', actualizarBoceto);
         });
@@ -294,6 +324,7 @@
 
             var nombre = inputNombre.value.trim();
             var zona = inputZona.value.trim();
+            var categoria = selectCategoria.value;
             var modalidad = inputModalidad.value.trim();
             var whatsapp = inputWhatsapp.value.trim();
             var prefijo = inputPrefijo.value.trim().toLowerCase();
@@ -304,14 +335,14 @@
             var fileName = nombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '') + '.html';
             document.getElementById('fileNameDisplay').textContent = fileName;
 
+            // Miniaturas de la ficha generada
             var miniaturasHTML = "";
             for (var i = 1; i <= cantidadFotos; i++) {
                 miniaturasHTML += '                <img src="img/' + prefijo + i + '.jpg" alt="' + nombre + ' ' + i + '" onclick="cambiarFoto(this)">\n';
             }
 
             var template = document.getElementById('plantillaFicha').innerHTML;
-            
-            var resultado = template
+            var resultadoPerfil = template
                 .replace('<![CDATA[', '').replace(']]>', '')
                 .replace(/\{\{nombre\}\}/g, nombre)
                 .replace(/\{\{nombreEnc\}\}/g, encodeURIComponent(nombre))
@@ -323,19 +354,43 @@
                 .replace(/\{\{bio\}\}/g, bio)
                 .replace(/\{\{horarios\}\}/g, horarios);
 
-            document.getElementById('codeOutput').value = resultado;
+            // Tarjeta para el Index
+            var resultadoIndex = '<a href="' + fileName + '" class="card-link" data-categoria="' + categoria + '">\n' +
+'    <article class="card">\n' +
+'        <div class="card-image">\n' +
+'            <img src="img/' + prefijo + '1.jpg" alt="' + nombre + '" loading="lazy">\n' +
+'            <span class="badge-verificado">✓ Verificado</span>\n' +
+'            <div class="card-gradient-overlay">\n' +
+'                <h3>' + nombre + '</h3>\n' +
+'                <span class="zona">📍 ' + zona.toUpperCase() + '</span>\n' +
+'                <span class="modalidad-tag">' + modalidad + '</span>\n' +
+'            </div>\n' +
+'        </div>\n' +
+'    </article>\n' +
+'</a>';
+
+            document.getElementById('codeOutputPerfil').value = resultadoPerfil;
+            document.getElementById('codeOutputIndex').value = resultadoIndex;
+            
             var outputSec = document.getElementById('outputSection');
             outputSec.style.display = 'block';
             outputSec.scrollIntoView({ behavior: 'smooth' });
         });
 
-        document.getElementById('btnCopiar').addEventListener('click', function() {
-            var codeBox = document.getElementById('codeOutput');
+        document.getElementById('btnCopiarPerfil').addEventListener('click', function() {
+            var codeBox = document.getElementById('codeOutputPerfil');
             codeBox.select();
             document.execCommand('copy');
-            this.textContent = '¡Copiado al portapapeles!';
-            var btn = this;
-            setTimeout(function() { btn.textContent = 'Copiar al Portapapeles'; }, 2000);
+            this.textContent = '¡Copiado código de ficha!';
+            setTimeout(() => { this.textContent = 'Copiar Código de Ficha'; }, 2000);
+        });
+
+        document.getElementById('btnCopiarIndex').addEventListener('click', function() {
+            var codeBox = document.getElementById('codeOutputIndex');
+            codeBox.select();
+            document.execCommand('copy');
+            this.textContent = '¡Copiado tarjeta para el Index!';
+            setTimeout(() => { this.textContent = 'Copiar Tarjeta para el Index'; }, 2000);
         });
     </script>
 </body>
