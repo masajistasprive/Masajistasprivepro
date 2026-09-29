@@ -13,104 +13,134 @@
 })();
 
 // =========================================================
-// INTEGRACIÓN DEL TRADUCTOR OFICIAL DE GOOGLE (100% AUTOMÁTICO)
+// DICCIONARIO MAESTRO DE EQUIVALENCIAS INTEGRALES (FRASES EXACTAS)
 // =========================================================
-
-// 1. Inyectar el contenedor oculto de Google y los estilos para limpiar la interfaz
-const styleTranslate = document.createElement('style');
-styleTranslate.innerHTML = `
-    /* Ocultar la barra superior nativa de Google Translate */
-    .goog-te-banner-frame { display: none !important; }
-    body { top: 0px !important; }
-    #goog-gt-tt { display: none !important; }
-    .goog-tooltip { display: none !important; }
-    .goog-tooltip:hover { display: none !important; }
-    .goog-text-highlight { background-color: transparent !important; box-shadow: none !important; }
-    
-    /* Ocultar el combo nativo feo de Google pero mantenerlo funcional */
-    #google_translate_element {
-        position: absolute;
-        top: -9999px;
-        left: -9999px;
-        opacity: 0;
-        pointer-events: none;
+const diccionarioTraduccionGlobal = {
+    es: {
+        "← Back": "← Volver",
+        "✓ Privé Verified": "✓ Privé Verificado",
+        "📍 Area:": "📍 Zona:",
+        "🏠 Modality:": "🏠 Modalidad:",
+        "Description": "Descripción",
+        "Massage techniques:": "Técnicas de masaje:",
+        "Days and hours:": "Días y horarios:",
+        "Equipment and services:": "Equipamiento y servicios:",
+        "Payment methods:": "Medios de pago:",
+        "Booking modality:": "Modalidad de turnos:",
+        "Studio Amenities": "Comodidades del Gabinete",
+        "Contact via WhatsApp": "💬 Contactar por WhatsApp",
+        "Experiences & Comments": "Experiencias y Comentarios",
+        "Your name or nickname": "Tu nombre o apodo",
+        "Write about your experience...": "Escribe tu experiencia...",
+        "Publish Experience": "Publicar Experiencia",
+        "Loading experiences...": "Cargando experiencias...",
+        "No experiences yet. Be the first to leave one!": "No hay experiencias aún. ¡Sé el primero en dejar una!",
+        "Like": "Me gusta",
+        "★ Featured": "★ Destacado",
+        "Delete": "🗑️ Eliminar",
+        "This is an adult site (+18). Advertisers have no employment relationship with the portal.": "Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.",
+        "© 2026 Masajistas Privé. All rights reserved.": "© 2026 Masajistas Privé. Todos los derechos reservados.",
+        
+        // Frases comunes de descripciones de las masajistas
+        "Certified Professional Massage Therapist, assistant in kinesiology.": "Masajista Profesional Matriculada auxiliar en kinesiología.",
+        "I invite you to create a unique massage session tailored to your needs. I am a massage therapist of German descent.": "Te invito a que creamos una sesión de masajes única, acorde a tus necesidades. Soy una masajista de ascendencia alemana.",
+        "Californian, sensitive, and deep tissue massages.": "Masajes californianos, sensitivos y descontracturantes.",
+        "Personalized attention in a private apartment in the Tribunales area.": "Atención personalizada en departamento reservado en la zona de Tribunales.",
+        "I provide comprehensive care focused on well-being and professional aesthetics.": "Brindo una atención integral orientada al bienestar y la estética profesional.",
+        "Monday to Saturday from": "Lunes a viernes de",
+        "Saturdays and Sundays by prior reservation with a deposit.": "Sábados y domingos previa reserva con seña.",
+        "Shower, air conditioning, cosmetology cabinet, spa cabinet, minibar.": "Ducha, aire acondicionado, gabinete cosmetológico, gabinete spa, frigobar.",
+        "Cash, bank transfer, Mercado Pago, Prex.": "Efectivo, transferencia bancaria, Mercado Pago, Prex."
+    },
+    en: {
+        "← Volver": "← Back",
+        "✓ Privé Verificado": "✓ Privé Verified",
+        "📍 Zona:": "📍 Area:",
+        "🏠 Modalidad:": "🏠 Modality:",
+        "Descripción": "Description",
+        "Técnicas de masaje:": "Massage techniques:",
+        "Días y horarios:": "Days and hours:",
+        "Equipamiento y servicios:": "Equipment and services:",
+        "Medios de pago:": "Payment methods:",
+        "Modalidad de turnos:": "Booking modality:",
+        "Comodidades del Gabinete": "Studio Amenities",
+        "💬 Contactar por WhatsApp": "Contact via WhatsApp",
+        "Experiencias y Comentarios": "Experiences & Comments",
+        "Tu nombre or apodo": "Your name or nickname",
+        "Escribe tu experiencia...": "Write about your experience...",
+        "Publicar Experiencia": "Publish Experience",
+        "Cargando experiencias...": "Loading experiences...",
+        "No hay experiencias aún. ¡Sé el primero en dejar una!": "No experiences yet. Be the first to leave one!",
+        "Me gusta": "Like",
+        "★ Destacado": "★ Featured",
+        "🗑️ Eliminar": "Delete",
+        "Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.": "This is an adult site (+18). Advertisers have no employment relationship with the portal.",
+        "© 2026 Masajistas Privé. Todos los derechos reservados.": "© 2026 Masajistas Privé. All rights reserved.",
+        
+        // Frases comunes de descripciones de las masajistas
+        "Masajista Profesional Matriculada auxiliar en kinesiología.": "Certified Professional Massage Therapist, assistant in kinesiology.",
+        "Te invito a que creamos una sesión de masajes única, acorde a tus necesidades. Soy una masajista de ascendencia alemana.": "I invite you to create a unique massage session tailored to your needs. I am a massage therapist of German descent.",
+        "Masajes californianos, sensitivos y descontracturantes.": "Californian, sensitive, and deep tissue massages.",
+        "Atención personalizada en departamento reservado en la zona de Tribunales.": "Personalized attention in a private apartment in the Tribunales area.",
+        "Brindo una atención integral orientada al bienestar y la estética profesional.": "I provide comprehensive care focused on well-being and professional aesthetics.",
+        "Lunes a viernes de": "Monday to Saturday from",
+        "Sábados y domingos previa reserva con seña.": "Saturdays and Sundays by prior reservation with a deposit.",
+        "Ducha, aire acondicionado, gabinete cosmetológico, gabinete spa, frigobar.": "Shower, air conditioning, cosmetology cabinet, spa cabinet, minibar.",
+        "Efectivo, transferencia bancaria, Mercado Pago, Prex.": "Cash, bank transfer, Mercado Pago, Prex."
     }
-`;
-document.head.appendChild(styleTranslate);
+};
 
-// Contenedor oculto necesario para la API de Google
-const divGoogle = document.createElement('div');
-divGoogle.id = 'google_translate_element';
-document.body.appendChild(divGoogle);
-
-// Cargar el script oficial de Google Translate
-if (!document.getElementById('google-translate-script')) {
-    const scriptGoogle = document.createElement('script');
-    scriptGoogle.id = 'google-translate-script';
-    scriptGoogle.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-    document.head.appendChild(scriptGoogle);
+function obtenerIdiomaPerfil() {
+    return localStorage.getItem('idiomaPriveGlobal') || 'es';
 }
 
-// Inicialización de Google
-window.googleTranslateElementInit = function() {
-    new google.translate.TranslateElement({
-        pageLanguage: 'es',
-        includedLanguages: 'en,es',
-        autoDisplay: false
-    }, 'google_translate_element');
-};
+function cambiarIdiomaPerfil() {
+    const actual = obtenerIdiomaPerfil();
+    const nuevo = actual === 'es' ? 'en' : 'es';
+    localStorage.setItem('idiomaPriveGlobal', nuevo);
+    location.reload();
+}
 
-// Función para cambiar idioma mediante cookies de Google de forma limpia
-window.cambiarIdiomaGoogle = function() {
-    const select = document.querySelector('.goog-te-combo');
-    if (!select) {
-        alert("El motor de traducción está cargando. Por favor, aguardá un segundo e intentá de nuevo.");
-        return;
-    }
-
-    // Detectar idioma actual mediante la cookie o el valor del combo
-    const langActual = document.cookie.includes('googtrans=/es/en') ? 'en' : 'es';
-    const nuevoLang = langActual === 'es' ? 'en' : 'es';
-
-    select.value = nuevoLang;
-    select.dispatchEvent(new Event('change'));
-
-    // Actualizar texto del botón visualmente
-    const btn = document.getElementById('btn-idioma');
-    if (btn) {
-        btn.innerHTML = nuevoLang === 'en' ? '🇦🇷 ES' : '🇺🇸 EN';
-    }
-
-    // Guardar preferencia en localStorage
-    localStorage.setItem('idiomaPriveGoogle', nuevoLang);
-    
-    // Recarga suave para asegurar que la traducción aplique de punta a punta en elementos dinámicos
-    setTimeout(() => {
-        location.reload();
-    }, 400);
-};
-
-// Inyectar el botón minimalista en el header de los perfiles
+// MOTOR DE ESCANEO Y TRADUCCIÓN GLOBAL AUTOMÁTICA DEL HTML
 window.addEventListener('DOMContentLoaded', () => {
     const headerRight = document.querySelector('.header-right');
     if (headerRight && !document.getElementById('btn-idioma')) {
         headerRight.style.cssText = "display: flex; align-items: center; gap: 10px;";
-        
-        const langGuardado = localStorage.getItem('idiomaPriveGoogle') || 'es';
-        const textoBtn = langGuardado === 'en' ? '🇦🇷 ES' : '🇺🇸 EN';
+        const langActual = obtenerIdiomaPerfil();
+        const textoBtn = langActual === 'es' ? '🇺🇸 EN' : '🇦🇷 ES';
         
         const btnLang = document.createElement('button');
         btnLang.id = 'btn-idioma';
-        btnLang.onclick = window.cambiarIdiomaGoogle;
+        btnLang.onclick = cambiarIdiomaPerfil;
         btnLang.innerHTML = textoBtn;
         btnLang.style.cssText = "background: transparent; border: 1px solid rgba(223, 194, 133, 0.4); color: #dfc285; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 10px; font-weight: 600; font-family: 'Montserrat', sans-serif; letter-spacing: 1px; transition: all 0.3s;";
         
         headerRight.insertBefore(btnLang, headerRight.firstChild);
-    }
 
-    // Aplicar estado inicial de la cookie si está en inglés
-    if (localStorage.getItem('idiomaPriveGoogle') === 'en' && !document.cookie.includes('googtrans=/es/en')) {
-        document.cookie = "googtrans=/es/en; path=/";
+        // Si el idioma actual es Inglés, escanea y traduce todo el contenido de texto de la página
+        if (langActual === 'en') {
+            const diccionario = diccionarioTraduccionGlobal.en;
+            
+            // Escanear todos los elementos de texto relevantes (párrafos, títulos, etiquetas, etc.)
+            const elementosATraducir = document.querySelectorAll('h2, h3, p, span, a, strong, .detalle-item');
+            
+            elementosATraducir.forEach(el => {
+                // Solo procesar nodos que contengan texto directo para no romper estructuras HTML complejas
+                if (el.children.length === 0 || el.classList.contains('perfil-ubicacion') || el.classList.contains('perfil-modalidad')) {
+                    let textoTrim = el.textContent.trim();
+                    if (diccionario[textoTrim]) {
+                        el.textContent = diccionario[textoTrim];
+                    } else {
+                        // Búsqueda parcial de frases dentro de párrafos largos
+                        for (let fraseEs in diccionario) {
+                            if (textoTrim.includes(fraseEs)) {
+                                el.innerHTML = el.innerHTML.replace(fraseEs, diccionario[fraseEs]);
+                            }
+                        }
+                    }
+                }
+            });
+        }
     }
 });
 
@@ -135,7 +165,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('keydown', (e) => {
         if (
-            event.key === 'F12' ||
+            e.key === 'F12' ||
             (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
             (e.ctrlKey && (e.key === 'U' || e.key === 'S' || e.key === 'P'))
         ) {
@@ -292,7 +322,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const nombreMasajista = document.querySelector('.perfil-titulo-seccion h2')?.textContent || "Perfil";
             const baseUrl = btnWa.getAttribute('href').split('?')[0];
             
-            const lang = localStorage.getItem('idiomaPriveGoogle') || 'es';
+            const lang = obtenerIdiomaPerfil();
             const nuevoMensaje = lang === 'en' 
                 ? `Hello ${nombreMasajista}, I saw your profile on Masajistas Privé and want to check availability.`
                 : `Hola ${nombreMasajista}, vi tu perfil en Masajistas Privé y quiero consultar disponibilidad.`;
@@ -307,8 +337,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const contenedorDestino = document.getElementById('seccion-comentarios');
     if (!contenedorDestino) return;
 
-    // Caja de comentarios con textos adaptables
-    const isEn = localStorage.getItem('idiomaPriveGoogle') === 'en';
+    const isEn = obtenerIdiomaPerfil() === 'en';
     const tExp = isEn ? "Experiences & Comments" : "Experiencias y Comentarios";
     const tAuth = isEn ? "Your name or nickname" : "Tu nombre o apodo";
     const tText = isEn ? "Write about your experience..." : "Escribe tu experiencia...";
