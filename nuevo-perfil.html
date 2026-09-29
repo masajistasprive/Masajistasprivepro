@@ -32,11 +32,11 @@
         .btn-action { background-color: var(--gold); color: #000; border: none; width: 100%; padding: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; text-transform: uppercase; margin-top: 15px; transition: background 0.3s; }
         .btn-action:hover { background-color: var(--gold-light); }
         .output-section { margin-top: 20px; display: none; }
-        textarea.code-output { background-color: #111; color: var(--success); font-family: monospace; font-size: 0.8rem; height: 150px; border: 1px solid #333; }
+        textarea.code-output { background-color: #111; color: var(--success); font-family: monospace; font-size: 0.8rem; height: 150px; border: 1px solid #333; width: 100%; }
         .back-link { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; display: inline-block; margin-bottom: 15px; }
         .back-link:hover { color: var(--gold); }
 
-        /* Estilos en vivo del boceto (idénticos a la web real) */
+        /* Estilos en vivo del boceto */
         .preview-box { background: #0b0b0b; border: 1px solid #333; border-radius: 10px; padding: 15px; max-height: 80vh; overflow-y: auto; }
         .preview-box .header-prive { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; padding-bottom: 10px; margin-bottom: 15px; }
         .preview-box .header-logo-grande { max-width: 90px; }
@@ -55,7 +55,6 @@
 <body>
 
     <div class="layout-master">
-        <!-- Columna Izquierda: Formulario -->
         <div class="container-gen">
             <a href="admin.html" class="back-link">&larr; Volver al Panel</a>
             <h1>Generador de Fichas Pro</h1>
@@ -113,7 +112,6 @@
             </div>
         </div>
 
-        <!-- Columna Derecha: Vista Previa en Vivo (Boceto) -->
         <div class="preview-sticky">
             <div class="preview-container">
                 <h2>Vista Previa en Vivo</h2>
@@ -152,6 +150,81 @@
         </div>
     </div>
 
+    <!-- Plantilla separada sin errores de sintaxis -->
+    <script type="text/template" id="plantillaFicha"><![CDATA[<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{nombre}} | Masajistas Privé</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="perfil-body">
+
+    <header class="header-prive">
+        <div class="header-left">
+            <img src="img/monograma.png" alt="Monograma" class="header-monograma">
+        </div>
+        <div class="header-center">
+            <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">
+        </div>
+        <div class="header-right">
+            <a href="index.html" class="btn-buscar">← Volver</a>
+        </div>
+    </header>
+
+    <main class="container perfil-container">
+        <div class="perfil-galeria-grid">
+            <img src="img/{{prefijo}}1.jpg" alt="{{nombre}}" class="foto-principal" id="fotoPrincipal">
+            <div class="galeria-miniaturas">
+{{miniaturas}}
+            </div>
+        </div>
+
+        <div class="perfil-info">
+            <div class="perfil-titulo-seccion">
+                <h2>{{nombre}}</h2>
+                <span class="badge-verificado">✓ Privé Verificado</span>
+            </div>
+
+            <p class="perfil-ubicacion">📍 Zona: <strong>{{zona}}</strong></p>
+            <p class="perfil-modalidad">🏠 Modalidad: <strong>{{modalidad}}</strong></p>
+
+            <div class="perfil-descripcion">
+                <h3>Sobre mí y Servicios</h3>
+                <p>{{bio}}</p>
+            </div>
+
+            <div class="perfil-detalles">
+                <div class="detalle-item">
+                    <span>Horarios:</span> {{horarios}}
+                </div>
+            </div>
+
+            <a href="https://wa.me/{{whatsapp}}?text=Hola%20{{nombreEnc}},%20vi%20tu%20perfil%20en%20Masajistas%20Privé" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
+                💬 Contactar por WhatsApp
+            </a>
+        </div>
+
+        <div id="seccion-comentarios"></div>
+    </main>
+
+    <footer class="footer">
+        <p>Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.</p>
+        <p class="copyright">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        function cambiarFoto(element) {
+            var fotoPrincipal = document.getElementById("fotoPrincipal");
+            fotoPrincipal.src = element.src;
+        }
+    </script>
+    <script src="comentarios.js"></script>
+</body>
+</html>]]></script>
+
     <script>
         const inputNombre = document.getElementById('nombre');
         const inputZona = document.getElementById('zona');
@@ -185,10 +258,8 @@
             prevBio.textContent = biografia;
             prevHorarios.textContent = hor;
 
-            // Foto principal inicial
             prevFotoPrincipal.src = 'img/' + pref + '1.jpg';
 
-            // Miniaturas dinámicas en vivo
             let minisHTML = '';
             for (let i = 1; i <= cant; i++) {
                 let rutaImg = 'img/' + pref + i + '.jpg';
@@ -197,16 +268,13 @@
             prevMiniaturas.innerHTML = minisHTML;
         }
 
-        // Escuchar cambios en tiempo real
         [inputNombre, inputZona, inputModalidad, inputWhatsapp, inputPrefijo, selectNumFotos, inputBio, inputHorarios].forEach(el => {
             el.addEventListener('input', actualizarBoceto);
             el.addEventListener('change', actualizarBoceto);
         });
 
-        // Cargar al iniciar
         actualizarBoceto();
 
-        // Generar código final al presionar el botón
         document.getElementById('genForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -227,71 +295,21 @@
                 miniaturasHTML += '                <img src="img/' + prefijo + i + '.jpg" alt="' + nombre + ' ' + i + '" onclick="cambiarFoto(this)">\n';
             }
 
-            var htmlGenerado = '<!DOCTYPE html>\n' +
-'<html lang="es">\n' +
-'<head>\n' +
-'    <meta charset="UTF-8">\n' +
-'    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
-'    <title>' + nombre + ' | Masajistas Privé</title>\n' +
-'    <link rel="stylesheet" href="css/style.css">\n' +
-'    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">\n' +
-'</head>\n' +
-'<body class="perfil-body">\n\n' +
-'    <header class="header-prive">\n' +
-'        <div class="header-left">\n' +
-'            <img src="img/monograma.png" alt="Monograma" class="header-monograma">\n' +
-'        </div>\n' +
-'        <div class="header-center">\n' +
-'            <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">\n' +
-'        </div>\n' +
-'        <div class="header-right">\n' +
-'            <a href="index.html" class="btn-buscar">← Volver</a>\n' +
-'        </div>\n' +
-'    </header>\n\n' +
-'    <main class="container perfil-container">\n' +
-'        <div class="perfil-galeria-grid">\n' +
-'            <img src="img/' + prefijo + '1.jpg" alt="' + nombre + '" class="foto-principal" id="fotoPrincipal">\n' +
-'            <div class="galeria-miniaturas">\n' +
-miniaturasHTML +
-'            </div>\n' +
-'        </div>\n\n' +
-'        <div class="perfil-info">\n' +
-'            <div class="perfil-titulo-seccion">\n' +
-'                <h2>' + nombre + '</h2>\n' +
-'                <span class="badge-verificado">✓ Privé Verificado</span>\n' +
-'            </div>\n\n' +
-'            <p class="perfil-ubicacion">📍 Zona: <strong>' + zona + '</strong></p>\n' +
-'            <p class="perfil-modalidad">🏠 Modalidad: <strong>' + modalidad + '</strong></p>\n\n' +
-'            <div class="perfil-descripcion">\n' +
-'                <h3>Sobre mí y Servicios</h3>\n' +
-'                <p>' + bio + '</p>\n' +
-'            </div>\n\n' +
-'            <div class="perfil-detalles">\n' +
-'                <div class="detalle-item">\n' +
-'                    <span>Horarios:</span> ' + horarios + '\n' +
-'                </div>\n' +
-'            </div>\n\n' +
-'            <a href="https://wa.me/' + whatsapp + '?text=Hola%20' + encodeURIComponent(nombre) + ',%20vi%20tu%20perfil%20en%20Masajistas%20Privé" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">\n' +
-'                💬 Contactar por WhatsApp\n' +
-'            </a>\n' +
-'        </div>\n\n' +
-'        <div id="seccion-comentarios"></div>\n' +
-'    </main>\n\n' +
-'    <footer class="footer">\n' +
-'        <p>Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.</p>\n' +
-'        <p class="copyright">© 2026 Masajistas Privé. Todos los derechos reservados.</p>\n' +
-'    </footer>\n\n' +
-'    <script>\n' +
-'        function cambiarFoto(element) {\n' +
-'            var fotoPrincipal = document.getElementById("fotoPrincipal");\n' +
-'            fotoPrincipal.src = element.src;\n' +
-'        }\n' +
-'    </script>\n' +
-'    <script src="comentarios.js"></script>\n' +
-'</body>\n' +
-'</html>';
+            var template = document.getElementById('plantillaFicha').innerHTML;
+            
+            var resultado = template
+                .replace('<![CDATA[', '').replace(']]>', '')
+                .replace(/\{\{nombre\}\}/g, nombre)
+                .replace(/\{\{nombreEnc\}\}/g, encodeURIComponent(nombre))
+                .replace(/\{\{zona\}\}/g, zona)
+                .replace(/\{\{modalidad\}\}/g, modalidad)
+                .replace(/\{\{whatsapp\}\}/g, whatsapp)
+                .replace(/\{\{prefijo\}\}/g, prefijo)
+                .replace(/\{\{miniaturas\}\}/g, miniaturasHTML.trim())
+                .replace(/\{\{bio\}\}/g, bio)
+                .replace(/\{\{horarios\}\}/g, horarios);
 
-            document.getElementById('codeOutput').value = htmlGenerado;
+            document.getElementById('codeOutput').value = resultado;
             var outputSec = document.getElementById('outputSection');
             outputSec.style.display = 'block';
             outputSec.scrollIntoView({ behavior: 'smooth' });
