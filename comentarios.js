@@ -162,7 +162,7 @@
 
         // Reposicionar y animar el botón de WhatsApp con mensaje ATEMPORAL
         const btnWa = document.querySelector('.btn-whatsapp');
-        const mainContainer = document.querySelector('.perfil-container');
+        const mainContainer = document.querySelector('.perfil-container') || document.querySelector('main');
         
         if (btnWa && mainContainer) {
             btnWa.classList.add('btn-whatsapp-titilante');
@@ -254,8 +254,14 @@
 
     verificarPausaYArrancar();
 
-    const contenedorDestino = document.getElementById('seccion-comentarios');
-    if (!contenedorDestino) return;
+    // BUSCAR O CREAR AUTOMÁTICAMENTE LA SECCIÓN DE COMENTARIOS PARA QUE NUNCA FALTE
+    let contenedorDestino = document.getElementById('seccion-comentarios');
+    if (!contenedorDestino) {
+        const contenedorPrincipal = document.querySelector('.perfil-container') || document.querySelector('main') || document.body;
+        contenedorDestino = document.createElement('div');
+        contenedorDestino.id = 'seccion-comentarios';
+        contenedorPrincipal.appendChild(contenedorDestino);
+    }
 
     contenedorDestino.innerHTML = `
         <div style="width: 100%; box-sizing: border-box; margin: 20px auto 10px auto; padding: 22px 15px; background: #141414; border: 1px solid rgba(223, 194, 133, 0.25); border-radius: 10px; font-family: 'Montserrat', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
