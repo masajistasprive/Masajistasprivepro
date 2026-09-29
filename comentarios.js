@@ -13,7 +13,7 @@
 })();
 
 // =========================================================
-// SISTEMA DE TRADUCCIÓN UNIVERSAL PARA PERFILES Y DESCRIPCIONES
+// DICCIONARIO MAESTRO INTEGRAL (100% BILINGÜE PARA PERFILES)
 // =========================================================
 const traduccionesPerfiles = {
     es: {
@@ -23,6 +23,7 @@ const traduccionesPerfiles = {
         modalidadLabel: "🏠 Modalidad:",
         descTitulo: "Descripción",
         tecnicasLabel: "Técnicas de masaje:",
+        comodidadesTitulo: "Comodidades del Gabinete",
         diasHorarios: "Días y horarios:",
         equipamiento: "Equipamiento y servicios:",
         mediosPago: "Medios de pago:",
@@ -40,7 +41,7 @@ const traduccionesPerfiles = {
         confirmarEliminar: "¿Estás seguro de eliminar este comentario?",
         alertaCompletar: "Por favor completá tu nombre y tu experiencia.",
         adjunto: "✓ Archivo adjunto: ",
-        footerTexto: "Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.",
+        footerTexto: "Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.",
         footerCopy: "© 2026 Masajistas Privé. Todos los derechos reservados."
     },
     en: {
@@ -50,6 +51,7 @@ const traduccionesPerfiles = {
         modalidadLabel: "🏠 Modality:",
         descTitulo: "Description",
         tecnicasLabel: "Massage techniques:",
+        comodidadesTitulo: "Studio Amenities",
         diasHorarios: "Days and hours:",
         equipamiento: "Equipment and services:",
         mediosPago: "Payment methods:",
@@ -67,39 +69,69 @@ const traduccionesPerfiles = {
         confirmarEliminar: "Are you sure you want to delete this comment?",
         alertaCompletar: "Please fill in your name and experience.",
         adjunto: "✓ Attached file: ",
-        footerTexto: "This is an adult site (+18). Advertisers have no employment relationship with the portal.",
+        footerTexto: "This is an exclusive site for adults (+18). The published advertisers are independent and have no employment, corporate, or dependency relationship with this portal.",
         footerCopy: "© 2026 Masajistas Privé. All rights reserved."
     }
 };
 
-// DICCIONARIO DE DESCRIPCIONES ESPECÍFICAS POR PERFIL
+// CONTENIDO ÍNTEGRO Y PERSONALIZADO DE LAS DESCRIPCIONES DE CADA PERFIL
 const descripcionesPorPerfil = {
     luly: {
         es: {
+            zona: "CABA",
+            modalidad: "Gabinete propio / Independiente",
             parrafo1: "Masajista Profesional Matriculada auxiliar en kinesiología.",
             parrafo2: "Te invito a que creamos una sesión de masajes única, acorde a tus necesidades. Soy una masajista de ascendencia alemana.",
-            tecnicas: "Masajes californianos, sensitivos y descontracturantes."
+            parrafo3: "Realizo masajes relajantes, descontracturantes, sensitivos, antiestrés, deportivos y reductores. No dudes en contactarme y agendá tu turno 😉🔥✅😊",
+            detalles: [
+                { label: "Días y horarios:", val: "Lunes a Sábados de 10 a 20 hs." },
+                { label: "Equipamiento y servicios:", val: "Camilla profesional, aire acondicionado, música ambiental, ducha." },
+                { label: "Medios de pago:", val: "Efectivo, transferencia, Mercado Pago." },
+                { label: "Modalidad de turnos:", val: "Reserva previa con anticipación por WhatsApp." }
+            ]
         },
         en: {
+            zona: "Buenos Aires (CABA)",
+            modalidad: "Private Studio / Independent",
             parrafo1: "Certified Professional Massage Therapist, assistant in kinesiology.",
             parrafo2: "I invite you to create a unique massage session tailored to your needs. I am a massage therapist of German descent.",
-            tecnicas: "Californian, sensitive, and deep tissue massages."
+            parrafo3: "I offer relaxing, deep tissue, sensitive, anti-stress, sports, and slimming massages. Feel free to contact me and book your appointment 😉🔥✅😊",
+            detalles: [
+                { label: "Days and hours:", val: "Monday to Saturday from 10 AM to 8 PM." },
+                { label: "Equipment and services:", val: "Professional massage table, AC, ambient music, shower." },
+                { label: "Payment methods:", val: "Cash, bank transfer, Mercado Pago." },
+                { label: "Booking modality:", val: "Advance reservation via WhatsApp." }
+            ]
         }
     },
     prada: {
         es: {
+            zona: "TRIBUNALES",
+            modalidad: "Departamento reservado",
             parrafo1: "Atención personalizada en departamento reservado en la zona de Tribunales.",
             parrafo2: "",
-            tecnicas: "Masajes californianos, sensitivos y descontracturantes."
+            parrafo3: "Masajes californianos, sensitivos y descontracturantes en un ambiente de absoluta discreción y confort.",
+            detalles: [
+                { label: "Días y horarios:", val: "Lunes a Sábados de 09 a 21 hs." },
+                { label: "Equipamiento y servicios:", val: "Camilla, tatami, aire acondicionado, servicio de ducha, frigobar sin cargo." },
+                { label: "Medios de pago:", val: "Efectivo, transferencia bancaria, Mercado Pago, Prex." },
+                { label: "Modalidad de turnos:", val: "Reserva previa por WhatsApp." }
+            ]
         },
         en: {
-            parrafo1: "Personalized attention in a private apartment in the Tribunales area.",
+            zona: "TRIBUNALES",
+            modalidad: "Private apartment",
+            parrafo1: "Personalized attention in a private apartment located in the Tribunales area.",
             parrafo2: "",
-            tecnicas: "Californian, sensitive, and deep tissue massages."
+            parrafo3: "Californian, sensitive, and deep tissue massages in an environment of absolute discretion and comfort.",
+            detalles: [
+                { label: "Days and hours:", val: "Monday to Saturday from 9 AM to 9 PM." },
+                { label: "Equipment and services:", val: "Table, tatami, AC, shower service, complimentary minibar." },
+                { label: "Payment methods:", val: "Cash, bank transfer, Mercado Pago, Prex." },
+                { label: "Booking modality:", val: "Advance booking via WhatsApp." }
+            ]
         }
-    },
-    // Podes agregar más perfiles acá abajo de la misma forma cuando quieras:
-    // jennyfer: { es: { ... }, en: { ... } }
+    }
 };
 
 function obtenerIdiomaPerfil() {
@@ -113,7 +145,7 @@ function cambiarIdiomaPerfil() {
     location.reload();
 }
 
-// Inyectar botón de idioma y traducir textos fijos y descripciones
+// INYECCIÓN AUTOMÁTICA Y TRADUCCIÓN INTEGRAL DEL PERFIL
 window.addEventListener('DOMContentLoaded', () => {
     const headerRight = document.querySelector('.header-right');
     if (headerRight && !document.getElementById('btn-idioma')) {
@@ -137,45 +169,47 @@ window.addEventListener('DOMContentLoaded', () => {
         const badgeVerif = document.querySelector('.badge-verificado');
         if (badgeVerif) badgeVerif.textContent = t.verificado;
 
-        const zonaEl = document.querySelector('.perfil-ubicacion strong');
-        if (zonaEl && zonaEl.previousSibling) {
-            document.querySelector('.perfil-ubicacion').innerHTML = `${t.zonaLabel} <strong>${zonaEl.textContent}</strong>`;
-        }
-
-        const modEl = document.querySelector('.perfil-modalidad strong');
-        if (modEl && modEl.previousSibling) {
-            document.querySelector('.perfil-modalidad').innerHTML = `${t.modalidadLabel} <strong>${modEl.textContent}</strong>`;
-        }
-
-        const descTitulo = document.querySelector('.perfil-descripcion h3');
-        if (descTitulo) descTitulo.textContent = t.descTitulo;
-
-        // Traducir descripción larga si el perfil está registrado en el diccionario
         let currentId = window.location.pathname.split("/").pop().replace(".html", "").trim();
-        if (descripcionesPorPerfil[currentId] && descripcionesPorPerfil[currentId][langActual]) {
-            const descData = descripcionesPorPerfil[currentId][langActual];
-            const descContainer = document.querySelector('.perfil-descripcion');
-            if (descContainer) {
-                let htmlDesc = `<h3 style="color: #dfc285; font-size: 1.1rem; margin-bottom: 0.5rem; font-family: 'Cormorant Garamond', serif;">${t.descTitulo}</h3>`;
-                if (descData.parrafo1) htmlDesc += `<p>${descData.parrafo1}</p>`;
-                if (descData.parrafo2) htmlDesc += `<p style="margin-top: 0.5rem;">${descData.parrafo2}</p>`;
-                if (descData.tecnicas) {
-                    htmlDesc += `<div style="margin-top: 0.5rem; color: #94a3b8; font-size: 0.9rem;"><strong>${t.tecnicasLabel}</strong> ${descData.tecnicas}</div>`;
-                }
-                descContainer.innerHTML = htmlDesc;
-            }
+        const perfilData = descripcionesPorPerfil[currentId] ? descripcionesPorPerfil[currentId][langActual] : null;
+
+        // Traducir Zona y Modalidad
+        const zonaEl = document.querySelector('.perfil-ubicacion');
+        if (zonaEl) {
+            const zonaVal = perfilData ? perfilData.zona : (zonaEl.querySelector('strong')?.textContent || "");
+            zonaEl.innerHTML = `${t.zonaLabel} <strong>${zonaVal}</strong>`;
         }
 
-        const detalles = document.querySelectorAll('.perfil-detalles .detalle-item');
-        detalles.forEach(item => {
-            const span = item.querySelector('span');
-            if (!span) return;
-            const textoSpan = span.textContent.toLowerCase();
-            if (textoSpan.includes('días') || textoSpan.includes('days')) span.textContent = t.diasHorarios;
-            if (textoSpan.includes('equipamiento') || textoSpan.includes('equipment')) span.textContent = t.equipamiento;
-            if (textoSpan.includes('medios') || textoSpan.includes('payment')) span.textContent = t.mediosPago;
-            if (textoSpan.includes('modalidad') || textoSpan.includes('booking')) span.textContent = t.modalidadTurnos;
-        });
+        const modEl = document.querySelector('.perfil-modalidad');
+        if (modEl) {
+            const modVal = perfilData ? perfilData.modalidad : (modEl.querySelector('strong')?.textContent || "");
+            modEl.innerHTML = `${t.modalidadLabel} <strong>${modVal}</strong>`;
+        }
+
+        // Traducir Descripción Completa
+        const descContainer = document.querySelector('.perfil-descripcion');
+        if (descContainer) {
+            let htmlDesc = `<h3 style="color: #dfc285; font-size: 1.1rem; margin-bottom: 0.5rem; font-family: 'Cormorant Garamond', serif;">${t.descTitulo}</h3>`;
+            if (perfilData) {
+                if (perfilData.parrafo1) htmlDesc += `<p>${perfilData.parrafo1}</p>`;
+                if (perfilData.parrafo2) htmlDesc += `<p style="margin-top: 0.5rem;">${perfilData.parrafo2}</p>`;
+                if (perfilData.parrafo3) htmlDesc += `<p style="margin-top: 0.5rem;">${perfilData.parrafo3}</p>`;
+            } else {
+                // Respaldo dinámico si el perfil no está explícitamente en el diccionario maestro
+                const pElements = descContainer.querySelectorAll('p');
+                pElements.forEach(p => htmlDesc += `<p style="margin-top: 0.5rem;">${p.textContent}</p>`);
+            }
+            descContainer.innerHTML = htmlDesc;
+        }
+
+        // Traducir Detalles y Comodidades
+        const detallesContainer = document.querySelector('.perfil-detalles');
+        if (detallesContainer && perfilData && perfilData.detalles) {
+            let htmlDetalles = `<h3 style="color: #dfc285; font-size: 1.1rem; margin-bottom: 0.8rem; font-family: 'Cormorant Garamond', serif; text-transform: uppercase; letter-spacing: 1px;">${t.comodidadesTitulo}</h3>`;
+            perfilData.detalles.forEach(det => {
+                htmlDetalles += `<div class="detalle-item" style="margin-bottom: 0.6rem; color: #ccc; font-size: 0.95rem;"><span style="color: #dfc285; font-weight: 600; margin-right: 6px;">${det.label}</span> ${det.val}</div>`;
+            });
+            detallesContainer.innerHTML = htmlDetalles;
+        }
 
         const btnWa = document.querySelector('.btn-whatsapp');
         if (btnWa) btnWa.textContent = t.btnWhatsapp;
@@ -188,7 +222,9 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// comentarios.js - Motor Global, Visor con Marca de Agua, Slider Táctil y Comentarios
+// =========================================================
+// MOTOR GLOBAL: SLIDER, VISOR Y COMENTARIOS
+// =========================================================
 (function() {
     document.addEventListener('contextmenu', (e) => {
         if (e.target.tagName === 'IMG') {
@@ -593,7 +629,7 @@ window.addEventListener('DOMContentLoaded', () => {
 })();
 
 /* ========================================================= */
-/* INYECCIÓN AUTOMÁTICA DE SCHEMA.ORG (ESTRELLITAS EN GOOGLE)*/
+/* SCHEMA.ORG & CONTADOR DE VISITAS */
 /* ========================================================= */
 window.addEventListener('DOMContentLoaded', () => {
     const tituloElemento = document.querySelector('.perfil-titulo-seccion h2');
@@ -628,9 +664,6 @@ window.addEventListener('DOMContentLoaded', () => {
     document.head.appendChild(scriptSchema);
 });
 
-/* ========================================================= */
-/* CONTADOR AUTOMÁTICO DE VISITAS GLOBAL POR PERFIL (ROBUSTO) */
-/* ========================================================= */
 function registrarVisitaPerfil() {
     const tituloElemento = document.querySelector('.perfil-titulo-seccion h2');
     if (!tituloElemento) return;
@@ -644,12 +677,12 @@ function registrarVisitaPerfil() {
                 if (!firebase.apps.length) {
                     firebase.initializeApp({
                         apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
-                    authDomain: "masajistasprivepro.firebaseapp.com",
-                    projectId: "masajistasprivepro",
-                    storageBucket: "masajistasprivepro.firebasestorage.app",
-                    messagingSenderId: "768677270509",
-                    appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
-                    measurementId: "G-SBN70C32JF"
+                        authDomain: "masajistasprivepro.firebaseapp.com",
+                        projectId: "masajistasprivepro",
+                        storageBucket: "masajistasprivepro.firebasestorage.app",
+                        messagingSenderId: "768677270509",
+                        appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
+                        measurementId: "G-SBN70C32JF"
                     });
                 }
                 const dbVisitas = firebase.firestore();
@@ -657,11 +690,7 @@ function registrarVisitaPerfil() {
                     nombre: tituloElemento.textContent.trim(),
                     visitas: firebase.firestore.FieldValue.increment(1),
                     ultimaVisita: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true }).then(() => {
-                    console.log("Visita registrada con éxito para:", currentId);
-                }).catch(err => {
-                    console.error("Error al registrar visita en Firestore:", err);
-                });
+                }, { merge: true }).catch(err => console.error("Error al registrar visita:", err));
             } else {
                 setTimeout(ejecutarIncremento, 500);
             }
