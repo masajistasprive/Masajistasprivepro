@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Perfiles - Masajistas Privé</title>
+    <title>Generador con Vista Previa - Masajistas Privé</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -17,175 +17,281 @@
             --success: #2ecc71;
         }
         body { background-color: var(--bg-color); color: var(--text-main); padding: 20px; font-family: 'Plus Jakarta Sans', sans-serif; }
-        .container-gen { max-width: 800px; margin: 0 auto; background: var(--card-bg); border: 1px solid #222; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.6); }
-        h1 { color: var(--gold); font-size: 1.5rem; text-transform: uppercase; margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 10px; }
+        .layout-master { display: flex; flex-direction: column; gap: 30px; max-width: 1100px; margin: 0 auto; }
+        @media(min-width: 900px) {
+            .layout-master { display: grid; grid-template-columns: 1fr 450px; align-items: start; }
+            .preview-sticky { position: sticky; top: 20px; }
+        }
+        .container-gen, .preview-container { background: var(--card-bg); border: 1px solid #222; border-radius: 12px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.6); }
+        h1, h2 { color: var(--gold); font-size: 1.3rem; text-transform: uppercase; margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 10px; }
         .form-group { margin-bottom: 15px; }
         label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; }
-        input, textarea { width: 100%; padding: 10px; background-color: #1f1f1f; border: 1px solid #333; border-radius: 6px; color: var(--text-main); font-size: 1rem; }
-        input:focus, textarea:focus { outline: none; border-color: var(--gold); }
-        textarea { resize: vertical; height: 90px; }
+        input, textarea, select { width: 100%; padding: 10px; background-color: #1f1f1f; border: 1px solid #333; border-radius: 6px; color: var(--text-main); font-size: 1rem; }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--gold); }
+        textarea { resize: vertical; height: 80px; }
         .btn-action { background-color: var(--gold); color: #000; border: none; width: 100%; padding: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; text-transform: uppercase; margin-top: 15px; transition: background 0.3s; }
         .btn-action:hover { background-color: var(--gold-light); }
-        .output-section { margin-top: 25px; display: none; }
-        textarea.code-output { background-color: #111; color: var(--success); font-family: monospace; font-size: 0.85rem; height: 220px; border: 1px solid #333; }
-        .hint { font-size: 0.85rem; color: var(--gold); margin-bottom: 10px; }
-        .back-link { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; float: right; }
+        .output-section { margin-top: 20px; display: none; }
+        textarea.code-output { background-color: #111; color: var(--success); font-family: monospace; font-size: 0.8rem; height: 150px; border: 1px solid #333; }
+        .back-link { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; display: inline-block; margin-bottom: 15px; }
         .back-link:hover { color: var(--gold); }
+
+        /* Estilos en vivo del boceto (idénticos a la web real) */
+        .preview-box { background: #0b0b0b; border: 1px solid #333; border-radius: 10px; padding: 15px; max-height: 80vh; overflow-y: auto; }
+        .preview-box .header-prive { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; padding-bottom: 10px; margin-bottom: 15px; }
+        .preview-box .header-logo-grande { max-width: 90px; }
+        .preview-box .foto-principal { width: 100%; height: 280px; object-fit: cover; border-radius: 8px; border: 1px solid #333; margin-bottom: 10px; }
+        .preview-box .galeria-miniaturas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 15px; }
+        .preview-box .galeria-miniaturas img { width: 100%; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #333; cursor: pointer; }
+        .preview-box h2 { font-size: 1.4rem; margin: 0; border: none; padding: 0; display: inline-block; }
+        .preview-box .perfil-titulo-seccion { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .preview-box .badge-verificado { background: #222; border: 1px solid var(--gold); color: var(--gold); font-size: 0.7rem; padding: 3px 8px; border-radius: 12px; }
+        .preview-box p { font-size: 0.85rem; color: #ccc; margin-bottom: 8px; }
+        .preview-box .perfil-descripcion { background: #141414; padding: 10px; border-radius: 6px; border: 1px solid #222; margin: 10px 0; }
+        .preview-box .perfil-descripcion h3 { color: var(--gold); font-size: 0.9rem; margin-bottom: 5px; text-transform: uppercase; }
+        .preview-box .btn-whatsapp { display: block; background-color: var(--success); color: #fff; text-decoration: none; padding: 10px; font-weight: bold; border-radius: 6px; text-align: center; font-size: 0.85rem; text-transform: uppercase; margin-top: 15px; }
     </style>
 </head>
 <body>
 
-    <div class="container-gen">
-        <a href="admin.html" class="back-link">&larr; Volver al Panel</a>
-        <h1>Generador de Fichas Pro</h1>
-        
-        <form id="genForm">
-            <div class="form-group">
-                <label for="nombre">Nombre de la Profesional</label>
-                <input type="text" id="nombre" placeholder="Ej: Valentina" required>
-            </div>
-            <div class="form-group">
-                <label for="zona">Zona / Barrio</label>
-                <input type="text" id="zona" placeholder="Ej: Recoleta" required>
-            </div>
-            <div class="form-group">
-                <label for="modalidad">Modalidad</label>
-                <input type="text" id="modalidad" value="Departamento propio" required>
-            </div>
-            <div class="form-group">
-                <label for="whatsapp">WhatsApp (número con código de país y área sin símbolos)</label>
-                <input type="text" id="whatsapp" placeholder="Ej: 5491112345678" required>
-            </div>
-            <div class="form-group">
-                <label for="prefijoFoto">Prefijo de las fotos (ej: si tus fotos son valentina1.jpg, poné 'valentina')</label>
-                <input type="text" id="prefijoFoto" placeholder="Ej: valentina" required>
-            </div>
-            <div class="form-group">
-                <label for="bio">Biografía y Servicios</label>
-                <textarea id="bio" placeholder="Te invito a vivir una experiencia de relajación única..." required></textarea>
-            </div>
-            <div class="form-group">
-                <label for="horarios">Horarios</label>
-                <input type="text" id="horarios" value="Lunes a sábados de 9 a 21 hs." required>
-            </div>
+    <div class="layout-master">
+        <!-- Columna Izquierda: Formulario -->
+        <div class="container-gen">
+            <a href="admin.html" class="back-link">&larr; Volver al Panel</a>
+            <h1>Generador de Fichas Pro</h1>
+            
+            <form id="genForm">
+                <div class="form-group">
+                    <label for="nombre">Nombre de la Profesional</label>
+                    <input type="text" id="nombre" placeholder="Ej: Valentina" value="Valentina" required>
+                </div>
+                <div class="form-group">
+                    <label for="zona">Zona / Barrio</label>
+                    <input type="text" id="zona" placeholder="Ej: Recoleta" value="Recoleta" required>
+                </div>
+                <div class="form-group">
+                    <label for="modalidad">Modalidad</label>
+                    <input type="text" id="modalidad" value="Departamento propio" required>
+                </div>
+                <div class="form-group">
+                    <label for="whatsapp">WhatsApp (núm sin símbolos)</label>
+                    <input type="text" id="whatsapp" value="5491112345678" required>
+                </div>
+                <div class="form-group">
+                    <label for="prefijoFoto">Prefijo de las fotos (ej: valentina)</label>
+                    <input type="text" id="prefijoFoto" value="valentina" required>
+                </div>
+                <div class="form-group">
+                    <label for="numFotos">Cantidad de fotos (4 a 10)</label>
+                    <select id="numFotos">
+                        <option value="4" selected>4 fotos</option>
+                        <option value="5">5 fotos</option>
+                        <option value="6">6 fotos</option>
+                        <option value="7">7 fotos</option>
+                        <option value="8">8 fotos</option>
+                        <option value="9">9 fotos</option>
+                        <option value="10">10 fotos</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="bio">Biografía y Servicios</label>
+                    <textarea id="bio" required>Te invito a vivir una experiencia de relajación única, atiendo en mi propio depto, discreto y con atención personalizada.</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="horarios">Horarios</label>
+                    <input type="text" id="horarios" value="Lunes a sábados de 9 a 21 hs." required>
+                </div>
 
-            <button type="submit" class="btn-action">Generar Código de la Ficha</button>
-        </form>
+                <button type="submit" class="btn-action">Obtener Código HTML Final</button>
+            </form>
 
-        <div class="output-section" id="outputSection">
-            <p class="hint">Copiá este código, creá un archivo nuevo con el nombre <span id="fileNameDisplay" style="color:#fff"></span> y subilo a tu GitHub:</p>
-            <textarea class="code-output" id="codeOutput" readonly></textarea>
-            <button type="button" class="btn-action" id="btnCopiar" style="background-color: #333; color: #fff;">Copiar al Portapapeles</button>
+            <div class="output-section" id="outputSection">
+                <h2>Código Plano Generado</h2>
+                <p style="font-size: 0.8rem; color: var(--gold); margin-bottom: 8px;">Guardalo como <span id="fileNameDisplay" style="color:#fff"></span> y subilo a GitHub:</p>
+                <textarea class="code-output" id="codeOutput" readonly></textarea>
+                <button type="button" class="btn-action" id="btnCopiar" style="background-color: #333; color: #fff; margin-top: 5px;">Copiar al Portapapeles</button>
+            </div>
+        </div>
+
+        <!-- Columna Derecha: Vista Previa en Vivo (Boceto) -->
+        <div class="preview-sticky">
+            <div class="preview-container">
+                <h2>Vista Previa en Vivo</h2>
+                <div class="preview-box">
+                    <div class="header-prive">
+                        <span style="color:var(--gold); font-size:0.75rem;">MONOGRAMA</span>
+                        <span style="color:var(--gold); font-weight:bold; font-size:0.8rem;">MASAJISTAS PRIVÉ</span>
+                        <span style="color:#888; font-size:0.75rem;">← Volver</span>
+                    </div>
+
+                    <div class="perfil-galeria-grid">
+                        <img src="" alt="Principal" class="foto-principal" id="prevFotoPrincipal" onerror="this.src='img/logo.png'">
+                        <div class="galeria-miniaturas" id="prevMiniaturas"></div>
+                    </div>
+
+                    <div class="perfil-info">
+                        <div class="perfil-titulo-seccion">
+                            <h2 id="prevNombre">Valentina</h2>
+                            <span class="badge-verificado">✓ Privé Verificado</span>
+                        </div>
+
+                        <p>📍 Zona: <strong id="prevZona">Recoleta</strong></p>
+                        <p>🏠 Modalidad: <strong id="prevModalidad">Departamento propio</strong></p>
+
+                        <div class="perfil-descripcion">
+                            <h3>Sobre mí y Servicios</h3>
+                            <p id="prevBio">Te invito a vivir una experiencia de relajación única...</p>
+                        </div>
+
+                        <p><span>Horarios:</span> <span id="prevHorarios">Lunes a sábados de 9 a 21 hs.</span></p>
+
+                        <a href="#" class="btn-whatsapp">💬 Contactar por WhatsApp</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Plantilla HTML separada para evitar errores de sintaxis en JS -->
-    <script type="text/template" id="plantillaFicha"><![CDATA[<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{nombre}} | Masajistas Privé</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body class="perfil-body">
-
-    <header class="header-prive">
-        <div class="header-left">
-            <img src="img/monograma.png" alt="Monograma" class="header-monograma">
-        </div>
-        <div class="header-center">
-            <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">
-        </div>
-        <div class="header-right">
-            <a href="index.html" class="btn-buscar">← Volver</a>
-        </div>
-    </header>
-
-    <main class="container perfil-container">
-        <div class="perfil-galeria-grid">
-            <img src="img/{{prefijo}}1.jpg" alt="{{nombre}}" class="foto-principal" id="fotoPrincipal">
-            <div class="galeria-miniaturas">
-                <img src="img/{{prefijo}}1.jpg" alt="{{nombre}} 1" onclick="cambiarFoto(this)">
-                <img src="img/{{prefijo}}2.jpg" alt="{{nombre}} 2" onclick="cambiarFoto(this)">
-                <img src="img/{{prefijo}}3.jpg" alt="{{nombre}} 3" onclick="cambiarFoto(this)">
-                <img src="img/{{prefijo}}4.jpg" alt="{{nombre}} 4" onclick="cambiarFoto(this)">
-            </div>
-        </div>
-
-        <div class="perfil-info">
-            <div class="perfil-titulo-seccion">
-                <h2>{{nombre}}</h2>
-                <span class="badge-verificado">✓ Privé Verificado</span>
-            </div>
-
-            <p class="perfil-ubicacion">📍 Zona: <strong>{{zona}}</strong></p>
-            <p class="perfil-modalidad">🏠 Modalidad: <strong>{{modalidad}}</strong></p>
-
-            <div class="perfil-descripcion">
-                <h3>Sobre mí y Servicios</h3>
-                <p>{{bio}}</p>
-            </div>
-
-            <div class="perfil-detalles">
-                <div class="detalle-item">
-                    <span>Horarios:</span> {{horarios}}
-                </div>
-            </div>
-
-            <a href="https://wa.me/{{whatsapp}}?text=Hola%20{{nombreEnc}},%20vi%20tu%20perfil%20en%20Masajistas%20Privé" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
-                💬 Contactar por WhatsApp
-            </a>
-        </div>
-
-        <div id="seccion-comentarios"></div>
-    </main>
-
-    <footer class="footer">
-        <p>Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.</p>
-        <p class="copyright">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
-    </footer>
-
     <script>
-        function cambiarFoto(element) {
-            var fotoPrincipal = document.getElementById("fotoPrincipal");
-            fotoPrincipal.src = element.src;
+        const inputNombre = document.getElementById('nombre');
+        const inputZona = document.getElementById('zona');
+        const inputModalidad = document.getElementById('modalidad');
+        const inputWhatsapp = document.getElementById('whatsapp');
+        const inputPrefijo = document.getElementById('prefijoFoto');
+        const selectNumFotos = document.getElementById('numFotos');
+        const inputBio = document.getElementById('bio');
+        const inputHorarios = document.getElementById('horarios');
+
+        const prevNombre = document.getElementById('prevNombre');
+        const prevZona = document.getElementById('prevZona');
+        const prevModalidad = document.getElementById('prevModalidad');
+        const prevBio = document.getElementById('prevBio');
+        const prevHorarios = document.getElementById('prevHorarios');
+        const prevFotoPrincipal = document.getElementById('prevFotoPrincipal');
+        const prevMiniaturas = document.getElementById('prevMiniaturas');
+
+        function actualizarBoceto() {
+            const nom = inputNombre.value || 'Nombre';
+            const zon = inputZona.value || 'Zona';
+            const mod = inputModalidad.value || 'Modalidad';
+            const pref = (inputPrefijo.value || 'foto').toLowerCase();
+            const cant = parseInt(selectNumFotos.value) || 4;
+            const biografia = inputBio.value || 'Descripción...';
+            const hor = inputHorarios.value || 'Horarios...';
+
+            prevNombre.textContent = nom;
+            prevZona.textContent = zon;
+            prevModalidad.textContent = mod;
+            prevBio.textContent = biografia;
+            prevHorarios.textContent = hor;
+
+            // Foto principal inicial
+            prevFotoPrincipal.src = 'img/' + pref + '1.jpg';
+
+            // Miniaturas dinámicas en vivo
+            let minisHTML = '';
+            for (let i = 1; i <= cant; i++) {
+                let rutaImg = 'img/' + pref + i + '.jpg';
+                minisHTML += '<img src="' + rutaImg + '" onclick="document.getElementById(\'prevFotoPrincipal\').src=\'' + rutaImg + '\'" onerror="this.src=\'img/logo.png\'">';
+            }
+            prevMiniaturas.innerHTML = minisHTML;
         }
-    </script>
-    <script src="comentarios.js"></script>
-</body>
-</html>]]></script>
 
-    <script>
+        // Escuchar cambios en tiempo real
+        [inputNombre, inputZona, inputModalidad, inputWhatsapp, inputPrefijo, selectNumFotos, inputBio, inputHorarios].forEach(el => {
+            el.addEventListener('input', actualizarBoceto);
+            el.addEventListener('change', actualizarBoceto);
+        });
+
+        // Cargar al iniciar
+        actualizarBoceto();
+
+        // Generar código final al presionar el botón
         document.getElementById('genForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            var nombre = document.getElementById('nombre').value.trim();
-            var zona = document.getElementById('zona').value.trim();
-            var modalidad = document.getElementById('modalidad').value.trim();
-            var whatsapp = document.getElementById('whatsapp').value.trim();
-            var prefijo = document.getElementById('prefijoFoto').value.trim().toLowerCase();
-            var bio = document.getElementById('bio').value.trim();
-            var horarios = document.getElementById('horarios').value.trim();
+            var nombre = inputNombre.value.trim();
+            var zona = inputZona.value.trim();
+            var modalidad = inputModalidad.value.trim();
+            var whatsapp = inputWhatsapp.value.trim();
+            var prefijo = inputPrefijo.value.trim().toLowerCase();
+            var cantidadFotos = parseInt(selectNumFotos.value);
+            var bio = inputBio.value.trim();
+            var horarios = inputHorarios.value.trim();
 
             var fileName = nombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '') + '.html';
             document.getElementById('fileNameDisplay').textContent = fileName;
 
-            var template = document.getElementById('plantillaFicha').innerHTML;
-            
-            var resultado = template
-                .replace('<![CDATA[', '').replace(']]>', '')
-                .replace(/\{\{nombre\}\}/g, nombre)
-                .replace(/\{\{nombreEnc\}\}/g, encodeURIComponent(nombre))
-                .replace(/\{\{zona\}\}/g, zona)
-                .replace(/\{\{modalidad\}\}/g, modalidad)
-                .replace(/\{\{whatsapp\}\}/g, whatsapp)
-                .replace(/\{\{prefijo\}\}/g, prefijo)
-                .replace(/\{\{bio\}\}/g, bio)
-                .replace(/\{\{horarios\}\}/g, horarios);
+            var miniaturasHTML = "";
+            for (var i = 1; i <= cantidadFotos; i++) {
+                miniaturasHTML += '                <img src="img/' + prefijo + i + '.jpg" alt="' + nombre + ' ' + i + '" onclick="cambiarFoto(this)">\n';
+            }
 
-            document.getElementById('codeOutput').value = resultado;
+            var htmlGenerado = '<!DOCTYPE html>\n' +
+'<html lang="es">\n' +
+'<head>\n' +
+'    <meta charset="UTF-8">\n' +
+'    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
+'    <title>' + nombre + ' | Masajistas Privé</title>\n' +
+'    <link rel="stylesheet" href="css/style.css">\n' +
+'    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">\n' +
+'</head>\n' +
+'<body class="perfil-body">\n\n' +
+'    <header class="header-prive">\n' +
+'        <div class="header-left">\n' +
+'            <img src="img/monograma.png" alt="Monograma" class="header-monograma">\n' +
+'        </div>\n' +
+'        <div class="header-center">\n' +
+'            <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">\n' +
+'        </div>\n' +
+'        <div class="header-right">\n' +
+'            <a href="index.html" class="btn-buscar">← Volver</a>\n' +
+'        </div>\n' +
+'    </header>\n\n' +
+'    <main class="container perfil-container">\n' +
+'        <div class="perfil-galeria-grid">\n' +
+'            <img src="img/' + prefijo + '1.jpg" alt="' + nombre + '" class="foto-principal" id="fotoPrincipal">\n' +
+'            <div class="galeria-miniaturas">\n' +
+miniaturasHTML +
+'            </div>\n' +
+'        </div>\n\n' +
+'        <div class="perfil-info">\n' +
+'            <div class="perfil-titulo-seccion">\n' +
+'                <h2>' + nombre + '</h2>\n' +
+'                <span class="badge-verificado">✓ Privé Verificado</span>\n' +
+'            </div>\n\n' +
+'            <p class="perfil-ubicacion">📍 Zona: <strong>' + zona + '</strong></p>\n' +
+'            <p class="perfil-modalidad">🏠 Modalidad: <strong>' + modalidad + '</strong></p>\n\n' +
+'            <div class="perfil-descripcion">\n' +
+'                <h3>Sobre mí y Servicios</h3>\n' +
+'                <p>' + bio + '</p>\n' +
+'            </div>\n\n' +
+'            <div class="perfil-detalles">\n' +
+'                <div class="detalle-item">\n' +
+'                    <span>Horarios:</span> ' + horarios + '\n' +
+'                </div>\n' +
+'            </div>\n\n' +
+'            <a href="https://wa.me/' + whatsapp + '?text=Hola%20' + encodeURIComponent(nombre) + ',%20vi%20tu%20perfil%20en%20Masajistas%20Privé" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">\n' +
+'                💬 Contactar por WhatsApp\n' +
+'            </a>\n' +
+'        </div>\n\n' +
+'        <div id="seccion-comentarios"></div>\n' +
+'    </main>\n\n' +
+'    <footer class="footer">\n' +
+'        <p>Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.</p>\n' +
+'        <p class="copyright">© 2026 Masajistas Privé. Todos los derechos reservados.</p>\n' +
+'    </footer>\n\n' +
+'    <script>\n' +
+'        function cambiarFoto(element) {\n' +
+'            var fotoPrincipal = document.getElementById("fotoPrincipal");\n' +
+'            fotoPrincipal.src = element.src;\n' +
+'        }\n' +
+'    </script>\n' +
+'    <script src="comentarios.js"></script>\n' +
+'</body>\n' +
+'</html>';
+
+            document.getElementById('codeOutput').value = htmlGenerado;
             var outputSec = document.getElementById('outputSection');
             outputSec.style.display = 'block';
             outputSec.scrollIntoView({ behavior: 'smooth' });
