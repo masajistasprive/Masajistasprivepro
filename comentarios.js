@@ -399,6 +399,12 @@
             });
 
             inicializarVisorFotos();
+        }, (error) => {
+            console.error("Error al escuchar comentarios:", error);
+            const container = document.getElementById('pCommentsContainer');
+            if (container) {
+                container.innerHTML = "<p style='color: #ff5555; font-size: 13px; text-align: center;'>Error al conectar con la base de datos de comentarios.</p>";
+            }
         });
 
         window.enviarComentarioPerfil = function() {
