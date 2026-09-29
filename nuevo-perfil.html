@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Perfiles - Masajistas Privé</title>
+    <title>Generador de Perfiles Pro - Masajistas Privé</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #0b0b0b;
@@ -14,259 +16,178 @@
             --text-muted: #aaaaaa;
             --success: #2ecc71;
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            border-bottom: 1px solid #222;
-            padding-bottom: 15px;
-        }
-
-        h1 {
-            color: var(--gold);
-            font-size: 1.5rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .back-link {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.3s;
-        }
-
-        .back-link:hover {
-            color: var(--gold);
-        }
-
-        .panel-card {
-            background-color: var(--card-bg);
-            border: 1px solid #222;
-            border-radius: 10px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        }
-
-        .panel-card h2 {
-            font-size: 1.1rem;
-            color: var(--gold);
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 5px;
-        }
-
-        input, textarea {
-            width: 100%;
-            padding: 10px;
-            background-color: #1f1f1f;
-            border: 1px solid #333;
-            border-radius: 6px;
-            color: var(--text-main);
-            font-size: 1rem;
-        }
-
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: var(--gold);
-        }
-
-        textarea {
-            resize: vertical;
-            height: 100px;
-        }
-
-        .btn-action {
-            background-color: var(--gold);
-            color: #000;
-            border: none;
-            width: 100%;
-            padding: 12px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.3s;
-            font-size: 1rem;
-            text-transform: uppercase;
-            margin-top: 10px;
-        }
-
-        .btn-action:hover {
-            background-color: var(--gold-light);
-        }
-
-        .output-section {
-            margin-top: 25px;
-            display: none;
-        }
-
-        textarea.code-output {
-            background-color: #111;
-            color: var(--success);
-            font-family: monospace;
-            font-size: 0.85rem;
-            height: 200px;
-            border: 1px solid #333;
-        }
-
-        .hint {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-top: 5px;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="container">
-        <header>
-            <h1>Generador de Perfiles</h1>
-            <a href="admin.html" class="back-link">&larr; Volver al Panel</a>
-        </header>
-
-        <div class="panel-card">
-            <h2>Datos de la Profesional</h2>
-            <form id="perfilForm">
-                <div class="form-group">
-                    <label for="nombre">Nombre</label>
-                    <input type="text" id="nombre" placeholder="Ej: Valentina" required>
-                </div>
-                <div class="form-group">
-                    <label for="zona">Zona / Cobertura (CABA)</label>
-                    <input type="text" id="zona" placeholder="Ej: Recoleta / Palermo" required>
-                </div>
-                <div class="form-group">
-                    <label for="whatsapp">WhatsApp (número con código país y área, sin símbolos)</label>
-                    <input type="text" id="whatsapp" placeholder="Ej: 5491112345678" required>
-                </div>
-                <div class="form-group">
-                    <label for="foto">Nombre del archivo de foto principal</label>
-                    <input type="text" id="foto" placeholder="Ej: valentina.jpg" required>
-                </div>
-                <div class="form-group">
-                    <label for="bio">Biografía / Descripción</label>
-                    <textarea id="bio" placeholder="Sesiones exclusivas de relax y bienestar..." required></textarea>
-                </div>
-                <button type="submit" class="btn-action">Generar Código HTML</button>
-            </form>
-
-            <div class="output-section" id="outputSection">
-                <h2>Código Plano Generado</h2>
-                <p class="hint">Copiá este código, creá un archivo nuevo (ej: <span id="fileNameHint" style="color:var(--gold)">perfil.html</span>) y subilo a tu GitHub.</p>
-                <textarea class="code-output" id="codeOutput" readonly></textarea>
-                <button class="btn-action" id="btnCopiar" style="background-color: #333; color: #fff; margin-top: 10px;">Copiar al Portapapeles</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const form = document.getElementById('perfilForm');
-        const outputSection = document.getElementById('outputSection');
-        const codeOutput = document.getElementById('codeOutput');
-        const fileNameHint = document.getElementById('fileNameHint');
-        const btnCopiar = document.getElementById('btnCopiar');
-
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const nombre = document.getElementById('nombre').value.trim();
-            const zona = document.getElementById('zona').value.trim();
-            const whatsapp = document.getElementById('whatsapp').value.trim();
-            const foto = document.getElementById('foto').value.trim();
-            const bio = document.getElementById('bio').value.trim();
-
-            const fileName = nombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '') + '.html';
-            fileNameHint.textContent = fileName;
-
-            // Plantilla plana, liviana y con la estética de Masajistas Privé
-            const htmlTemplate = `<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${nombre} - Masajistas Privé</title>
-    <style>
-        :root {
-            --bg-color: #0b0b0b;
-            --card-bg: #141414;
-            --gold: #d4af37;
-            --gold-light: #f3e5ab;
-            --text-main: #f5f5f5;
-            --text-muted: #aaaaaa;
-            --success: #2ecc71;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-main); padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .profile-card { background-color: var(--card-bg); border: 1px solid var(--gold); border-radius: 12px; max-width: 450px; width: 100%; padding: 25px; text-align: center; box-shadow: 0 4px 20px rgba(212, 175, 55, 0.15); }
-        .profile-img { width: 100%; height: 350px; object-fit: cover; border-radius: 8px; border: 1px solid #333; margin-bottom: 20px; }
-        h1 { color: var(--gold); font-size: 1.8rem; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
-        .zone { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .bio { font-size: 0.95rem; line-height: 1.5; color: var(--text-main); margin-bottom: 25px; text-align: left; background: #1a1a1a; padding: 15px; border-radius: 6px; border: 1px solid #222; }
-        .btn-whatsapp { display: block; background-color: var(--success); color: #fff; text-decoration: none; padding: 14px; font-weight: bold; border-radius: 6px; text-transform: uppercase; font-size: 1rem; transition: opacity 0.3s; }
-        .btn-whatsapp:hover { opacity: 0.9; }
-        .back-link { display: inline-block; margin-top: 20px; color: var(--text-muted); text-decoration: none; font-size: 0.85rem; }
+        body { background-color: var(--bg-color); color: var(--text-main); padding: 20px; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .container-gen { max-width: 800px; margin: 0 auto; background: var(--card-bg); border: 1px solid #222; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.6); }
+        h1 { color: var(--gold); font-size: 1.5rem; text-transform: uppercase; margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 10px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; }
+        input, textarea { width: 100%; padding: 10px; background-color: #1f1f1f; border: 1px solid #333; border-radius: 6px; color: var(--text-main); font-size: 1rem; }
+        input:focus, textarea:focus { outline: none; border-color: var(--gold); }
+        textarea { resize: vertical; height: 90px; }
+        .btn-action { background-color: var(--gold); color: #000; border: none; width: 100%; padding: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; text-transform: uppercase; margin-top: 15px; transition: background 0.3s; }
+        .btn-action:hover { background-color: var(--gold-light); }
+        .output-section { margin-top: 25px; display: none; }
+        textarea.code-output { background-color: #111; color: var(--success); font-family: monospace; font-size: 0.85rem; height: 220px; border: 1px solid #333; }
+        .hint { font-size: 0.85rem; color: var(--gold); margin-bottom: 10px; }
+        .back-link { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; float: right; }
         .back-link:hover { color: var(--gold); }
     </style>
 </head>
 <body>
 
-    <div class="profile-card">
-        <img src="${foto}" alt="${nombre}" class="profile-img">
-        <h1>${nombre}</h1>
-        <div class="zone">📍 Zona: ${zona}</div>
-        <div class="bio">${bio}</div>
-        <a href="https://wa.me/${whatsapp}?text=Hola%20${nombre},%20vi%20tu%20perfil%20en%20Masajistas%20Privé%20y%20quiero%20consultar%20disponibilidad." class="btn-whatsapp" target="_blank">Reservar por WhatsApp</a>
-        <br>
-        <a href="index.html" class="back-link">&larr; Volver al inicio</a>
+    <div class="container-gen">
+        <a href="admin.html" class="back-link">&larr; Volver al Panel</a>
+        <h1>Generador de Fichas Pro</h1>
+        
+        <form id="genForm">
+            <div class="form-group">
+                <label for="nombre">Nombre de la Profesional</label>
+                <input type="text" id="nombre" placeholder="Ej: Valentina" required>
+            </div>
+            <div class="form-group">
+                <label for="zona">Zona / Barrio</label>
+                <input type="text" id="zona" placeholder="Ej: Recoleta" required>
+            </div>
+            <div class="form-group">
+                <label for="modalidad">Modalidad</label>
+                <input type="text" id="modalidad" value="Departamento propio" required>
+            </div>
+            <div class="form-group">
+                <label for="whatsapp">WhatsApp (número con código de país y área sin símbolos)</label>
+                <input type="text" id="whatsapp" placeholder="Ej: 5491112345678" required>
+            </div>
+            <div class="form-group">
+                <label for="prefijoFoto">Prefijo de las fotos (ej: si tus fotos son valentina1.jpg, poné 'valentina')</label>
+                <input type="text" id="prefijoFoto" placeholder="Ej: valentina" required>
+            </div>
+            <div class="form-group">
+                <label for="bio">Biografía y Servicios</label>
+                <textarea id="bio" placeholder="Te invito a vivir una experiencia de relajación única..." required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="horarios">Horarios</label>
+                <input type="text" id="horarios" value="Lunes a sábados de 9 a 21 hs." required>
+            </div>
+
+            <button type="submit" class="btn-action">Generar Código de la Ficha</button>
+        </form>
+
+        <div class="output-section" id="outputSection">
+            <p class="hint">Copiá este código, creá un archivo nuevo con el nombre <span id="fileNameDisplay" style="color:#fff"></span> y subilo a tu GitHub:</p>
+            <textarea class="code-output" id="codeOutput" readonly></textarea>
+            <button class="btn-action" id="btnCopiar" style="background-color: #333; color: #fff;">Copiar al Portapapeles</button>
+        </div>
     </div>
 
+    <script>
+        document.getElementById('genForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const nombre = document.getElementById('nombre').value.trim();
+            const zona = document.getElementById('zona').value.trim();
+            const modalidad = document.getElementById('modalidad').value.trim();
+            const whatsapp = document.getElementById('whatsapp').value.trim();
+            const prefijo = document.getElementById('prefijoFoto').value.trim().toLowerCase();
+            const bio = document.getElementById('bio').value.trim();
+            const horarios = document.getElementById('horarios').value.trim();
+
+            const fileName = nombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '') + '.html';
+            document.getElementById('fileNameDisplay').textContent = fileName;
+
+            // Plantilla exacta basada en el perfil de Pamela
+            const htmlGenerado = `<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${nombre} | Masajistas Privé</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="perfil-body">
+
+    <!-- Header Estilo App de Lujo con Logo Grande -->
+    <header class="header-prive">
+        <div class="header-left">
+            <img src="img/monograma.png" alt="Monograma" class="header-monograma">
+        </div>
+        <div class="header-center">
+            <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">
+        </div>
+        <div class="header-right">
+            <a href="index.html" class="btn-buscar">← Volver</a>
+        </div>
+    </header>
+
+    <main class="container perfil-container">
+        
+        <!-- Galería de 5 Fotos -->
+        <div class="perfil-galeria-grid">
+            <img src="img/${prefijo}1.jpg" alt="${nombre}" class="foto-principal" id="fotoPrincipal">
+            <div class="galeria-miniaturas">
+                <img src="img/${prefijo}1.jpg" alt="${nombre} 1" onclick="cambiarFoto(this)">
+                <img src="img/${prefijo}2.jpg" alt="${nombre} 2" onclick="cambiarFoto(this)">
+                <img src="img/${prefijo}3.jpg" alt="${nombre} 3" onclick="cambiarFoto(this)">
+                <img src="img/${prefijo}4.jpg" alt="${nombre} 4" onclick="cambiarFoto(this)">
+            </div>
+        </div>
+
+        <!-- Información de la Profesional -->
+        <div class="perfil-info">
+            <div class="perfil-titulo-seccion">
+                <h2>${nombre}</h2>
+                <span class="badge-verificado">✓ Privé Verificado</span>
+            </div>
+
+            <p class="perfil-ubicacion">📍 Zona: <strong>${zona}</strong></p>
+            <p class="perfil-modalidad">🏠 Modalidad: <strong>${modalidad}</strong></p>
+
+            <div class="perfil-descripcion">
+                <h3>Sobre mí y Servicios</h3>
+                <p>${bio}</p>
+            </div>
+
+            <div class="perfil-detalles">
+                <div class="detalle-item">
+                    <span>Horarios:</span> ${horarios}
+                </div>
+            </div>
+
+            <a href="https://wa.me/${whatsapp}?text=Hola%20${nombre},%20vi%20tu%20perfil%20en%20Masajistas%20Privé" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
+                💬 Contactar por WhatsApp
+            </a>
+        </div>
+
+        <div id="seccion-comentarios"></div>
+    </main>
+
+    <footer class="footer">
+        <p>Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.</p>
+        <p class="copyright">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        function cambiarFoto(element) {
+            const fotoPrincipal = document.getElementById('fotoPrincipal');
+            fotoPrincipal.src = element.src;
+        }
+    </script>
+    <script src="comentarios.js"></script>
 </body>
 </html>`;
 
-            codeOutput.value = htmlTemplate;
-            outputSection.style.display = 'block';
-            outputSection.scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('codeOutput').value = htmlGenerado;
+            const outputSec = document.getElementById('outputSection');
+            outputSec.style.display = 'block';
+            outputSec.scrollIntoView({ behavior: 'smooth' });
         });
 
-        btnCopiar.addEventListener('click', function() {
-            codeOutput.select();
+        document.getElementById('btnCopiar').addEventListener('click', function() {
+            const codeBox = document.getElementById('codeOutput');
+            codeBox.select();
             document.execCommand('copy');
-            btnCopiar.textContent = '¡Copiado al portapapeles!';
-            setTimeout(() => {
-                btnCopiar.textContent = 'Copiar al Portapapeles';
-            }, 2000);
+            this.textContent = '¡Copiado al portapapeles!';
+            setTimeout(() => { this.textContent = 'Copiar al Portapapeles'; }, 2000);
         });
     </script>
 </body>
