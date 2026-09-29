@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Masajistas Privé | Portal Exclusivo</title>
-    <!-- EL TRUCO ESTÁ ACÁ ABAJO (?v=3.3) PARA FORZAR LA ACTUALIZACIÓN DEL DISEÑO -->
-    <link rel="stylesheet" href="css/style.css?v=3.3">
+    <!-- EL TRUCO ESTÁ ACÁ ABAJO (?v=3.4) PARA FORZAR LA ACTUALIZACIÓN DEL DISEÑO -->
+    <link rel="stylesheet" href="css/style.css?v=3.4">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -385,7 +385,7 @@
 
     </main>
 
-    <!-- Tarjeta del Dólar (Ubicación original abajo) -->
+    <!-- Tarjeta del Dólar -->
     <div class="dolar-card" style="background: #141414; border: 1px solid rgba(223, 194, 133, 0.25); border-radius: 10px; padding: 20px; max-width: 900px; margin: 30px auto; text-align: center; font-family: 'Montserrat', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
         <span style="color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 2px;">Indicadores Financieros</span>
         <h3 style="color: #fff; font-size: 18px; margin: 8px 0; font-family: 'Cormorant Garamond', serif;">Cotización Dólar (Argentina)</h3>
@@ -439,10 +439,17 @@
             <div class="footer-legal">
                 <p>Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.</p>
                 <p style="margin-top: 6px;">Todo el contenido, marcas y logotipos pertenecen a sus respectivos dueños.</p>
-                <p class="copyright" style="margin-top: 10px; color: #dfc285; font-size: 12px;">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
+                <div id="contador-visitas-global" style="margin-top: 12px; color: #dfc285; font-size: 13px; font-weight: 500;">
+                    👁️ Visitas totales al portal: <span id="visitas-total-num">Cargando...</span>
+                </div>
+                <p class="copyright" style="margin-top: 8px; color: #dfc285; font-size: 12px;">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
             </div>
         </div>
     </footer>
+
+    <!-- Firebase SDK para el contador global -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <script>
         const bancoArticulos = [
@@ -547,6 +554,7 @@
             barajarSeccion('grid-sensuales');
             barajarSeccion('grid-masculinos');
             barajarSeccion('grid-fantasias');
+            registrarYMostrarVisitasGlobales();
         });
 
         const pills = document.querySelectorAll('.pill-btn');
@@ -595,6 +603,46 @@
 
         function cerrarArticulo() {
             document.getElementById('modalArticulo').style.display = 'none';
+        }
+
+        // Contador Global de Visitas conectado a Firebase Firestore
+        function registrarYMostrarVisitasGlobales() {
+            try {
+                if (!firebase.apps.length) {
+                    firebase.initializeApp({
+                        apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
+                        authDomain: "masajistasprivepro.firebaseapp.com",
+                        projectId: "masajistasprivepro",
+                        storageBucket: "masajistasprivepro.firebasestorage.app",
+                        messagingSenderId: "768677270509",
+                        appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
+                        measurementId: "G-SBN70C32JF"
+                    });
+                }
+                const db = firebase.firestore();
+                const docRef = db.collection("estadisticas_visitas").doc("portal_index");
+
+                // Incrementar visita solo una vez por sesión para evitar duplicados artificiales
+                if (!sessionStorage.getItem("visitaRegistradaIndex")) {
+                    sessionStorage.setItem("visitaRegistradaIndex", "true");
+                    docRef.set({
+                        visitas: firebase.firestore.FieldValue.increment(1)
+                    }, { merge: true }).catch(err => console.error("Error sumando visita:", err));
+                }
+
+                // Escuchar y mostrar el total real acumulado
+                docRef.onSnapshot((doc) => {
+                    if (doc.exists) {
+                        const total = doc.data().visitas || 0;
+                        document.getElementById('visitas-total-num').textContent = total.toLocaleString('es-AR');
+                    } else {
+                        document.getElementById('visitas-total-num').textContent = "1";
+                    }
+                });
+            } catch (e) {
+                console.error("Excepción en contador global:", e);
+                document.getElementById('visitas-total-num').textContent = "Disponible";
+            }
         }
 
         // Obtener Clima de CABA con Dibujitos (Íconos automáticos)
