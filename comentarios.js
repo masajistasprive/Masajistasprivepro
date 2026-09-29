@@ -145,7 +145,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 // =========================================================
-// MOTOR GLOBAL: SLIDER, VISOR Y COMENTARIOS
+// MOTOR GLOBAL: SLIDER TÁCTIL, VISOR Y COMENTARIOS
 // =========================================================
 (function() {
     document.addEventListener('contextmenu', (e) => {
