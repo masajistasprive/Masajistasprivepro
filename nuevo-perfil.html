@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador con Vista Previa - Masajistas Privé</title>
+    <title>Generador de Perfiles Pro - Masajistas Privé</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -36,7 +36,7 @@
         .back-link { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; display: inline-block; margin-bottom: 15px; }
         .back-link:hover { color: var(--gold); }
 
-        /* Estilos en vivo del boceto */
+        /* Estilos en vivo del boceto idéntico a Pamela */
         .preview-box { background: #0b0b0b; border: 1px solid #333; border-radius: 10px; padding: 15px; max-height: 80vh; overflow-y: auto; }
         .preview-box .header-prive { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; padding-bottom: 10px; margin-bottom: 15px; }
         .preview-box .foto-principal { width: 100%; height: 280px; object-fit: cover; border-radius: 8px; border: 1px solid #333; margin-bottom: 10px; }
@@ -49,10 +49,8 @@
         .preview-box .perfil-descripcion { background: #141414; padding: 10px; border-radius: 6px; border: 1px solid #222; margin: 10px 0; }
         .preview-box .perfil-descripcion h3 { color: var(--gold); font-size: 0.9rem; margin-bottom: 5px; text-transform: uppercase; }
         .preview-box .perfil-detalles { font-size: 0.85rem; color: #ccc; margin-bottom: 10px; }
-        .preview-box .detalle-item span { color: var(--gold); font-weight: 600; }
-        .preview-box .btn-whatsapp { display: block; background-color: var(--success); color: #fff; text-decoration: none; padding: 10px; font-weight: bold; border-radius: 6px; text-align: center; font-size: 0.85rem; text-transform: uppercase; margin-top: 15px; margin-bottom: 15px; }
-        .preview-comentarios { border-top: 1px dashed #333; padding-top: 15px; margin-top: 15px; text-align: center; }
-        .preview-comentarios-box { background: #141414; border: 1px solid #222; border-radius: 8px; padding: 12px; font-size: 0.8rem; color: #888; }
+        .preview-box .detalle-item span { color: var(--text-main); }
+        .preview-box .btn-whatsapp { display: block; background-color: var(--success); color: #fff; text-decoration: none; padding: 10px; font-weight: bold; border-radius: 6px; text-align: center; font-size: 0.85rem; text-transform: uppercase; margin-top: 15px; }
     </style>
 </head>
 <body>
@@ -69,7 +67,7 @@
                 </div>
                 <div class="form-group">
                     <label for="zona">Zona / Barrio</label>
-                    <input type="text" id="zona" placeholder="Ej: Recoleta" value="Recoleta" required>
+                    <input type="text" id="zona" placeholder="Ej: Tribunales" value="Tribunales" required>
                 </div>
                 <div class="form-group">
                     <label for="categoria">Categoría (para el Index)</label>
@@ -86,11 +84,11 @@
                 </div>
                 <div class="form-group">
                     <label for="whatsapp">WhatsApp (núm sin símbolos)</label>
-                    <input type="text" id="whatsapp" value="5491112345678" required>
+                    <input type="text" id="whatsapp" value="5491167462275" required>
                 </div>
                 <div class="form-group">
-                    <label for="prefijoFoto">Prefijo de las fotos (ej: valentina)</label>
-                    <input type="text" id="prefijoFoto" value="valentina" required>
+                    <label for="prefijoFoto">Prefijo de las fotos (ej: pamela)</label>
+                    <input type="text" id="prefijoFoto" value="pamela" required>
                 </div>
                 <div class="form-group">
                     <label for="numFotos">Cantidad de fotos (4 a 10)</label>
@@ -134,15 +132,9 @@
                 <h2>Vista Previa en Vivo</h2>
                 <div class="preview-box">
                     <div class="header-prive">
-                        <div class="header-left">
-                            <span style="color:var(--gold); font-size:0.7rem;">Monograma</span>
-                        </div>
-                        <div class="header-center">
-                            <span style="color:var(--gold); font-weight:bold; font-size:0.75rem;">MASAJISTAS PRIVÉ</span>
-                        </div>
-                        <div class="header-right">
-                            <span style="color:#888; font-size:0.75rem;">← Volver</span>
-                        </div>
+                        <span style="color:var(--gold); font-size:0.75rem;">Monograma</span>
+                        <span style="color:var(--gold); font-weight:bold; font-size:0.8rem;">MASAJISTAS PRIVÉ</span>
+                        <span style="color:#888; font-size:0.75rem;">← Volver</span>
                     </div>
 
                     <div class="perfil-galeria-grid">
@@ -152,11 +144,11 @@
 
                     <div class="perfil-info">
                         <div class="perfil-titulo-seccion">
-                            <h2 id="prevNombre">Valentina</h2>
+                            <h2 id="prevNombre">Pamela</h2>
                             <span class="badge-verificado">✓ Privé Verificado</span>
                         </div>
 
-                        <p class="perfil-ubicacion">📍 Zona: <strong id="prevZona">Recoleta</strong></p>
+                        <p class="perfil-ubicacion">📍 Zona: <strong id="prevZona">Tribunales</strong></p>
                         <p class="perfil-modalidad">🏠 Modalidad: <strong id="prevModalidad">Departamento propio</strong></p>
 
                         <div class="perfil-descripcion">
@@ -172,18 +164,12 @@
 
                         <a href="#" class="btn-whatsapp">💬 Contactar por WhatsApp</a>
                     </div>
-
-                    <div class="preview-comentarios">
-                        <div class="preview-comentarios-box">
-                            💬 [ Sección de Comentarios (comentarios.js) ]
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Plantilla oficial idéntica al archivo de Pamela -->
+    <!-- Plantilla oficial 100% idéntica al archivo HTML de Pamela -->
     <script type="text/template" id="plantillaFicha"><![CDATA[<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -244,7 +230,6 @@
             </a>
         </div>
 
-        <div id="seccion-comentarios"></div>
     </main>
 
     <footer class="footer">
@@ -254,11 +239,10 @@
 
     <script>
         function cambiarFoto(element) {
-            var fotoPrincipal = document.getElementById("fotoPrincipal");
+            const fotoPrincipal = document.getElementById('fotoPrincipal');
             fotoPrincipal.src = element.src;
         }
     </script>
-    <script src="comentarios.js"></script>
 </body>
 </html>]]></script>
 
@@ -301,12 +285,6 @@
             let minisHTML = '';
             for (let i = 1; i <= cant; i++) {
                 let rutaImg = 'img/' + pref + i + '.jpg';
-                minisHTML += '<img src="' + rutaImg + '" onclick="document.getElementById(\'prevFotoPrincipal\'].src=\'' + rutaImg + '\'" onerror="this.src=\'img/logo.png\'">';
-            }
-            // Corrección limpia para el evento onclick del boceto
-            minisHTML = '';
-            for (let i = 1; i <= cant; i++) {
-                let rutaImg = 'img/' + pref + i + '.jpg';
                 minisHTML += '<img src="' + rutaImg + '" onclick="document.getElementById(\'prevFotoPrincipal\').src=\'' + rutaImg + '\'" onerror="this.src=\'img/logo.png\'">';
             }
             prevMiniaturas.innerHTML = minisHTML;
@@ -335,7 +313,6 @@
             var fileName = nombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '') + '.html';
             document.getElementById('fileNameDisplay').textContent = fileName;
 
-            // Miniaturas de la ficha generada
             var miniaturasHTML = "";
             for (var i = 1; i <= cantidadFotos; i++) {
                 miniaturasHTML += '                <img src="img/' + prefijo + i + '.jpg" alt="' + nombre + ' ' + i + '" onclick="cambiarFoto(this)">\n';
@@ -354,7 +331,6 @@
                 .replace(/\{\{bio\}\}/g, bio)
                 .replace(/\{\{horarios\}\}/g, horarios);
 
-            // Tarjeta para el Index
             var resultadoIndex = '<a href="' + fileName + '" class="card-link" data-categoria="' + categoria + '">\n' +
 '    <article class="card">\n' +
 '        <div class="card-image">\n' +
