@@ -13,56 +13,43 @@
 })();
 
 // =========================================================
-// MOTOR OFICIAL DE TRADUCCIÓN CORPORATIVA AL 100% (DOM GLOBAL)
+// MOTOR DE TRADUCCIÓN SILENCIOSA 100% AUTOMÁTICA (SIN CARTELES)
 // =========================================================
 
-// 1. Estilos para ocultar la barra superior y elementos visuales molestos de Google
-const styleTranslate = document.createElement('style');
-styleTranslate.innerHTML = `
-    .goog-te-banner-frame { display: none !important; }
-    body { top: 0px !important; }
-    #goog-gt-tt { display: none !important; }
-    .goog-tooltip { display: none !important; }
-    .goog-text-highlight { background-color: transparent !important; box-shadow: none !important; }
-    
-    #google_translate_element {
-        position: absolute;
-        top: -9999px;
-        left: -9999px;
-        opacity: 0;
-        pointer-events: none;
+// Inyectar estilos para bloquear cualquier barra o notificación visual de traducción
+const styleInvisibleTranslate = document.createElement('style');
+styleInvisibleTranslate.innerHTML = `
+    .goog-te-banner-frame, .goog-te-balloon-frame, #goog-gt-tt, .goog-tooltip {
+        display: none !important;
+        visibility: hidden !important;
     }
+    body { top: 0 !important; }
+    #google_translate_element { display: none !important; }
 `;
-document.head.appendChild(styleTranslate);
+document.head.appendChild(styleInvisibleTranslate);
 
-// 2. Contenedor oculto obligatorio para el motor
-if (!document.getElementById('google_translate_element')) {
-    const divGoogle = document.createElement('div');
-    divGoogle.id = 'google_translate_element';
-    document.body.appendChild(divGoogle);
-}
-
-// 3. Cargar el script asíncrono oficial de traducción
-if (!document.getElementById('google-translate-script')) {
-    const scriptGoogle = document.createElement('script');
-    scriptGoogle.id = 'google-translate-script';
-    scriptGoogle.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-    document.head.appendChild(scriptGoogle);
-}
-
+// Cargar la API interna de traducción de forma oculta
 window.googleTranslateElementInit = function() {
     new google.translate.TranslateElement({
         pageLanguage: 'es',
         includedLanguages: 'en,es',
-        autoDisplay: false
+        autoDisplay: false,
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
     }, 'google_translate_element');
 };
 
-// 4. Función de activación mediante cookies del navegador para el 100% de la página
-window.ejecutarTraduccionTotal = function() {
+if (!document.getElementById('google-translate-api')) {
+    const scriptTranslate = document.createElement('script');
+    scriptTranslate.id = 'google-translate-api';
+    scriptTranslate.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+    document.head.appendChild(scriptTranslate);
+}
+
+// Función para alternar el idioma de forma limpia en todo el sitio
+window.toggleIdiomaGlobalSilencioso = function() {
     const select = document.querySelector('.goog-te-combo');
     if (!select) {
-        alert("El motor de traducción se está inicializando. Por favor, aguardá un segundo e intentá de nuevo.");
+        alert("El motor se está inicializando. Por favor, aguardá un segundo.");
         return;
     }
 
@@ -72,40 +59,45 @@ window.ejecutarTraduccionTotal = function() {
     select.value = nuevoIdioma;
     select.dispatchEvent(new Event('change'));
 
-    localStorage.setItem('idiomaPriveGlobalEmpresa', nuevoIdioma);
+    localStorage.setItem('priveLangState', nuevoIdioma);
 
-    // Refrescar para aplicar de forma limpia en todo el DOM
     setTimeout(() => {
         location.reload();
-    }, 300);
+    }, 350);
 };
 
-// 5. Inyección del botón elegante Art Déco en el header de los perfiles e index
+// Inyectar el botón Art Déco en el header y contenedor oculto necesario
 window.addEventListener('DOMContentLoaded', () => {
+    if (!document.getElementById('google_translate_element')) {
+        const divOculto = document.createElement('div');
+        divOculto.id = 'google_translate_element';
+        document.body.appendChild(divOculto);
+    }
+
     const headerRight = document.querySelector('.header-right');
     if (headerRight && !document.getElementById('btn-idioma')) {
         headerRight.style.cssText = "display: flex; align-items: center; gap: 10px;";
         
-        const idiomaGuardado = localStorage.getItem('idiomaPriveGlobalEmpresa') || 'es';
-        const textoBtn = idiomaGuardado === 'en' ? '🇦🇷 ES' : '🇺🇸 EN';
+        const langActual = localStorage.getItem('priveLangState') || 'es';
+        const textoBtn = langActual === 'en' ? '🇦🇷 ES' : '🇺🇸 EN';
         
         const btnLang = document.createElement('button');
         btnLang.id = 'btn-idioma';
-        btnLang.onclick = ejecutarTraduccionTotal;
+        btnLang.onclick = window.toggleIdiomaGlobalSilencioso;
         btnLang.innerHTML = textoBtn;
         btnLang.style.cssText = "background: transparent; border: 1px solid rgba(223, 194, 133, 0.4); color: #dfc285; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 10px; font-weight: 600; font-family: 'Montserrat', sans-serif; letter-spacing: 1px; transition: all 0.3s;";
         
         headerRight.insertBefore(btnLang, headerRight.firstChild);
     }
 
-    if (localStorage.getItem('idiomaPriveGlobalEmpresa') === 'en' && !document.cookie.includes('googtrans=/es/en')) {
+    if (localStorage.getItem('priveLangState') === 'en' && !document.cookie.includes('googtrans=/es/en')) {
         document.cookie = "googtrans=/es/en; path=/";
     }
 });
 
 
 // =========================================================
-// MOTOR GLOBAL: SLIDER TÁCTIL, VISOR DE FOTOS Y COMENTARIOS
+// MOTOR GLOBAL: SLIDER TÁCTIL, VISOR Y COMENTARIOS
 // =========================================================
 (function() {
     document.addEventListener('contextmenu', (e) => {
@@ -281,7 +273,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const nombreMasajista = document.querySelector('.perfil-titulo-seccion h2')?.textContent || "Perfil";
             const baseUrl = btnWa.getAttribute('href').split('?')[0];
             
-            const isEn = localStorage.getItem('idiomaPriveGlobalEmpresa') === 'en';
+            const isEn = localStorage.getItem('priveLangState') === 'en';
             const nuevoMensaje = isEn 
                 ? `Hello ${nombreMasajista}, I saw your profile on Masajistas Privé and want to check availability.`
                 : `Hola ${nombreMasajista}, vi tu perfil en Masajistas Privé y quiero consultar disponibilidad.`;
@@ -296,7 +288,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const contenedorDestino = document.getElementById('seccion-comentarios');
     if (!contenedorDestino) return;
 
-    const isEn = localStorage.getItem('idiomaPriveGlobalEmpresa') === 'en';
+    const isEn = localStorage.getItem('priveLangState') === 'en';
     const tExp = isEn ? "Experiences & Comments" : "Experiencias y Comentarios";
     const tAuth = isEn ? "Your name or nickname" : "Tu nombre o apodo";
     const tText = isEn ? "Write about your experience..." : "Escribe tu experiencia...";
