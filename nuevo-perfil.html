@@ -36,10 +36,9 @@
         .back-link { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; display: inline-block; margin-bottom: 15px; }
         .back-link:hover { color: var(--gold); }
 
-        /* Estilos en vivo del boceto */
+        /* Estilos en vivo del boceto con Comentarios incorporados */
         .preview-box { background: #0b0b0b; border: 1px solid #333; border-radius: 10px; padding: 15px; max-height: 80vh; overflow-y: auto; }
         .preview-box .header-prive { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; padding-bottom: 10px; margin-bottom: 15px; }
-        .preview-box .header-logo-grande { max-width: 90px; }
         .preview-box .foto-principal { width: 100%; height: 280px; object-fit: cover; border-radius: 8px; border: 1px solid #333; margin-bottom: 10px; }
         .preview-box .galeria-miniaturas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 15px; }
         .preview-box .galeria-miniaturas img { width: 100%; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #333; cursor: pointer; }
@@ -49,7 +48,11 @@
         .preview-box p { font-size: 0.85rem; color: #ccc; margin-bottom: 8px; }
         .preview-box .perfil-descripcion { background: #141414; padding: 10px; border-radius: 6px; border: 1px solid #222; margin: 10px 0; }
         .preview-box .perfil-descripcion h3 { color: var(--gold); font-size: 0.9rem; margin-bottom: 5px; text-transform: uppercase; }
-        .preview-box .btn-whatsapp { display: block; background-color: var(--success); color: #fff; text-decoration: none; padding: 10px; font-weight: bold; border-radius: 6px; text-align: center; font-size: 0.85rem; text-transform: uppercase; margin-top: 15px; }
+        .preview-box .btn-whatsapp { display: block; background-color: var(--success); color: #fff; text-decoration: none; padding: 10px; font-weight: bold; border-radius: 6px; text-align: center; font-size: 0.85rem; text-transform: uppercase; margin-top: 15px; margin-bottom: 15px; }
+        
+        /* Simulación visual de la sección de comentarios en el boceto */
+        .preview-comentarios { border-top: 1px dashed #333; padding-top: 15px; margin-top: 15px; text-align: center; }
+        .preview-comentarios-box { background: #141414; border: 1px solid #222; border-radius: 8px; padding: 12px; font-size: 0.8rem; color: #888; }
     </style>
 </head>
 <body>
@@ -145,12 +148,19 @@
 
                         <a href="#" class="btn-whatsapp">💬 Contactar por WhatsApp</a>
                     </div>
+
+                    <!-- Sección de Comentarios incorporada en el boceto -->
+                    <div class="preview-comentarios">
+                        <div class="preview-comentarios-box">
+                            💬 [ Sección de Comentarios (comentarios.js) ]
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Plantilla separada sin errores de sintaxis -->
+    <!-- Plantilla oficial basada exactamente en el archivo de Pamela -->
     <script type="text/template" id="plantillaFicha"><![CDATA[<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -162,6 +172,7 @@
 </head>
 <body class="perfil-body">
 
+    <!-- Header Estilo App de Lujo con Logo Grande -->
     <header class="header-prive">
         <div class="header-left">
             <img src="img/monograma.png" alt="Monograma" class="header-monograma">
@@ -175,6 +186,8 @@
     </header>
 
     <main class="container perfil-container">
+        
+        <!-- Galería de Fotos -->
         <div class="perfil-galeria-grid">
             <img src="img/{{prefijo}}1.jpg" alt="{{nombre}}" class="foto-principal" id="fotoPrincipal">
             <div class="galeria-miniaturas">
@@ -182,6 +195,7 @@
             </div>
         </div>
 
+        <!-- Información de la Profesional -->
         <div class="perfil-info">
             <div class="perfil-titulo-seccion">
                 <h2>{{nombre}}</h2>
