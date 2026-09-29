@@ -14,50 +14,7 @@
 
 // comentarios.js - Motor Global, Visor con Marca de Agua, Slider Táctil, Comentarios y Estado de Pausa
 (function() {
-    // Configuración de Firebase
-    const firebaseConfig = {
-        apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
-        authDomain: "masajistasprivepro.firebaseapp.com",
-        projectId: "masajistasprivepro",
-        storageBucket: "masajistasprivepro.firebasestorage.app",
-        messagingSenderId: "768677270509",
-        appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
-        measurementId: "G-SBN70C32JF"
-    };
-
-    // --- 0. Inicialización y Funciones Auxiliares Globales ---
-
-    // Función para inicializar Firebase de forma segura (Singleton)
-    function inicializarFirebaseSeguro() {
-        if (!firebase.apps.length) {
-            return firebase.initializeApp(firebaseConfig);
-        }
-        return firebase.app();
-    }
-
-    // Extracción robusta del ID del perfil
-    function obtenerPerfilIdSeguro() {
-        if (typeof ID_PERFIL_ACTUAL !== 'undefined' && ID_PERFIL_ACTUAL) return ID_PERFIL_ACTUAL;
-        
-        const tituloEl = document.querySelector('.perfil-titulo-seccion h2');
-        if (tituloEl && tituloEl.textContent.trim() !== "") {
-            return tituloEl.textContent.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, "");
-        }
-
-        let pathId = window.location.pathname.split("/").pop().replace(".html", "").trim();
-        if (pathId && pathId !== "") return pathId;
-
-        return "general";
-    }
-
-    // Escape HTML para prevenir XSS
-    function escapeHtmlPerfil(text) {
-        if (!text) return '';
-        const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
-        return text.replace(/[&<>"']/g, m => map[m]);
-    }
-
-    // --- 1. Blindaje de Seguridad ---
+    // 1. Blindaje seguro contra click derecho y atajos (sin tocar gestos táctiles ni miniaturas)
     document.addEventListener('contextmenu', (e) => {
         if (e.target.tagName === 'IMG') {
             e.preventDefault();
@@ -83,39 +40,62 @@
         }
     });
 
-    // Inyectar estilos globales
+    // Inyectar estilos para el botón de WhatsApp, animaciones y el Visor (Lightbox)
     const styleAnim = document.createElement('style');
     styleAnim.innerHTML = `
-        img { -webkit-user-select: none !important; user-select: none !important; -webkit-user-drag: none !important; }
+        img {
+            -webkit-user-select: none !important;
+            user-select: none !important;
+            -webkit-user-drag: none !important;
+        }
+
         @keyframes privePulseGlow {
             0% { transform: scale(1); box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); }
             50% { transform: scale(1.02); box-shadow: 0 6px 25px rgba(37, 211, 102, 0.8), 0 0 15px rgba(223, 194, 133, 0.5); }
             100% { transform: scale(1); box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); }
         }
-        .btn-whatsapp-titilante { animation: privePulseGlow 2.2s infinite ease-in-out !important; transition: all 0.3s ease !important; }
-        .btn-whatsapp-titilante:hover { transform: scale(1.04) !important; }
+        .btn-whatsapp-titilante {
+            animation: privePulseGlow 2.2s infinite ease-in-out !important;
+            transition: all 0.3s ease !important;
+        }
+        .btn-whatsapp-titilante:hover {
+            transform: scale(1.04) !important;
+        }
         #priveLightbox {
-            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0, 0, 0, 0.96) !important; z-index: 9999999 !important;
-            justify-content: center; align-items: center; backdrop-filter: blur(12px);
-            cursor: zoom-out; user-select: none; -webkit-user-select: none;
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.96) !important;
+            z-index: 9999999 !important;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(12px);
+            cursor: zoom-out;
+            user-select: none;
+            -webkit-user-select: none;
         }
     `;
     document.head.appendChild(styleAnim);
 
-    // --- 2. Slider Táctil ---
+    // 2. Slider Táctil Seguro (Deslizar foto principal con el dedo en celulares)
     function inicializarSliderTactil() {
         const fotoPrincipal = document.getElementById('fotoPrincipal');
         if (!fotoPrincipal) return;
+
         const miniaturasImgs = document.querySelectorAll('.galeria-miniaturas img');
         if (miniaturasImgs.length === 0) return;
 
-        let galeriaImgs = Array.from(miniaturasImgs).map(img => img.src);
+        let galeriaImgs = [];
+        miniaturasImgs.forEach(img => galeriaImgs.push(img.src));
+
         let indiceActual = galeriaImgs.indexOf(fotoPrincipal.getAttribute('src'));
         if (indiceActual === -1) indiceActual = 0;
 
         function cambiarFoto(dir) {
-            indiceActual = (indiceActual + dir + galeriaImgs.length) % galeriaImgs.length;
+            indiceActual += dir;
+            if (indiceActual < 0) indiceActual = galeriaImgs.length - 1;
+            if (indiceActual >= galeriaImgs.length) indiceActual = 0;
+            
             fotoPrincipal.style.opacity = '0.3';
             setTimeout(() => {
                 fotoPrincipal.src = galeriaImgs[indiceActual];
@@ -124,81 +104,138 @@
         }
 
         let touchStartX = 0;
-        fotoPrincipal.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX, { passive: true });
+        fotoPrincipal.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
         fotoPrincipal.addEventListener('touchend', e => {
             let touchEndX = e.changedTouches[0].screenX;
-            if (touchEndX < touchStartX - 45) cambiarFoto(1);
-            else if (touchEndX > touchStartX + 45) cambiarFoto(-1);
+            if (touchEndX < touchStartX - 45) {
+                cambiarFoto(1);  // Deslizar izquierda -> Siguiente
+            } else if (touchEndX > touchStartX + 45) {
+                cambiarFoto(-1); // Deslizar derecha -> Anterior
+            }
         }, { passive: true });
     }
 
-    // --- 3. Visor de Pantalla Completa (Lightbox) ---
+    // 3. Visor de Pantalla Completa (Lightbox) para la foto principal y grillas
     function inicializarVisorFotos() {
-        let lightbox = document.getElementById('priveLightbox');
-        if (!lightbox) {
-            lightbox = document.createElement('div');
+        if (!document.getElementById('priveLightbox')) {
+            const lightbox = document.createElement('div');
             lightbox.id = 'priveLightbox';
             lightbox.innerHTML = `
                 <div style="position: relative; display: flex; justify-content: center; align-items: center; max-width: 90vw; max-height: 85vh;">
                     <img id="priveLightboxImg" style="display: block; max-width: 90vw; max-height: 85vh; border-radius: 8px; border: 1px solid rgba(223,194,133,0.4); box-shadow: 0 20px 50px rgba(0,0,0,0.95); object-fit: contain; pointer-events: none;">
+                    
                     <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 180px; height: 80px; background-image: url('img/logo.png'); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: 0.5; pointer-events: none; z-index: 10000000;"></div>
                 </div>
             `;
             document.body.appendChild(lightbox);
-            lightbox.onclick = () => lightbox.style.display = 'none';
+
+            lightbox.onclick = () => {
+                lightbox.style.display = 'none';
+            };
         }
+
         const fotosConVisor = document.querySelectorAll('.perfil-galeria-grid .foto-principal, .grid-perfiles .card-image img, .story-ring img');
+
         fotosConVisor.forEach(img => {
             img.style.cursor = 'zoom-in';
             img.onclick = function(e) {
-                e.preventDefault(); e.stopPropagation();
-                document.getElementById('priveLightboxImg').src = this.src;
-                lightbox.style.display = 'flex';
+                e.preventDefault();
+                e.stopPropagation();
+                const lb = document.getElementById('priveLightbox');
+                const lbImg = document.getElementById('priveLightboxImg');
+                lbImg.src = this.src;
+                lb.style.display = 'flex';
             };
         });
     }
 
-    // --- 4. Lógica Principal de Comentarios (y Estado de Pausa) ---
-    function inicializarLogicaComentarios(app) {
-        const contenedorDestino = document.getElementById('seccion-comentarios');
-        // CORRECCIÓN CRÍTICA: Validar si el contenedor existe antes de inyectar
-        if (!contenedorDestino) return; 
+    window.addEventListener('DOMContentLoaded', () => {
+        inicializarSliderTactil();
+        inicializarVisorFotos();
+        setTimeout(() => {
+            inicializarSliderTactil();
+            inicializarVisorFotos();
+        }, 600);
 
-        const dbPerfil = app.firestore();
-        const pId = obtenerPerfilIdSeguro();
-        let isAdminPerfil = sessionStorage.getItem("priveAdmin") === "true";
+        // Reposicionar y animar el botón de WhatsApp con mensaje ATEMPORAL
+        const btnWa = document.querySelector('.btn-whatsapp');
+        const mainContainer = document.querySelector('.perfil-container');
+        
+        if (btnWa && mainContainer) {
+            btnWa.classList.add('btn-whatsapp-titilante');
+            btnWa.style.cssText = `
+                display: block !important;
+                position: relative !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+                margin: 30px 0 20px 0 !important;
+                clear: both !important;
+                float: none !important;
+                z-index: 10 !important;
+                text-align: center !important;
+                font-size: 14px !important;
+                font-weight: 600 !important;
+                letter-spacing: 1px !important;
+                border-radius: 6px !important;
+            `;
+            
+            const seccionComentarios = document.getElementById('seccion-comentarios');
+            if (seccionComentarios) {
+                mainContainer.insertBefore(btnWa, seccionComentarios);
+            } else {
+                mainContainer.appendChild(btnWa);
+            }
 
-        // Inyectar HTML de la sección
-        contenedorDestino.innerHTML = `
-            <div style="width: 100%; box-sizing: border-box; margin: 20px auto 10px auto; padding: 22px 15px; background: #141414; border: 1px solid rgba(223, 194, 133, 0.25); border-radius: 10px; font-family: 'Montserrat', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-                <h3 style="color: #dfc285; text-align: center; font-size: 20px; margin-bottom: 20px; font-family: 'Cormorant Garamond', serif; letter-spacing: 1.5px;">Experiencias y Comentarios</h3>
-                <div style="display: flex; flex-direction: column; gap: 12px; width: 100%; box-sizing: border-box;">
-                    <input type="text" id="pAuthor" placeholder="Tu nombre o apodo" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a; color: #fff; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
-                    <textarea id="pText" rows="3" placeholder="Escribe tu experiencia..." style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a; color: #fff; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px; resize: vertical;"></textarea>
-                    <div style="display: flex; gap: 8px; align-items: center; background: #1a1a1a; padding: 10px 12px; border-radius: 6px; border: 1px solid rgba(223, 194, 133, 0.3); flex-wrap: wrap; width: 100%; box-sizing: border-box;">
-                        <button type="button" onclick="window.agregarEmojiPerfil('😊')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Sonrisa">😊</button>
-                        <button type="button" onclick="window.agregarEmojiPerfil('👍')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Pulgar arriba">👍</button>
-                        <button type="button" onclick="window.agregarEmojiPerfil('🔥')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Fuego">🔥</button>
-                        <button type="button" onclick="window.agregarEmojiPerfil('❤️')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Corazón">❤️</button>
-                        <button type="button" onclick="window.agregarEmojiPerfil('⭐')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Estrella">⭐</button>
-                        <label title="Adjuntar foto" style="color: #dfc285; cursor: pointer; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; background: rgba(223,194,133,0.1); width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(223, 194, 133, 0.4); margin-left: auto; transition: all 0.3s ease;">
-                            📎 <input type="file" id="pImageFile" accept="image/*" onchange="window.previewPerfilFile()" style="display:none;">
-                        </label>
-                    </div>
-                    <span id="pFileName" style="font-size: 11px; color: #dfc285; font-style: italic; padding-left: 2px;"></span>
-                    <button onclick="window.enviarComentarioPerfil()" style="background: linear-gradient(135deg, #dfc285, #c5a059); color: #0d0d0d; border: none; padding: 14px; cursor: pointer; border-radius: 6px; font-weight: 600; width: 100% !important; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-family: 'Montserrat', sans-serif; box-shadow: 0 4px 15px rgba(223,194,133,0.25);">Publicar Experiencia</button>
-                </div>
-                <div id="pCommentsContainer" style="margin-top: 25px; width: 100%; box-sizing: border-box;">
-                    <p style="text-align: center; color: #888; font-size: 13px; font-style: italic;">Cargando experiencias...</p>
-                </div>
-                <div style="text-align: center; margin-top: 35px; font-size: 11px;">
-                    <span onclick="window.activarAdminPerfil()" style="cursor: pointer; color: #555; text-transform: uppercase; letter-spacing: 1px;" onmouseover="this.style.color='#dfc285'" onmouseout="this.style.color='#555'">Admin</span>
-                </div>
-            </div>
-        `;
+            const nombreMasajista = document.querySelector('.perfil-titulo-seccion h2')?.textContent || "Perfil";
+            const baseUrl = btnWa.getAttribute('href').split('?')[0];
+            
+            const nuevoMensaje = `Hola ${nombreMasajista}, vi tu perfil en Masajistas Privé y quiero consultar disponibilidad.`;
+            btnWa.setAttribute('href', `${baseUrl}?text=${encodeURIComponent(nuevoMensaje)}`);
+        }
+    });
 
-        // Verificar estado de PAUSA
-        dbPerfil.collection("perfiles_estado").doc(pId).get().then((doc) => {
+    // Extracción robusta del ID del perfil
+    function obtenerPerfilIdSeguro() {
+        if (typeof ID_PERFIL_ACTUAL !== 'undefined' && ID_PERFIL_ACTUAL) return ID_PERFIL_ACTUAL;
+        
+        const tituloEl = document.querySelector('.perfil-titulo-seccion h2');
+        if (tituloEl && tituloEl.textContent.trim() !== "") {
+            return tituloEl.textContent.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, "");
+        }
+
+        let pathId = window.location.pathname.split("/").pop().replace(".html", "").trim();
+        if (pathId && pathId !== "") return pathId;
+
+        return "general";
+    }
+
+    // Inicializar Firebase y chequear estado de pausa
+    function verificarPausaYArrancar() {
+        if (typeof firebase === 'undefined') {
+            setTimeout(verificarPausaYArrancar, 300);
+            return;
+        }
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp({
+                apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
+                authDomain: "masajistasprivepro.firebaseapp.com",
+                projectId: "masajistasprivepro",
+                storageBucket: "masajistasprivepro.firebasestorage.app",
+                messagingSenderId: "768677270509",
+                appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
+                measurementId: "G-SBN70C32JF"
+            });
+        }
+        const dbPerfil = firebase.firestore();
+        const perfilId = obtenerPerfilIdSeguro();
+
+        // Verificar si el perfil está pausado en Firebase
+        dbPerfil.collection("perfiles_estado").doc(perfilId).get().then((doc) => {
             if (doc.exists && doc.data().pausado === true) {
                 const btnWa = document.querySelector('.btn-whatsapp');
                 if (btnWa) {
@@ -211,13 +248,63 @@
             }
         }).catch(err => console.log("Error al verificar estado:", err));
 
-        // Funciones Admin y UI adjuntas a window
+        // Continuar con los comentarios y administrador
+        inicializarLogicaComentarios(dbPerfil, perfilId);
+    }
+
+    verificarPausaYArrancar();
+
+    const contenedorDestino = document.getElementById('seccion-comentarios');
+    if (!contenedorDestino) return;
+
+    contenedorDestino.innerHTML = `
+        <div style="width: 100%; box-sizing: border-box; margin: 20px auto 10px auto; padding: 22px 15px; background: #141414; border: 1px solid rgba(223, 194, 133, 0.25); border-radius: 10px; font-family: 'Montserrat', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+            <h3 style="color: #dfc285; text-align: center; font-size: 20px; margin-bottom: 20px; font-family: 'Cormorant Garamond', serif; letter-spacing: 1.5px;">Experiencias y Comentarios</h3>
+            
+            <div style="display: flex; flex-direction: column; gap: 12px; width: 100%; box-sizing: border-box;">
+                <input type="text" id="pAuthor" placeholder="Tu nombre o apodo" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a; color: #fff; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
+                
+                <textarea id="pText" rows="3" placeholder="Escribe tu experiencia..." style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a; color: #fff; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px; resize: vertical;"></textarea>
+                
+                <div style="display: flex; gap: 8px; align-items: center; background: #1a1a1a; padding: 10px 12px; border-radius: 6px; border: 1px solid rgba(223, 194, 133, 0.3); flex-wrap: wrap; width: 100%; box-sizing: border-box;">
+                    <button type="button" onclick="window.agregarEmojiPerfil('😊')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Sonrisa">😊</button>
+                    <button type="button" onclick="window.agregarEmojiPerfil('👍')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Pulgar arriba">👍</button>
+                    <button type="button" onclick="window.agregarEmojiPerfil('🔥')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Fuego">🔥</button>
+                    <button type="button" onclick="window.agregarEmojiPerfil('❤️')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Corazón">❤️</button>
+                    <button type="button" onclick="window.agregarEmojiPerfil('⭐')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Estrella">⭐</button>
+                    
+                    <label title="Adjuntar foto" style="color: #dfc285; cursor: pointer; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; background: rgba(223,194,133,0.1); width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(223, 194, 133, 0.4); margin-left: auto; transition: all 0.3s ease;">
+                        📎 <input type="file" id="pImageFile" accept="image/*" onchange="window.previewPerfilFile()" style="display:none;">
+                    </label>
+                </div>
+                <span id="pFileName" style="font-size: 11px; color: #dfc285; font-style: italic; padding-left: 2px;"></span>
+
+                <button onclick="window.enviarComentarioPerfil()" style="background: linear-gradient(135deg, #dfc285, #c5a059); color: #0d0d0d; border: none; padding: 14px; cursor: pointer; border-radius: 6px; font-weight: 600; width: 100% !important; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-family: 'Montserrat', sans-serif; box-shadow: 0 4px 15px rgba(223,194,133,0.25);">Publicar Experiencia</button>
+            </div>
+
+            <div id="pCommentsContainer" style="margin-top: 25px; width: 100%; box-sizing: border-box;">
+                <p style="text-align: center; color: #888; font-size: 13px; font-style: italic;">Cargando experiencias...</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 35px; font-size: 11px;">
+                <span onclick="window.activarAdminPerfil()" style="cursor: pointer; color: #555; text-transform: uppercase; letter-spacing: 1px;" onmouseover="this.style.color='#dfc285'" onmouseout="this.style.color='#555'">Admin</span>
+            </div>
+        </div>
+    `;
+
+    function inicializarLogicaComentarios(dbPerfil, pId) {
+        let isAdminPerfil = sessionStorage.getItem("priveAdmin") === "true";
+
         window.activarAdminPerfil = function() {
             const pass = prompt("Contraseña de administrador:");
             if (pass === "prive2026") {
+                isAdminPerfil = true;
                 sessionStorage.setItem("priveAdmin", "true");
-                alert("Modo administrador activado."); location.reload();
-            } else if (pass !== null) alert("Contraseña incorrecta.");
+                alert("Modo administrador activado.");
+                location.reload();
+            } else if (pass !== null) {
+                alert("Contraseña incorrecta.");
+            }
         };
 
         window.agregarEmojiPerfil = function(emoji) {
@@ -228,11 +315,38 @@
         window.previewPerfilFile = function() {
             const input = document.getElementById('pImageFile');
             const span = document.getElementById('pFileName');
-            if (input && input.files && input.files[0]) span.textContent = "✓ Archivo adjunto: " + input.files[0].name;
-            else if(span) span.textContent = "";
+            if (input && input.files && input.files[0]) {
+                span.textContent = "✓ Archivo adjunto: " + input.files[0].name;
+            } else if(span) {
+                span.textContent = "";
+            }
         };
 
-        // Carga y escucha de comentarios
+        function comprimirImagenPerfil(callback) {
+            const input = document.getElementById('pImageFile');
+            if (!input || !input.files || !input.files[0]) {
+                callback(null);
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    let w = img.width, h = img.height;
+                    const max = 500;
+                    if (w > h && w > max) { h *= max / w; w = max; }
+                    else if (h > max) { w *= max / h; h = max; }
+                    canvas.width = w; canvas.height = h;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, w, h);
+                    callback(canvas.toDataURL('image/jpeg', 0.7));
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+
         dbPerfil.collection("perfiles_comentarios").doc(pId).collection("mensajes").onSnapshot((snapshot) => {
             const container = document.getElementById('pCommentsContainer');
             if (!container) return;
@@ -240,10 +354,12 @@
 
             if (snapshot.empty) {
                 container.innerHTML = "<p style='color: #777; font-size: 13px; text-align: center; font-style: italic;'>No hay experiencias aún. ¡Sé el primero en dejar una!</p>";
-                inicializarVisorFotos(); return;
+                inicializarVisorFotos();
+                return;
             }
 
-            let lista = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            let lista = [];
+            snapshot.forEach(doc => lista.push({ id: doc.id, ...doc.data() }));
             
             lista.sort((a, b) => {
                 const scoreA = (a.likes || 0) + (a.image ? 5 : 0);
@@ -275,49 +391,38 @@
                 `;
                 container.appendChild(div);
             });
+
             inicializarVisorFotos();
         });
-
-        // Acciones de base de datos
-        function comprimirImagenPerfil(callback) {
-            const input = document.getElementById('pImageFile');
-            if (!input || !input.files || !input.files[0]) { callback(null); return; }
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    let w = img.width, h = img.height;
-                    const max = 500;
-                    if (w > h && w > max) { h *= max / w; w = max; }
-                    else if (h > max) { w *= max / h; h = max; }
-                    canvas.width = w; canvas.height = h;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, w, h);
-                    callback(canvas.toDataURL('image/jpeg', 0.7));
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
 
         window.enviarComentarioPerfil = function() {
             const autor = document.getElementById('pAuthor').value.trim();
             const contenido = document.getElementById('pText').value.trim();
-            if (!autor || !contenido) { alert("Por favor completá tu nombre y tu experiencia."); return; }
+            if (!autor || !contenido) {
+                alert("Por favor completá tu nombre y tu experiencia.");
+                return;
+            }
+
             comprimirImagenPerfil((base64) => {
                 dbPerfil.collection("perfiles_comentarios").doc(pId).collection("mensajes").add({
-                    autor: autor, contenido: contenido, image: base64 || "",
-                    likes: 0, fecha: firebase.firestore.FieldValue.serverTimestamp()
+                    autor: autor,
+                    contenido: contenido,
+                    image: base64 || "",
+                    likes: 0,
+                    fecha: firebase.firestore.FieldValue.serverTimestamp()
                 }).then(() => {
-                    document.getElementById('pAuthor').value = ''; document.getElementById('pText').value = '';
-                    document.getElementById('pImageFile').value = ''; document.getElementById('pFileName').textContent = '';
-                }).catch(err => console.error("Error al enviar:", err));
+                    document.getElementById('pAuthor').value = '';
+                    document.getElementById('pText').value = '';
+                    document.getElementById('pImageFile').value = '';
+                    document.getElementById('pFileName').textContent = '';
+                });
             });
         };
 
         window.darLikePerfil = function(msgId, currentLikes, targetId) {
-            dbPerfil.collection("perfiles_comentarios").doc(targetId).collection("mensajes").doc(msgId).update({ likes: currentLikes + 1 });
+            dbPerfil.collection("perfiles_comentarios").doc(targetId).collection("mensajes").doc(msgId).update({
+                likes: currentLikes + 1
+            });
         };
 
         window.borrarComentarioPerfil = function(msgId, targetId) {
@@ -325,82 +430,98 @@
                 dbPerfil.collection("perfiles_comentarios").doc(targetId).collection("mensajes").doc(msgId).delete();
             }
         };
-    }
 
-    // --- 5. Inicialización General y Schema.org ---
-    window.addEventListener('DOMContentLoaded', () => {
-        // CORRECCIÓN CRÍTICA DE FIREBASE: Esperar a que el DOM esté listo y luego inicializar.
-        // Dado que initializeApp devuelve una promesa, debemos manejarla para asegurar que app esté lista.
-        if (typeof firebase !== 'undefined') {
-            try {
-                // Inicializamos y guardamos la instancia
-                const app = inicializarFirebaseSeguro();
-                
-                // Arrancar lógica de comentarios (ahora pasamos la instancia app)
-                inicializarLogicaComentarios(app);
-                
-                // Arrancar contadores visuales
-                inicializarSliderTactil();
-                inicializarVisorFotos();
-                setTimeout(() => { inicializarSliderTactil(); inicializarVisorFotos(); }, 600);
-
-                // Inyección de Schema.org
-                const tituloElemento = document.querySelector('.perfil-titulo-seccion h2');
-                if (tituloElemento) {
-                    const nombreMasajista = tituloElemento.textContent.trim();
-                    const fotoPrincipal = document.getElementById('fotoPrincipal');
-                    const urlImagen = fotoPrincipal ? fotoPrincipal.src : "https://masajistasprive.com/img/monograma.png";
-                    const ratingDec = nombreMasajista.length % 3;
-                    const rating = (4.7 + (ratingDec * 0.1)).toFixed(1);
-                    const reviewCount = 45 + (nombreMasajista.length * 7);
-                    const schemaJSON = {
-                        "@context": "https://schema.org/", "@type": "HealthAndBeautyBusiness",
-                        "name": nombreMasajista + " - Masajistas Privé", "image": urlImagen,
-                        "description": "Sesiones y gabinetes en CABA. Confort y absoluta discreción.",
-                        "aggregateRating": {
-                            "@type": "AggregateRating", "ratingValue": rating.toString(),
-                            "bestRating": "5", "worstRating": "1", "ratingCount": reviewCount.toString()
-                        }
-                    };
-                    const scriptSchema = document.createElement('script');
-                    scriptSchema.type = 'application/ld+json';
-                    scriptSchema.text = JSON.stringify(schemaJSON);
-                    document.head.appendChild(scriptSchema);
-                }
-
-                // Contador de visitas global por perfil (Robusto)
-                let currentId = obtenerPerfilIdSeguro();
-                if (currentId) {
-                    const dbVisitas = app.firestore();
-                    const visitasRef = dbVisitas.collection("estadisticas_visitas").doc(currentId);
-                    visitasRef.set({
-                        nombre: tituloElemento ? tituloElemento.textContent.trim() : currentId,
-                        visitas: firebase.firestore.FieldValue.increment(1),
-                        ultimaVisita: firebase.firestore.FieldValue.serverTimestamp()
-                    }, { merge: true }).catch(err => console.error("Error contador:", err));
-                }
-
-                // Botón WhatsApp
-                const btnWa = document.querySelector('.btn-whatsapp');
-                const mainContainer = document.querySelector('.perfil-container');
-                if (btnWa && mainContainer) {
-                    btnWa.classList.add('btn-whatsapp-titilante');
-                    btnWa.style.cssText = `display: block !important; position: relative !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; margin: 30px 0 20px 0 !important; clear: both !important; float: none !important; z-index: 10 !important; text-align: center !important; font-size: 14px !important; font-weight: 600 !important; letter-spacing: 1px !important; border-radius: 6px !important;`;
-                    const seccionComentarios = document.getElementById('seccion-comentarios');
-                    if (seccionComentarios) mainContainer.insertBefore(btnWa, seccionComentarios);
-                    else mainContainer.appendChild(btnWa);
-                    const nombreMasajista = document.querySelector('.perfil-titulo-seccion h2')?.textContent || "Perfil";
-                    const baseUrl = btnWa.getAttribute('href').split('?')[0];
-                    const nuevoMensaje = `Hola ${nombreMasajista}, vi tu perfil en Masajistas Privé y quiero consultar disponibilidad.`;
-                    btnWa.setAttribute('href', `${baseUrl}?text=${encodeURIComponent(nuevoMensaje)}`);
-                }
-
-            } catch(e) {
-                console.error("Error general en inicialización:", e);
-            }
-        } else {
-            console.error("Firebase SDK no cargado.");
+        function escapeHtmlPerfil(text) {
+            if (!text) return '';
+            return text.replace(/[&<>"']/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;' }[m]));
         }
-    });
-
+    }
 })();
+
+/* ========================================================= */
+/* INYECCIÓN AUTOMÁTICA DE SCHEMA.ORG (ESTRELLITAS EN GOOGLE)*/
+/* ========================================================= */
+window.addEventListener('DOMContentLoaded', () => {
+    const tituloElemento = document.querySelector('.perfil-titulo-seccion h2');
+    if (!tituloElemento) return; 
+
+    const nombreMasajista = tituloElemento.textContent.trim();
+    const fotoPrincipal = document.getElementById('fotoPrincipal');
+    const urlImagen = fotoPrincipal ? fotoPrincipal.src : "https://masajistasprive.com/img/logo.png";
+    
+    const ratingDec = nombreMasajista.length % 3;
+    const rating = (4.7 + (ratingDec * 0.1)).toFixed(1); 
+    const reviewCount = 45 + (nombreMasajista.length * 7); 
+
+    const schemaJSON = {
+        "@context": "https://schema.org/",
+        "@type": "HealthAndBeautyBusiness",
+        "name": nombreMasajista + " - Masajistas Privé",
+        "image": urlImagen,
+        "description": "Sesiones y gabinetes en CABA. Confort y absoluta discreción.",
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": rating.toString(),
+            "bestRating": "5",
+            "worstRating": "1",
+            "ratingCount": reviewCount.toString()
+        }
+    };
+
+    const scriptSchema = document.createElement('script');
+    scriptSchema.type = 'application/ld+json';
+    scriptSchema.text = JSON.stringify(schemaJSON);
+    document.head.appendChild(scriptSchema);
+});
+
+/* ========================================================= */
+/* CONTADOR AUTOMÁTICO DE VISITAS GLOBAL POR PERFIL (ROBUSTO) */
+/* ========================================================= */
+function registrarVisitaPerfil() {
+    const tituloElemento = document.querySelector('.perfil-titulo-seccion h2');
+    if (!tituloElemento) return;
+
+    let currentId = tituloElemento.textContent.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, "");
+    if (!currentId || currentId === "") currentId = window.location.pathname.split("/").pop().replace(".html", "").trim();
+    if (!currentId || currentId === "") return;
+
+    const ejecutarIncremento = () => {
+        try {
+            if (typeof firebase !== 'undefined') {
+                if (!firebase.apps.length) {
+                    firebase.initializeApp({
+                        apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
+                        authDomain: "masajistasprivepro.firebaseapp.com",
+                        projectId: "masajistasprivepro",
+                        storageBucket: "masajistasprivepro.firebasestorage.app",
+                        messagingSenderId: "768677270509",
+                        appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
+                        measurementId: "G-SBN70C32JF"
+                    });
+                }
+                const dbVisitas = firebase.firestore();
+                dbVisitas.collection("estadisticas_visitas").doc(currentId).set({
+                    nombre: tituloElemento.textContent.trim(),
+                    visitas: firebase.firestore.FieldValue.increment(1),
+                    ultimaVisita: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true }).then(() => {
+                    console.log("Visita registrada con éxito para:", currentId);
+                }).catch(err => {
+                    console.error("Error al registrar visita en Firestore:", err);
+                });
+            } else {
+                setTimeout(ejecutarIncremento, 500);
+            }
+        } catch (e) {
+            console.error("Excepción en contador de visitas:", e);
+        }
+    };
+
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        ejecutarIncremento();
+    } else {
+        window.addEventListener('DOMContentLoaded', ejecutarIncremento);
+    }
+}
+
+registrarVisitaPerfil();
