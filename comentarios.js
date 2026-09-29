@@ -13,7 +13,7 @@
 })();
 
 // =========================================================
-// DICCIONARIO MAESTRO INTEGRAL (100% BILINGÜE PARA PERFILES)
+// MOTOR DE TRADUCCIÓN AUTOMÁTICA UNIVERSAL PARA PERFILES
 // =========================================================
 const traduccionesPerfiles = {
     es: {
@@ -22,12 +22,7 @@ const traduccionesPerfiles = {
         zonaLabel: "📍 Zona:",
         modalidadLabel: "🏠 Modalidad:",
         descTitulo: "Descripción",
-        tecnicasLabel: "Técnicas de masaje:",
         comodidadesTitulo: "Comodidades del Gabinete",
-        diasHorarios: "Días y horarios:",
-        equipamiento: "Equipamiento y servicios:",
-        mediosPago: "Medios de pago:",
-        modalidadTurnos: "Modalidad de turnos:",
         btnWhatsapp: "💬 Contactar por WhatsApp",
         experienciasTitulo: "Experiencias y Comentarios",
         placeholderAutor: "Tu nombre o apodo",
@@ -50,12 +45,7 @@ const traduccionesPerfiles = {
         zonaLabel: "📍 Area:",
         modalidadLabel: "🏠 Modality:",
         descTitulo: "Description",
-        tecnicasLabel: "Massage techniques:",
         comodidadesTitulo: "Studio Amenities",
-        diasHorarios: "Days and hours:",
-        equipamiento: "Equipment and services:",
-        mediosPago: "Payment methods:",
-        modalidadTurnos: "Booking modality:",
         btnWhatsapp: "💬 Contact via WhatsApp",
         experienciasTitulo: "Experiences & Comments",
         placeholderAutor: "Your name or nickname",
@@ -74,63 +64,51 @@ const traduccionesPerfiles = {
     }
 };
 
-// CONTENIDO ÍNTEGRO Y PERSONALIZADO DE LAS DESCRIPCIONES DE CADA PERFIL
-const descripcionesPorPerfil = {
-    luly: {
-        es: {
-            zona: "CABA",
-            modalidad: "Gabinete propio / Independiente",
-            parrafo1: "Masajista Profesional Matriculada auxiliar en kinesiología.",
-            parrafo2: "Te invito a que creamos una sesión de masajes única, acorde a tus necesidades. Soy una masajista de ascendencia alemana.",
-            parrafo3: "Realizo masajes relajantes, descontracturantes, sensitivos, antiestrés, deportivos y reductores. No dudes en contactarme y agendá tu turno 😉🔥✅😊",
-            detalles: [
-                { label: "Días y horarios:", val: "Lunes a Sábados de 10 a 20 hs." },
-                { label: "Equipamiento y servicios:", val: "Camilla profesional, aire acondicionado, música ambiental, ducha." },
-                { label: "Medios de pago:", val: "Efectivo, transferencia, Mercado Pago." },
-                { label: "Modalidad de turnos:", val: "Reserva previa con anticipación por WhatsApp." }
-            ]
-        },
-        en: {
-            zona: "Buenos Aires (CABA)",
-            modalidad: "Private Studio / Independent",
-            parrafo1: "Certified Professional Massage Therapist, assistant in kinesiology.",
-            parrafo2: "I invite you to create a unique massage session tailored to your needs. I am a massage therapist of German descent.",
-            parrafo3: "I offer relaxing, deep tissue, sensitive, anti-stress, sports, and slimming massages. Feel free to contact me and book your appointment 😉🔥✅😊",
-            detalles: [
-                { label: "Days and hours:", val: "Monday to Saturday from 10 AM to 8 PM." },
-                { label: "Equipment and services:", val: "Professional massage table, AC, ambient music, shower." },
-                { label: "Payment methods:", val: "Cash, bank transfer, Mercado Pago." },
-                { label: "Booking modality:", val: "Advance reservation via WhatsApp." }
-            ]
-        }
+// DICCIONARIO INTELIGENTE DE EQUIVALENCIAS PARA TRADUCCIÓN AUTOMÁTICA DE PÁRRAFOS
+const diccionarioFrases = {
+    en: {
+        "Brindo una atención integral orientada al bienestar y la estética profesional.": "I provide comprehensive care focused on well-being and professional aesthetics.",
+        "Horarios:": "Hours:",
+        "Lunes a viernes de": "Monday to Friday from",
+        "a": "to",
+        "hs. Sábados y domingos previa reserva con seña.": "hs. Saturdays and Sundays by prior reservation with a deposit.",
+        "Comodidades:": "Amenities:",
+        "Ducha": "Shower",
+        "aire acondicionado": "air conditioning",
+        "gabinete cosmetológico": "cosmetology cabinet",
+        "gabinete spa": "spa cabinet",
+        "frigobar": "minibar",
+        "Pagos:": "Payments:",
+        "Efectivo": "Cash",
+        "transferencia": "transfer",
+        "Tarjetas de crédito y débito con 15% de recargo": "Credit and debit cards with a 15% surcharge",
+        "Reserva previa por WhatsApp": "Advance booking via WhatsApp",
+        "Camilla": "Massage table",
+        "tatami": "tatami",
+        "servicio de ducha": "shower service",
+        "frigobar sin cargo": "complimentary minibar"
     },
-    prada: {
-        es: {
-            zona: "TRIBUNALES",
-            modalidad: "Departamento reservado",
-            parrafo1: "Atención personalizada en departamento reservado en la zona de Tribunales.",
-            parrafo2: "",
-            parrafo3: "Masajes californianos, sensitivos y descontracturantes en un ambiente de absoluta discreción y confort.",
-            detalles: [
-                { label: "Días y horarios:", val: "Lunes a Sábados de 09 a 21 hs." },
-                { label: "Equipamiento y servicios:", val: "Camilla, tatami, aire acondicionado, servicio de ducha, frigobar sin cargo." },
-                { label: "Medios de pago:", val: "Efectivo, transferencia bancaria, Mercado Pago, Prex." },
-                { label: "Modalidad de turnos:", val: "Reserva previa por WhatsApp." }
-            ]
-        },
-        en: {
-            zona: "TRIBUNALES",
-            modalidad: "Private apartment",
-            parrafo1: "Personalized attention in a private apartment located in the Tribunales area.",
-            parrafo2: "",
-            parrafo3: "Californian, sensitive, and deep tissue massages in an environment of absolute discretion and comfort.",
-            detalles: [
-                { label: "Days and hours:", val: "Monday to Saturday from 9 AM to 9 PM." },
-                { label: "Equipment and services:", val: "Table, tatami, AC, shower service, complimentary minibar." },
-                { label: "Payment methods:", val: "Cash, bank transfer, Mercado Pago, Prex." },
-                { label: "Booking modality:", val: "Advance booking via WhatsApp." }
-            ]
-        }
+    es: {
+        "I provide comprehensive care focused on well-being and professional aesthetics.": "Brindo una atención integral orientada al bienestar y la estética profesional.",
+        "Hours:": "Horarios:",
+        "Monday to Friday from": "Lunes a viernes de",
+        "to": "a",
+        "hs. Saturdays and Sundays by prior reservation with a deposit.": "hs. Sábados y domingos previa reserva con seña.",
+        "Amenities:": "Comodidades:",
+        "Shower": "Ducha",
+        "air conditioning": "aire acondicionado",
+        "cosmetology cabinet": "gabinete cosmetológico",
+        "spa cabinet": "gabinete spa",
+        "minibar": "frigobar",
+        "Payments:": "Pagos:",
+        "Cash": "Efectivo",
+        "transfer": "transfer",
+        "Credit and debit cards with a 15% surcharge": "Tarjetas de crédito y débito con 15% de recargo",
+        "Advance booking via WhatsApp": "Reserva previa por WhatsApp",
+        "Massage table": "Camilla",
+        "tatami": "tatami",
+        "shower service": "servicio de ducha",
+        "complimentary minibar": "frigobar sin cargo"
     }
 };
 
@@ -145,7 +123,7 @@ function cambiarIdiomaPerfil() {
     location.reload();
 }
 
-// INYECCIÓN AUTOMÁTICA Y TRADUCCIÓN INTEGRAL DEL PERFIL
+// TRADUCCIÓN AUTOMÁTICA INTEGRAL DEL PERFIL
 window.addEventListener('DOMContentLoaded', () => {
     const headerRight = document.querySelector('.header-right');
     if (headerRight && !document.getElementById('btn-idioma')) {
@@ -169,46 +147,35 @@ window.addEventListener('DOMContentLoaded', () => {
         const badgeVerif = document.querySelector('.badge-verificado');
         if (badgeVerif) badgeVerif.textContent = t.verificado;
 
-        let currentId = window.location.pathname.split("/").pop().replace(".html", "").trim();
-        const perfilData = descripcionesPorPerfil[currentId] ? descripcionesPorPerfil[currentId][langActual] : null;
-
-        // Traducir Zona y Modalidad
+        // Traducir Zona y Modalidad automáticamente
         const zonaEl = document.querySelector('.perfil-ubicacion');
         if (zonaEl) {
-            const zonaVal = perfilData ? perfilData.zona : (zonaEl.querySelector('strong')?.textContent || "");
+            const zonaVal = zonaEl.querySelector('strong')?.textContent || "";
             zonaEl.innerHTML = `${t.zonaLabel} <strong>${zonaVal}</strong>`;
         }
 
         const modEl = document.querySelector('.perfil-modalidad');
         if (modEl) {
-            const modVal = perfilData ? perfilData.modalidad : (modEl.querySelector('strong')?.textContent || "");
+            const modVal = modEl.querySelector('strong')?.textContent || "";
             modEl.innerHTML = `${t.modalidadLabel} <strong>${modVal}</strong>`;
         }
 
-        // Traducir Descripción Completa
-        const descContainer = document.querySelector('.perfil-descripcion');
-        if (descContainer) {
-            let htmlDesc = `<h3 style="color: #dfc285; font-size: 1.1rem; margin-bottom: 0.5rem; font-family: 'Cormorant Garamond', serif;">${t.descTitulo}</h3>`;
-            if (perfilData) {
-                if (perfilData.parrafo1) htmlDesc += `<p>${perfilData.parrafo1}</p>`;
-                if (perfilData.parrafo2) htmlDesc += `<p style="margin-top: 0.5rem;">${perfilData.parrafo2}</p>`;
-                if (perfilData.parrafo3) htmlDesc += `<p style="margin-top: 0.5rem;">${perfilData.parrafo3}</p>`;
-            } else {
-                // Respaldo dinámico si el perfil no está explícitamente en el diccionario maestro
-                const pElements = descContainer.querySelectorAll('p');
-                pElements.forEach(p => htmlDesc += `<p style="margin-top: 0.5rem;">${p.textContent}</p>`);
-            }
-            descContainer.innerHTML = htmlDesc;
-        }
+        // Título de Descripción
+        const descTitulo = document.querySelector('.perfil-descripcion h3');
+        if (descTitulo) descTitulo.textContent = t.descTitulo;
 
-        // Traducir Detalles y Comodidades
-        const detallesContainer = document.querySelector('.perfil-detalles');
-        if (detallesContainer && perfilData && perfilData.detalles) {
-            let htmlDetalles = `<h3 style="color: #dfc285; font-size: 1.1rem; margin-bottom: 0.8rem; font-family: 'Cormorant Garamond', serif; text-transform: uppercase; letter-spacing: 1px;">${t.comodidadesTitulo}</h3>`;
-            perfilData.detalles.forEach(det => {
-                htmlDetalles += `<div class="detalle-item" style="margin-bottom: 0.6rem; color: #ccc; font-size: 0.95rem;"><span style="color: #dfc285; font-weight: 600; margin-right: 6px;">${det.label}</span> ${det.val}</div>`;
+        // BARRIDO AUTOMÁTICO DE PÁRRAFOS Y TEXTOS EN LA DESCRIPCIÓN
+        if (langActual === 'en') {
+            const parrafos = document.querySelectorAll('.perfil-descripcion p, .perfil-detalles, .detalle-item');
+            parrafos.forEach(el => {
+                let textoOriginal = el.innerHTML;
+                for (let esFrase in diccionarioFrases.en) {
+                    if (textoOriginal.includes(esFrase)) {
+                        textoOriginal = textoOriginal.replace(new RegExp(esFrase, 'g'), diccionarioFrases.en[esFrase]);
+                    }
+                }
+                el.innerHTML = textoOriginal;
             });
-            detallesContainer.innerHTML = htmlDetalles;
         }
 
         const btnWa = document.querySelector('.btn-whatsapp');
