@@ -193,14 +193,25 @@
             const nombreMasajista = document.querySelector('.perfil-titulo-seccion h2')?.textContent || "Perfil";
             const baseUrl = btnWa.getAttribute('href').split('?')[0];
             
-            // MENSAJE ATEMPORAL Y NEUTRO
             const nuevoMensaje = `Hola ${nombreMasajista}, vi tu perfil en Masajistas Privé y quiero consultar disponibilidad.`;
             btnWa.setAttribute('href', `${baseUrl}?text=${encodeURIComponent(nuevoMensaje)}`);
         }
     });
 
-    let perfilId = typeof ID_PERFIL_ACTUAL !== 'undefined' ? ID_PERFIL_ACTUAL : window.location.pathname.split("/").pop().replace(".html", "");
-    if (!perfilId || perfilId === "") perfilId = "general";
+    // Extracción robusta del ID del perfil (Usa el título H2 o el nombre del archivo)
+    function obtenerPerfilIdSeguro() {
+        if (typeof ID_PERFIL_ACTUAL !== 'undefined' && ID_PERFIL_ACTUAL) return ID_PERFIL_ACTUAL;
+        
+        const tituloEl = document.querySelector('.perfil-titulo-seccion h2');
+        if (tituloEl && tituloEl.textContent.trim() !== "") {
+            return tituloEl.textContent.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, "");
+        }
+
+        let pathId = window.location.pathname.split("/").pop().replace(".html", "").trim();
+        if (pathId && pathId !== "") return pathId;
+
+        return "general";
+    }
 
     // Inicializar Firebase y chequear estado de pausa
     function verificarPausaYArrancar() {
@@ -221,6 +232,7 @@
             });
         }
         const dbPerfil = firebase.firestore();
+        const perfilId = obtenerPerfilIdSeguro();
 
         // Verificar si el perfil está pausado en Firebase
         dbPerfil.collection("perfiles_estado").doc(perfilId).get().then((doc) => {
@@ -469,7 +481,8 @@ function registrarVisitaPerfil() {
     const tituloElemento = document.querySelector('.perfil-titulo-seccion h2');
     if (!tituloElemento) return;
 
-    let currentId = window.location.pathname.split("/").pop().replace(".html", "").trim();
+    let currentId = tituloElemento.textContent.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, "");
+    if (!currentId || currentId === "") currentId = window.location.pathname.split("/").pop().replace(".html", "").trim();
     if (!currentId || currentId === "") return;
 
     const ejecutarIncremento = () => {
