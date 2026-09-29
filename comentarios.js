@@ -13,99 +13,136 @@
 })();
 
 // =========================================================
-// MOTOR CORPORATIVO DE TRADUCCIÓN SILENCIOSA (100% AUTOMÁTICO)
+// MOTOR BILINGÜE INTELIGENTE AMPLIADO (100% LIMPIO, SIN CARTELES)
 // =========================================================
-
-// Estilo estricto para anular y destruir cualquier barra superior o notificación visual
-const styleCleanTranslate = document.createElement('style');
-styleCleanTranslate.innerHTML = `
-    .goog-te-banner-frame, .goog-te-balloon-frame, #goog-gt-tt, .goog-tooltip, .goog-te-gadget {
-        display: none !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
-        height: 0 !important;
-        width: 0 !important;
-        pointer-events: none !important;
+const diccionarioMasivoPrive = {
+    esToEn: {
+        "← Volver": "← Back",
+        "✓ Privé Verificado": "✓ Privé Verified",
+        "Zona:": "Area:",
+        "Modalidad:": "Modality:",
+        "Sobre mí y Servicios": "About Me and Services",
+        "Comodidades del Gabinete": "Studio Amenities",
+        "Horarios Laborales": "Working Hours",
+        "Horarios:": "Hours:",
+        "Pagos:": "Payments:",
+        "Atención:": "Attention:",
+        "💬 CONTACTAR POR WHATSAPP": "💬 CONTACT VIA WHATSAPP",
+        "💬 Contactar por WhatsApp": "💬 Contact via WhatsApp",
+        "Experiencias y Comentarios": "Experiences & Comments",
+        "Tu nombre o apodo": "Your name or nickname",
+        "Escribe tu experiencia...": "Write about your experience...",
+        "Publicar Experiencia": "Publish Experience",
+        "Cargando experiencias...": "Loading experiences...",
+        "No hay experiencias aún. ¡Sé el primero en dejar una!": "No experiences yet. Be the first to leave one!",
+        "Me gusta": "Like",
+        "★ Destacado": "★ Featured",
+        "Eliminar": "Delete",
+        "Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.": "This is an exclusive site for adults (+18). The published advertisers are independent and have no employment, corporate, or dependency relationship with this portal.",
+        "Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.": "This is an exclusive site for adults (+18). The published advertisers are independent and have no employment relationship with the portal.",
+        "Todos los derechos reservados.": "All rights reserved.",
+        "Ducha y toallas limpias": "Shower and clean towels",
+        "Gabinete amplio y cómodo": "Spacious and comfortable studio",
+        "Aire acondicionado / Calefacción": "Air conditioning / Heating",
+        "Entrada independiente": "Independent entrance",
+        "Efectivo y transferencia": "Cash and bank transfer",
+        "Gabinete propio / Independiente": "Own studio / Independent",
+        "Departamento propio": "Own apartment",
+        // Frases comunes de descripciones de perfiles
+        "Masajista Profesional Matriculada auxiliar en kinesiología.": "Registered Professional Masseur assistant in kinesiology.",
+        "Te invito a que creemos una sesión de masajes única, acorde a tus necesidades. Soy una masajista de ascendencia alemana.": "I invite you to create a unique massage session tailored to your needs. I am a masseuse of German descent.",
+        "Realizo masajes relajantes, descontracturantes, sensitivos, antiestrés, deportivos y reductores. No dudes en contactarme y agendá tu turno 💆‍♀️💆‍♂️✅😊": "I perform relaxing, decontracturing, sensitive, anti-stress, sports and reducing massages. Feel free to contact me and book your session 💆‍♀️💆‍♂️✅😊",
+        "Sesiones enfocadas en brindarte el mejor bienestar y alivio a través de masajes relajantes y descontracturantes.": "Sessions focused on providing you with the best well-being and relief through relaxing and decontracturing massages.",
+        "Técnicas: Masajes relajantes, descontracturantes.": "Techniques: Relaxing, decontracturing massages.",
+        "Te recibo en un espacio privado, limpio, cómodo y totalmente discreto. Brindo masajes relajantes, descontracturantes, deportivos y sensuales, con una atención cálida, respetuosa y personalizada.": "I welcome you in a private, clean, comfortable and totally discreet space. I provide relaxing, decontracturing, sports and sensual massages, with warm, respectful and personalized attention.",
+        "Cada sesión está pensada para ayudarte a liberar tensiones, desconectar del estrés y disfrutar de un momento único de bienestar. La experiencia se completa con un relajante relax manual.": "Each session is designed to help you release tension, disconnect from stress and enjoy a unique moment of well-being. The experience is completed with a relaxing manual release."
+    },
+    enToEs: {
+        "← Back": "← Volver",
+        "✓ Privé Verified": "✓ Privé Verificado",
+        "Area:": "Zona:",
+        "Modality:": "Modalidad:",
+        "About Me and Services": "Sobre mí y Servicios",
+        "Studio Amenities": "Comodidades del Gabinete",
+        "Working Hours": "Horarios Laborales",
+        "Hours:": "Horarios:",
+        "Payments:": "Pagos:",
+        "Attention:": "Atención:",
+        "💬 CONTACT VIA WHATSAPP": "💬 CONTACTAR POR WHATSAPP",
+        "💬 Contact via WhatsApp": "💬 Contactar por WhatsApp",
+        "Experiences & Comments": "Experiencias y Comentarios",
+        "Your name or nickname": "Tu nombre o apodo",
+        "Write about your experience...": "Escribe tu experiencia...",
+        "Publish Experience": "Publicar Experiencia",
+        "Loading experiences...": "Cargando experiencias...",
+        "No experiences yet. Be the first to leave one!": "No hay experiencias aún. ¡Sé el primero en dejar una!",
+        "Like": "Me gusta",
+        "★ Featured": "★ Destacado",
+        "Delete": "Eliminar",
+        "This is an exclusive site for adults (+18). The published advertisers are independent and have no employment, corporate, or dependency relationship with this portal.": "Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.",
+        "This is an exclusive site for adults (+18). The published advertisers are independent and have no employment relationship with the portal.": "Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.",
+        "All rights reserved.": "Todos los derechos reservados.",
+        "Shower and clean towels": "Ducha y toallas limpias",
+        "Spacious and comfortable studio": "Gabinete amplio y cómodo",
+        "Air conditioning / Heating": "Aire acondicionado / Calefacción",
+        "Independent entrance": "Entrada independiente",
+        "Cash and bank transfer": "Efectivo y transferencia",
+        "Own studio / Independent": "Gabinete propio / Independiente",
+        "Own apartment": "Departamento propio",
+        "Registered Professional Masseur assistant in kinesiology.": "Masajista Profesional Matriculada auxiliar en kinesiología.",
+        "I invite you to create a unique massage session tailored to your needs. I am a masseuse of German descent.": "Te invito a que creemos una sesión de masajes única, acorde a tus necesidades. Soy una masajista de ascendencia alemana.",
+        "I perform relaxing, decontracturing, sensitive, anti-stress, sports and reducing massages. Feel free to contact me and book your session 💆‍♀️💆‍♂️✅😊": "Realizo masajes relajantes, descontracturantes, sensitivos, antiestrés, deportivos y reductores. No dudes en contactarme y agendá tu turno 💆‍♀️💆‍♂️✅😊",
+        "Sessions focused on providing you with the best well-being and relief through relaxing and decontracturing massages.": "Sesiones enfocadas en brindarte el mejor bienestar y alivio a través de masajes relajantes y descontracturantes.",
+        "Techniques: Relaxing, decontracturing massages.": "Técnicas: Masajes relajantes, descontracturantes.",
+        "I welcome you in a private, clean, comfortable and totally discreet space. I provide relaxing, decontracturing, sports and sensual massages, with warm, respectful and personalized attention.": "Te recibo en un espacio privado, limpio, cómodo y totalmente discreto. Brindo masajes relajantes, descontracturantes, deportivos y sensuales, con una atención cálida, respetuosa y personalizada.",
+        "Each session is designed to help you release tension, disconnect from stress and enjoy a unique moment of well-being. The experience is completed with a relaxing manual release.": "Cada sesión está pensada para ayudarte a liberar tensiones, desconectar del estrés y disfrutar de un momento único de bienestar. La experiencia se completa con un relajante relax manual."
     }
-    body { top: 0px !important; position: static !important; }
-    .goog-text-highlight { background-color: transparent !important; box-shadow: none !important; }
-    #google_translate_element {
-        position: absolute;
-        top: -9999px;
-        left: -9999px;
-        opacity: 0;
-        pointer-events: none;
-    }
-`;
-document.head.appendChild(styleCleanTranslate);
-
-// Contenedor invisible obligatorio para el motor
-if (!document.getElementById('google_translate_element')) {
-    const divGoogle = document.createElement('div');
-    divGoogle.id = 'google_translate_element';
-    document.body.appendChild(divGoogle);
-}
-
-// Cargar el script asíncrono oficial
-if (!document.getElementById('google-translate-script')) {
-    const scriptGoogle = document.createElement('script');
-    scriptGoogle.id = 'google-translate-script';
-    scriptGoogle.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-    document.head.appendChild(scriptGoogle);
-}
-
-window.googleTranslateElementInit = function() {
-    new google.translate.TranslateElement({
-        pageLanguage: 'es',
-        includedLanguages: 'en,es',
-        autoDisplay: false
-    }, 'google_translate_element');
 };
 
-// Función de activación silenciosa para el 100% del DOM
-window.ejecutarTraduccionTotalSilenciosa = function() {
-    const select = document.querySelector('.goog-te-combo');
-    if (!select) {
-        alert("El motor se está inicializando. Por favor, aguardá un segundo e intentá de nuevo.");
-        return;
-    }
+function obtenerIdiomaLocalPrive() {
+    return localStorage.getItem('priveLangSeguro') || 'es';
+}
 
-    const esIngles = document.cookie.includes('googtrans=/es/en');
-    const nuevoIdioma = esIngles ? 'es' : 'en';
+function cambiarIdiomaSeguro() {
+    const actual = obtenerIdiomaLocalPrive();
+    const nuevo = actual === 'es' ? 'en' : 'es';
+    localStorage.setItem('priveLangSeguro', nuevo);
+    location.reload();
+}
 
-    select.value = nuevoIdioma;
-    select.dispatchEvent(new Event('change'));
-
-    localStorage.setItem('idiomaPriveSilencioso', nuevoIdioma);
-
-    // Recargar de forma limpia para aplicar en todo el contenido al instante
-    setTimeout(() => {
-        location.reload();
-    }, 250);
-};
-
-// Inyección del botón elegante Art Déco en el header de todos los perfiles
 window.addEventListener('DOMContentLoaded', () => {
+    const lang = obtenerIdiomaLocalPrive();
+    
+    // Inyectar botón Art Déco en el header
     const headerRight = document.querySelector('.header-right');
-    if (headerRight) {
+    if (headerRight && !document.getElementById('btn-idioma')) {
         headerRight.style.cssText = "display: flex !important; align-items: center; gap: 10px;";
+        const textoBtn = lang === 'es' ? '🇺🇸 EN' : '🇦🇷 ES';
         
-        if (!document.getElementById('btn-idioma')) {
-            const idiomaGuardado = localStorage.getItem('idiomaPriveSilencioso') || 'es';
-            const textoBtn = idiomaGuardado === 'en' ? '🇦🇷 ES' : '🇺🇸 EN';
-            
-            const btnLang = document.createElement('button');
-            btnLang.id = 'btn-idioma';
-            btnLang.onclick = ejecutarTraduccionTotalSilenciosa;
-            btnLang.innerHTML = textoBtn;
-            btnLang.style.cssText = "background: transparent; border: 1px solid rgba(223, 194, 133, 0.4); color: #dfc285; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 10px; font-weight: 600; font-family: 'Montserrat', sans-serif; letter-spacing: 1px; transition: all 0.3s;";
-            
-            headerRight.insertBefore(btnLang, headerRight.firstChild);
-        }
+        const btnLang = document.createElement('button');
+        btnLang.id = 'btn-idioma';
+        btnLang.onclick = cambiarIdiomaSeguro;
+        btnLang.innerHTML = textoBtn;
+        btnLang.style.cssText = "background: transparent; border: 1px solid rgba(223, 194, 133, 0.4); color: #dfc285; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 10px; font-weight: 600; font-family: 'Montserrat', sans-serif; letter-spacing: 1px; transition: all 0.3s;";
+        
+        headerRight.insertBefore(btnLang, headerRight.firstChild);
     }
 
-    if (localStorage.getItem('idiomaPriveSilencioso') === 'en' && !document.cookie.includes('googtrans=/es/en')) {
-        document.cookie = "googtrans=/es/en; path=/";
+    // Aplicar traducción de textos si está en inglés
+    if (lang === 'en') {
+        const mapa = diccionarioMasivoPrive.esToEn;
+        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+        let node;
+        while (node = walker.nextNode()) {
+            let textoOriginal = node.nodeValue.trim();
+            if (mapa[textoOriginal]) {
+                node.nodeValue = node.nodeValue.replace(textoOriginal, mapa[textoOriginal]);
+            }
+        }
+        document.querySelectorAll('input[placeholder], textarea[placeholder]').forEach(el => {
+            const p = el.getAttribute('placeholder');
+            if (mapa[p]) el.setAttribute('placeholder', mapa[p]);
+        });
     }
 });
 
@@ -191,15 +228,15 @@ window.addEventListener('DOMContentLoaded', () => {
     const contenedorDestino = document.getElementById('seccion-comentarios');
     if (!contenedorDestino) return;
 
-    const isEn = localStorage.getItem('idiomaPriveSilencioso') === 'en';
-    const tExp = isEn ? "Experiences & Comments" : "Experiencias y Comentarios";
-    const tAuth = isEn ? "Your name or nickname" : "Tu nombre o apodo";
-    const tText = isEn ? "Write about your experience..." : "Escribe tu experiencia...";
-    const tPub = isEn ? "Publish Experience" : "Publicar Experiencia";
-    const tLoad = isEn ? "Loading experiences..." : "Cargando experiencias...";
-    const tNone = isEn ? "No experiences yet. Be the first to leave one!" : "No hay experiencias aún. ¡Sé el primero en dejar una!";
-    const tLike = isEn ? "Like" : "Me gusta";
-    const tDel = isEn ? "Delete" : "Eliminar";
+    const lang = obtenerIdiomaLocalPrive();
+    const tExp = lang === 'en' ? "Experiences & Comments" : "Experiencias y Comentarios";
+    const tAuth = lang === 'en' ? "Your name or nickname" : "Tu nombre o apodo";
+    const tText = lang === 'en' ? "Write about your experience..." : "Escribe tu experiencia...";
+    const tPub = lang === 'en' ? "Publish Experience" : "Publicar Experiencia";
+    const tLoad = lang === 'en' ? "Loading experiences..." : "Cargando experiencias...";
+    const tNone = lang === 'en' ? "No experiences yet. Be the first to leave one!" : "No hay experiencias aún. ¡Sé el primero en dejar una!";
+    const tLike = lang === 'en' ? "Like" : "Me gusta";
+    const tDel = lang === 'en' ? "Delete" : "Eliminar";
 
     contenedorDestino.innerHTML = `
         <div style="width: 100%; box-sizing: border-box; margin: 20px auto 10px auto; padding: 22px 15px; background: #141414; border: 1px solid rgba(223, 194, 133, 0.25); border-radius: 10px; font-family: 'Montserrat', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
@@ -211,7 +248,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     <button type="button" onclick="window.agregarEmojiPerfil('😊')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">😊</button>
                     <button type="button" onclick="window.agregarEmojiPerfil('👍')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">👍</button>
                     <button type="button" onclick="window.agregarEmojiPerfil('🔥')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">🔥</button>
-                    <button type="button" onclick="window.agregarEmojiPerfil('❤️')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">❤️</button>
+                    <button type="button" onclick="window.agregarEmojiPerfil('❤️️')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">❤️</button>
                     <button type="button" onclick="window.agregarEmojiPerfil('⭐')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">⭐</button>
                     <label style="color: #dfc285; cursor: pointer; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; background: rgba(223,194,133,0.1); width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(223, 194, 133, 0.4); margin-left: auto;">
                         📎 <input type="file" id="pImageFile" accept="image/*" onchange="window.previewPerfilFile()" style="display:none;">
@@ -275,7 +312,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const input = document.getElementById('pImageFile');
             const span = document.getElementById('pFileName');
             if (input && input.files && input.files[0]) {
-                span.textContent = "✓ " + (isEn ? "Attached file: " : "Archivo adjunto: ") + input.files[0].name;
+                span.textContent = "✓ " + (lang === 'en' ? "Attached file: " : "Archivo adjunto: ") + input.files[0].name;
             } else if(span) { span.textContent = ""; }
         };
 
@@ -322,7 +359,7 @@ window.addEventListener('DOMContentLoaded', () => {
             });
 
             lista.forEach(data => {
-                const fechaStr = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : (isEn ? 'Just now' : 'Hace un momento');
+                const fechaStr = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : (lang === 'en' ? 'Just now' : 'Hace un momento');
                 const likes = data.likes || 0;
                 const imgHtml = data.image ? `<img src="${data.image}" style="max-width: 100%; max-height: 180px; border-radius: 6px; margin-top: 10px; display: block; object-fit: cover; border: 1px solid rgba(223,194,133,0.4);" alt="Adjunto">` : '';
                 const deleteBtn = isAdminPerfil ? `<button onclick="window.borrarComentarioPerfil('${data.id}', '${perfilId}')" style="background:none; border:none; color:#ff5555; cursor:pointer; font-size:11px; font-weight:bold; float:right; text-transform: uppercase;">🗑️ ${tDel}</button>` : '';
@@ -339,7 +376,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <div style="margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 8px; display: flex; align-items: center; justify-content: space-between;">
                         <button onclick="window.darLikePerfil('${data.id}', ${likes}, '${perfilId}')" style="background:none; border:none; color:#dfc285; cursor:pointer; font-size:12px; font-weight:600; display:flex; align-items:center; gap:5px;">👍 ${tLike} (<span id="plikes-${data.id}">${likes}</span>)</button>
-                        ${data.image ? `<span style="font-size: 10px; color: #dfc285; background: rgba(223,194,133,0.1); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(223,194,133,0.3); text-transform: uppercase;">${isEn ? '★ Featured' : '★ Destacado'}</span>` : ''}
+                        ${data.image ? `<span style="font-size: 10px; color: #dfc285; background: rgba(223,194,133,0.1); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(223,194,133,0.3); text-transform: uppercase;">${lang === 'en' ? '★ Featured' : '★ Destacado'}</span>` : ''}
                     </div>
                 `;
                 container.appendChild(div);
@@ -350,7 +387,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const autor = document.getElementById('pAuthor').value.trim();
             const contenido = document.getElementById('pText').value.trim();
             if (!autor || !contenido) {
-                alert(isEn ? "Please fill in your name and experience." : "Por favor completá tu nombre y tu experiencia.");
+                alert(lang === 'en' ? "Please fill in your name and experience." : "Por favor completá tu nombre y tu experiencia.");
                 return;
             }
             comprimirImagenPerfil((base64) => {
@@ -370,7 +407,7 @@ window.addEventListener('DOMContentLoaded', () => {
         };
 
         window.borrarComentarioPerfil = function(msgId, pId) {
-            if (confirm(isEn ? "Are you sure you want to delete this comment?" : "¿Estás seguro de eliminar este comentario?")) {
+            if (confirm(lang === 'en' ? "Are you sure you want to delete this comment?" : "¿Estás seguro de eliminar este comentario?")) {
                 dbPerfil.collection("perfiles_comentarios").doc(pId).collection("mensajes").doc(msgId).delete();
             }
         };
