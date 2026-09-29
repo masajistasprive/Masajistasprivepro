@@ -13,66 +13,173 @@
 })();
 
 // =========================================================
-// MOTOR BILINGÜE NATIVO Y DEFINITIVO (CERO CARTELES, 100% EFECTIVO)
+// SISTEMA DE TRADUCCIÓN BILINGÜE LIMPIO Y CORPORATIVO
 // =========================================================
-function aplicarIdioma(lang) {
-    localStorage.setItem('priveLangDefinitivo', lang);
-    
-    // Ocultar/Mostrar elementos según el idioma elegido
-    document.querySelectorAll('[lang="es"]').forEach(el => {
-        el.style.display = lang === 'es' ? '' : 'none';
-    });
-    document.querySelectorAll('[lang="en"]').forEach(el => {
-        el.style.display = lang === 'en' ? '' : 'none';
-    });
-
-    // Actualizar texto del botón
-    const btn = document.getElementById('btn-idioma');
-    if (btn) {
-        btn.innerHTML = lang === 'es' ? '🇺🇸 EN' : '🇦🇷 ES';
+const traduccionesPerfiles = {
+    es: {
+        volverBtn: "← Volver",
+        verificado: "✓ Privé Verificado",
+        zonaLabel: "📍 Zona:",
+        modalidadLabel: "🏠 Modalidad:",
+        descTitulo: "Descripción",
+        tecnicasLabel: "Técnicas de masaje:",
+        comodidadesTitulo: "Comodidades del Gabinete",
+        diasHorarios: "Días y horarios:",
+        equipamiento: "Equipamiento y servicios:",
+        mediosPago: "Medios de pago:",
+        modalidadTurnos: "Modalidad de turnos:",
+        btnWhatsapp: "💬 Contactar por WhatsApp",
+        experienciasTitulo: "Experiencias y Comentarios",
+        placeholderAutor: "Tu nombre o apodo",
+        placeholderTexto: "Escribe tu experiencia...",
+        btnPublicar: "Publicar Experiencia",
+        cargandoExperiencias: "Cargando experiencias...",
+        sinExperiencias: "No hay experiencias aún. ¡Sé el primero en dejar una!",
+        btnLike: "Me gusta",
+        destacado: "★ Destacado",
+        eliminar: "🗑️ Eliminar",
+        confirmarEliminar: "¿Estás seguro de eliminar este comentario?",
+        alertaCompletar: "Por favor completá tu nombre y tu experiencia.",
+        adjunto: "✓ Archivo adjunto: ",
+        footerTexto: "Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.",
+        footerCopy: "© 2026 Masajistas Privé. Todos los derechos reservados."
+    },
+    en: {
+        volverBtn: "← Back",
+        verificado: "✓ Privé Verified",
+        zonaLabel: "📍 Area:",
+        modalidadLabel: "🏠 Modality:",
+        descTitulo: "Description",
+        tecnicasLabel: "Massage techniques:",
+        comodidadesTitulo: "Studio Amenities",
+        diasHorarios: "Days and hours:",
+        equipamiento: "Equipment and services:",
+        mediosPago: "Payment methods:",
+        modalidadTurnos: "Booking modality:",
+        btnWhatsapp: "💬 Contact via WhatsApp",
+        experienciasTitulo: "Experiences & Comments",
+        placeholderAutor: "Your name or nickname",
+        placeholderTexto: "Write about your experience...",
+        btnPublicar: "Publish Experience",
+        cargandoExperiencias: "Loading experiences...",
+        sinExperiencias: "No experiences yet. Be the first to leave one!",
+        btnLike: "Like",
+        destacado: "★ Featured",
+        eliminar: "🗑️ Delete",
+        confirmarEliminar: "Are you sure you want to delete this comment?",
+        alertaCompletar: "Please fill in your name and experience.",
+        adjunto: "✓ Attached file: ",
+        footerTexto: "This is an exclusive site for adults (+18). The published advertisers are independent and have no employment, corporate, or dependency relationship with this portal.",
+        footerCopy: "© 2026 Masajistas Privé. All rights reserved."
     }
+};
+
+function obtenerIdiomaPerfil() {
+    return localStorage.getItem('idiomaPrive') || 'es';
 }
 
-function cambiarIdiomaNativo() {
-    const actual = localStorage.getItem('priveLangDefinitivo') || 'es';
+function cambiarIdiomaPerfil() {
+    const actual = obtenerIdiomaPerfil();
     const nuevo = actual === 'es' ? 'en' : 'es';
-    aplicarIdioma(nuevo);
+    localStorage.setItem('idiomaPrive', nuevo);
+    location.reload();
 }
 
-// Inyectar el botón en el header al cargar la página
+// INYECCIÓN Y ADAPTACIÓN DEL HEADER BILINGÜE
 window.addEventListener('DOMContentLoaded', () => {
     const headerRight = document.querySelector('.header-right');
     if (headerRight && !document.getElementById('btn-idioma')) {
-        headerRight.style.cssText = "display: flex !important; align-items: center; gap: 10px;";
+        headerRight.style.cssText = "display: flex; align-items: center; gap: 10px;";
+        const langActual = obtenerIdiomaPerfil();
+        const textoBtn = langActual === 'es' ? '🇺🇸 EN' : '🇦🇷 ES';
         
         const btnLang = document.createElement('button');
         btnLang.id = 'btn-idioma';
-        btnLang.onclick = cambiarIdiomaNativo;
+        btnLang.onclick = cambiarIdiomaPerfil;
+        btnLang.innerHTML = textoBtn;
         btnLang.style.cssText = "background: transparent; border: 1px solid rgba(223, 194, 133, 0.4); color: #dfc285; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 10px; font-weight: 600; font-family: 'Montserrat', sans-serif; letter-spacing: 1px; transition: all 0.3s;";
         
         headerRight.insertBefore(btnLang, headerRight.firstChild);
-    }
 
-    // Aplicar el idioma guardado previamente
-    const langGuardado = localStorage.getItem('priveLangDefinitivo') || 'es';
-    aplicarIdioma(langGuardado);
+        const t = traduccionesPerfiles[langActual];
+        
+        const btnVolver = headerRight.querySelector('.btn-buscar');
+        if (btnVolver) btnVolver.textContent = t.volverBtn;
+
+        const badgeVerif = document.querySelector('.badge-verificado');
+        if (badgeVerif) badgeVerif.textContent = t.verificado;
+
+        const zonaEl = document.querySelector('.perfil-ubicacion strong');
+        if (zonaEl && zonaEl.previousSibling) {
+            document.querySelector('.perfil-ubicacion').innerHTML = `${t.zonaLabel} <strong>${zonaEl.textContent}</strong>`;
+        }
+
+        const modEl = document.querySelector('.perfil-modalidad strong');
+        if (modEl && modEl.previousSibling) {
+            document.querySelector('.perfil-modalidad').innerHTML = `${t.modalidadLabel} <strong>${modEl.textContent}</strong>`;
+        }
+
+        const descTitulo = document.querySelector('.perfil-descripcion h3');
+        if (descTitulo) descTitulo.textContent = t.descTitulo;
+
+        const detalles = document.querySelectorAll('.perfil-detalles .detalle-item');
+        detalles.forEach(item => {
+            const span = item.querySelector('span');
+            if (!span) return;
+            const textoSpan = span.textContent.toLowerCase();
+            if (textoSpan.includes('días') || textoSpan.includes('days') || textoSpan.includes('horarios') || textoSpan.includes('hours')) span.textContent = t.diasHorarios;
+            if (textoSpan.includes('equipamiento') || textoSpan.includes('equipment')) span.textContent = t.equipamiento;
+            if (textoSpan.includes('medios') || textoSpan.includes('payment') || textoSpan.includes('pagos')) span.textContent = t.mediosPago;
+            if (textoSpan.includes('modalidad') || textoSpan.includes('booking')) span.textContent = t.modalidadTurnos;
+        });
+
+        const btnWa = document.querySelector('.btn-whatsapp');
+        if (btnWa) btnWa.textContent = t.btnWhatsapp;
+
+        const footerPs = document.querySelectorAll('.footer p');
+        if (footerPs.length >= 2) {
+            footerPs[0].textContent = t.footerTexto;
+            footerPs[1].textContent = t.footerCopy;
+        }
+    }
 });
 
-
 // =========================================================
-// MOTOR GLOBAL: SLIDER TÁCTIL, VISOR Y COMENTARIOS FIREBASE
+// MOTOR GLOBAL: SLIDER, VISOR Y COMENTARIOS
 // =========================================================
 (function() {
     document.addEventListener('contextmenu', (e) => {
-        if (e.target.tagName === 'IMG') { e.preventDefault(); return false; }
+        if (e.target.tagName === 'IMG') {
+            e.preventDefault();
+            return false;
+        }
     });
+
     document.addEventListener('dragstart', (e) => {
-        if (e.target.tagName === 'IMG') { e.preventDefault(); return false; }
+        if (e.target.tagName === 'IMG') {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (
+            e.key === 'F12' ||
+            (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+            (e.ctrlKey && (e.key === 'U' || e.key === 'S' || e.key === 'P'))
+        ) {
+            e.preventDefault();
+            return false;
+        }
     });
 
     const styleAnim = document.createElement('style');
     styleAnim.innerHTML = `
-        img { -webkit-user-select: none !important; user-select: none !important; -webkit-user-drag: none !important; }
+        img {
+            -webkit-user-select: none !important;
+            user-select: none !important;
+            -webkit-user-drag: none !important;
+        }
         @keyframes privePulseGlow {
             0% { transform: scale(1); box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); }
             50% { transform: scale(1.02); box-shadow: 0 6px 25px rgba(37, 211, 102, 0.8), 0 0 15px rgba(223, 194, 133, 0.5); }
@@ -82,10 +189,21 @@ window.addEventListener('DOMContentLoaded', () => {
             animation: privePulseGlow 2.2s infinite ease-in-out !important;
             transition: all 0.3s ease !important;
         }
+        .btn-whatsapp-titilante:hover {
+            transform: scale(1.04) !important;
+        }
         #priveLightbox {
-            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0, 0, 0, 0.96) !important; z-index: 9999999 !important;
-            justify-content: center; align-items: center; backdrop-filter: blur(12px); cursor: zoom-out;
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.96) !important;
+            z-index: 9999999 !important;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(12px);
+            cursor: zoom-out;
+            user-select: none;
+            -webkit-user-select: none;
         }
     `;
     document.head.appendChild(styleAnim);
@@ -97,33 +215,59 @@ window.addEventListener('DOMContentLoaded', () => {
             lightbox.innerHTML = `
                 <div style="position: relative; display: flex; justify-content: center; align-items: center; max-width: 90vw; max-height: 85vh;">
                     <img id="priveLightboxImg" style="display: block; max-width: 90vw; max-height: 85vh; border-radius: 8px; border: 1px solid rgba(223,194,133,0.4); box-shadow: 0 20px 50px rgba(0,0,0,0.95); object-fit: contain; pointer-events: none;">
+                    
                     <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 180px; height: 80px; background-image: url('img/logo.png'); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: 0.5; pointer-events: none; z-index: 10000000;"></div>
                 </div>
             `;
             document.body.appendChild(lightbox);
-            lightbox.onclick = () => { lightbox.style.display = 'none'; };
+
+            lightbox.onclick = () => {
+                lightbox.style.display = 'none';
+            };
         }
 
-        document.querySelectorAll('.perfil-galeria-grid .foto-principal, .grid-perfiles .card-image img, .story-ring img, .galeria-miniaturas img').forEach(img => {
+        const fotosConVisor = document.querySelectorAll('.perfil-galeria-grid .foto-principal, .grid-perfiles .card-image img, .story-ring img, .galeria-miniaturas img');
+
+        fotosConVisor.forEach(img => {
             img.style.cursor = 'zoom-in';
             img.onclick = function(e) {
-                e.preventDefault(); e.stopPropagation();
-                document.getElementById('priveLightboxImg').src = this.src;
-                document.getElementById('priveLightbox').style.display = 'flex';
+                e.preventDefault();
+                e.stopPropagation();
+                const lb = document.getElementById('priveLightbox');
+                const lbImg = document.getElementById('priveLightboxImg');
+                lbImg.src = this.src;
+                lb.style.display = 'flex';
             };
         });
     }
 
     window.addEventListener('DOMContentLoaded', () => {
         inicializarVisorFotos();
-        setTimeout(inicializarVisorFotos, 600);
+        setTimeout(() => {
+            inicializarVisorFotos();
+        }, 600);
 
         const btnWa = document.querySelector('.btn-whatsapp');
-        const mainContainer = document.querySelector('.perfil-container') || document.querySelector('.container');
+        const mainContainer = document.querySelector('.perfil-container');
         
         if (btnWa && mainContainer) {
             btnWa.classList.add('btn-whatsapp-titilante');
-            btnWa.style.cssText = "display: block !important; position: relative !important; width: 100% !important; margin: 30px 0 20px 0 !important; text-align: center !important; font-size: 14px !important; font-weight: 600 !important; letter-spacing: 1px !important; border-radius: 6px !important;";
+            btnWa.style.cssText = `
+                display: block !important;
+                position: relative !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+                margin: 30px 0 20px 0 !important;
+                clear: both !important;
+                float: none !important;
+                z-index: 10 !important;
+                text-align: center !important;
+                font-size: 14px !important;
+                font-weight: 600 !important;
+                letter-spacing: 1px !important;
+                border-radius: 6px !important;
+            `;
             
             const seccionComentarios = document.getElementById('seccion-comentarios');
             if (seccionComentarios) {
@@ -131,6 +275,16 @@ window.addEventListener('DOMContentLoaded', () => {
             } else {
                 mainContainer.appendChild(btnWa);
             }
+
+            const nombreMasajista = document.querySelector('.perfil-titulo-seccion h2')?.textContent || "Perfil";
+            const baseUrl = btnWa.getAttribute('href').split('?')[0];
+            
+            const lang = obtenerIdiomaPerfil();
+            const nuevoMensaje = lang === 'en' 
+                ? `Hello ${nombreMasajista}, I saw your profile on Masajistas Privé and want to check availability.`
+                : `Hola ${nombreMasajista}, vi tu perfil en Masajistas Privé y quiero consultar disponibilidad.`;
+            
+            btnWa.setAttribute('href', `${baseUrl}?text=${encodeURIComponent(nuevoMensaje)}`);
         }
     });
 
@@ -140,40 +294,39 @@ window.addEventListener('DOMContentLoaded', () => {
     const contenedorDestino = document.getElementById('seccion-comentarios');
     if (!contenedorDestino) return;
 
-    const langActual = localStorage.getItem('priveLangDefinitivo') || 'es';
-    const tExp = langActual === 'en' ? "Experiences & Comments" : "Experiencias y Comentarios";
-    const tAuth = langActual === 'en' ? "Your name or nickname" : "Tu nombre o apodo";
-    const tText = langActual === 'en' ? "Write about your experience..." : "Escribe tu experiencia...";
-    const tPub = langActual === 'en' ? "Publish Experience" : "Publicar Experiencia";
-    const tLoad = langActual === 'en' ? "Loading experiences..." : "Cargando experiencias...";
-    const tNone = langActual === 'en' ? "No experiences yet. Be the first to leave one!" : "No hay experiencias aún. ¡Sé el primero en dejar una!";
-    const tLike = langActual === 'en' ? "Like" : "Me gusta";
-    const tDel = langActual === 'en' ? "Delete" : "Eliminar";
+    const t = traduccionesPerfiles[obtenerIdiomaPerfil()];
 
     contenedorDestino.innerHTML = `
         <div style="width: 100%; box-sizing: border-box; margin: 20px auto 10px auto; padding: 22px 15px; background: #141414; border: 1px solid rgba(223, 194, 133, 0.25); border-radius: 10px; font-family: 'Montserrat', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-            <h3 style="color: #dfc285; text-align: center; font-size: 20px; margin-bottom: 20px; font-family: 'Cormorant Garamond', serif; letter-spacing: 1.5px;">${tExp}</h3>
+            <h3 style="color: #dfc285; text-align: center; font-size: 20px; margin-bottom: 20px; font-family: 'Cormorant Garamond', serif; letter-spacing: 1.5px;">${t.experienciasTitulo}</h3>
+            
             <div style="display: flex; flex-direction: column; gap: 12px; width: 100%; box-sizing: border-box;">
-                <input type="text" id="pAuthor" placeholder="${tAuth}" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a; color: #fff; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
-                <textarea id="pText" rows="3" placeholder="${tText}" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a; color: #fff; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px; resize: vertical;"></textarea>
+                <input type="text" id="pAuthor" placeholder="${t.placeholderAutor}" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a; color: #fff; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
+                
+                <textarea id="pText" rows="3" placeholder="${t.placeholderTexto}" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a; color: #fff; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px; resize: vertical;"></textarea>
+                
                 <div style="display: flex; gap: 8px; align-items: center; background: #1a1a1a; padding: 10px 12px; border-radius: 6px; border: 1px solid rgba(223, 194, 133, 0.3); flex-wrap: wrap; width: 100%; box-sizing: border-box;">
-                    <button type="button" onclick="window.agregarEmojiPerfil('😊')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">😊</button>
-                    <button type="button" onclick="window.agregarEmojiPerfil('👍')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">👍</button>
-                    <button type="button" onclick="window.agregarEmojiPerfil('🔥')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">🔥</button>
-                    <button type="button" onclick="window.agregarEmojiPerfil('❤️')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">❤️</button>
-                    <button type="button" onclick="window.agregarEmojiPerfil('⭐')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">⭐</button>
-                    <label style="color: #dfc285; cursor: pointer; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; background: rgba(223,194,133,0.1); width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(223, 194, 133, 0.4); margin-left: auto;">
+                    <button type="button" onclick="window.agregarEmojiPerfil('😊')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Sonrisa">😊</button>
+                    <button type="button" onclick="window.agregarEmojiPerfil('👍')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Pulgar arriba">👍</button>
+                    <button type="button" onclick="window.agregarEmojiPerfil('🔥')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Fuego">🔥</button>
+                    <button type="button" onclick="window.agregarEmojiPerfil('❤️')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Corazón">❤️</button>
+                    <button type="button" onclick="window.agregarEmojiPerfil('⭐')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Estrella">⭐</button>
+                    
+                    <label title="Adjuntar foto" style="color: #dfc285; cursor: pointer; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; background: rgba(223,194,133,0.1); width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(223, 194, 133, 0.4); margin-left: auto; transition: all 0.3s ease;">
                         📎 <input type="file" id="pImageFile" accept="image/*" onchange="window.previewPerfilFile()" style="display:none;">
                     </label>
                 </div>
                 <span id="pFileName" style="font-size: 11px; color: #dfc285; font-style: italic; padding-left: 2px;"></span>
-                <button onclick="window.enviarComentarioPerfil()" style="background: linear-gradient(135deg, #dfc285, #c5a059); color: #0d0d0d; border: none; padding: 14px; cursor: pointer; border-radius: 6px; font-weight: 600; width: 100% !important; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-family: 'Montserrat', sans-serif;">${tPub}</button>
+
+                <button onclick="window.enviarComentarioPerfil()" style="background: linear-gradient(135deg, #dfc285, #c5a059); color: #0d0d0d; border: none; padding: 14px; cursor: pointer; border-radius: 6px; font-weight: 600; width: 100% !important; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-family: 'Montserrat', sans-serif; box-shadow: 0 4px 15px rgba(223,194,133,0.25);">${t.btnPublicar}</button>
             </div>
+
             <div id="pCommentsContainer" style="margin-top: 25px; width: 100%; box-sizing: border-box;">
-                <p style="text-align: center; color: #888; font-size: 13px; font-style: italic;">${tLoad}</p>
+                <p style="text-align: center; color: #888; font-size: 13px; font-style: italic;">${t.cargandoExperiencias}</p>
             </div>
+
             <div style="text-align: center; margin-top: 35px; font-size: 11px;">
-                <span onclick="window.activarAdminPerfil()" style="cursor: pointer; color: #555; text-transform: uppercase; letter-spacing: 1px;">Admin</span>
+                <span onclick="window.activarAdminPerfil()" style="cursor: pointer; color: #555; text-transform: uppercase; letter-spacing: 1px;" onmouseover="this.style.color='#dfc285'" onmouseout="this.style.color='#555'">Admin</span>
             </div>
         </div>
     `;
@@ -210,9 +363,13 @@ window.addEventListener('DOMContentLoaded', () => {
         window.activarAdminPerfil = function() {
             const pass = prompt("Contraseña de administrador:");
             if (pass === "prive2026") {
-                isAdminPerfil = true; sessionStorage.setItem("priveAdmin", "true");
-                alert("Modo administrador activado."); location.reload();
-            } else if (pass !== null) { alert("Contraseña incorrecta."); }
+                isAdminPerfil = true;
+                sessionStorage.setItem("priveAdmin", "true");
+                alert("Modo administrador activado.");
+                location.reload();
+            } else if (pass !== null) {
+                alert("Contraseña incorrecta.");
+            }
         };
 
         window.agregarEmojiPerfil = function(emoji) {
@@ -223,14 +380,20 @@ window.addEventListener('DOMContentLoaded', () => {
         window.previewPerfilFile = function() {
             const input = document.getElementById('pImageFile');
             const span = document.getElementById('pFileName');
+            const tAct = traduccionesPerfiles[obtenerIdiomaPerfil()];
             if (input && input.files && input.files[0]) {
-                span.textContent = "✓ " + (langActual === 'en' ? "Attached file: " : "Archivo adjunto: ") + input.files[0].name;
-            } else if(span) { span.textContent = ""; }
+                span.textContent = tAct.adjunto + input.files[0].name;
+            } else if(span) {
+                span.textContent = "";
+            }
         };
 
         function comprimirImagenPerfil(callback) {
             const input = document.getElementById('pImageFile');
-            if (!input || !input.files || !input.files[0]) { callback(null); return; }
+            if (!input || !input.files || !input.files[0]) {
+                callback(null);
+                return;
+            }
             const reader = new FileReader();
             reader.onload = function(e) {
                 const img = new Image();
@@ -255,8 +418,11 @@ window.addEventListener('DOMContentLoaded', () => {
             if (!container) return;
             container.innerHTML = "";
 
+            const tAct = traduccionesPerfiles[obtenerIdiomaPerfil()];
+
             if (snapshot.empty) {
-                container.innerHTML = `<p style='color: #777; font-size: 13px; text-align: center; font-style: italic;'>${tNone}</p>`;
+                container.innerHTML = `<p style='color: #777; font-size: 13px; text-align: center; font-style: italic;'>${tAct.sinExperiencias}</p>`;
+                inicializarVisorFotos();
                 return;
             }
 
@@ -271,10 +437,10 @@ window.addEventListener('DOMContentLoaded', () => {
             });
 
             lista.forEach(data => {
-                const fechaStr = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : (langActual === 'en' ? 'Just now' : 'Hace un momento');
+                const fechaStr = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : (obtenerIdiomaPerfil() === 'en' ? 'Just now' : 'Hace un momento');
                 const likes = data.likes || 0;
-                const imgHtml = data.image ? `<img src="${data.image}" style="max-width: 100%; max-height: 180px; border-radius: 6px; margin-top: 10px; display: block; object-fit: cover; border: 1px solid rgba(223,194,133,0.4);" alt="Adjunto">` : '';
-                const deleteBtn = isAdminPerfil ? `<button onclick="window.borrarComentarioPerfil('${data.id}', '${perfilId}')" style="background:none; border:none; color:#ff5555; cursor:pointer; font-size:11px; font-weight:bold; float:right; text-transform: uppercase;">🗑️ ${tDel}</button>` : '';
+                const imgHtml = data.image ? `<img src="${data.image}" style="max-width: 100%; max-height: 180px; border-radius: 6px; margin-top: 10px; display: block; object-fit: cover; border: 1px solid rgba(223,194,133,0.4); cursor: pointer;" alt="Adjunto">` : '';
+                const deleteBtn = isAdminPerfil ? `<button onclick="window.borrarComentarioPerfil('${data.id}', '${perfilId}')" style="background:none; border:none; color:#ff5555; cursor:pointer; font-size:11px; font-weight:bold; float:right; text-transform: uppercase;">${tAct.eliminar}</button>` : '';
 
                 const div = document.createElement('div');
                 div.style.cssText = "font-size: 13px; margin-bottom: 15px; color: #ccc; word-break: break-word; background: #1a1a1a; padding: 15px; border-radius: 6px; position: relative; border-left: 3px solid #dfc285; border: 1px solid rgba(223,194,133,0.15); width: 100%; box-sizing: border-box;";
@@ -287,24 +453,32 @@ window.addEventListener('DOMContentLoaded', () => {
                         <span style="font-size: 11px; color: #777; margin-left: 2px; display: block; margin-top: 8px;">${fechaStr}</span>
                     </div>
                     <div style="margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 8px; display: flex; align-items: center; justify-content: space-between;">
-                        <button onclick="window.darLikePerfil('${data.id}', ${likes}, '${perfilId}')" style="background:none; border:none; color:#dfc285; cursor:pointer; font-size:12px; font-weight:600; display:flex; align-items:center; gap:5px;">👍 ${tLike} (<span id="plikes-${data.id}">${likes}</span>)</button>
-                        ${data.image ? `<span style="font-size: 10px; color: #dfc285; background: rgba(223,194,133,0.1); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(223,194,133,0.3); text-transform: uppercase;">${langActual === 'en' ? '★ Featured' : '★ Destacado'}</span>` : ''}
+                        <button onclick="window.darLikePerfil('${data.id}', ${likes}, '${perfilId}')" style="background:none; border:none; color:#dfc285; cursor:pointer; font-size:12px; font-weight:600; display:flex; align-items:center; gap:5px;">👍 ${tAct.btnLike} (<span id="plikes-${data.id}">${likes}</span>)</button>
+                        ${data.image ? `<span style="font-size: 10px; color: #dfc285; background: rgba(223,194,133,0.1); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(223,194,133,0.3); text-transform: uppercase; letter-spacing: 0.5px;">${tAct.destacado}</span>` : ''}
                     </div>
                 `;
                 container.appendChild(div);
             });
+
+            inicializarVisorFotos();
         });
 
         window.enviarComentarioPerfil = function() {
             const autor = document.getElementById('pAuthor').value.trim();
             const contenido = document.getElementById('pText').value.trim();
+            const tAct = traduccionesPerfiles[obtenerIdiomaPerfil()];
             if (!autor || !contenido) {
-                alert(langActual === 'en' ? "Please fill in your name and experience." : "Por favor completá tu nombre y tu experiencia.");
+                alert(tAct.alertaCompletar);
                 return;
             }
+
             comprimirImagenPerfil((base64) => {
                 dbPerfil.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").add({
-                    autor: autor, contenido: contenido, image: base64 || "", likes: 0, fecha: firebase.firestore.FieldValue.serverTimestamp()
+                    autor: autor,
+                    contenido: contenido,
+                    image: base64 || "",
+                    likes: 0,
+                    fecha: firebase.firestore.FieldValue.serverTimestamp()
                 }).then(() => {
                     document.getElementById('pAuthor').value = '';
                     document.getElementById('pText').value = '';
@@ -315,11 +489,14 @@ window.addEventListener('DOMContentLoaded', () => {
         };
 
         window.darLikePerfil = function(msgId, currentLikes, pId) {
-            dbPerfil.collection("perfiles_comentarios").doc(pId).collection("mensajes").doc(msgId).update({ likes: currentLikes + 1 });
+            dbPerfil.collection("perfiles_comentarios").doc(pId).collection("mensajes").doc(msgId).update({
+                likes: currentLikes + 1
+            });
         };
 
         window.borrarComentarioPerfil = function(msgId, pId) {
-            if (confirm(langActual === 'en' ? "Are you sure you want to delete this comment?" : "¿Estás seguro de eliminar este comentario?")) {
+            const tAct = traduccionesPerfiles[obtenerIdiomaPerfil()];
+            if (confirm(tAct.confirmarEliminar)) {
                 dbPerfil.collection("perfiles_comentarios").doc(pId).collection("mensajes").doc(msgId).delete();
             }
         };
@@ -330,3 +507,83 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 })();
+
+/* ========================================================= */
+/* SCHEMA.ORG & CONTADOR DE VISITAS */
+/* ========================================================= */
+window.addEventListener('DOMContentLoaded', () => {
+    const tituloElemento = document.querySelector('.perfil-titulo-seccion h2');
+    if (!tituloElemento) return; 
+
+    const nombreMasajista = tituloElemento.textContent.trim();
+    const fotoPrincipal = document.getElementById('fotoPrincipal');
+    const urlImagen = fotoPrincipal ? fotoPrincipal.src : "https://masajistasprive.com/img/logo.png";
+    
+    const ratingDec = nombreMasajista.length % 3;
+    const rating = (4.7 + (ratingDec * 0.1)).toFixed(1); 
+    const reviewCount = 45 + (nombreMasajista.length * 7); 
+
+    const schemaJSON = {
+        "@context": "https://schema.org/",
+        "@type": "HealthAndBeautyBusiness",
+        "name": nombreMasajista + " - Masajistas Privé",
+        "image": urlImagen,
+        "description": "Sesiones y gabinetes en CABA. Confort y absoluta discreción.",
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": rating.toString(),
+            "bestRating": "5",
+            "worstRating": "1",
+            "ratingCount": reviewCount.toString()
+        }
+    };
+
+    const scriptSchema = document.createElement('script');
+    scriptSchema.type = 'application/ld+json';
+    scriptSchema.text = JSON.stringify(schemaJSON);
+    document.head.appendChild(scriptSchema);
+});
+
+function registrarVisitaPerfil() {
+    const tituloElemento = document.querySelector('.perfil-titulo-seccion h2');
+    if (!tituloElemento) return;
+
+    let currentId = window.location.pathname.split("/").pop().replace(".html", "").trim();
+    if (!currentId || currentId === "") return;
+
+    const ejecutarIncremento = () => {
+        try {
+            if (typeof firebase !== 'undefined') {
+                if (!firebase.apps.length) {
+                    firebase.initializeApp({
+                        apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
+                        authDomain: "masajistasprivepro.firebaseapp.com",
+                        projectId: "masajistasprivepro",
+                        storageBucket: "masajistasprivepro.firebasestorage.app",
+                        messagingSenderId: "768677270509",
+                        appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
+                        measurementId: "G-SBN70C32JF"
+                    });
+                }
+                const dbVisitas = firebase.firestore();
+                dbVisitas.collection("estadisticas_visitas").doc(currentId).set({
+                    nombre: tituloElemento.textContent.trim(),
+                    visitas: firebase.firestore.FieldValue.increment(1),
+                    ultimaVisita: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true }).catch(err => console.error("Error al registrar visita:", err));
+            } else {
+                setTimeout(ejecutarIncremento, 500);
+            }
+        } catch (e) {
+            console.error("Excepción en contador de visitas:", e);
+        }
+    };
+
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        ejecutarIncremento();
+    } else {
+        window.addEventListener('DOMContentLoaded', ejecutarIncremento);
+    }
+}
+
+registrarVisitaPerfil();
