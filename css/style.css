@@ -138,15 +138,15 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     flex-shrink: 0;
 }
 .story-ring {
-    width: 85px !important; /* Tamaño premium para móvil */
+    width: 85px !important;
     height: 85px !important;
     border-radius: 50%;
-    padding: 3px !important; /* Anillo dorado más grueso */
+    padding: 3px !important;
     background: linear-gradient(135deg, #f5ebd0 0%, #dfc285 50%, #b8934f 100%) !important;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 15px rgba(223, 194, 133, 0.4) !important; /* Resplandor dorado de fondo */
+    box-shadow: 0 4px 15px rgba(223, 194, 133, 0.4) !important;
 }
 
 .story-ring img {
@@ -155,11 +155,11 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     border-radius: 50% !important;
     object-fit: cover !important;
     object-position: center top !important;
-    border: 3px solid #080808 !important; /* Borde oscuro interno para mayor contraste */
+    border: 3px solid #080808 !important;
 }
 
 .story-item span {
-    color: #dfc285 !important; /* Nombres en dorado en vez de blanco */
+    color: #dfc285 !important;
     font-size: 12px !important;
     margin-top: 6px !important;
     font-weight: 600 !important;
@@ -286,12 +286,11 @@ h1, h2, h3, h4, .section-heading, .card-gradient-overlay h3, .perfil-titulo-secc
     font-weight: 600 !important;
 }
 
-/* Fotos en cuadrícula móvil y PC (Proporción vertical perfecta asegurada) */
 .grid-perfiles .card-image {
     position: relative !important;
     overflow: hidden !important;
-    aspect-ratio: 4 / 5 !important; /* MAGIA: Bloquea la foto para que siempre sea vertical */
-    height: auto !important; /* Anula cualquier altura que intente aplastarlas */
+    aspect-ratio: 4 / 5 !important;
+    height: auto !important;
 }
 .grid-perfiles .card-image img {
     width: 100% !important;
@@ -608,7 +607,6 @@ img {
         padding: 20px 4% !important;
     }
 
-    /* Grilla pasa a 4 columnas */
     .grid-perfiles {
         grid-template-columns: repeat(4, 1fr) !important;
         gap: 24px !important;
@@ -629,7 +627,6 @@ img {
         object-position: center top !important;
     }
 
-    /* Globos destacados se centran y agrandan a tamaño PC */
     .destacadas-container-wrapper {
         padding: 25px 4% 20px 4% !important;
         text-align: center;
@@ -649,4 +646,38 @@ img {
         font-size: 14px !important;
         margin-top: 8px !important;
     }
+}
+
+/* ========================================================= */
+/* NUEVAS MEJORAS VISUALES (GLOW Y ART DÉCO)                 */
+/* ========================================================= */
+.card, .dolar-card, .clima-card, .blog-card {
+    transition: all 0.3s ease;
+}
+
+.card:hover, .dolar-card:hover, .clima-card:hover {
+    box-shadow: 0 0 20px rgba(223, 194, 133, 0.35) !important;
+    border-color: rgba(223, 194, 133, 0.6) !important;
+}
+
+.art-deco-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 40px auto;
+    width: 100%;
+    max-width: 400px;
+}
+
+.art-deco-divider::before, .art-deco-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid rgba(223, 194, 133, 0.3);
+}
+
+.art-deco-divider span {
+    padding: 0 15px;
+    color: #dfc285;
+    font-size: 14px;
 }
