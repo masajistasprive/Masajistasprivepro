@@ -13,7 +13,7 @@
 })();
 
 // =========================================================
-// SISTEMA DE TRADUCCIÓN BILINGÜE UNIVERSAL PARA PERFILES
+// SISTEMA DE TRADUCCIÓN UNIVERSAL PARA PERFILES Y DESCRIPCIONES
 // =========================================================
 const traduccionesPerfiles = {
     es: {
@@ -72,6 +72,36 @@ const traduccionesPerfiles = {
     }
 };
 
+// DICCIONARIO DE DESCRIPCIONES ESPECÍFICAS POR PERFIL
+const descripcionesPorPerfil = {
+    luly: {
+        es: {
+            parrafo1: "Masajista Profesional Matriculada auxiliar en kinesiología.",
+            parrafo2: "Te invito a que creamos una sesión de masajes única, acorde a tus necesidades. Soy una masajista de ascendencia alemana.",
+            tecnicas: "Masajes californianos, sensitivos y descontracturantes."
+        },
+        en: {
+            parrafo1: "Certified Professional Massage Therapist, assistant in kinesiology.",
+            parrafo2: "I invite you to create a unique massage session tailored to your needs. I am a massage therapist of German descent.",
+            tecnicas: "Californian, sensitive, and deep tissue massages."
+        }
+    },
+    prada: {
+        es: {
+            parrafo1: "Atención personalizada en departamento reservado en la zona de Tribunales.",
+            parrafo2: "",
+            tecnicas: "Masajes californianos, sensitivos y descontracturantes."
+        },
+        en: {
+            parrafo1: "Personalized attention in a private apartment in the Tribunales area.",
+            parrafo2: "",
+            tecnicas: "Californian, sensitive, and deep tissue massages."
+        }
+    },
+    // Podes agregar más perfiles acá abajo de la misma forma cuando quieras:
+    // jennyfer: { es: { ... }, en: { ... } }
+};
+
 function obtenerIdiomaPerfil() {
     return localStorage.getItem('idiomaPrive') || 'es';
 }
@@ -83,7 +113,7 @@ function cambiarIdiomaPerfil() {
     location.reload();
 }
 
-// Inyectar el botón de idioma y adaptar el header de los perfiles
+// Inyectar botón de idioma y traducir textos fijos y descripciones
 window.addEventListener('DOMContentLoaded', () => {
     const headerRight = document.querySelector('.header-right');
     if (headerRight && !document.getElementById('btn-idioma')) {
@@ -99,7 +129,6 @@ window.addEventListener('DOMContentLoaded', () => {
         
         headerRight.insertBefore(btnLang, headerRight.firstChild);
 
-        // Traducir textos fijos del perfil automáticamente según idioma
         const t = traduccionesPerfiles[langActual];
         
         const btnVolver = headerRight.querySelector('.btn-buscar');
@@ -120,6 +149,22 @@ window.addEventListener('DOMContentLoaded', () => {
 
         const descTitulo = document.querySelector('.perfil-descripcion h3');
         if (descTitulo) descTitulo.textContent = t.descTitulo;
+
+        // Traducir descripción larga si el perfil está registrado en el diccionario
+        let currentId = window.location.pathname.split("/").pop().replace(".html", "").trim();
+        if (descripcionesPorPerfil[currentId] && descripcionesPorPerfil[currentId][langActual]) {
+            const descData = descripcionesPorPerfil[currentId][langActual];
+            const descContainer = document.querySelector('.perfil-descripcion');
+            if (descContainer) {
+                let htmlDesc = `<h3 style="color: #dfc285; font-size: 1.1rem; margin-bottom: 0.5rem; font-family: 'Cormorant Garamond', serif;">${t.descTitulo}</h3>`;
+                if (descData.parrafo1) htmlDesc += `<p>${descData.parrafo1}</p>`;
+                if (descData.parrafo2) htmlDesc += `<p style="margin-top: 0.5rem;">${descData.parrafo2}</p>`;
+                if (descData.tecnicas) {
+                    htmlDesc += `<div style="margin-top: 0.5rem; color: #94a3b8; font-size: 0.9rem;"><strong>${t.tecnicasLabel}</strong> ${descData.tecnicas}</div>`;
+                }
+                descContainer.innerHTML = htmlDesc;
+            }
+        }
 
         const detalles = document.querySelectorAll('.perfil-detalles .detalle-item');
         detalles.forEach(item => {
@@ -599,12 +644,12 @@ function registrarVisitaPerfil() {
                 if (!firebase.apps.length) {
                     firebase.initializeApp({
                         apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
-                        authDomain: "masajistasprivepro.firebaseapp.com",
-                        projectId: "masajistasprivepro",
-                        storageBucket: "masajistasprivepro.firebasestorage.app",
-                        messagingSenderId: "768677270509",
-                        appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
-                        measurementId: "G-SBN70C32JF"
+                    authDomain: "masajistasprivepro.firebaseapp.com",
+                    projectId: "masajistasprivepro",
+                    storageBucket: "masajistasprivepro.firebasestorage.app",
+                    messagingSenderId: "768677270509",
+                    appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
+                    measurementId: "G-SBN70C32JF"
                     });
                 }
                 const dbVisitas = firebase.firestore();
