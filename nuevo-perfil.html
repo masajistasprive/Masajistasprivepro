@@ -75,7 +75,7 @@
         <div class="output-section" id="outputSection">
             <p class="hint">Copiá este código, creá un archivo nuevo con el nombre <span id="fileNameDisplay" style="color:#fff"></span> y subilo a tu GitHub:</p>
             <textarea class="code-output" id="codeOutput" readonly></textarea>
-            <button class="btn-action" id="btnCopiar" style="background-color: #333; color: #fff;">Copiar al Portapapeles</button>
+            <button type="button" class="btn-action" id="btnCopiar" style="background-color: #333; color: #fff;">Copiar al Portapapeles</button>
         </div>
     </div>
 
@@ -94,7 +94,6 @@
             const fileName = nombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '') + '.html';
             document.getElementById('fileNameDisplay').textContent = fileName;
 
-            // Plantilla exacta basada en el perfil de Pamela
             const htmlGenerado = `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -106,7 +105,6 @@
 </head>
 <body class="perfil-body">
 
-    <!-- Header Estilo App de Lujo con Logo Grande -->
     <header class="header-prive">
         <div class="header-left">
             <img src="img/monograma.png" alt="Monograma" class="header-monograma">
@@ -121,7 +119,6 @@
 
     <main class="container perfil-container">
         
-        <!-- Galería de 5 Fotos -->
         <div class="perfil-galeria-grid">
             <img src="img/${prefijo}1.jpg" alt="${nombre}" class="foto-principal" id="fotoPrincipal">
             <div class="galeria-miniaturas">
@@ -132,7 +129,6 @@
             </div>
         </div>
 
-        <!-- Información de la Profesional -->
         <div class="perfil-info">
             <div class="perfil-titulo-seccion">
                 <h2>${nombre}</h2>
