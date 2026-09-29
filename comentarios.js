@@ -13,20 +13,25 @@
 })();
 
 // =========================================================
-// TRADUCTOR GLOBAL AUTOMÁTICO AL 100% (DOM NATIVO)
+// MOTOR DE TRADUCCIÓN GLOBAL BLINDADO (CERO BANNERS)
 // =========================================================
 
-// Inyectar el script oficial de Google Translate de forma oculta y limpia
-const styleTranslate = document.createElement('style');
-styleTranslate.innerHTML = `
-    .goog-te-banner-frame { display: none !important; }
-    body { top: 0px !important; }
-    #goog-gt-tt { display: none !important; }
-    .goog-tooltip { display: none !important; }
+// CSS estricto para eliminar y ocultar cualquier barra nativa de Google o del navegador
+const styleAntibanner = document.createElement('style');
+styleAntibanner.innerHTML = `
+    .goog-te-banner-frame, .goog-te-balloon-frame, #goog-gt-tt, .goog-tooltip, .goog-te-gadget {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        height: 0 !important;
+        width: 0 !important;
+        pointer-events: none !important;
+    }
+    body { top: 0px !important; position: static !important; }
     .goog-text-highlight { background-color: transparent !important; box-shadow: none !important; }
-    #google_translate_element { position: absolute; top: -9999px; left: -9999px; opacity: 0; pointer-events: none; }
+    #google_translate_element { display: none !important; }
 `;
-document.head.appendChild(styleTranslate);
+document.head.appendChild(styleAntibanner);
 
 if (!document.getElementById('google_translate_element')) {
     const divGoogle = document.createElement('div');
@@ -49,11 +54,11 @@ window.googleTranslateElementInit = function() {
     }, 'google_translate_element');
 };
 
-// Función para alternar el idioma traduciendo absolutamente todo el DOM
+// Función para cambiar idioma de forma totalmente limpia y sin rastros visuales
 window.cambiarIdiomaTotal = function() {
     const select = document.querySelector('.goog-te-combo');
     if (!select) {
-        alert("El motor de traducción está cargando. Aguardá un segundo e intentá de nuevo.");
+        alert("El motor se está cargando. Aguardá un segundo e intentá de nuevo.");
         return;
     }
 
@@ -437,7 +442,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 const fechaStr = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : (isEn ? 'Just now' : 'Hace un momento');
                 const likes = data.likes || 0;
                 const imgHtml = data.image ? `<img src="${data.image}" style="max-width: 100%; max-height: 180px; border-radius: 6px; margin-top: 10px; display: block; object-fit: cover; border: 1px solid rgba(223,194,133,0.4); cursor: pointer;" alt="Adjunto">` : '';
-                const deleteBtn = isAdminPerfil ? `<button onclick="window.borrarComentarioPerfil('${data.id}', '${perfilId}')" style="background:none; border:none; color:#ff5555; cursor:pointer; font-size:11px; font-weight:bold; float:right; text-transform: uppercase;">🗑️ ${tDel}</button>` : '';
+                const deleteBtn = isAdminPerfil ? `<button onclick="window.borrarComentarioPerfil('${data.id}', '${perfilId}')" style="background:none; border:none; color:#ff5555; cursor:pointer; font-size:11px; font-weight:bold; float:right; text-transform: uppercase;">🗑️️ ${tDel}</button>` : '';
 
                 const div = document.createElement('div');
                 div.style.cssText = "font-size: 13px; margin-bottom: 15px; color: #ccc; word-break: break-word; background: #1a1a1a; padding: 15px; border-radius: 6px; position: relative; border-left: 3px solid #dfc285; border: 1px solid rgba(223,194,133,0.15); width: 100%; box-sizing: border-box;";
