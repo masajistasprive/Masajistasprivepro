@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Perfiles Pro - Masajistas Privé</title>
+    <title>Generador con Vista Previa - Masajistas Privé</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -36,7 +36,7 @@
         .back-link { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; display: inline-block; margin-bottom: 15px; }
         .back-link:hover { color: var(--gold); }
 
-        /* Estilos en vivo del boceto idéntico a Pamela */
+        /* Estilos en vivo del boceto */
         .preview-box { background: #0b0b0b; border: 1px solid #333; border-radius: 10px; padding: 15px; max-height: 80vh; overflow-y: auto; }
         .preview-box .header-prive { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; padding-bottom: 10px; margin-bottom: 15px; }
         .preview-box .foto-principal { width: 100%; height: 280px; object-fit: cover; border-radius: 8px; border: 1px solid #333; margin-bottom: 10px; }
@@ -51,6 +51,8 @@
         .preview-box .perfil-detalles { font-size: 0.85rem; color: #ccc; margin-bottom: 10px; }
         .preview-box .detalle-item span { color: var(--text-main); }
         .preview-box .btn-whatsapp { display: block; background-color: var(--success); color: #fff; text-decoration: none; padding: 10px; font-weight: bold; border-radius: 6px; text-align: center; font-size: 0.85rem; text-transform: uppercase; margin-top: 15px; }
+        .preview-comentarios { border-top: 1px dashed #333; padding-top: 15px; margin-top: 15px; text-align: center; }
+        .preview-comentarios-box { background: #141414; border: 1px solid #222; border-radius: 8px; padding: 12px; font-size: 0.8rem; color: #888; }
     </style>
 </head>
 <body>
@@ -67,7 +69,7 @@
                 </div>
                 <div class="form-group">
                     <label for="zona">Zona / Barrio</label>
-                    <input type="text" id="zona" placeholder="Ej: Tribunales" value="Tribunales" required>
+                    <input type="text" id="zona" placeholder="Ej: Recoleta" value="Recoleta" required>
                 </div>
                 <div class="form-group">
                     <label for="categoria">Categoría (para el Index)</label>
@@ -84,11 +86,11 @@
                 </div>
                 <div class="form-group">
                     <label for="whatsapp">WhatsApp (núm sin símbolos)</label>
-                    <input type="text" id="whatsapp" value="5491167462275" required>
+                    <input type="text" id="whatsapp" value="5491112345678" required>
                 </div>
                 <div class="form-group">
-                    <label for="prefijoFoto">Prefijo de las fotos (ej: pamela)</label>
-                    <input type="text" id="prefijoFoto" value="pamela" required>
+                    <label for="prefijoFoto">Prefijo de las fotos (ej: valentina)</label>
+                    <input type="text" id="prefijoFoto" value="valentina" required>
                 </div>
                 <div class="form-group">
                     <label for="numFotos">Cantidad de fotos (4 a 10)</label>
@@ -144,11 +146,11 @@
 
                     <div class="perfil-info">
                         <div class="perfil-titulo-seccion">
-                            <h2 id="prevNombre">Pamela</h2>
+                            <h2 id="prevNombre">Valentina</h2>
                             <span class="badge-verificado">✓ Privé Verificado</span>
                         </div>
 
-                        <p class="perfil-ubicacion">📍 Zona: <strong id="prevZona">Tribunales</strong></p>
+                        <p class="perfil-ubicacion">📍 Zona: <strong id="prevZona">Recoleta</strong></p>
                         <p class="perfil-modalidad">🏠 Modalidad: <strong id="prevModalidad">Departamento propio</strong></p>
 
                         <div class="perfil-descripcion">
@@ -164,12 +166,18 @@
 
                         <a href="#" class="btn-whatsapp">💬 Contactar por WhatsApp</a>
                     </div>
+
+                    <div class="preview-comentarios">
+                        <div class="preview-comentarios-box">
+                            💬 [ Casilla de Experiencias y Comentarios ]
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Plantilla oficial 100% idéntica al archivo HTML de Pamela -->
+    <!-- Plantilla oficial con comentarios.js incluido -->
     <script type="text/template" id="plantillaFicha"><![CDATA[<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -230,6 +238,7 @@
             </a>
         </div>
 
+        <div id="seccion-comentarios"></div>
     </main>
 
     <footer class="footer">
@@ -243,6 +252,7 @@
             fotoPrincipal.src = element.src;
         }
     </script>
+    <script src="comentarios.js"></script>
 </body>
 </html>]]></script>
 
