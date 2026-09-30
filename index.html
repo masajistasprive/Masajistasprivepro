@@ -38,7 +38,7 @@
         </div>
     </div>
 
-        <header class="header-prive">
+    <header class="header-prive">
         <div class="header-left" style="display: none !important;"></div>
         <div class="header-center">
             <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">
@@ -451,7 +451,7 @@
                 <p data-i18n="footerLegal">Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.</p>
                 <p style="margin-top: 6px;" data-i18n="footerMarcas">Todo el contenido, marcas y logotipos pertenecen a sus respectivos dueños.</p>
                 <div id="contador-visitas-global" style="margin-top: 12px; color: #dfc285; font-size: 13px; font-weight: 500;">
-                    👁️ <span data-i18n="visitasTotales">Visitas totales al portal</span>: <span id="visitas-total-num" data-i18n="cargando">Cargando...</span>
+                    👁️️ <span data-i18n="visitasTotales">Visitas totales al portal</span>: <span id="visitas-total-num" data-i18n="cargando">Cargando...</span>
                 </div>
                 <p class="copyright" style="margin-top: 8px; color: #dfc285; font-size: 12px;" data-i18n="footerCopy">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
             </div>
@@ -521,7 +521,7 @@
                 filtroTerapeuticas: "Therapeutic",
                 filtroSensuales: "Sensual",
                 filtroMasculinos: "Male",
-                filtroFantasias: "Fantasies",
+                filtroFantasies: "Fantasies",
                 seccionTerapeuticas: "Therapeutic Masseuses",
                 seccionSensuales: "Sensual Masseuses",
                 seccionMasculinos: "Male Masseurs",
@@ -815,7 +815,7 @@
             }
         }
 
-        // Obtener Clima de CABA
+        // Obtener Clima de CABA (Corregido con detección automática de noche/día)
         async function obtenerClimaCABA() {
             try {
                 const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=-34.6132&longitude=-58.3816&current=temperature_2m,relative_humidity_2m,weather_code&timezone=America%2FArgentina%2FBuenos_Aires');
@@ -825,14 +825,20 @@
                 const humedad = data.current.relative_humidity_2m;
                 const codigoClima = data.current.weather_code;
                 
+                // Detectar si es de noche (de 20:00 a 06:00 hs)
+                const horaActual = new Date().getHours();
+                const esDeNoche = horaActual < 6 || horaActual >= 20;
+
                 let icono = '☁️';
                 let estado = idiomaActual === 'en' ? 'Cloudy' : 'Nublado';
                 
                 if (codigoClima === 0) {
-                    icono = '☀️';
-                    estado = idiomaActual === 'en' ? 'Clear' : 'Despejado';
+                    icono = esDeNoche ? '🌙' : '☀️';
+                    estado = idiomaActual === 'en' 
+                        ? (esDeNoche ? 'Clear night' : 'Clear') 
+                        : (esDeNoche ? 'Noche despejada' : 'Despejado');
                 } else if (codigoClima >= 1 && codigoClima <= 2) {
-                    icono = '⛅';
+                    icono = esDeNoche ? '☁️' : '⛅';
                     estado = idiomaActual === 'en' ? 'Partly cloudy' : 'Parcialmente nublado';
                 } else if (codigoClima === 3) {
                     icono = '☁';
@@ -844,7 +850,7 @@
                     icono = '❄️';
                     estado = idiomaActual === 'en' ? 'Snow' : 'Nieve';
                 } else if (codigoClima >= 95) {
-                    icono = '⛈️';
+                    icono = '⛈️️';
                     estado = idiomaActual === 'en' ? 'Thunderstorm' : 'Tormenta';
                 }
 
