@@ -211,13 +211,12 @@ h1, h2, h3, h4, .card-gradient-overlay h3, .perfil-titulo-seccion h2 {
 }
 
 /* ========================================================= */
-/* GRILLAS Y TARJETAS (MÓVIL) CON TÍTULOS MEJORADOS          */
+/* GRILLAS Y TARJETAS (INDEX ORIGINAL)                       */
 /* ========================================================= */
 .container:not(.perfil-container) { 
     padding: 10px 4%; 
 }
 
-/* Títulos de Categoría Grandes y Elegantes */
 .section-heading {
     font-family: 'Cormorant Garamond', serif !important;
     font-size: 28px !important;
@@ -253,7 +252,6 @@ h1, h2, h3, h4, .card-gradient-overlay h3, .perfil-titulo-seccion h2 {
     height: 100% !important;
 }
 
-/* Tarjeta de Anuncio / Espacio Disponible IGUALADA EN TAMAÑO */
 .grid-perfiles .card-ad-link {
     display: block !important;
     height: 100% !important;
@@ -267,7 +265,7 @@ h1, h2, h3, h4, .card-gradient-overlay h3, .perfil-titulo-seccion h2 {
     overflow: hidden !important;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
     height: 100% !important;
-    aspect-ratio: 4 / 5 !important; /* Mantiene la misma proporción exacta de alto y ancho que las fichas de las chicas */
+    aspect-ratio: 4 / 5 !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
@@ -711,30 +709,39 @@ img {
     font-size: 14px;
 }
 
-/* Corrección definitiva para que la tarjeta de anuncio mida exactamente lo mismo que las fichas */
-.grid-perfiles {
-    align-items: stretch !important;
-}
-
-.grid-perfiles .card-link,
-.grid-perfiles .card-ad-link {
+/* ========================================================= */
+/* BOTÓN FLOTANTE DE WHATSAPP (SOLO EN PÁGINAS DE PERFIL)     */
+/* ========================================================= */
+body.perfil-body .whatsapp-sticky-btn {
+    position: fixed !important;
+    bottom: 25px !important;
+    right: 25px !important;
+    z-index: 99999 !important;
+    background: #25d366 !important;
+    color: #fff !important;
+    width: 58px !important;
+    height: 58px !important;
+    border-radius: 50% !important;
     display: flex !important;
-    flex-direction: column !important;
-}
-
-.grid-perfiles .card, 
-.grid-perfiles .card-ad {
-    flex: 1 !important;
-    height: 100% !important;
-    min-height: 100% !important;
-    aspect-ratio: auto !important;
-}
-
-.grid-perfiles .card-ad {
-    padding: 20px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
     align-items: center !important;
-    text-align: center !important;
+    justify-content: center !important;
+    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.6) !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+    text-decoration: none !important;
+    font-size: 30px !important;
+}
+
+body.perfil-body .whatsapp-sticky-btn:hover {
+    transform: scale(1.1) !important;
+    box-shadow: 0 6px 25px rgba(37, 211, 102, 0.9) !important;
+}
+
+@media (max-width: 768px) {
+    body.perfil-body .whatsapp-sticky-btn {
+        bottom: 20px !important;
+        right: 20px !important;
+        width: 52px !important;
+        height: 52px !important;
+        font-size: 26px !important;
     }
+}
