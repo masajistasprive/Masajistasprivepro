@@ -66,17 +66,15 @@
 
         async function escanearIndexYConstruirPanel() {
             const contenedor = document.getElementById('listaPerfilesAdmin');
-            contenedor.innerHTML = "<p style='color: #dfc285;'>Leyendo perfiles publicados en el index...</p>";
+            contenedor.innerHTML = "<p style='color: #dfc285;'>Leyendo perfiles publicados en o índice...</p>";
 
             try {
-                // 1. Descargamos el index.html en vivo para extraer los nombres de las chicas
                 const response = await fetch('index.html?' + new Date().getTime());
                 const htmlText = await response.text();
                 
                 const parser = new DOMParser();
                 const docHtml = parser.parseFromString(htmlText, 'text/html');
                 
-                // Buscamos todos los enlaces de las tarjetas de perfiles
                 const links = docHtml.querySelectorAll('.card-link');
                 let perfilesDetectados = new Set();
 
@@ -93,7 +91,6 @@
                     return;
                 }
 
-                // 2. Traemos las visitas y estados de Firebase
                 const snapVisitas = await db.collection("estadisticas_visitas").get();
                 let visitasMap = {};
                 snapVisitas.forEach(doc => {
@@ -108,7 +105,6 @@
 
                 contenedor.innerHTML = "";
 
-                // 3. Dibujamos la lista con los nombres reales que encontró en el index
                 perfilesDetectados.forEach(idPerfil => {
                     let estado = estadosMap[idPerfil] || "activo";
                     let totalVisitas = visitasMap[idPerfil] || 0;
@@ -122,8 +118,8 @@
                         </div>
                         <div>
                             ${estado === 'activo' 
-                                ? `<button onclick="cambiarEstado('${idPerfil}', 'pausado')" class="btn-accion btn-pausado">Pausar / Ocultar</button>` 
-                                : `<button onclick="cambiarEstado('${idPerfil}', 'activo')" class="btn-accion btn-activo">Activar Perfil</button>`
+                                ? `<button onclick="window.cambiarEstado('${idPerfil}', 'pausado')" class="btn-accion btn-pausado">Pausar / Ocultar</button>` 
+                                : `<button onclick="window.cambiarEstado('${idPerfil}', 'activo')" class="btn-accion btn-activo">Activar Perfil</button>`
                             }
                         </div>
                     `;
@@ -136,12 +132,16 @@
             }
         }
 
+        // Definición explícita global para que el botón la ejecute correctamente
         window.cambiarEstado = function(idPerfil, nuevoEstado) {
             db.collection("config_perfiles").doc(idPerfil).set({
                 estado: nuevoEstado
             }, { merge: true }).then(() => {
                 alert(`El perfil de ${idPerfil} ahora está ${nuevoEstado}.`);
                 escanearIndexYConstruirPanel();
+            }).catch(err => {
+                console.error("Error al actualizar:", err);
+                alert("No se pudo actualizar el estado en Firebase.");
             });
         };
     </script>
