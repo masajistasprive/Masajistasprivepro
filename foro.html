@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Foro - Masajistas Privé</title>
+    <title data-i18n="foroTitle">Foro - Masajistas Privé</title>
     <!-- Firebase App (compat) y Firestore -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -152,10 +152,19 @@
         .admin-link { color: #555; text-decoration: none; cursor: pointer; }
         .admin-link:hover { color: var(--champagne); }
 
-        /* Logo Gigante Imponente */
+        /* Contenedor Superior con Logo e Idioma */
+        .foro-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto 20px auto;
+            padding: 0 10px;
+        }
+
         .logo-foro {
-            height: 120px !important;
-            max-height: 130px !important;
+            height: 90px !important;
+            max-height: 100px !important;
             width: auto !important;
             object-fit: contain !important;
         }
@@ -163,24 +172,32 @@
 </head>
 <body>
 
-<div style="text-align: center; margin-bottom: 20px;">
-    <img src="img/logo.png" alt="Logo" class="logo-foro">
+<div class="foro-header-top">
+    <div></div>
+    <div>
+        <img src="img/logo.png" alt="Logo" class="logo-foro">
+    </div>
+    <div>
+        <button id="btn-idioma" onclick="cambiarIdiomaPerfil()" style="background: transparent; border: 1px solid rgba(223, 194, 133, 0.4); color: #dfc285; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600; font-family: 'Montserrat', sans-serif; letter-spacing: 1px; width: auto; box-shadow: none;">
+            🇺🇸 EN
+        </button>
+    </div>
 </div>
 
 <div class="container">
-    <h1>Foro Masajistas Privé</h1>
+    <h1 data-i18n="foroTitulo">Foro Masajistas Privé</h1>
 
     <!-- VISTA 1: LISTA DE TEMAS (ÍNDICE COMPACTO) -->
     <div id="listView">
         <div class="form-group">
-            <h2>Crear nuevo tema</h2>
-            <input type="text" id="autorInput" placeholder="Tu nombre o apodo">
+            <h2 data-i18n="crearTemaTitulo">Crear nuevo tema</h2>
+            <input type="text" id="autorInput" data-i18n-placeholder="placeholderAutor" placeholder="Tu nombre o apodo">
         </div>
         <div class="form-group">
-            <input type="text" id="tituloInput" placeholder="Título del tema">
+            <input type="text" id="tituloInput" data-i18n-placeholder="placeholderTitulo" placeholder="Título del tema">
         </div>
         <div class="form-group">
-            <textarea id="contenidoInput" rows="4" placeholder="Escribí tu mensaje aquí..."></textarea>
+            <textarea id="contenidoInput" rows="4" data-i18n-placeholder="placeholderContenido" placeholder="Escribí tu mensaje aquí..."></textarea>
             <div class="emoji-bar" style="margin-top: 8px;">
                 <button type="button" class="emoji-btn" onclick="agregarEmoji('contenidoInput', '😊')">😊</button>
                 <button type="button" class="emoji-btn" onclick="agregarEmoji('contenidoInput', '👍')">👍</button>
@@ -188,46 +205,46 @@
                 <button type="button" class="emoji-btn" onclick="agregarEmoji('contenidoInput', '❤️')">❤️</button>
                 <button type="button" class="emoji-btn" onclick="agregarEmoji('contenidoInput', '👏')">👏</button>
                 <button type="button" class="emoji-btn" onclick="agregarEmoji('contenidoInput', '✨')">✨</button>
-                <label class="file-upload-label" title="Adjuntar foto">
+                <label class="file-upload-label" data-i18n-title="titleAdjuntar" title="Adjuntar foto">
                     📎 <input type="file" id="mainImageFile" accept="image/*" onchange="previewFile('mainImageFile', 'mainFileName')">
                 </label>
             </div>
             <span id="mainFileName" class="file-preview-text"></span>
         </div>
-        <button id="publicarBtn">Publicar Tema</button>
+        <button id="publicarBtn" data-i18n="btnPublicar">Publicar Tema</button>
 
         <hr style="border: 0; border-top: 1px solid rgba(223,194,133,0.2); margin: 30px 0;">
 
-        <h2>Temas del Foro</h2>
-        <div id="loading">Cargando temas...</div>
+        <h2 data-i18n="temasForoTitulo">Temas del Foro</h2>
+        <div id="loading" data-i18n="textoCargando">Cargando temas...</div>
         <div id="postsContainer"></div>
     </div>
 
     <!-- VISTA 2: HILO INDIVIDUAL -->
     <div id="threadView" style="display: none;">
-        <button class="back-btn" onclick="volverAlListado()">← Volver al Foro</button>
+        <button class="back-btn" onclick="volverAlListado()" data-i18n="btnVolverForo">← Volver al Foro</button>
         <div id="singlePostContainer"></div>
         
         <div class="comments-section">
-            <h3 style="text-align: left; font-size: 1.2em; margin-bottom: 15px;">Comentarios y Respuestas</h3>
+            <h3 style="text-align: left; font-size: 1.2em; margin-bottom: 15px;" data-i18n="comentariosTitulo">Comentarios y Respuestas</h3>
             <div id="singleCommentsContainer"></div>
             
             <div class="comment-form">
                 <div class="comment-inputs">
-                    <input type="text" id="activeAuthor" placeholder="Tu nombre" style="flex: 1;">
-                    <input type="text" id="activeCommentText" placeholder="Escribir comentario..." style="flex: 2.5;">
+                    <input type="text" id="activeAuthor" data-i18n-placeholder="placeholderNombre" placeholder="Tu nombre" style="flex: 1;">
+                    <input type="text" id="activeCommentText" data-i18n-placeholder="placeholderComentario" placeholder="Escribir comentario..." style="flex: 2.5;">
                 </div>
                 <div class="emoji-bar">
                     <button type="button" class="emoji-btn" onclick="agregarEmoji('activeCommentText', '😊')">😊</button>
                     <button type="button" class="emoji-btn" onclick="agregarEmoji('activeCommentText', '👍')">👍</button>
                     <button type="button" class="emoji-btn" onclick="agregarEmoji('activeCommentText', '🔥')">🔥</button>
                     <button type="button" class="emoji-btn" onclick="agregarEmoji('activeCommentText', '❤️')">❤️</button>
-                    <label class="file-upload-label" title="Adjuntar foto">
+                    <label class="file-upload-label" data-i18n-title="titleAdjuntar" title="Adjuntar foto">
                         📎 <input type="file" id="activeImageFile" accept="image/*" onchange="previewFile('activeImageFile', 'activeFileName')">
                     </label>
                 </div>
                 <span id="activeFileName" class="file-preview-text"></span>
-                <button class="comment-btn" onclick="enviarComentarioActivo()">Comentar</button>
+                <button class="comment-btn" onclick="enviarComentarioActivo()" data-i18n="btnComentar">Comentar</button>
             </div>
         </div>
     </div>
@@ -237,6 +254,123 @@
         <span class="admin-link" onclick="activarAdmin()">Admin</span>
     </div>
 </div>
+
+<!-- Motor de Traducción Bilingüe -->
+<script>
+    const traduccionesForo = {
+        es: {
+            foroTitle: "Foro - Masajistas Privé",
+            foroTitulo: "Foro Masajistas Privé",
+            crearTemaTitulo: "Crear nuevo tema",
+            placeholderAutor: "Tu nombre o apodo",
+            placeholderTitulo: "Título del tema",
+            placeholderContenido: "Escribí tu mensaje aquí...",
+            titleAdjuntar: "Adjuntar foto",
+            btnPublicar: "Publicar Tema",
+            temasForoTitulo: "Temas del Foro",
+            textoCargando: "Cargando temas...",
+            btnVolverForo: "← Volver al Foro",
+            comentariosTitulo: "Comentarios y Respuestas",
+            placeholderNombre: "Tu nombre",
+            placeholderComentario: "Escribir comentario...",
+            btnComentar: "Comentar",
+            btnVerDebate: "Ver Debate",
+            btnMeGusta: "Me gusta",
+            btnResponder: "Responder",
+            btnEnviarResp: "Enviar",
+            alertaCamposTema: "Por favor completá nombre, título y mensaje antes de publicar.",
+            alertaCamposComentario: "Ingresá tu nombre y un comentario.",
+            alertaCamposRespuesta: "Ingresá tu nombre y tu respuesta.",
+            confirmBorrarTema: "¿Estás seguro de eliminar este tema y todas sus respuestas?",
+            confirmBorrarComentario: "¿Estás seguro de eliminar este comentario?",
+            textoSinTemas: "No hay temas publicados todavía. ¡Sé el primero en crear uno!",
+            textoSinComentarios: "No hay comentarios aún. ¡Sé el primero en responder!",
+            publicadoPor: "Publicado por",
+            porAutor: "Por",
+            archivoAdjunto: "✓ Archivo adjunto: "
+        },
+        en: {
+            foroTitle: "Forum - Masajistas Privé",
+            foroTitulo: "Masajistas Privé Forum",
+            crearTemaTitulo: "Create new topic",
+            placeholderAutor: "Your name or nickname",
+            placeholderTitulo: "Topic title",
+            placeholderContenido: "Write your message here...",
+            titleAdjuntar: "Attach photo",
+            btnPublicar: "Publish Topic",
+            temasForoTitulo: "Forum Topics",
+            textoCargando: "Loading topics...",
+            btnVolverForo: "← Back to Forum",
+            comentariosTitulo: "Comments and Replies",
+            placeholderNombre: "Your name",
+            placeholderComentario: "Write comment...",
+            btnComentar: "Comment",
+            btnVerDebate: "View Debate",
+            btnMeGusta: "Like",
+            btnResponder: "Reply",
+            btnEnviarResp: "Send",
+            alertaCamposTema: "Please complete name, title, and message before publishing.",
+            alertaCamposComentario: "Enter your name and a comment.",
+            alertaCamposRespuesta: "Enter your name and your reply.",
+            confirmBorrarTema: "Are you sure you want to delete this topic and all its replies?",
+            confirmBorrarComentario: "Are you sure you want to delete this comment?",
+            textoSinTemas: "No topics published yet. Be the first to create one!",
+            textoSinComentarios: "No comments yet. Be the first to reply!",
+            publicadoBy: "Published by",
+            porAutor: "By",
+            archivoAdjunto: "✓ Attached file: "
+        }
+    };
+
+    let idiomaPerfil = localStorage.getItem('idiomaPrive') || 'es';
+
+    function aplicarIdiomaPerfil(lang) {
+        idiomaPerfil = lang;
+        localStorage.setItem('idiomaPrive', lang);
+
+        const btn = document.getElementById('btn-idioma');
+        if(btn) {
+            btn.innerHTML = lang === 'es' ? '🇺🇸 EN' : '🇦🇷 ES';
+        }
+
+        // Traducir elementos estándar [data-i18n]
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const clave = el.getAttribute('data-i18n');
+            if (traduccionesForo[lang] && traduccionesForo[lang][clave]) {
+                if(el.tagName === 'TITLE') {
+                    document.title = traduccionesForo[lang][clave];
+                } else {
+                    el.textContent = traduccionesForo[lang][clave];
+                }
+            }
+        });
+
+        // Traducir placeholders [data-i18n-placeholder]
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            const clave = el.getAttribute('data-i18n-placeholder');
+            if (traduccionesForo[lang] && traduccionesForo[lang][clave]) {
+                el.placeholder = traduccionesForo[lang][clave];
+            }
+        });
+
+        // Traducir títulos/tooltips [data-i18n-title]
+        document.querySelectorAll('[data-i18n-title]').forEach(el => {
+            const clave = el.getAttribute('data-i18n-title');
+            if (traduccionesForo[lang] && traduccionesForo[lang][clave]) {
+                el.title = traduccionesForo[lang][clave];
+            }
+        });
+    }
+
+    function cambiarIdiomaPerfil() {
+        const nuevoLang = idiomaPerfil === 'es' ? 'en' : 'es';
+        aplicarIdiomaPerfil(nuevoLang);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        aplicarIdiomaPerfil(idiomaPerfil);
+    });
+</script>
 
 <script>
   const firebaseConfig = {
@@ -284,8 +418,9 @@
   window.previewFile = function(inputId, nameId) {
       const input = document.getElementById(inputId);
       const nameSpan = document.getElementById(nameId);
+      const t = traduccionesForo[idiomaPerfil];
       if (input.files && input.files[0]) {
-          nameSpan.textContent = "✓ Archivo adjunto: " + input.files[0].name;
+          nameSpan.textContent = t.archivoAdjunto + input.files[0].name;
       } else {
           nameSpan.textContent = "";
       }
@@ -329,9 +464,10 @@
   db.collection("temas").onSnapshot((snapshot) => {
       loadingDiv.style.display = 'none';
       postsContainer.innerHTML = "";
+      const t = traduccionesForo[idiomaPerfil];
 
       if (snapshot.empty) {
-          postsContainer.innerHTML = "<p style='text-align: center; color: #888;'>No hay temas publicados todavía. ¡Sé el primero en crear uno!</p>";
+          postsContainer.innerHTML = `<p style='text-align: center; color: #888;'>${t.textoSinTemas}</p>`;
           return;
       }
 
@@ -348,7 +484,7 @@
 
       docs.forEach((data) => {
           const postId = data.id;
-          const fechaFormateada = data.fecha ? new Date(data.fecha.toDate()).toLocaleDateString() : 'Reciente';
+          const fechaFormateada = data.fecha ? new Date(data.fecha.toDate()).toLocaleDateString() : (idiomaPerfil === 'es' ? 'Reciente' : 'Recent');
           
           let deleteBtnHtml = isAdmin ? `<button class="delete-btn" onclick="borrarTema('${postId}')" style="margin-left: 10px;">🗑️</button>` : '';
 
@@ -357,10 +493,10 @@
           postElement.innerHTML = `
               <div class="post-index-info" onclick="abrirHilo('${postId}')">
                   <h3>💬 ${escapeHtml(data.titulo)}</h3>
-                  <small>Por <b>${escapeHtml(data.autor)}</b> — ${fechaFormateada}</small>
+                  <small>${t.porAutor} <b>${escapeHtml(data.autor)}</b> — ${fechaFormateada}</small>
               </div>
               <div style="display: flex; align-items: center;">
-                  <button class="view-btn" onclick="abrirHilo('${postId}')">Ver Debate</button>
+                  <button class="view-btn" onclick="abrirHilo('${postId}')">${t.btnVerDebate}</button>
                   ${deleteBtnHtml}
               </div>
           `;
@@ -372,14 +508,15 @@
       const autor = document.getElementById('autorInput').value.trim();
       const titulo = document.getElementById('tituloInput').value.trim();
       const contenido = document.getElementById('contenidoInput').value.trim();
+      const t = traduccionesForo[idiomaPerfil];
 
       if (!autor || !titulo || !contenido) {
-          alert("Por favor completá nombre, título y mensaje antes de publicar.");
+          alert(t.alertaCamposTema);
           return;
       }
 
       publicarBtn.disabled = true;
-      publicarBtn.textContent = "Publicando...";
+      publicarBtn.textContent = idiomaPerfil === 'es' ? "Publicando..." : "Publishing...";
 
       convertImageToBase64('mainImageFile', (imageBase64) => {
           db.collection("temas").add({
@@ -397,18 +534,19 @@
               document.getElementById('mainImageFile').value = '';
               document.getElementById('mainFileName').textContent = '';
               publicarBtn.disabled = false;
-              publicarBtn.textContent = "Publicar Tema";
+              publicarBtn.textContent = traduccionesForo[idiomaPerfil].btnPublicar;
           })
           .catch((error) => {
               console.error("Error al guardar el tema: ", error);
               publicarBtn.disabled = false;
-              publicarBtn.textContent = "Publicar Tema";
+              publicarBtn.textContent = traduccionesForo[idiomaPerfil].btnPublicar;
           });
       });
   });
 
   window.borrarTema = function(postId) {
-      if (confirm("¿Estás seguro de eliminar este tema y todas sus respuestas?")) {
+      const t = traduccionesForo[idiomaPerfil];
+      if (confirm(t.confirmBorrarTema)) {
           db.collection("temas").doc(postId).delete().then(() => {
               if (currentPostId === postId) {
                   volverAlListado();
@@ -420,7 +558,8 @@
   };
 
   window.borrarComentario = function(postId, replyId) {
-      if (confirm("¿Estás seguro de eliminar este comentario?")) {
+      const t = traduccionesForo[idiomaPerfil];
+      if (confirm(t.confirmBorrarComentario)) {
           db.collection("temas").doc(postId).collection("respuestas").doc(replyId).delete().catch((error) => {
               console.error("Error al eliminar el comentario:", error);
           });
@@ -431,6 +570,7 @@
       currentPostId = postId;
       document.getElementById('listView').style.display = 'none';
       document.getElementById('threadView').style.display = 'block';
+      const t = traduccionesForo[idiomaPerfil];
 
       db.collection("temas").doc(postId).get().then((doc) => {
           if (doc.exists) {
@@ -438,7 +578,7 @@
               const fechaFormateada = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : '';
               const likesCount = data.likes || 0;
               let mediaHtml = data.image ? `<img src="${data.image}" class="post-media" alt="Imagen">` : '';
-              let deleteBtnHtml = isAdmin ? `<button class="delete-btn" onclick="borrarTema('${postId}')">🗑️ Eliminar tema</button>` : '';
+              let deleteBtnHtml = isAdmin ? `<button class="delete-btn" onclick="borrarTema('${postId}')">🗑️ ${idiomaPerfil === 'es' ? 'Eliminar tema' : 'Delete topic'}</button>` : '';
 
               document.getElementById('singlePostContainer').innerHTML = `
                   <div class="post" style="border-left-color: var(--champagne); margin-bottom: 10px;">
@@ -446,9 +586,9 @@
                       <h2>${escapeHtml(data.titulo)}</h2>
                       <p style="font-size: 1.1em;">${escapeHtml(data.contenido)}</p>
                       ${mediaHtml}
-                      <small>Publicado por <b>${escapeHtml(data.autor)}</b> el ${fechaFormateada}</small>
+                      <small>${t.publicadoPor} <b>${escapeHtml(data.autor)}</b> el ${fechaFormateada}</small>
                       <div class="actions-bar" style="margin-top: 15px;">
-                          <button class="like-btn" onclick="darLikePost('${postId}', ${likesCount})">👍 Me gusta (<span id="likes-count-${postId}">${likesCount}</span>)</button>
+                          <button class="like-btn" onclick="darLikePost('${postId}', ${likesCount})">👍 ${t.btnMeGusta} (<span id="likes-count-${postId}">${likesCount}</span>)</button>
                       </div>
                   </div>
               `;
@@ -458,9 +598,10 @@
       db.collection("temas").doc(postId).collection("respuestas").onSnapshot((snapshot) => {
           const commentsContainer = document.getElementById('singleCommentsContainer');
           commentsContainer.innerHTML = "";
+          const t = traduccionesForo[idiomaPerfil];
 
           if (snapshot.empty) {
-              commentsContainer.innerHTML = "<p style='color: #777; font-size: 0.9em;'>No hay comentarios aún. ¡Sé el primero en responder!</p>";
+              commentsContainer.innerHTML = `<p style='color: #777; font-size: 0.9em;'>${t.textoSinComentarios}</p>`;
               return;
           }
 
@@ -480,7 +621,7 @@
               const rFecha = rData.fecha ? new Date(rData.fecha.toDate()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
               const rLikes = rData.likes || 0;
               let rMedia = rData.image ? `<img src="${rData.image}" class="msg-media" alt="Adjunto">` : '';
-              let deleteCommentBtn = isAdmin ? `<button class="delete-btn" onclick="borrarComentario('${postId}', '${rId}')">🗑️ Eliminar</button>` : '';
+              let deleteCommentBtn = isAdmin ? `<button class="delete-btn" onclick="borrarComentario('${postId}', '${rId}')">🗑️ ${idiomaPerfil === 'es' ? 'Eliminar' : 'Delete'}</button>` : '';
 
               const commentDiv = document.createElement('div');
               commentDiv.className = 'comment-item';
@@ -494,16 +635,16 @@
                   </div>
                   <div style="display: flex; gap: 15px; margin-top: 8px; align-items: center;">
                       <button class="like-btn" style="font-size: 0.8em;" onclick="darLikeComentario('${postId}', '${rId}', ${rLikes})">👍 <span id="r-likes-${rId}">${rLikes}</span></button>
-                      <button class="reply-trigger" onclick="toggleReplyBox('${rId}')">Responder</button>
+                      <button class="reply-trigger" onclick="toggleReplyBox('${rId}')">${t.btnResponder}</button>
                   </div>
                   <div id="reply-box-${rId}" class="reply-box">
-                      <input type="text" id="rAuthor-${rId}" placeholder="Nombre" style="font-size: 0.85em; padding: 6px;">
-                      <input type="text" id="rText-${rId}" placeholder="Responder a ${escapeHtml(rData.autor)}..." style="font-size: 0.85em; padding: 6px;">
-                      <label class="file-upload-label" style="font-size:0.8em; width:30px; height:30px;" title="Adjuntar foto">
+                      <input type="text" id="rAuthor-${rId}" placeholder="${t.placeholderNombre}" style="font-size: 0.85em; padding: 6px;">
+                      <input type="text" id="rText-${rId}" placeholder="${t.btnResponder} a ${escapeHtml(rData.autor)}..." style="font-size: 0.85em; padding: 6px;">
+                      <label class="file-upload-label" style="font-size:0.8em; width:30px; height:30px;" title="${t.titleAdjuntar}">
                           📎 <input type="file" id="rFile-${rId}" accept="image/*" onchange="previewFile('rFile-${rId}', 'rFileName-${rId}')">
                       </label>
                       <span id="rFileName-${rId}" class="file-preview-text"></span>
-                      <button class="comment-btn" onclick="enviarRespuestaAComentario('${postId}', '${rId}', '${escapeHtml(rData.autor)}')">Enviar</button>
+                      <button class="comment-btn" onclick="enviarRespuestaAComentario('${postId}', '${rId}', '${escapeHtml(rData.autor)}')">${t.btnEnviarResp}</button>
                   </div>
               `;
               commentsContainer.appendChild(commentDiv);
@@ -521,9 +662,10 @@
       if (!currentPostId) return;
       const autor = document.getElementById('activeAuthor').value.trim();
       const contenido = document.getElementById('activeCommentText').value.trim();
+      const t = traduccionesForo[idiomaPerfil];
 
       if (!autor || !contenido) {
-          alert("Ingresá tu nombre y un comentario.");
+          alert(t.alertaCamposComentario);
           return;
       }
 
@@ -546,9 +688,10 @@
   window.enviarRespuestaAComentario = function(postId, replyId, targetAuthor) {
       const autor = document.getElementById(`rAuthor-${replyId}`).value.trim();
       const contenido = document.getElementById(`rText-${replyId}`).value.trim();
+      const t = traduccionesForo[idiomaPerfil];
 
       if (!autor || !contenido) {
-          alert("Ingresá tu nombre y tu respuesta.");
+          alert(t.alertaCamposRespuesta);
           return;
       }
 
@@ -599,4 +742,3 @@
 
 </body>
 </html>
-
