@@ -397,15 +397,36 @@
 
     <!-- Tarjeta del Dólar -->
     <div class="dolar-card" style="background: #141414; border: 1px solid rgba(223, 194, 133, 0.25); border-radius: 10px; padding: 20px; max-width: 900px; margin: 30px auto; text-align: center; font-family: 'Montserrat', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-        <span style="color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 2px;">Indicadores Financieros</span>
-        <h3 style="color: #fff; font-size: 18px; margin: 8px 0; font-family: 'Cormorant Garamond', serif;">Cotización Dólar (Argentina)</h3>
-        <div id="dolar-info" style="color: #ccc; font-size: 14px;">Cargando cotización actual...</div>
+        <span style="color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 2px;" data-i18n="financierosSub">Indicadores Financieros</span>
+        <h3 style="color: #fff; font-size: 18px; margin: 8px 0; font-family: 'Cormorant Garamond', serif;" data-i18n="financierosTitulo">Cotización Dólar (Argentina)</h3>
+        <div id="dolar-info" style="color: #ccc; font-size: 14px;"><span data-i18n="cargandoCotizacion">Cargando cotización actual...</span></div>
+    </div>
+
+    <section style="max-width: 900px; margin: 40px auto; padding: 0 20px;">
+        <div style="text-align: center; margin-bottom: 35px;">
+            <span style="color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 3px; font-weight: 500; display: block; margin-bottom: 8px;" data-i18n="editorialSub">Editorial & Bienestar</span>
+            <h2 style="font-size: 30px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; color: #dfc285; font-family: 'Cormorant Garamond', serif;" data-i18n="cuadernoTitulo">Cuaderno Privé</h2>
+            <p style="color: #999; font-size: 14px; font-weight: 300;" data-i18n="cuadernoDesc">Crónicas urbanas, secretos de gabinete y el arte del relax absoluto en CABA.</p>
+        </div>
+
+        <div id="cuaderno-rotativo" style="display: grid; gap: 20px;"></div>
+    </section>
+
+    <div id="modalArticulo" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); justify-content: center; align-items: center; z-index: 9999; padding: 20px;">
+        <div style="background: #141414; border: 1px solid #dfc285; border-radius: 8px; width: 100%; max-width: 650px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); max-height: 85vh; overflow-y: auto;">
+            <span id="categoriaArticuloModal" style="color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; display: block; margin-bottom: 6px;"></span>
+            <h3 id="tituloArticuloModal" style="color: #dfc285; font-size: 24px; margin-bottom: 15px; font-family: 'Cormorant Garamond', serif;"></h3>
+            <p id="textoArticuloModal" style="color: #ccc; font-size: 14px; line-height: 1.8; margin-bottom: 25px; font-weight: 300; font-family: 'Montserrat', sans-serif; white-space: pre-line;"></p>
+            <div style="text-align: right;">
+                <button type="button" onclick="cerrarArticulo()" style="background: #dfc285; color: #0d0d0d; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-weight: 600; text-transform: uppercase; font-family: 'Montserrat', sans-serif;" data-i18n="btnCerrar">Cerrar</button>
+            </div>
+        </div>
     </div>
 
     <footer class="footer">
         <div class="footer-container">
             <div class="footer-socials">
-                <span style="color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500;">Síguenos</span>
+                <span style="color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500;" data-i18n="siguenos">Síguenos</span>
                 <div class="footer-icons-row">
                     <a href="https://instagram.com/masajistasprive" target="_blank" class="footer-icon-link" title="Instagram">
                         <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
@@ -426,12 +447,12 @@
             </div>
 
             <div class="footer-legal">
-                <p>Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.</p>
-                <p style="margin-top: 6px;">Todo el contenido, marcas y logotipos pertenecen a sus respectivos dueños.</p>
+                <p data-i18n="footerLegal">Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.</p>
+                <p style="margin-top: 6px;" data-i18n="footerMarcas">Todo el contenido, marcas y logotipos pertenecen a sus respectivos dueños.</p>
                 <div id="contador-visitas-global" style="margin-top: 12px; color: #dfc285; font-size: 13px; font-weight: 500;">
-                    👁 Visitas totales al portal: <span id="visitas-total-num">Cargando...</span>
+                    👁 <span data-i18n="visitasTotales">Visitas totales al portal</span>: <span id="visitas-total-num" data-i18n="cargando">Cargando...</span>
                 </div>
-                <p class="copyright" style="margin-top: 8px; color: #dfc285; font-size: 12px;">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
+                <p class="copyright" style="margin-top: 8px; color: #dfc285; font-size: 12px;" data-i18n="footerCopy">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
             </div>
         </div>
     </footer>
@@ -441,9 +462,14 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <script>
-        // --- DICCIONARIO DE TRADUCCIÓN ---
+        // --- DICCIONARIO DE TRADUCCIÓN BILINGÜE Y TRINACIONAL (ES / EN / PT) ---
         const traducciones = {
             es: {
+                pageTitle: "Masajistas Privé | Portal Exclusivo",
+                brandName: "MASAJISTAS PRIVÉ",
+                modalEdadTexto: "Este sitio web contiene material exclusivo para adultos (+18) y servicios de relax independientes. Debes ser mayor de edad para ingresar.",
+                btnMayor: "Soy mayor de 18 años",
+                btnSalir: "Salir",
                 climaTitulo: "Clima en Directo",
                 cargando: "Cargando clima...",
                 destacadasTitulo: "Destacadas",
@@ -466,9 +492,27 @@
                 modConsultorioDomicilio: "Consultorio / Domicilio",
                 espacioDisponible: "Espacio Disponible",
                 publicaPerfil: "Publicá tu perfil aquí",
-                contactanos: "Contáctanos"
+                contactanos: "Contáctanos",
+                financierosSub: "Indicadores Financieros",
+                financierosTitulo: "Cotización Dólar (Argentina)",
+                cargandoCotizacion: "Cargando cotización actual...",
+                editorialSub: "Editorial & Bienestar",
+                cuadernoTitulo: "Cuaderno Privé",
+                cuadernoDesc: "Crónicas urbanas, secretos de gabinete y el arte del relax absoluto en CABA.",
+                leerCompleto: "Leer artículo completo &rarr;",
+                btnCerrar: "Cerrar",
+                siguenos: "Síguenos",
+                footerLegal: "Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.",
+                footerMarcas: "Todo el contenido, marcas y logotipos pertenecen a sus respectivos dueños.",
+                visitasTotales: "Visitas totales al portal",
+                footerCopy: "© 2026 Masajistas Privé. Todos los derechos reservados."
             },
             en: {
+                pageTitle: "Masajistas Privé | Exclusive Portal",
+                brandName: "MASAJISTAS PRIVÉ",
+                modalEdadTexto: "This website contains exclusive adult material (+18) and independent relaxation services. You must be of legal age to enter.",
+                btnMayor: "I am over 18 years old",
+                btnSalir: "Exit",
                 climaTitulo: "Live Weather",
                 cargando: "Loading weather...",
                 destacadasTitulo: "Featured",
@@ -491,9 +535,27 @@
                 modConsultorioDomicilio: "Office / Outcall",
                 espacioDisponible: "Available Space",
                 publicaPerfil: "Publish your profile here",
-                contactanos: "Contact Us"
+                contactanos: "Contact Us",
+                financierosSub: "Financial Indicators",
+                financierosTitulo: "US Dollar Rate (Argentina)",
+                cargandoCotizacion: "Loading current rate...",
+                editorialSub: "Editorial & Wellness",
+                cuadernoTitulo: "Privé Notebook",
+                cuadernoDesc: "Urban chronicles, cabinet secrets, and the art of absolute relaxation in Buenos Aires.",
+                leerCompleto: "Read full article &rarr;",
+                btnCerrar: "Close",
+                siguenos: "Follow Us",
+                footerLegal: "This is an exclusive site for adults (+18). The published advertisers are independent and have no employment, corporate, or dependency relationship with this portal.",
+                footerMarcas: "All content, trademarks, and logos belong to their respective owners.",
+                visitasTotales: "Total portal visits",
+                footerCopy: "© 2026 Masajistas Privé. All rights reserved."
             },
             pt: {
+                pageTitle: "Masajistas Privé | Portal Exclusivo",
+                brandName: "MASAJISTAS PRIVÉ",
+                modalEdadTexto: "Este site contém material exclusivo para adultos (+18) e serviços de relaxamento independentes. Você deve ser maior de idade para entrar.",
+                btnMayor: "Sou maior de 18 anos",
+                btnSalir: "Sair",
                 climaTitulo: "Clima ao Vivo",
                 cargando: "Carregando clima...",
                 destacadasTitulo: "Destaques",
@@ -516,8 +578,66 @@
                 modConsultorioDomicilio: "Consultório / Domicílio",
                 espacioDisponible: "Espaço Disponível",
                 publicaPerfil: "Publique seu perfil aqui",
-                contactanos: "Contate-nos"
+                contactanos: "Contate-nos",
+                financierosSub: "Indicadores Financeiros",
+                financierosTitulo: "Cotação Dólar (Argentina)",
+                cargandoCotizacion: "Carregando cotação atual...",
+                editorialSub: "Editorial & Bem-estar",
+                cuadernoTitulo: "Caderno Privé",
+                cuadernoDesc: "Crônicas urbanas, segredos de estúdio e a arte do relax absoluto em Buenos Aires.",
+                leerCompleto: "Ler artigo completo &rarr;",
+                btnCerrar: "Fechar",
+                siguenos: "Siga-nos",
+                footerLegal: "Este é um site exclusivo para adultos (+18). Os anunciantes publicados são independentes e não possuem vínculo empregatício, societário ou de dependência com este portal.",
+                footerMarcas: "Todo o conteúdo, marcas e logotipos pertencem aos seus respectivos donos.",
+                visitasTotales: "Visitas totais ao portal",
+                footerCopy: "© 2026 Masajistas Privé. Todos os direitos reservados."
             }
+        };
+
+        const bancoArticulos = {
+            es: [
+                {
+                    categoria: "Bienestar & CABA",
+                    titulo: "El ritual post-oficina: Cómo desconectar del microcentro en diez minutos",
+                    extracto: "El ruido de la City porteña, el subte colapsado y las pantallas cargan de tensión invisible la zona cervical. Claves para entender por qué una pausa programada en gabinete cambia por completo la noche.",
+                    cuerpo: "El ritmo de Buenos Aires tiene una exigencia particular. Salir de una oficina en Microcentro o Tribunales a las 18:00 horas implica someter al cuerpo a un nivel de cortisol elevado de forma crónica.\n\nLa desconexión no ocurre sola al llegar a casa; el cerebro sigue procesando pendientes. Ingresar a un espacio climatizado, con iluminación tenue, aromas de sándalo y música ambiental adecuada permite un reseteo físico inmediato. El tacto profesional sobre los puntos gatillo no es un lujo estético, es una necesidad fisiológica para evitar que el estrés se convierta en migrañas o contracturas crónicas."
+                },
+                {
+                    categoria: "Técnicas & Conexión",
+                    titulo: "Más allá del masaje: La importancia de la atmósfera y la confianza previa",
+                    extracto: "Un buen encuentro de relax se construye desde el primer mensaje de coordinación. Qué factores determinan que una sesión pase de ser correcta a ser absolutamente inolvidable.",
+                    cuerpo: "La experiencia de un masaje de alto nivel depende en un 50% de la técnica manual y en el otro 50% del entorno y la sintonía entre el profesional y quien busca el espacio.\n\nLa discreción, la pulcritud absoluta del gabinete y la claridad en los tiempos de la sesión generan un marco de seguridad mental indispensable. Cuando el cliente logra apagar el teléfono y entregarse por completo a los sentidos, la circulación se reactiva y la liberación de endorfinas se multiplica exponencialmente."
+                }
+            ],
+            en: [
+                {
+                    categoria: "Wellness & BA",
+                    titulo: "The Post-Office Ritual: How to Disconnect from Downtown in Ten Minutes",
+                    extracto: "The noise of Buenos Aires' City, the crowded subway, and screens fill the cervical area with invisible tension. Keys to understanding why a scheduled session completely changes the night.",
+                    cuerpo: "The pace of Buenos Aires has a particular demand. Leaving an office in Microcentro or Tribunales at 6:00 PM means subjecting the body to chronically elevated cortisol levels.\n\nDisconnection doesn't happen just by getting home; the brain keeps processing pending tasks. Entering a climate-controlled space with dim lighting, sandalwood aromas, and ambient music allows an immediate physical reset. Professional touch on trigger points is not an aesthetic luxury, it is a physiological necessity to prevent stress from turning into chronic migraines or muscle knots."
+                },
+                {
+                    categoria: "Techniques & Connection",
+                    titulo: "Beyond the Massage: The Importance of Atmosphere and Prior Trust",
+                    extracto: "A good relaxation encounter is built from the very first coordination message. What factors determine whether a session goes from good to unforgettable.",
+                    cuerpo: "The experience of a high-level massage depends 50% on manual technique and 50% on the environment and harmony between the professional and the client.\n\nDiscretion, absolute cleanliness of the studio, and clarity regarding session times create an indispensable framework of mental security. When clients manage to turn off their phones and completely surrender to their senses, circulation reactivates and endorphin release multiplies exponentially."
+                }
+            ],
+            pt: [
+                {
+                    categoria: "Bem-estar & BA",
+                    titulo: "O ritual pós-escritório: Como se desconectar do centro em dez minutos",
+                    extracto: "O barulho da City portenha, o metrô lotado e as telas carregam a cervical de tensão invisível. Chaves para entender por que uma pausa programada muda completamente a noite.",
+                    cuerpo: "O ritmo de Buenos Aires tem uma exigência particular. Sair de um escritório no Microcentro ou Tribunales às 18h significa submeter o corpo a um nível de cortisol cronicamente elevado.\n\nA desconexão não acontece sozinha ao chegar em casa; o cérebro continua processando pendências. Entrar em um espaço climatizado, com iluminação suave, aromas de sândalo e música ambiente permite um reset físico imediato."
+                },
+                {
+                    categoria: "Técnicas & Conexão",
+                    titulo: "Além da massagem: A importância da atmosfera e da confiança prévia",
+                    extracto: "Um bom encontro de relaxamento é construído desde a primeira mensagem de coordenação. Quais fatores determinam se uma sessão passa de boa a inesquecível.",
+                    cuerpo: "A experiência de uma massagem de alto nível depende 50% da técnica manual e 50% do ambiente e da harmonia entre o profissional e o cliente.\n\nA discrição, a limpeza absoluta do estúdio e a clareza nos horários criam uma moldura de segurança mental indispensável."
+                }
+            ]
         };
 
         let idiomaActual = localStorage.getItem('idiomaPrive') || 'es';
@@ -536,15 +656,87 @@
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const clave = el.getAttribute('data-i18n');
                 if (traducciones[lang] && traducciones[lang][clave]) {
-                    el.textContent = traducciones[lang][clave];
+                    if(el.tagName === 'TITLE') {
+                        document.title = traducciones[lang][clave];
+                    } else {
+                        el.textContent = traducciones[lang][clave];
+                    }
                 }
             });
+
+            cargarArticulosDelDia();
         }
 
         function cambiarIdioma() {
             if (idiomaActual === 'es') aplicarIdioma('en');
             else if (idiomaActual === 'en') aplicarIdioma('pt');
             else aplicarIdioma('es');
+        }
+
+        function cargarArticulosDelDia() {
+            const hoy = new Date();
+            const diaDelAnio = Math.floor((hoy - new Date(hoy.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+            
+            const listaActual = bancoArticulos[idiomaActual] || bancoArticulos['es'];
+            const index1 = diaDelAnio % listaActual.length;
+            const index2 = (diaDelAnio + 1) % listaActual.length;
+
+            const art1 = listaActual[index1];
+            const art2 = listaActual[index2];
+            const textoBtnLeer = traducciones[idiomaActual].leerCompleto;
+
+            const contenedor = document.getElementById('cuaderno-rotativo');
+            if(!contenedor) return;
+
+            contenedor.innerHTML = `
+                <div class="blog-card" onclick="abrirArticulo('${art1.titulo.replace(/'/g, "\\'")}', '${art1.cuerpo.replace(/'/g, "\\'").replace(/\n/g, '\\n')}', '${art1.categoria}')">
+                    <span style="color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; display: block; margin-bottom: 6px;">${art1.categoria}</span>
+                    <h3 style="color: #ffffff; font-size: 22px; font-weight: 600; margin-bottom: 10px; font-family: 'Cormorant Garamond', serif;">${art1.titulo}</h3>
+                    <p style="color: #bcbbb5; font-size: 14px; font-weight: 300; margin-bottom: 15px;">${art1.extracto}</p>
+                    <span style="color: #dfc285; font-size: 13px; font-weight: 600; letter-spacing: 1px;">${textoBtnLeer}</span>
+                </div>
+
+                <div class="blog-card" onclick="abrirArticulo('${art2.titulo.replace(/'/g, "\\'")}', '${art2.cuerpo.replace(/'/g, "\\'").replace(/\n/g, '\\n')}', '${art2.categoria}')">
+                    <span style="color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; display: block; margin-bottom: 6px;">${art2.categoria}</span>
+                    <h3 style="color: #ffffff; font-size: 22px; font-weight: 600; margin-bottom: 10px; font-family: 'Cormorant Garamond', serif;">${art2.titulo}</h3>
+                    <p style="color: #bcbbb5; font-size: 14px; font-weight: 300; margin-bottom: 15px;">${art2.extracto}</p>
+                    <span style="color: #dfc285; font-size: 13px; font-weight: 600; letter-spacing: 1px;">${textoBtnLeer}</span>
+                </div>
+            `;
+        }
+
+        function barajarSeccion(gridId) {
+            const grid = document.getElementById(gridId);
+            if (!grid) return;
+
+            const tarjetas = Array.from(grid.querySelectorAll('.card-link:not(.card-ad-link)'));
+            const anuncio = grid.querySelector('.card-ad-link');
+
+            for (let i = tarjetas.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [tarjetas[i], tarjetas[j]] = [tarjetas[j], tarjetas[i]];
+            }
+
+            grid.innerHTML = '';
+            tarjetas.forEach(tarjeta => grid.appendChild(tarjeta));
+            if (anuncio) {
+                grid.appendChild(anuncio);
+            }
+        }
+
+        function barajarDestacadas() {
+            const contenedor = document.querySelector('.stories-container');
+            if (!contenedor) return;
+
+            const globos = Array.from(contenedor.querySelectorAll('.story-item'));
+
+            for (let i = globos.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [globos[i], globos[j]] = [globos[j], globos[i]];
+            }
+
+            contenedor.innerHTML = '';
+            globos.forEach(globo => contenedor.appendChild(globo));
         }
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -557,49 +749,34 @@
             registrarYMostrarVisitasGlobales();
         });
 
-        function barajarSeccion(gridId) {
-            const grid = document.getElementById(gridId);
-            if (!grid) return;
-            const tarjetas = Array.from(grid.querySelectorAll('.card-link:not(.card-ad-link)'));
-            const anuncio = grid.querySelector('.card-ad-link');
-            for (let i = tarjetas.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [tarjetas[i], tarjetas[j]] = [tarjetas[j], tarjetas[i]];
-            }
-            grid.innerHTML = '';
-            tarjetas.forEach(tarjeta => grid.appendChild(tarjeta));
-            if (anuncio) grid.appendChild(anuncio);
-        }
-
-        function barajarDestacadas() {
-            const contenedor = document.querySelector('.stories-container');
-            if (!contenedor) return;
-            const globos = Array.from(contenedor.querySelectorAll('.story-item'));
-            for (let i = globos.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [globos[i], globos[j]] = [globos[j], globos[i]];
-            }
-            contenedor.innerHTML = '';
-            globos.forEach(globo => contenedor.appendChild(globo));
-        }
-
         const pills = document.querySelectorAll('.pill-btn');
         const cards = document.querySelectorAll('.card-link');
         const headings = document.querySelectorAll('.section-heading');
         
         function filtrarSeccion(filter) {
             pills.forEach(p => {
-                if(p.getAttribute('data-filter') === filter) p.classList.add('active');
-                else p.classList.remove('active');
+                if(p.getAttribute('data-filter') === filter) {
+                    p.classList.add('active');
+                } else {
+                    p.classList.remove('active');
+                }
             });
+
             cards.forEach(card => {
-                if (filter === 'todas' || card.getAttribute('data-categoria') === filter) card.style.display = 'block';
-                else card.style.display = 'none';
+                if (filter === 'todas' || card.getAttribute('data-categoria') === filter) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
             });
+
             headings.forEach(heading => {
                 const sectionType = heading.getAttribute('data-section');
-                if (filter === 'todas' || sectionType === filter) heading.style.display = 'block';
-                else heading.style.display = 'none';
+                if (filter === 'todas' || sectionType === filter) {
+                    heading.style.display = 'block';
+                } else {
+                    heading.style.display = 'none';
+                }
             });
         }
 
@@ -608,6 +785,17 @@
                 filtrarSeccion(pill.getAttribute('data-filter'));
             });
         });
+
+        function abrirArticulo(titulo, texto, categoria) {
+            document.getElementById('categoriaArticuloModal').innerText = categoria;
+            document.getElementById('tituloArticuloModal').innerText = titulo;
+            document.getElementById('textoArticuloModal').innerText = texto;
+            document.getElementById('modalArticulo').style.display = 'flex';
+        }
+
+        function cerrarArticulo() {
+            document.getElementById('modalArticulo').style.display = 'none';
+        }
 
         function registrarYMostrarVisitasGlobales() {
             try {
@@ -641,6 +829,7 @@
                     }
                 });
             } catch (e) {
+                console.error("Excepción en contador global:", e);
                 document.getElementById('visitas-total-num').textContent = "Disponible";
             }
         }
@@ -649,9 +838,49 @@
             try {
                 const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=-34.6132&longitude=-58.3816&current=temperature_2m,relative_humidity_2m,weather_code&timezone=America%2FArgentina%2FBuenos_Aires');
                 const data = await response.json();
+                
                 const temp = Math.round(data.current.temperature_2m);
                 const humedad = data.current.relative_humidity_2m;
-                document.getElementById('clima-info').innerHTML = `Buenos Aires (CABA) — 🌡️ ${temp} °C | 💧 Humedad: ${humedad}%`;
+                const codigoClima = data.current.weather_code;
+                
+                const horaActual = new Date().getHours();
+                const esDeNoche = horaActual < 6 || horaActual >= 20;
+
+                let icono = '☁️';
+                let estado = idiomaActual === 'en' ? 'Cloudy' : (idiomaActual === 'pt' ? 'Nublado' : 'Nublado');
+                
+                if (codigoClima === 0) {
+                    icono = esDeNoche ? '🌙' : '☀️';
+                    estado = idiomaActual === 'en' 
+                        ? (esDeNoche ? 'Clear night' : 'Clear') 
+                        : (idiomaActual === 'pt' ? (esDeNoche ? 'Noite limpa' : 'Limpo') : (esDeNoche ? 'Noche despejada' : 'Despejado'));
+                } else if (codigoClima >= 1 && codigoClima <= 2) {
+                    icono = esDeNoche ? '☁️' : '⛅';
+                    estado = idiomaActual === 'en' ? 'Partly cloudy' : (idiomaActual === 'pt' ? 'Parcialmente nublado' : 'Parcialmente nublado');
+                } else if (codigoClima === 3) {
+                    icono = '☁';
+                    estado = idiomaActual === 'en' ? 'Cloudy' : (idiomaActual === 'pt' ? 'Nublado' : 'Nublado');
+                } else if ((codigoClima >= 51 && codigoClima <= 67) || (codigoClima >= 80 && codigoClima <= 99) || codigoClima === 56 || codigoClima === 57 || codigoClima === 66 || codigoClima === 67) {
+                    icono = '🌧️';
+                    estado = idiomaActual === 'en' ? 'Raining' : (idiomaActual === 'pt' ? 'Chovendo' : 'Lloviendo');
+                } else if (codigoClima >= 71 && codigoClima <= 77) {
+                    icono = '❄️';
+                    estado = idiomaActual === 'en' ? 'Snow' : (idiomaActual === 'pt' ? 'Neve' : 'Nieve');
+                } else if (codigoClima >= 95) {
+                    icono = '⛈';
+                    estado = idiomaActual === 'en' ? 'Thunderstorm' : (idiomaActual === 'pt' ? 'Tempestade' : 'Tormenta');
+                }
+
+                const labelHumedad = idiomaActual === 'en' ? 'Humidity' : (idiomaActual === 'pt' ? 'Umidade' : 'Humedad');
+
+                document.getElementById('clima-info').innerHTML = `
+                    <span style="font-size: 20px; vertical-align: middle; margin-right: 4px;">${icono}</span>
+                    <span style="color: #dfc285; font-size: 20px; font-weight: 600; font-family: 'Cormorant Garamond', serif;">${temp} °C</span> 
+                    <span style="margin: 0 6px; color: #555;">|</span> 
+                    <span>${estado}</span>
+                    <span style="margin: 0 6px; color: #555;">|</span> 
+                    ${labelHumedad}: ${humedad}%
+                `;
             } catch (error) {
                 document.getElementById('clima-info').innerHTML = "Buenos Aires (CABA) — Clima no disponible";
             }
@@ -662,7 +891,12 @@
             try {
                 const response = await fetch('https://dolarapi.com/v1/dolares/blue');
                 const data = await response.json();
-                document.getElementById('dolar-info').innerHTML = `<b>Dólar Blue</b> — Compra: $${data.compra} | Venta: $${data.venta}`;
+                const labelDolar = idiomaActual === 'en' ? 'Blue Dollar' : (idiomaActual === 'pt' ? 'Dólar Blue' : 'Dólar Blue');
+                const labelCompra = idiomaActual === 'en' ? 'Buy' : (idiomaActual === 'pt' ? 'Compra' : 'Compra');
+                const labelVenta = idiomaActual === 'en' ? 'Sell' : (idiomaActual === 'pt' ? 'Venda' : 'Venta');
+                document.getElementById('dolar-info').innerHTML = `
+                    <span style="color: #dfc285; font-weight: 600;">${labelDolar}</span> — ${labelCompra}: $${data.compra} | ${labelVenta}: $${data.venta}
+                `;
             } catch (error) {
                 document.getElementById('dolar-info').innerHTML = "No se pudo cargar la cotización en este momento.";
             }
@@ -671,9 +905,11 @@
 
         const modalEdad = document.getElementById('modal-edad');
         const btnMayor = document.getElementById('btn-mayor');
-        if (sessionStorage.getItem('edadVerificada') === 'true' && modalEdad) {
-            modalEdad.style.display = 'none';
+
+        if (sessionStorage.getItem('edadVerificada') === 'true') {
+            if (modalEdad) modalEdad.style.display = 'none';
         }
+
         if (btnMayor && modalEdad) {
             btnMayor.addEventListener('click', () => {
                 sessionStorage.setItem('edadVerificada', 'true');
@@ -684,14 +920,22 @@
     
     <script>
         document.addEventListener('contextmenu', event => event.preventDefault());
+
         document.addEventListener('keydown', event => {
-            if (event.key === 'F12' || (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'J' || event.key === 'C')) || (event.ctrlKey && (event.key === 'U' || event.key === 'S' || event.key === 'P'))) {
+            if (
+                event.key === 'F12' ||
+                (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'J' || event.key === 'C')) ||
+                (event.ctrlKey && (event.key === 'U' || event.key === 'S' || event.key === 'P'))
+            ) {
                 event.preventDefault();
                 return false;
             }
         });
+
         document.addEventListener('dragstart', event => {
-            if (event.target.tagName === 'IMG') event.preventDefault();
+            if (event.target.tagName === 'IMG') {
+                event.preventDefault();
+            }
         });
     </script>
 </body>
