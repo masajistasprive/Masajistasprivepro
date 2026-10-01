@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="main-title">Masajistas Privé | Portal Exclusivo</title>
-    <!-- VERSIÓN ACTUALIZADA BILINGÜE Y CORREGIDA -->
+    <!-- VERSIÓN ACTUALIZADA CUATRILINGÜE Y CORREGIDA -->
     <link rel="stylesheet" href="css/style.css?v=3.8">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,7 +44,7 @@
             <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">
         </div>
         <div class="header-right" style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
-            <!-- Selector de Idioma Minimalista y Visible Arriba del Foro -->
+            <!-- Selector de Idioma Cuatrilingüe Visible Arriba del Foro -->
             <button id="btn-idioma" onclick="cambiarIdioma()" style="background: rgba(223, 194, 133, 0.12); border: 1px solid #dfc285; color: #dfc285; padding: 7px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; font-family: 'Montserrat', sans-serif; letter-spacing: 1.5px; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.4);">
                 🇺🇸 EN
             </button>
@@ -320,7 +320,7 @@
                         <div class="card-gradient-overlay">
                             <h3>Luly</h3>
                             <span class="zona">📍 CABA</span>
-                            <span class="modalidad-tag" data-i18n="modGabinete">Gabinete propio</span>
+                            <span class="modalidad-tag" data-i18n="modGabinete">Gabinete próprio</span>
                         </div>
                     </div>
                 </article>
@@ -462,7 +462,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <script>
-        // --- DICCIONARIO DE TRADUCCIÓN BILINGÜE Y TRINACIONAL (ES / EN / PT) ---
+        // --- DICCIONARIO CUATRILINGÜE (ES / EN / PT / FR) ---
         const traducciones = {
             es: {
                 pageTitle: "Masajistas Privé | Portal Exclusivo",
@@ -592,6 +592,49 @@
                 footerMarcas: "Todo o conteúdo, marcas e logotipos pertencem aos seus respectivos donos.",
                 visitasTotales: "Visitas totais ao portal",
                 footerCopy: "© 2026 Masajistas Privé. Todos os direitos reservados."
+            },
+            fr: {
+                pageTitle: "Masajistas Privé | Portail Exclusif",
+                brandName: "MASAJISTAS PRIVÉ",
+                modalEdadTexto: "Ce site Web contient du contenu exclusif pour adultes (+18) et des services de relaxation indépendants. Vous devez être majeur pour entrer.",
+                btnMayor: "J'ai plus de 18 ans",
+                btnSalir: "Quitter",
+                climaTitulo: "Météo en Direct",
+                cargando: "Chargement de la météo...",
+                destacadasTitulo: "En Vedette",
+                filtroTodas: "Tous",
+                filtroTerapeuticas: "Thérapeutiques",
+                filtroSensuales: "Sensuelles",
+                filtroMasculinos: "Hommes",
+                filtroFantasias: "Fantasies",
+                seccionTerapeuticas: "Masseuses Thérapeutiques",
+                seccionSensuales: "Masseuses Sensuelles",
+                seccionMasculinos: "Masseurs",
+                seccionFantasias: "Fantasies",
+                badgeVerificado: "✓ Vérifié",
+                modConsultorio: "Cabinet privé",
+                modGabinete: "Studio privé",
+                modDepto: "Appartement privé",
+                modConsultorioHotel: "Cabinet / Hôtel",
+                modDeptoPropio: "Appart privé",
+                modGabineteDomicilio: "Studio / À domicile",
+                modConsultorioDomicilio: "Cabinet / À domicile",
+                espacioDisponible: "Espace Disponible",
+                publicaPerfil: "Publiez votre profil ici",
+                contactanos: "Contactez-nous",
+                financierosSub: "Indicateurs Financiers",
+                financierosTitulo: "Taux du Dollar (Argentine)",
+                cargandoCotizacion: "Chargement du taux...",
+                editorialSub: "Éditorial & Bien-être",
+                cuadernoTitulo: "Carnet Privé",
+                cuadernoDesc: "Chroniques urbaines, secrets de studio et l'art de la relaxation absolue à Buenos Aires.",
+                leerCompleto: "Lire l'article complet &rarr;",
+                btnCerrar: "Fermer",
+                siguenos: "Suivez-nous",
+                footerLegal: "Ceci est un site exclusif pour adultes (+18). Les annonceurs publiés sont indépendants et n'ont aucun lien d'emploi, d'entreprise ou de dépendance avec ce portail.",
+                footerMarcas: "Tout le contenu, les marques et les logos appartiennent à leurs propriétaires respectifs.",
+                visitasTotales: "Total des visites du portail",
+                footerCopy: "© 2026 Masajistas Privé. Tous droits réservés."
             }
         };
 
@@ -637,6 +680,20 @@
                     extracto: "Um bom encontro de relaxamento é construído desde a primeira mensagem de coordenação. Quais fatores determinam se uma sessão passa de boa a inesquecível.",
                     cuerpo: "A experiência de uma massagem de alto nível depende 50% da técnica manual e 50% do ambiente e da harmonia entre o profissional e o cliente.\n\nA discrição, a limpeza absoluta do estúdio e a clareza nos horários criam uma moldura de segurança mental indispensável."
                 }
+            ],
+            fr: [
+                {
+                    categoria: "Bien-être & BA",
+                    titulo: "Le rituel post-bureau : Comment déconnecter du centre en dix minutes",
+                    extracto: "Le bruit de la ville, le métro bondé et les écrans chargent la zone cervicale d'une tension invisible. Les clés pour comprendre pourquoi une pause programmée change toute la soirée.",
+                    cuerpo: "Le rythme de Buenos Aires est particulièrement exigeant. Sortir d'un bureau au Microcentro ou à Tribunales à 18h soumet le corps à un niveau de cortisol chroniquement élevé.\n\nLa déconnexion ne se fait pas toute seule en rentrant chez soi. Entrer dans un espace climatisé, à l'éclairage tamisé, aux arômes de santal et à la musique ambiante permet une réinitialisation physique immédiate."
+                },
+                {
+                    categoria: "Techniques & Connexion",
+                    titulo: "Au-delà du massage : L'importance de l'atmosphère et de la confiance préalable",
+                    extracto: "Une bonne rencontre de détente se construit dès le premier message de coordination. Quels facteurs déterminent le succès d'une séance.",
+                    cuerpo: "L'expérience d'un massage de haut niveau dépend à 50 % de la technique manuelle et à 50 % de l'environnement et de l'harmonie entre le professionnel et le client.\n\nLa discrétion, la propreté absolue et la clarté des horaires garantissent une sécurité mentale indispensable."
+                }
             ]
         };
 
@@ -650,6 +707,7 @@
             if(btn) {
                 if (lang === 'es') btn.innerHTML = '🇺🇸 EN';
                 else if (lang === 'en') btn.innerHTML = '🇧🇷 PT';
+                else if (lang === 'pt') btn.innerHTML = '🇫🇷 FR';
                 else btn.innerHTML = '🇦🇷 ES';
             }
 
@@ -665,11 +723,14 @@
             });
 
             cargarArticulosDelDia();
+            obtenerClimaCABA();
+            obtenerDolar();
         }
 
         function cambiarIdioma() {
             if (idiomaActual === 'es') aplicarIdioma('en');
             else if (idiomaActual === 'en') aplicarIdioma('pt');
+            else if (idiomaActual === 'pt') aplicarIdioma('fr');
             else aplicarIdioma('es');
         }
 
@@ -847,31 +908,33 @@
                 const esDeNoche = horaActual < 6 || horaActual >= 20;
 
                 let icono = '☁️';
-                let estado = idiomaActual === 'en' ? 'Cloudy' : (idiomaActual === 'pt' ? 'Nublado' : 'Nublado');
+                let estado = idiomaActual === 'en' ? 'Cloudy' : (idiomaActual === 'pt' ? 'Nublado' : (idiomaActual === 'fr' ? 'Nuageux' : 'Nublado'));
                 
                 if (codigoClima === 0) {
                     icono = esDeNoche ? '🌙' : '☀️';
                     estado = idiomaActual === 'en' 
                         ? (esDeNoche ? 'Clear night' : 'Clear') 
-                        : (idiomaActual === 'pt' ? (esDeNoche ? 'Noite limpa' : 'Limpo') : (esDeNoche ? 'Noche despejada' : 'Despejado'));
+                        : (idiomaActual === 'pt' ? (esDeNoche ? 'Noite limpa' : 'Limpo') 
+                        : (idiomaActual === 'fr' ? (esDeNoche ? 'Nuit claire' : 'Dégagé') 
+                        : (esDeNoche ? 'Noche despejada' : 'Despejado')));
                 } else if (codigoClima >= 1 && codigoClima <= 2) {
                     icono = esDeNoche ? '☁️' : '⛅';
-                    estado = idiomaActual === 'en' ? 'Partly cloudy' : (idiomaActual === 'pt' ? 'Parcialmente nublado' : 'Parcialmente nublado');
+                    estado = idiomaActual === 'en' ? 'Partly cloudy' : (idiomaActual === 'pt' ? 'Parcialmente nublado' : (idiomaActual === 'fr' ? 'Partiellement nuageux' : 'Parcialmente nublado'));
                 } else if (codigoClima === 3) {
                     icono = '☁';
-                    estado = idiomaActual === 'en' ? 'Cloudy' : (idiomaActual === 'pt' ? 'Nublado' : 'Nublado');
+                    estado = idiomaActual === 'en' ? 'Cloudy' : (idiomaActual === 'pt' ? 'Nublado' : (idiomaActual === 'fr' ? 'Nuageux' : 'Nublado'));
                 } else if ((codigoClima >= 51 && codigoClima <= 67) || (codigoClima >= 80 && codigoClima <= 99) || codigoClima === 56 || codigoClima === 57 || codigoClima === 66 || codigoClima === 67) {
                     icono = '🌧️';
-                    estado = idiomaActual === 'en' ? 'Raining' : (idiomaActual === 'pt' ? 'Chovendo' : 'Lloviendo');
+                    estado = idiomaActual === 'en' ? 'Raining' : (idiomaActual === 'pt' ? 'Chovendo' : (idiomaActual === 'fr' ? 'Pluie' : 'Lloviendo'));
                 } else if (codigoClima >= 71 && codigoClima <= 77) {
                     icono = '❄️';
-                    estado = idiomaActual === 'en' ? 'Snow' : (idiomaActual === 'pt' ? 'Neve' : 'Nieve');
+                    estado = idiomaActual === 'en' ? 'Snow' : (idiomaActual === 'pt' ? 'Neve' : (idiomaActual === 'fr' ? 'Neige' : 'Nieve'));
                 } else if (codigoClima >= 95) {
                     icono = '⛈';
-                    estado = idiomaActual === 'en' ? 'Thunderstorm' : (idiomaActual === 'pt' ? 'Tempestade' : 'Tormenta');
+                    estado = idiomaActual === 'en' ? 'Thunderstorm' : (idiomaActual === 'pt' ? 'Tempestade' : (idiomaActual === 'fr' ? 'Orage' : 'Tormenta'));
                 }
 
-                const labelHumedad = idiomaActual === 'en' ? 'Humidity' : (idiomaActual === 'pt' ? 'Umidade' : 'Humedad');
+                const labelHumedad = idiomaActual === 'en' ? 'Humidity' : (idiomaActual === 'pt' ? 'Umidade' : (idiomaActual === 'fr' ? 'Humidité' : 'Humedad'));
 
                 document.getElementById('clima-info').innerHTML = `
                     <span style="font-size: 20px; vertical-align: middle; margin-right: 4px;">${icono}</span>
@@ -885,15 +948,14 @@
                 document.getElementById('clima-info').innerHTML = "Buenos Aires (CABA) — Clima no disponible";
             }
         }
-        obtenerClimaCABA();
 
         async function obtenerDolar() {
             try {
                 const response = await fetch('https://dolarapi.com/v1/dolares/blue');
                 const data = await response.json();
-                const labelDolar = idiomaActual === 'en' ? 'Blue Dollar' : (idiomaActual === 'pt' ? 'Dólar Blue' : 'Dólar Blue');
-                const labelCompra = idiomaActual === 'en' ? 'Buy' : (idiomaActual === 'pt' ? 'Compra' : 'Compra');
-                const labelVenta = idiomaActual === 'en' ? 'Sell' : (idiomaActual === 'pt' ? 'Venda' : 'Venta');
+                const labelDolar = idiomaActual === 'en' ? 'Blue Dollar' : (idiomaActual === 'pt' ? 'Dólar Blue' : (idiomaActual === 'fr' ? 'Dollar Bleu' : 'Dólar Blue'));
+                const labelCompra = idiomaActual === 'en' ? 'Buy' : (idiomaActual === 'pt' ? 'Compra' : (idiomaActual === 'fr' ? 'Achat' : 'Compra'));
+                const labelVenta = idiomaActual === 'en' ? 'Sell' : (idiomaActual === 'pt' ? 'Venda' : (idiomaActual === 'fr' ? 'Vente' : 'Venta'));
                 document.getElementById('dolar-info').innerHTML = `
                     <span style="color: #dfc285; font-weight: 600;">${labelDolar}</span> — ${labelCompra}: $${data.compra} | ${labelVenta}: $${data.venta}
                 `;
@@ -901,7 +963,6 @@
                 document.getElementById('dolar-info').innerHTML = "No se pudo cargar la cotización en este momento.";
             }
         }
-        obtenerDolar();
 
         const modalEdad = document.getElementById('modal-edad');
         const btnMayor = document.getElementById('btn-mayor');
