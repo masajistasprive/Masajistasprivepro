@@ -12,8 +12,44 @@
     });
 })();
 
-// comentarios.js - Motor Global, Visor con Marca de Agua, Slider Táctil y Comentarios
+// comentarios.js - Motor Global, Visor con Marca de Agua, Slider Táctil, Comentarios Bilingües y Visitas
 (function() {
+    // Diccionario de textos bilingües para los comentarios
+    const dictComentarios = {
+        es: {
+            tituloSeccion: "Experiencias y Comentarios",
+            placeholderNombre: "Tu nombre o apodo",
+            placeholderTexto: "Escribe tu experiencia...",
+            btnPublicar: "Publicar Experiencia",
+            cargando: "Cargando experiencias...",
+            sinExperiencias: "No hay experiencias aún. ¡Sé el primero en dejar una!",
+            meGusta: "Me gusta",
+            destacado: "★ Destacado",
+            eliminar: "🗑️ Eliminar",
+            alertaIncompleto: "Por favor completá tu nombre y tu experiencia.",
+            confirmEliminar: "¿Estás seguro de eliminar este comentario?",
+            adjuntoTexto: "✓ Archivo adjunto: "
+        },
+        en: {
+            tituloSeccion: "Experiences and Reviews",
+            placeholderNombre: "Your name or nickname",
+            placeholderTexto: "Write about your experience...",
+            btnPublicar: "Publish Experience",
+            cargando: "Loading experiences...",
+            sinExperiencias: "No experiences yet. Be the first to leave one!",
+            meGusta: "Like",
+            destacado: "★ Featured",
+            eliminar: "🗑️ Delete",
+            alertaIncompleto: "Please fill in your name and experience.",
+            confirmEliminar: "Are you sure you want to delete this comment?",
+            adjuntoTexto: "✓ Attached file: "
+        }
+    };
+
+    function obtenerLangActual() {
+        return localStorage.getItem('idiomaPrive') || 'es';
+    }
+
     // 1. Blindaje seguro contra click derecho y atajos (sin tocar gestos táctiles ni miniaturas)
     document.addEventListener('contextmenu', (e) => {
         if (e.target.tagName === 'IMG') {
@@ -162,7 +198,7 @@
 
         // Reposicionar y animar el botón de WhatsApp con mensaje ATEMPORAL
         const btnWa = document.querySelector('.btn-whatsapp');
-        const mainContainer = document.querySelector('.perfil-container');
+        const mainContainer = document.querySelector('.perfil-container') || document.querySelector('.container');
         
         if (btnWa && mainContainer) {
             btnWa.classList.add('btn-whatsapp-titilante');
@@ -193,7 +229,6 @@
             const nombreMasajista = document.querySelector('.perfil-titulo-seccion h2')?.textContent || "Perfil";
             const baseUrl = btnWa.getAttribute('href').split('?')[0];
             
-            // MENSAJE ATEMPORAL Y NEUTRO
             const nuevoMensaje = `Hola ${nombreMasajista}, vi tu perfil en Masajistas Privé y quiero consultar disponibilidad.`;
             btnWa.setAttribute('href', `${baseUrl}?text=${encodeURIComponent(nuevoMensaje)}`);
         }
@@ -205,15 +240,18 @@
     const contenedorDestino = document.getElementById('seccion-comentarios');
     if (!contenedorDestino) return;
 
-    // Caja de comentarios con botón de adjuntar minimalista (Clip 📎)
+    const langInit = obtenerLangActual();
+    const tInit = dictComentarios[langInit];
+
+    // Caja de comentarios bilingüe
     contenedorDestino.innerHTML = `
         <div style="width: 100%; box-sizing: border-box; margin: 20px auto 10px auto; padding: 22px 15px; background: #141414; border: 1px solid rgba(223, 194, 133, 0.25); border-radius: 10px; font-family: 'Montserrat', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-            <h3 style="color: #dfc285; text-align: center; font-size: 20px; margin-bottom: 20px; font-family: 'Cormorant Garamond', serif; letter-spacing: 1.5px;">Experiencias y Comentarios</h3>
+            <h3 data-i18n="comentariosTitulo" style="color: #dfc285; text-align: center; font-size: 20px; margin-bottom: 20px; font-family: 'Cormorant Garamond', serif; letter-spacing: 1.5px;">${tInit.tituloSeccion}</h3>
             
             <div style="display: flex; flex-direction: column; gap: 12px; width: 100%; box-sizing: border-box;">
-                <input type="text" id="pAuthor" placeholder="Tu nombre o apodo" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a; color: #fff; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
+                <input type="text" id="pAuthor" data-i18n-placeholder="comentariosPlaceholderAutor" placeholder="${tInit.placeholderNombre}" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a; color: #fff; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
                 
-                <textarea id="pText" rows="3" placeholder="Escribe tu experiencia..." style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a; color: #fff; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px; resize: vertical;"></textarea>
+                <textarea id="pText" rows="3" data-i18n-placeholder="comentariosPlaceholderTexto" placeholder="${tInit.placeholderTexto}" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a; color: #fff; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px; resize: vertical;"></textarea>
                 
                 <div style="display: flex; gap: 8px; align-items: center; background: #1a1a1a; padding: 10px 12px; border-radius: 6px; border: 1px solid rgba(223, 194, 133, 0.3); flex-wrap: wrap; width: 100%; box-sizing: border-box;">
                     <button type="button" onclick="window.agregarEmojiPerfil('😊')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Sonrisa">😊</button>
@@ -222,17 +260,17 @@
                     <button type="button" onclick="window.agregarEmojiPerfil('❤️')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Corazón">❤️</button>
                     <button type="button" onclick="window.agregarEmojiPerfil('⭐')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Estrella">⭐</button>
                     
-                    <label title="Adjuntar foto" style="color: #dfc285; cursor: pointer; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; background: rgba(223,194,133,0.1); width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(223, 194, 133, 0.4); margin-left: auto; transition: all 0.3s ease;">
+                    <label data-i18n-title="titleAdjuntar" title="Adjuntar foto" style="color: #dfc285; cursor: pointer; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; background: rgba(223,194,133,0.1); width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(223, 194, 133, 0.4); margin-left: auto; transition: all 0.3s ease;">
                         📎 <input type="file" id="pImageFile" accept="image/*" onchange="window.previewPerfilFile()" style="display:none;">
                     </label>
                 </div>
                 <span id="pFileName" style="font-size: 11px; color: #dfc285; font-style: italic; padding-left: 2px;"></span>
 
-                <button onclick="window.enviarComentarioPerfil()" style="background: linear-gradient(135deg, #dfc285, #c5a059); color: #0d0d0d; border: none; padding: 14px; cursor: pointer; border-radius: 6px; font-weight: 600; width: 100% !important; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-family: 'Montserrat', sans-serif; box-shadow: 0 4px 15px rgba(223,194,133,0.25);">Publicar Experiencia</button>
+                <button onclick="window.enviarComentarioPerfil()" data-i18n="btnPublicarExp" style="background: linear-gradient(135deg, #dfc285, #c5a059); color: #0d0d0d; border: none; padding: 14px; cursor: pointer; border-radius: 6px; font-weight: 600; width: 100% !important; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-family: 'Montserrat', sans-serif; box-shadow: 0 4px 15px rgba(223,194,133,0.25);">${tInit.btnPublicar}</button>
             </div>
 
             <div id="pCommentsContainer" style="margin-top: 25px; width: 100%; box-sizing: border-box;">
-                <p style="text-align: center; color: #888; font-size: 13px; font-style: italic;">Cargando experiencias...</p>
+                <p style="text-align: center; color: #888; font-size: 13px; font-style: italic;">${tInit.cargando}</p>
             </div>
 
             <div style="text-align: center; margin-top: 35px; font-size: 11px;">
@@ -290,8 +328,10 @@
         window.previewPerfilFile = function() {
             const input = document.getElementById('pImageFile');
             const span = document.getElementById('pFileName');
+            const currentLang = obtenerLangActual();
+            const t = dictComentarios[currentLang];
             if (input && input.files && input.files[0]) {
-                span.textContent = "✓ Archivo adjunto: " + input.files[0].name;
+                span.textContent = t.adjuntoTexto + input.files[0].name;
             } else if(span) {
                 span.textContent = "";
             }
@@ -327,8 +367,11 @@
             if (!container) return;
             container.innerHTML = "";
 
+            const currentLang = obtenerLangActual();
+            const t = dictComentarios[currentLang];
+
             if (snapshot.empty) {
-                container.innerHTML = "<p style='color: #777; font-size: 13px; text-align: center; font-style: italic;'>No hay experiencias aún. ¡Sé el primero en dejar una!</p>";
+                container.innerHTML = `<p style='color: #777; font-size: 13px; text-align: center; font-style: italic;'>${t.sinExperiencias}</p>`;
                 inicializarVisorFotos();
                 return;
             }
@@ -344,10 +387,10 @@
             });
 
             lista.forEach(data => {
-                const fechaStr = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : 'Hace un momento';
+                const fechaStr = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : (currentLang === 'es' ? 'Hace un momento' : 'Just now');
                 const likes = data.likes || 0;
                 const imgHtml = data.image ? `<img src="${data.image}" style="max-width: 100%; max-height: 180px; border-radius: 6px; margin-top: 10px; display: block; object-fit: cover; border: 1px solid rgba(223,194,133,0.4); cursor: pointer;" alt="Adjunto">` : '';
-                const deleteBtn = isAdminPerfil ? `<button onclick="window.borrarComentarioPerfil('${data.id}', '${perfilId}')" style="background:none; border:none; color:#ff5555; cursor:pointer; font-size:11px; font-weight:bold; float:right; text-transform: uppercase;">🗑️ Eliminar</button>` : '';
+                const deleteBtn = isAdminPerfil ? `<button onclick="window.borrarComentarioPerfil('${data.id}', '${perfilId}')" style="background:none; border:none; color:#ff5555; cursor:pointer; font-size:11px; font-weight:bold; float:right; text-transform: uppercase;">${t.eliminar}</button>` : '';
 
                 const div = document.createElement('div');
                 div.style.cssText = "font-size: 13px; margin-bottom: 15px; color: #ccc; word-break: break-word; background: #1a1a1a; padding: 15px; border-radius: 6px; position: relative; border-left: 3px solid #dfc285; border: 1px solid rgba(223,194,133,0.15); width: 100%; box-sizing: border-box;";
@@ -360,8 +403,8 @@
                         <span style="font-size: 11px; color: #777; margin-left: 2px; display: block; margin-top: 8px;">${fechaStr}</span>
                     </div>
                     <div style="margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 8px; display: flex; align-items: center; justify-content: space-between;">
-                        <button onclick="window.darLikePerfil('${data.id}', ${likes}, '${perfilId}')" style="background:none; border:none; color:#dfc285; cursor:pointer; font-size:12px; font-weight:600; display:flex; align-items:center; gap:5px;">👍 Me gusta (<span id="plikes-${data.id}">${likes}</span>)</button>
-                        ${data.image ? '<span style="font-size: 10px; color: #dfc285; background: rgba(223,194,133,0.1); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(223,194,133,0.3); text-transform: uppercase; letter-spacing: 0.5px;">★ Destacado</span>' : ''}
+                        <button onclick="window.darLikePerfil('${data.id}', ${likes}, '${perfilId}')" style="background:none; border:none; color:#dfc285; cursor:pointer; font-size:12px; font-weight:600; display:flex; align-items:center; gap:5px;">👍 ${t.meGusta} (<span id="plikes-${data.id}">${likes}</span>)</button>
+                        ${data.image ? `<span style="font-size: 10px; color: #dfc285; background: rgba(223,194,133,0.1); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(223,194,133,0.3); text-transform: uppercase; letter-spacing: 0.5px;">${t.destacado}</span>` : ''}
                     </div>
                 `;
                 container.appendChild(div);
@@ -373,8 +416,11 @@
         window.enviarComentarioPerfil = function() {
             const autor = document.getElementById('pAuthor').value.trim();
             const contenido = document.getElementById('pText').value.trim();
+            const currentLang = obtenerLangActual();
+            const t = dictComentarios[currentLang];
+
             if (!autor || !contenido) {
-                alert("Por favor completá tu nombre y tu experiencia.");
+                alert(t.alertaIncompleto);
                 return;
             }
 
@@ -401,7 +447,9 @@
         };
 
         window.borrarComentarioPerfil = function(msgId, pId) {
-            if (confirm("¿Estás seguro de eliminar este comentario?")) {
+            const currentLang = obtenerLangActual();
+            const t = dictComentarios[currentLang];
+            if (confirm(t.confirmEliminar)) {
                 dbPerfil.collection("perfiles_comentarios").doc(pId).collection("mensajes").doc(msgId).delete();
             }
         };
