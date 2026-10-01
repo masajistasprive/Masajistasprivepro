@@ -441,6 +441,122 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <script>
+        // --- DICCIONARIO DE TRADUCCIÓN ---
+        const traducciones = {
+            es: {
+                climaTitulo: "Clima en Directo",
+                cargando: "Cargando clima...",
+                destacadasTitulo: "Destacadas",
+                filtroTodas: "Todas",
+                filtroTerapeuticas: "Terapéuticas",
+                filtroSensuales: "Sensuales",
+                filtroMasculinos: "Masculinos",
+                filtroFantasias: "Fantasías",
+                seccionTerapeuticas: "Masajistas Terapéuticas",
+                seccionSensuales: "Masajistas Sensuales",
+                seccionMasculinos: "Masajistas Masculinos",
+                seccionFantasias: "Fantasías",
+                badgeVerificado: "✓ Verificado",
+                modConsultorio: "Consultorio propio",
+                modGabinete: "Gabinete propio",
+                modDepto: "Departamento propio",
+                modConsultorioHotel: "Consultorio / Hotel",
+                modDeptoPropio: "Depto propio",
+                modGabineteDomicilio: "Gabinete / Domicilio",
+                modConsultorioDomicilio: "Consultorio / Domicilio",
+                espacioDisponible: "Espacio Disponible",
+                publicaPerfil: "Publicá tu perfil aquí",
+                contactanos: "Contáctanos"
+            },
+            en: {
+                climaTitulo: "Live Weather",
+                cargando: "Loading weather...",
+                destacadasTitulo: "Featured",
+                filtroTodas: "All",
+                filtroTerapeuticas: "Therapeutic",
+                filtroSensuales: "Sensual",
+                filtroMasculinos: "Male",
+                filtroFantasias: "Fantasies",
+                seccionTerapeuticas: "Therapeutic Masseuses",
+                seccionSensuales: "Sensual Masseuses",
+                seccionMasculinos: "Male Masseurs",
+                seccionFantasias: "Fantasies",
+                badgeVerificado: "✓ Verified",
+                modConsultorio: "Private office",
+                modGabinete: "Private studio",
+                modDepto: "Private apartment",
+                modConsultorioHotel: "Office / Hotel",
+                modDeptoPropio: "Private apt",
+                modGabineteDomicilio: "Studio / Outcall",
+                modConsultorioDomicilio: "Office / Outcall",
+                espacioDisponible: "Available Space",
+                publicaPerfil: "Publish your profile here",
+                contactanos: "Contact Us"
+            },
+            pt: {
+                climaTitulo: "Clima ao Vivo",
+                cargando: "Carregando clima...",
+                destacadasTitulo: "Destaques",
+                filtroTodas: "Todas",
+                filtroTerapeuticas: "Terapêuticas",
+                filtroSensuales: "Sensuais",
+                filtroMasculinos: "Masculinos",
+                filtroFantasias: "Fantasias",
+                seccionTerapeuticas: "Massagistas Terapêuticas",
+                seccionSensuales: "Massagistas Sensuais",
+                seccionMasculinos: "Massagistas Masculinos",
+                seccionFantasias: "Fantasias",
+                badgeVerificado: "✓ Verificado",
+                modConsultorio: "Consultório próprio",
+                modGabinete: "Estúdio próprio",
+                modDepto: "Apartamento próprio",
+                modConsultorioHotel: "Consultório / Hotel",
+                modDeptoPropio: "Apt próprio",
+                modGabineteDomicilio: "Estúdio / Domicílio",
+                modConsultorioDomicilio: "Consultório / Domicílio",
+                espacioDisponible: "Espaço Disponível",
+                publicaPerfil: "Publique seu perfil aqui",
+                contactanos: "Contate-nos"
+            }
+        };
+
+        let idiomaActual = localStorage.getItem('idiomaPrive') || 'es';
+
+        function aplicarIdioma(lang) {
+            idiomaActual = lang;
+            localStorage.setItem('idiomaPrive', lang);
+            
+            const btn = document.getElementById('btn-idioma');
+            if(btn) {
+                if (lang === 'es') btn.innerHTML = '🇺🇸 EN';
+                else if (lang === 'en') btn.innerHTML = '🇧🇷 PT';
+                else btn.innerHTML = '🇦🇷 ES';
+            }
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const clave = el.getAttribute('data-i18n');
+                if (traducciones[lang] && traducciones[lang][clave]) {
+                    el.textContent = traducciones[lang][clave];
+                }
+            });
+        }
+
+        function cambiarIdioma() {
+            if (idiomaActual === 'es') aplicarIdioma('en');
+            else if (idiomaActual === 'en') aplicarIdioma('pt');
+            else aplicarIdioma('es');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            aplicarIdioma(idiomaActual);
+            barajarDestacadas();
+            barajarSeccion('grid-terapeuticas');
+            barajarSeccion('grid-sensuales');
+            barajarSeccion('grid-masculinos');
+            barajarSeccion('grid-fantasias');
+            registrarYMostrarVisitasGlobales();
+        });
+
         function barajarSeccion(gridId) {
             const grid = document.getElementById(gridId);
             if (!grid) return;
@@ -466,15 +582,6 @@
             contenedor.innerHTML = '';
             globos.forEach(globo => contenedor.appendChild(globo));
         }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            barajarDestacadas();
-            barajarSeccion('grid-terapeuticas');
-            barajarSeccion('grid-sensuales');
-            barajarSeccion('grid-masculinos');
-            barajarSeccion('grid-fantasias');
-            registrarYMostrarVisitasGlobales();
-        });
 
         const pills = document.querySelectorAll('.pill-btn');
         const cards = document.querySelectorAll('.card-link');
@@ -586,47 +693,6 @@
         document.addEventListener('dragstart', event => {
             if (event.target.tagName === 'IMG') event.preventDefault();
         });
-    </script>
-
-    <!-- Widget de Google Translate Oculto -->
-    <div id="google_translate_element" style="display:none;"></div>
-    <script type="text/javascript">
-    function googleTranslateElementInit() {
-      new google.translate.TranslateElement({
-        pageLanguage: 'es',
-        includedLanguages: 'en,pt,es',
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-        autoDisplay: false
-      }, 'google_translate_element');
-    }
-    </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-    <!-- Script de Control del Botón de Idioma -->
-    <script>
-        function cambiarIdioma() {
-            const selectGoogle = document.querySelector('.goog-te-combo');
-            const btn = document.getElementById('btn-idioma');
-            
-            if (!selectGoogle) {
-                return;
-            }
-
-            let actual = selectGoogle.value;
-
-            if (!actual || actual === 'es') {
-                selectGoogle.value = 'en';
-                btn.innerHTML = '🇧🇷 PT';
-            } else if (actual === 'en') {
-                selectGoogle.value = 'pt';
-                btn.innerHTML = '🇦🇷 ES';
-            } else {
-                selectGoogle.value = 'es';
-                btn.innerHTML = '🇺🇸 EN';
-            }
-
-            selectGoogle.dispatchEvent(new Event('change'));
-        }
     </script>
 </body>
 </html>
