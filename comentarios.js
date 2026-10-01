@@ -12,7 +12,7 @@
     });
 })();
 
-// comentarios.js - Motor Global, Visor con Marca de Agua, Slider Táctil, Comentarios con Estrellas Bilingües y Visitas
+// comentarios.js - Motor Global, Visor con Marca de Agua, Slider Táctil, Comentarios con Estrellas Bilingües, Visitas y Botón Flotante
 (function() {
     // Diccionario de textos bilingües para los comentarios
     const dictComentarios = {
@@ -78,7 +78,7 @@
         }
     });
 
-    // Inyectar estilos para el botón de WhatsApp, animaciones, Lightbox y el sistema de Estrellas CSS
+    // Inyectar estilos para animaciones, Lightbox y el sistema de Estrellas CSS
     const styleAnim = document.createElement('style');
     styleAnim.innerHTML = `
         img {
@@ -246,7 +246,21 @@
             const baseUrl = btnWa.getAttribute('href').split('?')[0];
             
             const nuevoMensaje = `Hola ${nombreMasajista}, vi tu perfil en Masajistas Privé y quiero consultar disponibilidad.`;
-            btnWa.setAttribute('href', `${baseUrl}?text=${encodeURIComponent(nuevoMensaje)}`);
+            const enlaceFinal = `${baseUrl}?text=${encodeURIComponent(nuevoMensaje)}`;
+            btnWa.setAttribute('href', enlaceFinal);
+
+            // Inyección automática del Botón Flotante de WhatsApp (Sticky CTA) en perfiles
+            if (!document.getElementById('whatsappStickyCTA')) {
+                const stickyBtn = document.createElement('a');
+                stickyBtn.id = 'whatsappStickyCTA';
+                stickyBtn.className = 'whatsapp-sticky-btn';
+                stickyBtn.href = enlaceFinal;
+                stickyBtn.target = '_blank';
+                stickyBtn.rel = 'noopener noreferrer';
+                stickyBtn.title = 'Contactar por WhatsApp';
+                stickyBtn.innerHTML = '💬';
+                document.body.appendChild(stickyBtn);
+            }
         }
     });
 
@@ -419,7 +433,6 @@
                 const fechaStr = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : (currentLang === 'es' ? 'Hace un momento' : 'Just now');
                 const likes = data.likes || 0;
                 
-                // Generar estrellas visuales según la calificación guardada (por defecto 5 si no tiene)
                 const numEstrellas = data.rating || 5;
                 const estrellasHtml = '★'.repeat(numEstrellas) + '☆'.repeat(5 - numEstrellas);
 
