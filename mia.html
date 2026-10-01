@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mia | Masajistas Privé</title>
+    <title data-i18n="perfilTitle">Mia | Masajistas Privé</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="perfil-body">
 
-    <!-- Header Estilo App de Lujo -->
-       <!-- Header Estilo App de Lujo con Logo Grande -->
+    <!-- Header Estilo App de Lujo con Logo Grande y Selector de Idioma -->
     <header class="header-prive">
         <div class="header-left">
             <img src="img/monograma.png" alt="Monograma" class="header-monograma">
@@ -18,8 +17,13 @@
         <div class="header-center">
             <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">
         </div>
-        <div class="header-right">
-            <a href="index.html" class="btn-buscar">← Volver</a>
+        <div class="header-right" style="display: flex; align-items: center; gap: 10px;">
+            <button id="btn-idioma" onclick="cambiarIdiomaPerfil()" style="background: transparent; border: 1px solid rgba(223, 194, 133, 0.4); color: #dfc285; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 10px; font-weight: 600; font-family: 'Montserrat', sans-serif; letter-spacing: 1px; transition: all 0.3s;">
+                🇺🇸 EN
+            </button>
+            <a href="index.html" class="btn-buscar">
+                <span data-i18n="btnVolver">← Volver</span>
+            </a>
         </div>
     </header>
 
@@ -37,46 +41,117 @@
             </div>
         </div>
 
-        <!-- Información -->
-           <!-- Información de Mía -->
+        <!-- Información de Mía -->
         <div class="perfil-info">
             <div class="perfil-titulo-seccion">
                 <h2>Mía</h2>
-                <span class="badge-verificado">✓ Privé Verificado</span>
+                <span class="badge-verificado" data-i18n="badgeVerificado">✓ Privé Verificado</span>
             </div>
 
-            <p class="perfil-ubicacion">📍 Zona: <strong>Congreso</strong></p>
-            <p class="perfil-modalidad">🏠 Modalidad: <strong>Gabinete / Domicilio</strong></p>
+            <p class="perfil-ubicacion">📍 <span data-i18n="labelZona">Zona:</span> <strong data-i18n="valorZona">Congreso</strong></p>
+            <p class="perfil-modalidad">🏠 <span data-i18n="labelModalidad">Modalidad:</span> <strong data-i18n="valorModalidad">Gabinete / Domicilio</strong></p>
 
             <div class="perfil-descripcion">
-                <h3>Sobre mí</h3>
-                <p>💗 Mi servicio es de masajes sensuales, buscando tu relajación plena y relax. Cualquier duda se charla por mensaje… Espero conocerte pronto 💗</p>
+                <h3 data-i18n="tituloSobreMi">Sobre mí</h3>
+                <p data-i18n="descPerfil">💗 Mi servicio es de masajes sensuales, buscando tu relajación plena y relax. Cualquier duda se charla por mensaje… Espero conocerte pronto 💗</p>
             </div>
 
             <div class="perfil-detalles">
                 <div class="detalle-item">
-                    <span>Horarios:</span> 12:00 a 18:00 hs.
+                    <span data-i18n="labelHorarios">Horarios:</span> <span data-i18n="valorHorarios">12:00 a 18:00 hs.</span>
                 </div>
             </div>
 
             <a href="https://wa.me/5491130065404?text=Hola%20Mía,%20vi%20tu%20perfil%20en%20Masajistas%20Privé" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
-                💬 Contactar por WhatsApp
+                💬 <span data-i18n="btnWpp">Contactar por WhatsApp</span>
             </a>
         </div>
-<div id="seccion-comentarios"></div>
+
+        <div id="seccion-comentarios"></div>
+
+    </main>
 
     <footer class="footer">
-        <p>Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.</p>
-        <p class="copyright">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
+        <p data-i18n="footerLegal">Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.</p>
+        <p class="copyright" data-i18n="footerCopy">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
     </footer>
 
+    <!-- Motor de Traducción de Perfil -->
     <script>
+        const traduccionesPerfil = {
+            es: {
+                perfilTitle: "Mia | Masajistas Privé",
+                btnVolver: "← Volver",
+                badgeVerificado: "✓ Privé Verificado",
+                labelZona: "Zona:",
+                valorZona: "Congreso",
+                labelModalidad: "Modalidad:",
+                valorModalidad: "Gabinete / Domicilio",
+                tituloSobreMi: "Sobre mí",
+                descPerfil: "💗 Mi servicio es de masajes sensuales, buscando tu relajación plena y relax. Cualquier duda se charla por mensaje… Espero conocerte pronto 💗",
+                labelHorarios: "Horarios:",
+                valorHorarios: "12:00 a 18:00 hs.",
+                btnWpp: "Contactar por WhatsApp",
+                footerLegal: "Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.",
+                footerCopy: "© 2026 Masajistas Privé. Todos los derechos reservados."
+            },
+            en: {
+                perfilTitle: "Mia | Masajistas Privé",
+                btnVolver: "← Back",
+                badgeVerificado: "✓ Privé Verified",
+                labelZona: "Area:",
+                valorZona: "Congreso",
+                labelModalidad: "Modality:",
+                valorModalidad: "Studio / Outcall",
+                tituloSobreMi: "About Me",
+                descPerfil: "💗 My service is about sensual massages, seeking your full relaxation and unwind. Any questions can be discussed via message… Hope to meet you soon 💗",
+                labelHorarios: "Hours:",
+                valorHorarios: "12:00 PM to 6:00 PM.",
+                btnWpp: "Contact via WhatsApp",
+                footerLegal: "This is an adult site (+18). Advertisers have no employment relationship with the portal.",
+                footerCopy: "© 2026 Masajistas Privé. All rights reserved."
+            }
+        };
+
+        let idiomaPerfil = localStorage.getItem('idiomaPrive') || 'es';
+
+        function aplicarIdiomaPerfil(lang) {
+            idiomaPerfil = lang;
+            localStorage.setItem('idiomaPrive', lang);
+
+            const btn = document.getElementById('btn-idioma');
+            if(btn) {
+                btn.innerHTML = lang === 'es' ? '🇺🇸 EN' : '🇦🇷 ES';
+            }
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const clave = el.getAttribute('data-i18n');
+                if (traduccionesPerfil[lang] && traduccionesPerfil[lang][clave]) {
+                    if(el.tagName === 'TITLE') {
+                        document.title = traduccionesPerfil[lang][clave];
+                    } else {
+                        el.textContent = traduccionesPerfil[lang][clave];
+                    }
+                }
+            });
+        }
+
+        function cambiarIdiomaPerfil() {
+            const nuevoLang = idiomaPerfil === 'es' ? 'en' : 'es';
+            aplicarIdiomaPerfil(nuevoLang);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            aplicarIdiomaPerfil(idiomaPerfil);
+        });
+
         function cambiarFoto(element) {
             const fotoPrincipal = document.getElementById('fotoPrincipal');
             fotoPrincipal.src = element.src;
         }
     </script>
-        <script src="comentarios.js"></script>
+    
+    <script src="comentarios.js"></script>
 
 </body>
 </html>
