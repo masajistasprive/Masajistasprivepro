@@ -12,12 +12,13 @@
     });
 })();
 
-// comentarios.js - Motor Global, Visor con Marca de Agua, Slider Táctil, Comentarios Bilingües y Visitas
+// comentarios.js - Motor Global, Visor con Marca de Agua, Slider Táctil, Comentarios con Estrellas Bilingües y Visitas
 (function() {
     // Diccionario de textos bilingües para los comentarios
     const dictComentarios = {
         es: {
             tituloSeccion: "Experiencias y Comentarios",
+            labelEstrellas: "Calificación:",
             placeholderNombre: "Tu nombre o apodo",
             placeholderTexto: "Escribe tu experiencia...",
             btnPublicar: "Publicar Experiencia",
@@ -26,12 +27,13 @@
             meGusta: "Me gusta",
             destacado: "★ Destacado",
             eliminar: "🗑️ Eliminar",
-            alertaIncompleto: "Por favor completá tu nombre y tu experiencia.",
+            alertaIncompleto: "Por favor completá tu nombre, elegí una calificación y escribí tu experiencia.",
             confirmEliminar: "¿Estás seguro de eliminar este comentario?",
             adjuntoTexto: "✓ Archivo adjunto: "
         },
         en: {
             tituloSeccion: "Experiences and Reviews",
+            labelEstrellas: "Rating:",
             placeholderNombre: "Your name or nickname",
             placeholderTexto: "Write about your experience...",
             btnPublicar: "Publish Experience",
@@ -40,7 +42,7 @@
             meGusta: "Like",
             destacado: "★ Featured",
             eliminar: "🗑️ Delete",
-            alertaIncompleto: "Please fill in your name and experience.",
+            alertaIncompleto: "Please fill in your name, select a rating, and write your experience.",
             confirmEliminar: "Are you sure you want to delete this comment?",
             adjuntoTexto: "✓ Attached file: "
         }
@@ -50,7 +52,7 @@
         return localStorage.getItem('idiomaPrive') || 'es';
     }
 
-    // 1. Blindaje seguro contra click derecho y atajos (sin tocar gestos táctiles ni miniaturas)
+    // 1. Blindaje seguro contra click derecho y atajos
     document.addEventListener('contextmenu', (e) => {
         if (e.target.tagName === 'IMG') {
             e.preventDefault();
@@ -76,7 +78,7 @@
         }
     });
 
-    // Inyectar estilos para el botón de WhatsApp, animaciones y el Visor (Lightbox)
+    // Inyectar estilos para el botón de WhatsApp, animaciones, Lightbox y el sistema de Estrellas CSS
     const styleAnim = document.createElement('style');
     styleAnim.innerHTML = `
         img {
@@ -110,10 +112,25 @@
             user-select: none;
             -webkit-user-select: none;
         }
+
+        /* Estilos del selector de estrellas interactivo */
+        .star-rating {
+            display: inline-flex;
+            gap: 4px;
+            cursor: pointer;
+            font-size: 22px;
+            direction: rtl;
+            justify-content: flex-end;
+        }
+        .star-rating input { display: none; }
+        .star-rating label { color: #444; transition: color 0.2s; }
+        .star-rating input:checked ~ label, 
+        .star-rating label:hover, 
+        .star-rating label:hover ~ label { color: #dfc285; }
     `;
     document.head.appendChild(styleAnim);
 
-    // 2. Slider Táctil Seguro (Deslizar foto principal con el dedo en celulares)
+    // 2. Slider Táctil Seguro
     function inicializarSliderTactil() {
         const fotoPrincipal = document.getElementById('fotoPrincipal');
         if (!fotoPrincipal) return;
@@ -147,14 +164,14 @@
         fotoPrincipal.addEventListener('touchend', e => {
             let touchEndX = e.changedTouches[0].screenX;
             if (touchEndX < touchStartX - 45) {
-                cambiarFoto(1);  // Deslizar izquierda -> Siguiente
+                cambiarFoto(1);
             } else if (touchEndX > touchStartX + 45) {
-                cambiarFoto(-1); // Deslizar derecha -> Anterior
+                cambiarFoto(-1);
             }
         }, { passive: true });
     }
 
-    // 3. Visor de Pantalla Completa (Lightbox) para la foto principal y grillas
+    // 3. Visor de Pantalla Completa (Lightbox)
     function inicializarVisorFotos() {
         if (!document.getElementById('priveLightbox')) {
             const lightbox = document.createElement('div');
@@ -196,7 +213,6 @@
             inicializarVisorFotos();
         }, 600);
 
-        // Reposicionar y animar el botón de WhatsApp con mensaje ATEMPORAL
         const btnWa = document.querySelector('.btn-whatsapp');
         const mainContainer = document.querySelector('.perfil-container') || document.querySelector('.container');
         
@@ -243,15 +259,28 @@
     const langInit = obtenerLangActual();
     const tInit = dictComentarios[langInit];
 
-    // Caja de comentarios bilingüe
+    // Caja de comentarios bilingüe con selector de estrellas incorporado
     contenedorDestino.innerHTML = `
         <div style="width: 100%; box-sizing: border-box; margin: 20px auto 10px auto; padding: 22px 15px; background: #141414; border: 1px solid rgba(223, 194, 133, 0.25); border-radius: 10px; font-family: 'Montserrat', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
             <h3 data-i18n="comentariosTitulo" style="color: #dfc285; text-align: center; font-size: 20px; margin-bottom: 20px; font-family: 'Cormorant Garamond', serif; letter-spacing: 1.5px;">${tInit.tituloSeccion}</h3>
             
             <div style="display: flex; flex-direction: column; gap: 12px; width: 100%; box-sizing: border-box;">
-                <input type="text" id="pAuthor" data-i18n-placeholder="comentariosPlaceholderAutor" placeholder="${tInit.placeholderNombre}" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a; color: #fff; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
                 
-                <textarea id="pText" rows="3" data-i18n-placeholder="comentariosPlaceholderTexto" placeholder="${tInit.placeholderTexto}" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a; color: #fff; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px; resize: vertical;"></textarea>
+                <!-- Selector de Estrellas -->
+                <div style="display: flex; align-items: center; justify-content: space-between; background: #1a1a1a; padding: 10px 15px; border-radius: 6px; border: 1px solid rgba(223, 194, 133, 0.3);">
+                    <span style="font-size: 13px; color: #dfc285; font-weight: 500;">${tInit.labelEstrellas}</span>
+                    <div class="star-rating">
+                        <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="5 estrellas">★</label>
+                        <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 estrellas">★</label>
+                        <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 estrellas">★</label>
+                        <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 estrellas">★</label>
+                        <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 estrella">★</label>
+                    </div>
+                </div>
+
+                <input type="text" id="pAuthor" placeholder="${tInit.placeholderNombre}" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a; color: #fff; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
+                
+                <textarea id="pText" rows="3" placeholder="${tInit.placeholderTexto}" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a; color: #fff; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px; resize: vertical;"></textarea>
                 
                 <div style="display: flex; gap: 8px; align-items: center; background: #1a1a1a; padding: 10px 12px; border-radius: 6px; border: 1px solid rgba(223, 194, 133, 0.3); flex-wrap: wrap; width: 100%; box-sizing: border-box;">
                     <button type="button" onclick="window.agregarEmojiPerfil('😊')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Sonrisa">😊</button>
@@ -260,13 +289,13 @@
                     <button type="button" onclick="window.agregarEmojiPerfil('❤️')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Corazón">❤️</button>
                     <button type="button" onclick="window.agregarEmojiPerfil('⭐')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Estrella">⭐</button>
                     
-                    <label data-i18n-title="titleAdjuntar" title="Adjuntar foto" style="color: #dfc285; cursor: pointer; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; background: rgba(223,194,133,0.1); width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(223, 194, 133, 0.4); margin-left: auto; transition: all 0.3s ease;">
+                    <label title="Adjuntar foto" style="color: #dfc285; cursor: pointer; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; background: rgba(223,194,133,0.1); width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(223, 194, 133, 0.4); margin-left: auto; transition: all 0.3s ease;">
                         📎 <input type="file" id="pImageFile" accept="image/*" onchange="window.previewPerfilFile()" style="display:none;">
                     </label>
                 </div>
                 <span id="pFileName" style="font-size: 11px; color: #dfc285; font-style: italic; padding-left: 2px;"></span>
 
-                <button onclick="window.enviarComentarioPerfil()" data-i18n="btnPublicarExp" style="background: linear-gradient(135deg, #dfc285, #c5a059); color: #0d0d0d; border: none; padding: 14px; cursor: pointer; border-radius: 6px; font-weight: 600; width: 100% !important; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-family: 'Montserrat', sans-serif; box-shadow: 0 4px 15px rgba(223,194,133,0.25);">${tInit.btnPublicar}</button>
+                <button onclick="window.enviarComentarioPerfil()" style="background: linear-gradient(135deg, #dfc285, #c5a059); color: #0d0d0d; border: none; padding: 14px; cursor: pointer; border-radius: 6px; font-weight: 600; width: 100% !important; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-family: 'Montserrat', sans-serif; box-shadow: 0 4px 15px rgba(223,194,133,0.25);">${tInit.btnPublicar}</button>
             </div>
 
             <div id="pCommentsContainer" style="margin-top: 25px; width: 100%; box-sizing: border-box;">
@@ -389,6 +418,11 @@
             lista.forEach(data => {
                 const fechaStr = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : (currentLang === 'es' ? 'Hace un momento' : 'Just now');
                 const likes = data.likes || 0;
+                
+                // Generar estrellas visuales según la calificación guardada (por defecto 5 si no tiene)
+                const numEstrellas = data.rating || 5;
+                const estrellasHtml = '★'.repeat(numEstrellas) + '☆'.repeat(5 - numEstrellas);
+
                 const imgHtml = data.image ? `<img src="${data.image}" style="max-width: 100%; max-height: 180px; border-radius: 6px; margin-top: 10px; display: block; object-fit: cover; border: 1px solid rgba(223,194,133,0.4); cursor: pointer;" alt="Adjunto">` : '';
                 const deleteBtn = isAdminPerfil ? `<button onclick="window.borrarComentarioPerfil('${data.id}', '${perfilId}')" style="background:none; border:none; color:#ff5555; cursor:pointer; font-size:11px; font-weight:bold; float:right; text-transform: uppercase;">${t.eliminar}</button>` : '';
 
@@ -397,8 +431,11 @@
                 div.innerHTML = `
                     ${deleteBtn}
                     <div>
-                        <span style="color: #dfc285; font-weight: bold; margin-right: 6px;">${escapeHtmlPerfil(data.autor)}:</span>
-                        <span style="color: #e5e0d8; line-height: 1.5;">${escapeHtmlPerfil(data.contenido)}</span>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                            <span style="color: #dfc285; font-weight: bold; margin-right: 6px;">${escapeHtmlPerfil(data.autor)}:</span>
+                            <span style="color: #dfc285; font-size: 14px; letter-spacing: 2px;">${estrellasHtml}</span>
+                        </div>
+                        <span style="color: #e5e0d8; line-height: 1.5; display: block; margin-top: 4px;">${escapeHtmlPerfil(data.contenido)}</span>
                         ${imgHtml}
                         <span style="font-size: 11px; color: #777; margin-left: 2px; display: block; margin-top: 8px;">${fechaStr}</span>
                     </div>
@@ -416,10 +453,11 @@
         window.enviarComentarioPerfil = function() {
             const autor = document.getElementById('pAuthor').value.trim();
             const contenido = document.getElementById('pText').value.trim();
+            const ratingSeleccionado = document.querySelector('input[name="rating"]:checked');
             const currentLang = obtenerLangActual();
             const t = dictComentarios[currentLang];
 
-            if (!autor || !contenido) {
+            if (!autor || !contenido || !ratingSeleccionado) {
                 alert(t.alertaIncompleto);
                 return;
             }
@@ -428,6 +466,7 @@
                 dbPerfil.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").add({
                     autor: autor,
                     contenido: contenido,
+                    rating: parseInt(ratingSeleccionado.value),
                     image: base64 || "",
                     likes: 0,
                     fecha: firebase.firestore.FieldValue.serverTimestamp()
@@ -436,6 +475,7 @@
                     document.getElementById('pText').value = '';
                     document.getElementById('pImageFile').value = '';
                     document.getElementById('pFileName').textContent = '';
+                    document.querySelectorAll('input[name="rating"]').forEach(r => r.checked = false);
                 });
             });
         };
