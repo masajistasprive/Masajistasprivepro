@@ -41,7 +41,7 @@
             sinExperiencias: "No experiences yet. Be the first to leave one!",
             meGusta: "Like",
             destacado: "★ Featured",
-            eliminar: "🗑️️ Delete",
+            eliminar: "🗑 Delete",
             alertaIncompleto: "Please fill in your name, select a rating, and write your experience.",
             confirmEliminar: "Are you sure you want to delete this comment?",
             adjuntoTexto: "✓ Attached file: "
@@ -602,7 +602,7 @@ function registrarVisitaPerfil() {
 registrarVisitaPerfil();
 
 /* ========================================================= */
-/* CONTROL GLOBAL DE ESTADO (MOSTRAR U OCULTAR WHATSAPP)     */
+/* CONTROL GLOBAL DE ESTADO (BLOQUEO TOTAL SI ESTÁ PAUSADO)  */
 /* ========================================================= */
 (function() {
     window.addEventListener('DOMContentLoaded', () => {
@@ -626,8 +626,21 @@ registrarVisitaPerfil();
                 }
                 const db = firebase.firestore();
                 db.collection("config_perfiles").doc(perfilId).get().then((doc) => {
-                    // Si el perfil NO está pausado, los mostramos removiendo el display none
-                    if (!doc.exists || doc.data().estado !== 'pausado') {
+                    if (doc.exists && doc.data().estado === 'pausado') {
+                        // Neutralizar y destruir cualquier intento de mostrar WhatsApp
+                        const ocultarTodo = () => {
+                            const btnWpp = document.querySelector('.btn-whatsapp');
+                            if (btnWpp) btnWpp.remove();
+                            
+                            const stickyWpp = document.getElementById('whatsappStickyCTA');
+                            if (stickyWpp) stickyWpp.remove();
+                        };
+
+                        ocultarTodo();
+                        setTimeout(ocultarTodo, 300);
+                        setTimeout(ocultarTodo, 800);
+                    } else {
+                        // Si está activo, los mostramos normalmente
                         const btnWpp = document.querySelector('.btn-whatsapp');
                         if (btnWpp) btnWpp.style.display = 'block';
                         
@@ -635,7 +648,6 @@ registrarVisitaPerfil();
                         if (stickyWpp) stickyWpp.style.display = 'flex';
                     }
                 }).catch(err => {
-                    // Si falla la red, por seguridad los mostramos para no perder consultas
                     const btnWpp = document.querySelector('.btn-whatsapp');
                     if (btnWpp) btnWpp.style.display = 'block';
                     const stickyWpp = document.getElementById('whatsappStickyCTA');
@@ -643,7 +655,7 @@ registrarVisitaPerfil();
                 });
             }
         } catch (e) {
-            console.error("Error en control global de estado:", e);
+            console.error("Error en control global de pausa:", e);
         }
     });
 })();
