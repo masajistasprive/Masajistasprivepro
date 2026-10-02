@@ -651,8 +651,9 @@ registrarVisitaPerfil();
                         };
 
                         eliminarBotones();
-                        setTimeout(eliminarBotones, 250);
-                        setTimeout(eliminarBotones, 700);
+                        setTimeout(eliminarBotones, 200);
+                        setTimeout(eliminarBotones, 500);
+                        setTimeout(eliminarBotones, 1000);
                     }
                 }).catch(err => {
                     console.error("Error consultando estado en Firestore:", err);
