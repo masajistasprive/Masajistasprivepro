@@ -287,7 +287,7 @@
                         <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="5 estrellas">★</label>
                         <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 estrellas">★</label>
                         <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 estrellas">★</label>
-                        <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 estrellas">★</label>
+                        <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 estrella">★</label>
                         <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 estrella">★</label>
                     </div>
                 </div>
@@ -602,7 +602,7 @@ function registrarVisitaPerfil() {
 registrarVisitaPerfil();
 
 /* ========================================================= */
-/* CONTROL GLOBAL DE ESTADO (VERIFICACIÓN ABSOLUTA)          */
+/* CONTROL GLOBAL DE ESTADO (TIEMPO REAL ABSOLUTO)           */
 /* ========================================================= */
 (function() {
     window.addEventListener('DOMContentLoaded', () => {
@@ -639,7 +639,9 @@ registrarVisitaPerfil();
                     });
                 }
                 const db = firebase.firestore();
-                db.collection("config_perfiles").doc(docIdFirebase).get().then((doc) => {
+                
+                // onSnapshot escucha en tiempo real cualquier cambio en la base de datos
+                db.collection("config_perfiles").doc(docIdFirebase).onSnapshot((doc) => {
                     if (doc.exists && doc.data().estado === 'pausado') {
                         document.body.classList.add('perfil-pausado');
 
@@ -648,12 +650,15 @@ registrarVisitaPerfil();
                         };
 
                         aniquilarBotones();
-                        setTimeout(aniquilarBotones, 100);
-                        setTimeout(aniquilarBotones, 400);
-                        setTimeout(aniquilarBotones, 900);
+
+                        // Observador por si el DOM los vuelve a renderizar tarde
+                        const observer = new MutationObserver(() => {
+                            aniquilarBotones();
+                        });
+                        observer.observe(document.body, { childList: true, subtree: true });
+                    } else if (doc.exists && doc.data().estado === 'activo') {
+                        document.body.classList.remove('perfil-pausado');
                     }
-                }).catch(err => {
-                    console.error("Error consultando estado en Firestore:", err);
                 });
             }
         } catch (e) {
