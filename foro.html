@@ -178,7 +178,7 @@
         <img src="img/logo.png" alt="Logo" class="logo-foro">
     </div>
     <div>
-        <button id="btn-idioma" onclick="cambiarIdiomaPerfil()" style="background: transparent; border: 1px solid rgba(223, 194, 133, 0.4); color: #dfc285; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600; font-family: 'Montserrat', sans-serif; letter-spacing: 1px; width: auto; box-shadow: none;">
+        <button id="btn-idioma" onclick="cambiarIdiomaPerfil()" style="background: rgba(223, 194, 133, 0.12); border: 1px solid #dfc285; color: #dfc285; padding: 7px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; font-family: 'Montserrat', sans-serif; letter-spacing: 1.5px; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.4);">
             🇺🇸 EN
         </button>
     </div>
@@ -255,7 +255,7 @@
     </div>
 </div>
 
-<!-- Motor de Traducción Bilingüe -->
+<!-- Motor de Traducción Cuatrilingüe -->
 <script>
     const traduccionesForo = {
         es: {
@@ -316,9 +316,71 @@
             confirmBorrarComentario: "Are you sure you want to delete this comment?",
             textoSinTemas: "No topics published yet. Be the first to create one!",
             textoSinComentarios: "No comments yet. Be the first to reply!",
-            publicadoBy: "Published by",
+            publicadoPor: "Published by",
             porAutor: "By",
             archivoAdjunto: "✓ Attached file: "
+        },
+        pt: {
+            foroTitle: "Fórum - Masajistas Privé",
+            foroTitulo: "Fórum Masajistas Privé",
+            crearTemaTitulo: "Criar novo tópico",
+            placeholderAutor: "Seu nome ou apelido",
+            placeholderTitulo: "Título do tópico",
+            placeholderContenido: "Escreva sua mensagem aqui...",
+            titleAdjuntar: "Anexar foto",
+            btnPublicar: "Publicar Tópico",
+            temasForoTitulo: "Tópicos do Fórum",
+            textoCargando: "Carregando tópicos...",
+            btnVolverForo: "← Voltar ao Fórum",
+            comentariosTitulo: "Comentários e Respostas",
+            placeholderNombre: "Seu nome",
+            placeholderComentario: "Escrever comentário...",
+            btnComentar: "Comentar",
+            btnVerDebate: "Ver Debate",
+            btnMeGusta: "Curtir",
+            btnResponder: "Responder",
+            btnEnviarResp: "Enviar",
+            alertaCamposTema: "Por favor, preencha nome, título e mensagem antes de publicar.",
+            alertaCamposComentario: "Insira seu nome e um comentário.",
+            alertaCamposRespuesta: "Insira seu nome e sua resposta.",
+            confirmBorrarTema: "Tem certeza de que deseja excluir este tópico e todas as respostas?",
+            confirmBorrarComentario: "Tem certeza de que deseja excluir este comentário?",
+            textoSinTemas: "Nenhum tópico publicado ainda. Seja o primeiro a criar um!",
+            textoSinComentarios: "Nenhum comentário ainda. Seja o primeiro a responder!",
+            publicadoPor: "Publicado por",
+            porAutor: "Por",
+            archivoAdjunto: "✓ Arquivo anexado: "
+        },
+        fr: {
+            foroTitle: "Forum - Masajistas Privé",
+            foroTitulo: "Forum Masajistas Privé",
+            crearTemaTitulo: "Créer un nouveau sujet",
+            placeholderAutor: "Votre nom ou pseudo",
+            placeholderTitulo: "Titre du sujet",
+            placeholderContenido: "Écrivez votre message ici...",
+            titleAdjuntar: "Joindre une photo",
+            btnPublicar: "Publier le sujet",
+            temasForoTitulo: "Sujets du Forum",
+            textoCargando: "Chargement des sujets...",
+            btnVolverForo: "← Retour au Forum",
+            comentariosTitulo: "Commentaires et Réponses",
+            placeholderNombre: "Votre nom",
+            placeholderComentario: "Écrire un commentaire...",
+            btnComentar: "Commenter",
+            btnVerDebate: "Voir le débat",
+            btnMeGusta: "J'aime",
+            btnResponder: "Répondre",
+            btnEnviarResp: "Envoyer",
+            alertaCamposTema: "Veuillez remplir le nom, le titre et le message avant de publier.",
+            alertaCamposComentario: "Entrez votre nom et un commentaire.",
+            alertaCamposRespuesta: "Entrez votre nom et votre réponse.",
+            confirmBorrarTema: "Êtes-vous sûr de vouloir supprimer ce sujet et toutes ses réponses ?",
+            confirmBorrarComentario: "Êtes-vous sûr de vouloir supprimer ce commentaire ?",
+            textoSinTemas: "Aucun sujet publié pour l'instant. Soyez le premier à en créer un !",
+            textoSinComentarios: "Aucun commentaire pour l'instant. Soyez le premier à répondre !",
+            publicadoPor: "Publié par",
+            porAutor: "Par",
+            archivoAdjunto: "✓ Fichier joint : "
         }
     };
 
@@ -330,7 +392,10 @@
 
         const btn = document.getElementById('btn-idioma');
         if(btn) {
-            btn.innerHTML = lang === 'es' ? '🇺🇸 EN' : '🇦🇷 ES';
+            if (lang === 'es') btn.innerHTML = '🇺🇸 EN';
+            else if (lang === 'en') btn.innerHTML = '🇧🇷 PT';
+            else if (lang === 'pt') btn.innerHTML = '🇫🇷 FR';
+            else btn.innerHTML = '🇦🇷 ES';
         }
 
         // Traducir elementos estándar [data-i18n]
@@ -363,8 +428,10 @@
     }
 
     function cambiarIdiomaPerfil() {
-        const nuevoLang = idiomaPerfil === 'es' ? 'en' : 'es';
-        aplicarIdiomaPerfil(nuevoLang);
+        if (idiomaPerfil === 'es') aplicarIdiomaPerfil('en');
+        else if (idiomaPerfil === 'en') aplicarIdiomaPerfil('pt');
+        else if (idiomaPerfil === 'pt') aplicarIdiomaPerfil('fr');
+        else aplicarIdiomaPerfil('es');
     }
 
     window.addEventListener('DOMContentLoaded', () => {
