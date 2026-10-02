@@ -602,7 +602,7 @@ function registrarVisitaPerfil() {
 registrarVisitaPerfil();
 
 /* ========================================================= */
-/* CONTROL GLOBAL DE ESTADO (TIEMPO REAL ABSOLUTO)           */
+/* CONTROL GLOBAL DE ESTADO (DESTRUCCIÓN ABSOLUTO DE ENLACES WA) */
 /* ========================================================= */
 (function() {
     window.addEventListener('DOMContentLoaded', () => {
@@ -642,7 +642,7 @@ registrarVisitaPerfil();
                 
                 db.collection("config_perfiles").doc(docIdFirebase).onSnapshot((doc) => {
                     if (doc.exists && doc.data().estado === 'pausado') {
-                        // Inyectar estilo de ocultamiento forzado de emergencia de forma directa en el head
+                        // Inyectar estilo CSS absoluto para bloquear cualquier enlace de WhatsApp de inmediato
                         if (!document.getElementById('estiloPausadoForzado')) {
                             const stylePausa = document.createElement('style');
                             stylePausa.id = 'estiloPausadoForzado';
@@ -657,15 +657,21 @@ registrarVisitaPerfil();
                             document.head.appendChild(stylePausa);
                         }
 
-                        // Destrucción física de los elementos si ya fueron creados
-                        const aniquilarBotones = () => {
+                        // Barrido universal: destruye físicamente cualquier botón o enlace que apunte a WhatsApp
+                        const aniquilarTodoWpp = () => {
                             document.querySelectorAll('.btn-whatsapp, #whatsappStickyCTA, .whatsapp-sticky-btn').forEach(el => el.remove());
+                            document.querySelectorAll('a').forEach(a => {
+                                let href = a.getAttribute('href') || '';
+                                if (href.includes('wa.me') || href.includes('whatsapp.com')) {
+                                    a.remove();
+                                }
+                            });
                         };
 
-                        aniquilarBotones();
-                        setTimeout(aniquilarBotones, 100);
-                        setTimeout(aniquilarBotones, 400);
-                        setTimeout(aniquilarBotones, 800);
+                        aniquilarTodoWpp();
+                        setTimeout(aniquilarTodoWpp, 100);
+                        setTimeout(aniquilarTodoWpp, 400);
+                        setTimeout(aniquilarTodoWpp, 900);
                     }
                 });
             }
