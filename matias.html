@@ -86,11 +86,7 @@
         <p class="copyright" data-i18n="footerCopy">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
     </footer>
 
-    <!-- Firebase SDK para control de estado -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
-    <!-- Motor de Traducción de Perfil y Verificación de Estado -->
+    <!-- Motor de Traducción de Perfil -->
     <script>
         const traduccionesPerfil = {
             es: {
@@ -220,34 +216,8 @@
             else aplicarIdiomaPerfil('es');
         }
 
-        function verificarEstadoPerfilFirebase() {
-            try {
-                if (!firebase.apps.length) {
-                    firebase.initializeApp({
-                        apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
-                        authDomain: "masajistasprivepro.firebaseapp.com",
-                        projectId: "masajistasprivepro",
-                        storageBucket: "masajistasprivepro.firebasestorage.app",
-                        messagingSenderId: "768677270509",
-                        appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
-                        measurementId: "G-SBN70C32JF"
-                    });
-                }
-                const db = firebase.firestore();
-                db.collection("config_perfiles").doc("matias").get().then((doc) => {
-                    if (doc.exists && doc.data().estado === 'pausado') {
-                        const btnWpp = document.getElementById('btnWhatsappMatias');
-                        if (btnWpp) btnWpp.style.display = 'none';
-                    }
-                });
-            } catch (e) {
-                console.error("Error verificando estado:", e);
-            }
-        }
-
         window.addEventListener('DOMContentLoaded', () => {
             aplicarIdiomaPerfil(idiomaPerfil);
-            verificarEstadoPerfilFirebase();
         });
 
         function cambiarFoto(element) {
