@@ -602,14 +602,17 @@ function registrarVisitaPerfil() {
 registrarVisitaPerfil();
 
 /* ========================================================= */
-/* CONTROL GLOBAL DE ESTADO (BLOQUEO TOTAL SI ESTÁ PAUSADO)  */
+/* CONTROL GLOBAL DE ESTADO (LECTURA POR TÍTULO EN FIREBASE) */
 /* ========================================================= */
 (function() {
     window.addEventListener('DOMContentLoaded', () => {
-        let path = window.location.pathname;
-        let perfilId = path.split("/").pop().replace(".html", "").trim();
-        
-        if (!perfilId || perfilId === "index" || perfilId === "foro" || perfilId === "") return;
+        let tituloElemento = document.querySelector('.perfil-titulo-seccion h2');
+        if (!tituloElemento) return;
+
+        let nombrePerfil = tituloElemento.textContent.trim().toLowerCase()
+            .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+        if (!nombrePerfil) return;
 
         try {
             if (typeof firebase !== 'undefined') {
@@ -625,9 +628,8 @@ registrarVisitaPerfil();
                     });
                 }
                 const db = firebase.firestore();
-                db.collection("config_perfiles").doc(perfilId).get().then((doc) => {
+                db.collection("config_perfiles").doc(nombrePerfil).get().then((doc) => {
                     if (doc.exists && doc.data().estado === 'pausado') {
-                        // Neutralizar y destruir cualquier intento de mostrar WhatsApp
                         const ocultarTodo = () => {
                             const btnWpp = document.querySelector('.btn-whatsapp');
                             if (btnWpp) btnWpp.remove();
@@ -640,7 +642,6 @@ registrarVisitaPerfil();
                         setTimeout(ocultarTodo, 300);
                         setTimeout(ocultarTodo, 800);
                     } else {
-                        // Si está activo, los mostramos normalmente
                         const btnWpp = document.querySelector('.btn-whatsapp');
                         if (btnWpp) btnWpp.style.display = 'block';
                         
