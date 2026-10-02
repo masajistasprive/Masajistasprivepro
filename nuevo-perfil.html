@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador con Vista Previa Bilingüe - Masajistas Privé</title>
+    <title>Generador con Vista Previa Cuatrilingüe - Masajistas Privé</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -60,20 +60,20 @@
     <div class="layout-master">
         <div class="container-gen">
             <a href="admin.html" class="back-link">&larr; Volver al Panel</a>
-            <h1>Generador de Fichas Bilingüe</h1>
+            <h1>Generador Cuatrilingüe de Fichas</h1>
             
             <form id="genForm">
                 <div class="form-group">
                     <label for="nombre">Nombre de la Profesional</label>
-                    <input type="text" id="nombre" placeholder="Ej: Valentina" value="Valentina" required>
+                    <input type="text" id="nombre" value="Valentina" required>
                 </div>
                 <div class="form-group">
                     <label for="zona">Zona / Barrio (ES)</label>
-                    <input type="text" id="zona" placeholder="Ej: Recoleta" value="Recoleta" required>
+                    <input type="text" id="zona" value="Recoleta" required>
                 </div>
                 <div class="form-group">
-                    <label for="zonaEn">Zona / Barrio (EN)</label>
-                    <input type="text" id="zonaEn" placeholder="Ej: Recoleta" value="Recoleta" required>
+                    <label for="zonaEn">Zona / Barrio (EN/PT/FR)</label>
+                    <input type="text" id="zonaEn" value="Recoleta" required>
                 </div>
                 <div class="form-group">
                     <label for="categoria">Categoría (para el Index)</label>
@@ -91,6 +91,14 @@
                 <div class="form-group">
                     <label for="modalidadEn">Modalidad (EN)</label>
                     <input type="text" id="modalidadEn" value="Private apartment" required>
+                </div>
+                <div class="form-group">
+                    <label for="modalidadPt">Modalidad (PT)</label>
+                    <input type="text" id="modalidadPt" value="Apartamento próprio" required>
+                </div>
+                <div class="form-group">
+                    <label for="modalidadFr">Modalidad (FR)</label>
+                    <input type="text" id="modalidadFr" value="Appartement privé" required>
                 </div>
                 <div class="form-group">
                     <label for="whatsapp">WhatsApp (núm sin símbolos)</label>
@@ -121,6 +129,14 @@
                     <textarea id="bioEn" required>I invite you to experience a unique relaxation session. I welcome you in my own discreet apartment with personalized care.</textarea>
                 </div>
                 <div class="form-group">
+                    <label for="bioPt">Biografía y Servicios (PT)</label>
+                    <textarea id="bioPt" required>Convido você a vivenciar uma experiência única de relaxamento em meu próprio apartamento, discreto e com atendimento personalizado.</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="bioFr">Biografía y Servicios (FR)</label>
+                    <textarea id="bioFr" required>Je vous invite à vivre une expérience de relaxation unique dans mon propre appartement, discret et avec un soin personnalisé.</textarea>
+                </div>
+                <div class="form-group">
                     <label for="horarios">Horarios (ES)</label>
                     <input type="text" id="horarios" value="Lunes a sábados de 9 a 21 hs." required>
                 </div>
@@ -128,12 +144,20 @@
                     <label for="horariosEn">Horarios (EN)</label>
                     <input type="text" id="horariosEn" value="Monday to Saturday from 9 a.m. to 9 p.m." required>
                 </div>
+                <div class="form-group">
+                    <label for="horariosPt">Horarios (PT)</label>
+                    <input type="text" id="horariosPt" value="Segunda a sábado das 9h às 21h." required>
+                </div>
+                <div class="form-group">
+                    <label for="horariosFr">Horarios (FR)</label>
+                    <input type="text" id="horariosFr" value="Lundi au samedi de 9h00 à 21h00." required>
+                </div>
 
-                <button type="submit" class="btn-action">Obtener Código Bilingüe</button>
+                <button type="submit" class="btn-action">Obtener Código Cuatrilingüe</button>
             </form>
 
             <div class="output-section" id="outputSection">
-                <h2>1. Código para la Ficha Bilingüe</h2>
+                <h2>1. Código para la Ficha</h2>
                 <p style="font-size: 0.8rem; color: var(--gold); margin-bottom: 5px;">Creá el archivo <span id="fileNameDisplay" style="color:#fff"></span>:</p>
                 <textarea class="code-output" id="codeOutputPerfil" readonly></textarea>
                 <button type="button" class="btn-action" id="btnCopiarPerfil" style="background-color: #333; color: #fff; margin-top: 0; margin-bottom: 15px;">Copiar Código de Ficha</button>
@@ -193,7 +217,7 @@
         </div>
     </div>
 
-    <!-- Plantilla Oficial Bilingüe con Control de Pausa y Comentarios -->
+    <!-- Plantilla Oficial Cuatrilingüe con Control de Pausa y Comentarios -->
     <script type="text/template" id="plantillaFicha"><![CDATA[<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -271,7 +295,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
-    <!-- Motor de Traducción de Perfil y Control Directo de Pausa -->
+    <!-- Motor de Traducción Cuatrilingüe y Control Directo de Pausa -->
     <script>
         const traduccionesPerfil = {
             es: {
@@ -305,6 +329,38 @@
                 btnWpp: "Contact via WhatsApp",
                 footerLegal: "This is an adult site (+18). Advertisers have no employment relationship with the portal.",
                 footerCopy: "© 2026 Masajistas Privé. All rights reserved."
+            },
+            pt: {
+                perfilTitle: "{{nombre}} | Masajistas Privé",
+                btnVolver: "← Voltar",
+                badgeVerificado: "✓ Privé Verificado",
+                labelZona: "Zona:",
+                valorZona: "{{zonaPt}}",
+                labelModalidad: "Modalidade:",
+                valorModalidad: "{{modalidadPt}}",
+                tituloSobreMi: "Sobre mim e Serviços",
+                descPerfil: "{{bioPt}}",
+                labelHorarios: "Horários:",
+                valorHorarios: "{{horariosPt}}",
+                btnWpp: "Contatar por WhatsApp",
+                footerLegal: "Este é um site para adultos (+18). Os anunciantes não têm vínculo empregatício com o portal.",
+                footerCopy: "© 2026 Masajistas Privé. Todos os direitos reservados."
+            },
+            fr: {
+                perfilTitle: "{{nombre}} | Masajistas Privé",
+                btnVolver: "← Retour",
+                badgeVerificado: "✓ Privé Vérifié",
+                labelZona: "Zone :",
+                valorZona: "{{zonaFr}}",
+                labelModalidad: "Modalité :",
+                valorModalidad: "{{modalidadFr}}",
+                tituloSobreMi: "À propos de moi et Services",
+                descPerfil: "{{bioFr}}",
+                labelHorarios: "Horaires :",
+                valorHorarios: "{{horariosFr}}",
+                btnWpp: "Contacter par WhatsApp",
+                footerLegal: "Ceci est un site pour adultes (+18). Les annonceurs n'ont aucun lien d'emploi avec le portail.",
+                footerCopy: "© 2026 Masajistas Privé. Tous droits réservés."
             }
         };
 
@@ -316,7 +372,10 @@
 
             const btn = document.getElementById('btn-idioma');
             if(btn) {
-                btn.innerHTML = lang === 'es' ? '🇺🇸 EN' : '🇦🇷 ES';
+                if (lang === 'es') btn.innerHTML = '🇺🇸 EN';
+                else if (lang === 'en') btn.innerHTML = '🇧🇷 PT';
+                else if (lang === 'pt') btn.innerHTML = '🇫🇷 FR';
+                else btn.innerHTML = '🇦🇷 ES';
             }
 
             document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -332,8 +391,10 @@
         }
 
         function cambiarIdiomaPerfil() {
-            const nuevoLang = idiomaPerfil === 'es' ? 'en' : 'es';
-            aplicarIdiomaPerfil(nuevoLang);
+            if (idiomaPerfil === 'es') aplicarIdiomaPerfil('en');
+            else if (idiomaPerfil === 'en') aplicarIdiomaPerfil('pt');
+            else if (idiomaPerfil === 'pt') aplicarIdiomaPerfil('fr');
+            else aplicarIdiomaPerfil('es');
         }
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -489,13 +550,19 @@
         const selectCategoria = document.getElementById('categoria');
         const inputModalidad = document.getElementById('modalidad');
         const inputModalidadEn = document.getElementById('modalidadEn');
+        const inputModalidadPt = document.getElementById('modalidadPt');
+        const inputModalidadFr = document.getElementById('modalidadFr');
         const inputWhatsapp = document.getElementById('whatsapp');
         const inputPrefijo = document.getElementById('prefijoFoto');
         const selectNumFotos = document.getElementById('numFotos');
         const inputBio = document.getElementById('bio');
         const inputBioEn = document.getElementById('bioEn');
+        const inputBioPt = document.getElementById('bioPt');
+        const inputBioFr = document.getElementById('bioFr');
         const inputHorarios = document.getElementById('horarios');
         const inputHorariosEn = document.getElementById('horariosEn');
+        const inputHorariosPt = document.getElementById('horariosPt');
+        const inputHorariosFr = document.getElementById('horariosFr');
 
         const prevNombre = document.getElementById('prevNombre');
         const prevZona = document.getElementById('prevZona');
@@ -530,7 +597,7 @@
             prevMiniaturas.innerHTML = minisHTML;
         }
 
-        [inputNombre, inputZona, inputZonaEn, selectCategoria, inputModalidad, inputModalidadEn, inputWhatsapp, inputPrefijo, selectNumFotos, inputBio, inputBioEn, inputHorarios, inputHorariosEn].forEach(el => {
+        [inputNombre, inputZona, inputZonaEn, selectCategoria, inputModalidad, inputModalidadEn, inputModalidadPt, inputModalidadFr, inputWhatsapp, inputPrefijo, selectNumFotos, inputBio, inputBioEn, inputBioPt, inputBioFr, inputHorarios, inputHorariosEn, inputHorariosPt, inputHorariosFr].forEach(el => {
             el.addEventListener('input', actualizarBoceto);
             el.addEventListener('change', actualizarBoceto);
         });
@@ -546,13 +613,19 @@
             var categoria = selectCategoria.value;
             var modalidad = inputModalidad.value.trim();
             var modalidadEn = inputModalidadEn.value.trim();
+            var modalidadPt = inputModalidadPt.value.trim();
+            var modalidadFr = inputModalidadFr.value.trim();
             var whatsapp = inputWhatsapp.value.trim();
             var prefijo = inputPrefijo.value.trim().toLowerCase();
             var cantidadFotos = parseInt(selectNumFotos.value);
             var bio = inputBio.value.trim();
             var bioEn = inputBioEn.value.trim();
+            var bioPt = inputBioPt.value.trim();
+            var bioFr = inputBioFr.value.trim();
             var horarios = inputHorarios.value.trim();
             var horariosEn = inputHorariosEn.value.trim();
+            var horariosPt = inputHorariosPt.value.trim();
+            var horariosFr = inputHorariosFr.value.trim();
 
             var fileName = nombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '') + '.html';
             document.getElementById('fileNameDisplay').textContent = fileName;
@@ -569,15 +642,23 @@
                 .replace(/\{\{nombreEnc\}\}/g, encodeURIComponent(nombre))
                 .replace(/\{\{zona\}\}/g, zona)
                 .replace(/\{\{zonaEn\}\}/g, zonaEn)
+                .replace(/\{\{zonaPt\}\}/g, zonaEn)
+                .replace(/\{\{zonaFr\}\}/g, zonaEn)
                 .replace(/\{\{modalidad\}\}/g, modalidad)
                 .replace(/\{\{modalidadEn\}\}/g, modalidadEn)
+                .replace(/\{\{modalidadPt\}\}/g, modalidadPt)
+                .replace(/\{\{modalidadFr\}\}/g, modalidadFr)
                 .replace(/\{\{whatsapp\}\}/g, whatsapp)
                 .replace(/\{\{prefijo\}\}/g, prefijo)
                 .replace(/\{\{miniaturas\}\}/g, miniaturasHTML.trim())
                 .replace(/\{\{bio\}\}/g, bio)
                 .replace(/\{\{bioEn\}\}/g, bioEn)
+                .replace(/\{\{bioPt\}\}/g, bioPt)
+                .replace(/\{\{bioFr\}\}/g, bioFr)
                 .replace(/\{\{horarios\}\}/g, horarios)
-                .replace(/\{\{horariosEn\}\}/g, horariosEn);
+                .replace(/\{\{horariosEn\}\}/g, horariosEn)
+                .replace(/\{\{horariosPt\}\}/g, horariosPt)
+                .replace(/\{\{horariosFr\}\}/g, horariosFr);
 
             var resultadoIndex = '<a href="' + fileName + '" class="card-link" data-categoria="' + categoria + '">\n' +
 '    <article class="card">\n' +
@@ -605,7 +686,7 @@
             var codeBox = document.getElementById('codeOutputPerfil');
             codeBox.select();
             document.execCommand('copy');
-            this.textContent = '¡Copiado código de ficha bilingüe!';
+            this.textContent = '¡Copiado código de ficha cuatrilingüe!';
             setTimeout(() => { this.textContent = 'Copiar Código de Ficha'; }, 2000);
         });
 
