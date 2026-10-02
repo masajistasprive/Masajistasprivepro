@@ -752,3 +752,14 @@ body.perfil-body .whatsapp-sticky-btn:hover {
 .btn-whatsapp, .whatsapp-sticky-btn {
     display: none !important;
 }
+
+/* ========================================================= */
+/* BLINDAJE ABSOLUTO PARA PERFILES PAUSADOS                   */
+/* ========================================================= */
+body.perfil-pausado .btn-whatsapp,
+body.perfil-pausado .whatsapp-sticky-btn {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
