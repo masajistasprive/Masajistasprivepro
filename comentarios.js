@@ -602,7 +602,7 @@ function registrarVisitaPerfil() {
 registrarVisitaPerfil();
 
 /* ========================================================= */
-/* CONTROL GLOBAL DE ESTADO (MAPEO INTELIGENTE A FIRESTORE)   */
+/* CONTROL GLOBAL DE ESTADO (DESTRUCCIÓN TOTAL SI ESTÁ PAUSADO) */
 /* ========================================================= */
 (function() {
     window.addEventListener('DOMContentLoaded', () => {
@@ -611,7 +611,6 @@ registrarVisitaPerfil();
         
         if (!perfilId || perfilId === "index" || perfilId === "foro" || perfilId === "") return;
 
-        // Diccionario de correspondencia exacta con los IDs de Firebase de tu panel
         const mapaPerfiles = {
             "mora": "mora-sensual",
             "luly": "luly-sensual",
@@ -640,9 +639,8 @@ registrarVisitaPerfil();
                 }
                 const db = firebase.firestore();
                 db.collection("config_perfiles").doc(docIdFirebase).get().then((doc) => {
-                    // Si el perfil está marcado específicamente como 'pausado' en Firebase
                     if (doc.exists && doc.data().estado === 'pausado') {
-                        const eliminarBotones = () => {
+                        const destruirBotones = () => {
                             const btnWpp = document.querySelector('.btn-whatsapp');
                             if (btnWpp) btnWpp.remove();
                             
@@ -650,10 +648,16 @@ registrarVisitaPerfil();
                             if (stickyWpp) stickyWpp.remove();
                         };
 
-                        eliminarBotones();
-                        setTimeout(eliminarBotones, 200);
-                        setTimeout(eliminarBotones, 500);
-                        setTimeout(eliminarBotones, 1000);
+                        destruirBotones();
+
+                        // Observador para interceptar y destruir cualquier botón que intente crearse tarde
+                        const observer = new MutationObserver((mutations, obs) => {
+                            destruirBotones();
+                        });
+                        observer.observe(document.body, { childList: true, subtree: true });
+
+                        // Apagar el observador a los 4 segundos por rendimiento
+                        setTimeout(() => observer.disconnect(), 4000);
                     }
                 }).catch(err => {
                     console.error("Error consultando estado en Firestore:", err);
