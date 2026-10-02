@@ -194,6 +194,19 @@
                     </div>
                 </article>
             </a>
+            <a href="lupita.html" class="card-link" data-categoria="terapeuticas">
+                <article class="card">
+                    <div class="card-image">
+                        <img src="img/lupita1.jpg" alt="Lupita" loading="lazy">
+                        <span class="badge-verificado" data-i18n="badgeVerificado">✓ Verificado</span>
+                        <div class="card-gradient-overlay">
+                            <h3>Lupita</h3>
+                            <span class="zona">📍 TRIBUNALES</span>
+                            <span class="modalidad-tag" data-i18n="modGabineteDomicilio">Gabinete / Domicilio</span>
+                        </div>
+                    </div>
+                </article>
+            </a>
             <a href="https://wa.me/5491131774848?text=Hola,%20quiero%20publicar%20mi%20anuncio%20en%20Masajistas%20Prive" target="_blank" class="card-ad-link" data-categoria="terapeuticas">
                 <article class="card-ad">
                     <div class="ad-content">
@@ -282,19 +295,6 @@
                             <h3>Sol</h3>
                             <span class="zona">📍 TRIBUNALES</span>
                             <span class="modalidad-tag" data-i18n="modDepto">Departamento propio</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-            <a href="lupita.html" class="card-link" data-categoria="sensuales">
-                <article class="card">
-                    <div class="card-image">
-                        <img src="img/lupita1.jpg" alt="Lupita" loading="lazy">
-                        <span class="badge-verificado" data-i18n="badgeVerificado">✓ Verificado</span>
-                        <div class="card-gradient-overlay">
-                            <h3>Lupita</h3>
-                            <span class="zona">📍 TRIBUNALES</span>
-                            <span class="modalidad-tag" data-i18n="modGabineteDomicilio">Gabinete / Domicilio</span>
                         </div>
                     </div>
                 </article>
@@ -911,14 +911,14 @@
                 let estado = idiomaActual === 'en' ? 'Cloudy' : (idiomaActual === 'pt' ? 'Nublado' : (idiomaActual === 'fr' ? 'Nuageux' : 'Nublado'));
                 
                 if (codigoClima === 0) {
-                    icono = esDeNoche ? '🌙' : '☀️';
+                    icono = esDeNoche ? '🌙' : '☀️️';
                     estado = idiomaActual === 'en' 
                         ? (esDeNoche ? 'Clear night' : 'Clear') 
                         : (idiomaActual === 'pt' ? (esDeNoche ? 'Noite limpa' : 'Limpo') 
                         : (idiomaActual === 'fr' ? (esDeNoche ? 'Nuit claire' : 'Dégagé') 
                         : (esDeNoche ? 'Noche despejada' : 'Despejado')));
                 } else if (codigoClima >= 1 && codigoClima <= 2) {
-                    icono = esDeNoche ? '☁️' : '⛅';
+                    icono = esDeNoche ? '☁️️' : '⛅';
                     estado = idiomaActual === 'en' ? 'Partly cloudy' : (idiomaActual === 'pt' ? 'Parcialmente nublado' : (idiomaActual === 'fr' ? 'Partiellement nuageux' : 'Parcialmente nublado'));
                 } else if (codigoClima === 3) {
                     icono = '☁';
@@ -1000,4 +1000,4 @@
         });
     </script>
 </body>
-    </html>
+</html>
