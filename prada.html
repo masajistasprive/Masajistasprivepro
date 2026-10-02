@@ -18,7 +18,7 @@
             <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">
         </div>
         <div class="header-right" style="display: flex; align-items: center; gap: 10px;">
-            <button id="btn-idioma" onclick="cambiarIdiomaPerfil()" style="background: transparent; border: 1px solid rgba(223, 194, 133, 0.4); color: #dfc285; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 10px; font-weight: 600; font-family: 'Montserrat', sans-serif; letter-spacing: 1px; transition: all 0.3s;">
+            <button id="btn-idioma" onclick="cambiarIdiomaPerfil()" style="background: rgba(223, 194, 133, 0.12); border: 1px solid #dfc285; color: #dfc285; padding: 7px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; font-family: 'Montserrat', sans-serif; letter-spacing: 1.5px; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.4);">
                 🇺🇸 EN
             </button>
             <a href="index.html" class="btn-buscar">
@@ -73,7 +73,7 @@
                 </div>
             </div>
 
-            <a href="https://wa.me/5491135796465?text=Hola%20Prada,%20vi%20tu%20perfil%20en%20Masajistas%20Privé" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
+            <a href="https://wa.me/5491135796465?text=Hola%20Prada,%20vi%20tu%20perfil%20en%20Masajistas%20Privé" target="_blank" rel="noopener noreferrer" class="btn-whatsapp" id="btnWhatsappPrada">
                 💬 <span data-i18n="btnWpp">Contactar por WhatsApp</span>
             </a>
         </div>
@@ -87,7 +87,11 @@
         <p class="copyright" data-i18n="footerCopy">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
     </footer>
 
-    <!-- Motor de Traducción de Perfil -->
+    <!-- Firebase SDK para control de estado -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+    <!-- Motor de Traducción de Perfil y Verificación de Estado -->
     <script>
         const traduccionesPerfil = {
             es: {
@@ -137,6 +141,54 @@
                 btnWpp: "Contact via WhatsApp",
                 footerLegal: "This is an adult site (+18). Advertisers have no employment relationship with the portal.",
                 footerCopy: "© 2026 Masajistas Privé. All rights reserved."
+            },
+            pt: {
+                perfilTitle: "Prada | Masajistas Privé",
+                btnVolver: "← Voltar",
+                badgeVerificado: "✓ Privé Verificado",
+                labelZona: "Zona:",
+                valorZona: "Tribunales",
+                labelModalidade: "Modalidade:",
+                valorModalidad: "Apartamento reservado",
+                tituloSobreMi: "Descrição",
+                descPerfil: "Atendimento personalizado em apartamento reservado na região de Tribunales.",
+                labelTecnicas: "Técnicas de massagem:",
+                valorTecnicas: "Massagens californianas, sensitivas e descontraentes.",
+                labelHorarios: "Dias e horários:",
+                valorHorarios: "Segunda a Sábado das 09h às 21h.",
+                labelEquipamiento: "Equipamentos e serviços:",
+                valorEquipamiento: "Maca, tatame, ar-condicionado, serviço de chuveiro, frigobar cortesia.",
+                labelPagos: "Meios de pagamento:",
+                valorPagos: "Dinheiro, transferência bancária, Mercado Pago, Prex.",
+                labelTurnos: "Modalidade de agendamento:",
+                valorTurnos: "Reserva prévia via WhatsApp.",
+                btnWpp: "Contatar por WhatsApp",
+                footerLegal: "Este é um site para adultos (+18). Os anunciantes não têm vínculo empregatício com o portal.",
+                footerCopy: "© 2026 Masajistas Privé. Todos os direitos reservados."
+            },
+            fr: {
+                perfilTitle: "Prada | Masajistas Privé",
+                btnVolver: "← Retour",
+                badgeVerificado: "✓ Privé Vérifié",
+                labelZona: "Zone :",
+                valorZona: "Tribunales",
+                labelModalidad: "Modalité :",
+                valorModalidad: "Appartement réservé",
+                tituloSobreMi: "Description",
+                descPerfil: "Soins personnalisés dans un appartement réservé dans le quartier de Tribunales.",
+                labelTecnicas: "Techniques de massage :",
+                valorTecnicas: "Massages californiens, sensitifs et décontracturants.",
+                labelHorarios: "Jours et horaires :",
+                valorHorarios: "Lundi au Samedi de 09h00 à 21h00.",
+                labelEquipamiento: "Équipements et services :",
+                valorEquipamiento: "Table de massage, tatami, climatisation, service de douche, minibar gratuit.",
+                labelPagos: "Modes de paiement :",
+                valorPagos: "Espèces, virement bancaire, Mercado Pago, Prex.",
+                labelTurnos: "Modalité de réservation :",
+                valorTurnos: "Réservation préalable par WhatsApp.",
+                btnWpp: "Contacter par WhatsApp",
+                footerLegal: "Ceci est un site pour adultes (+18). Les annonceurs n'ont aucun lien d'emploi avec le portail.",
+                footerCopy: "© 2026 Masajistas Privé. Tous droits réservés."
             }
         };
 
@@ -148,7 +200,10 @@
 
             const btn = document.getElementById('btn-idioma');
             if(btn) {
-                btn.innerHTML = lang === 'es' ? '🇺🇸 EN' : '🇦🇷 ES';
+                if (lang === 'es') btn.innerHTML = '🇺🇸 EN';
+                else if (lang === 'en') btn.innerHTML = '🇧🇷 PT';
+                else if (lang === 'pt') btn.innerHTML = '🇫🇷 FR';
+                else btn.innerHTML = '🇦🇷 ES';
             }
 
             document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -164,12 +219,40 @@
         }
 
         function cambiarIdiomaPerfil() {
-            const nuevoLang = idiomaPerfil === 'es' ? 'en' : 'es';
-            aplicarIdiomaPerfil(nuevoLang);
+            if (idiomaPerfil === 'es') aplicarIdiomaPerfil('en');
+            else if (idiomaPerfil === 'en') aplicarIdiomaPerfil('pt');
+            else if (idiomaPerfil === 'pt') aplicarIdiomaPerfil('fr');
+            else aplicarIdiomaPerfil('es');
+        }
+
+        function verificarEstadoPerfilFirebase() {
+            try {
+                if (!firebase.apps.length) {
+                    firebase.initializeApp({
+                        apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
+                        authDomain: "masajistasprivepro.firebaseapp.com",
+                        projectId: "masajistasprivepro",
+                        storageBucket: "masajistasprivepro.firebasestorage.app",
+                        messagingSenderId: "768677270509",
+                        appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
+                        measurementId: "G-SBN70C32JF"
+                    });
+                }
+                const db = firebase.firestore();
+                db.collection("config_perfiles").doc("prada").get().then((doc) => {
+                    if (doc.exists && doc.data().estado === 'pausado') {
+                        const btnWpp = document.getElementById('btnWhatsappPrada');
+                        if (btnWpp) btnWpp.style.display = 'none';
+                    }
+                });
+            } catch (e) {
+                console.error("Error verificando estado:", e);
+            }
         }
 
         window.addEventListener('DOMContentLoaded', () => {
             aplicarIdiomaPerfil(idiomaPerfil);
+            verificarEstadoPerfilFirebase();
         });
 
         function cambiarFoto(element) {
@@ -178,6 +261,104 @@
         }
     </script>
     <script src="comentarios.js"></script>
+
+    <!-- --- SOUNDTRACK PRIVÉ - MOTOR GLOBAL FLOTANTE --- -->
+    <script>
+        (function() {
+            if (window.priveEngineLoaded) return;
+            window.priveEngineLoaded = true;
+
+            let bgAudio = document.getElementById('priveGlobalAudioEngine');
+            if (!bgAudio) {
+                bgAudio = window.top.document.getElementById('priveGlobalAudioEngine');
+            }
+            if (!bgAudio) {
+                bgAudio = document.createElement('audio');
+                bgAudio.id = 'priveGlobalAudioEngine';
+                bgAudio.loop = true;
+                bgAudio.preload = 'auto';
+                
+                let audioSource = document.createElement('source');
+                audioSource.src = 'chill.mp3';
+                audioSource.type = 'audio/mpeg';
+                bgAudio.appendChild(audioSource);
+                document.body.appendChild(bgAudio);
+            }
+
+            function injectFloatingButton() {
+                if (document.getElementById('priveUltraSutilBtn')) return;
+
+                const floatingBtn = document.createElement('div');
+                floatingBtn.id = 'priveUltraSutilBtn';
+                floatingBtn.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    left: 20px;
+                    z-index: 999999;
+                    background: rgba(18, 18, 18, 0.9);
+                    border: 1px solid #dfbc63;
+                    border-radius: 50px;
+                    width: 44px;
+                    height: 44px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.7);
+                    backdrop-filter: blur(6px);
+                `;
+
+                const isPlayingNow = !bgAudio.paused;
+                floatingBtn.innerHTML = `<span id="priveIconSymbol" style="color: #dfbc63; font-size: 1.15em; line-height: 1;">${isPlayingNow ? '⏸' : '🎵'}</span>`;
+                document.body.appendChild(floatingBtn);
+
+                floatingBtn.onclick = () => {
+                    if (bgAudio.paused) {
+                        bgAudio.play().then(() => {
+                            document.getElementById('priveIconSymbol').textContent = '⏸';
+                            localStorage.setItem('priveStatePlaying', 'true');
+                        }).catch(err => {
+                            bgAudio.load();
+                            bgAudio.play().then(() => {
+                                document.getElementById('priveIconSymbol').textContent = '⏸';
+                                localStorage.setItem('priveStatePlaying', 'true');
+                            });
+                        });
+                    } else {
+                        bgAudio.pause();
+                        document.getElementById('priveIconSymbol').textContent = '🎵';
+                        localStorage.setItem('priveStatePlaying', 'false');
+                    }
+                };
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', injectFloatingButton);
+            } else {
+                injectFloatingButton();
+            }
+
+            window.addEventListener('load', () => {
+                let savedTime = localStorage.getItem('priveAudioCurrentTime');
+                if (savedTime && !isNaN(savedTime)) {
+                    bgAudio.currentTime = parseFloat(savedTime);
+                }
+
+                if (localStorage.getItem('priveStatePlaying') === 'true' && bgAudio.paused) {
+                    bgAudio.play().then(() => {
+                        const icon = document.getElementById('priveIconSymbol');
+                        if (icon) icon.textContent = '⏸';
+                    }).catch(e => console.log("Autoplay restringido"));
+                }
+            });
+
+            setInterval(() => {
+                if (!bgAudio.paused) {
+                    localStorage.setItem('priveAudioCurrentTime', bgAudio.currentTime);
+                }
+            }, 1000);
+        })();
+    </script>
 
 </body>
 </html>
