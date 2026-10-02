@@ -66,7 +66,7 @@
 
         async function escanearIndexYConstruirPanel() {
             const contenedor = document.getElementById('listaPerfilesAdmin');
-            contenedor.innerHTML = "<p style='color: #dfc285;'>Leyendo perfiles publicados en o índice...</p>";
+            contenedor.innerHTML = "<p style='color: #dfc285;'>Leyendo perfiles publicados en el índice...</p>";
 
             try {
                 const response = await fetch('index.html?' + new Date().getTime());
@@ -78,11 +78,18 @@
                 const links = docHtml.querySelectorAll('.card-link');
                 let perfilesDetectados = new Set();
 
+                // Mapa de correspondencia para los IDs exactos de Firebase
+                const mapaPerfiles = {
+                    "mora": "mora-sensual",
+                    "luly": "luly-sensual"
+                };
+
                 links.forEach(link => {
                     let href = link.getAttribute('href');
                     if (href && href.endsWith('.html') && !href.startsWith('http')) {
-                        let nombreId = href.replace('.html', '').trim();
-                        perfilesDetectados.add(nombreId);
+                        let nombreId = href.replace('.html', '').trim().toLowerCase();
+                        let idReal = mapaPerfiles[nombreId] || nombreId;
+                        perfilesDetectados.add(idReal);
                     }
                 });
 
@@ -132,7 +139,6 @@
             }
         }
 
-        // Definición explícita global para que el botón la ejecute correctamente
         window.cambiarEstado = function(idPerfil, nuevoEstado) {
             db.collection("config_perfiles").doc(idPerfil).set({
                 estado: nuevoEstado
