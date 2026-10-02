@@ -602,7 +602,7 @@ function registrarVisitaPerfil() {
 registrarVisitaPerfil();
 
 /* ========================================================= */
-/* CONTROL GLOBAL DE ESTADO (LECTURA POR TÍTULO EN FIREBASE) */
+/* CONTROL GLOBAL DE ESTADO (VERIFICACIÓN SEGURA POR TÍTULO) */
 /* ========================================================= */
 (function() {
     window.addEventListener('DOMContentLoaded', () => {
@@ -629,8 +629,9 @@ registrarVisitaPerfil();
                 }
                 const db = firebase.firestore();
                 db.collection("config_perfiles").doc(nombrePerfil).get().then((doc) => {
+                    // Si el perfil está marcado específicamente como 'pausado' en Firebase
                     if (doc.exists && doc.data().estado === 'pausado') {
-                        const ocultarTodo = () => {
+                        const eliminarBotones = () => {
                             const btnWpp = document.querySelector('.btn-whatsapp');
                             if (btnWpp) btnWpp.remove();
                             
@@ -638,21 +639,13 @@ registrarVisitaPerfil();
                             if (stickyWpp) stickyWpp.remove();
                         };
 
-                        ocultarTodo();
-                        setTimeout(ocultarTodo, 300);
-                        setTimeout(ocultarTodo, 800);
-                    } else {
-                        const btnWpp = document.querySelector('.btn-whatsapp');
-                        if (btnWpp) btnWpp.style.display = 'block';
-                        
-                        const stickyWpp = document.getElementById('whatsappStickyCTA');
-                        if (stickyWpp) stickyWpp.style.display = 'flex';
+                        eliminarBotones();
+                        setTimeout(eliminarBotones, 250);
+                        setTimeout(eliminarBotones, 700);
                     }
+                    // Si no está pausado, no alteramos nada y permitimos que opere con normalidad.
                 }).catch(err => {
-                    const btnWpp = document.querySelector('.btn-whatsapp');
-                    if (btnWpp) btnWpp.style.display = 'block';
-                    const stickyWpp = document.getElementById('whatsappStickyCTA');
-                    if (stickyWpp) stickyWpp.style.display = 'flex';
+                    console.error("Error consultando estado en Firestore:", err);
                 });
             }
         } catch (e) {
