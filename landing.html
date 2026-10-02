@@ -5,107 +5,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Centro de Masajes y Bienestar | CABA</title>
     <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         body {
             background-color: #0b0b0b;
             color: #f5f5f5;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            justify-content: space-between;
+            justify-content: center;
+            align-items: center;
         }
-        .landing-container {
-            max-width: 700px;
-            margin: 40px auto;
+        .landing-box {
+            max-width: 550px;
+            width: 90%;
             background: #141414;
-            border: 1px solid rgba(223, 194, 133, 0.25);
-            border-radius: 12px;
-            padding: 40px 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            border: 1px solid rgba(223, 194, 133, 0.3);
+            border-radius: 14px;
+            padding: 50px 30px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.9);
             text-align: center;
+        }
+        .landing-logo {
+            max-width: 180px;
+            width: 100%;
+            height: auto;
+            margin-bottom: 30px;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));
         }
         h1 {
             color: #dfc285;
             font-family: 'Cormorant Garamond', serif;
-            font-size: 32px;
-            margin-bottom: 15px;
+            font-size: 26px;
+            margin-bottom: 12px;
             letter-spacing: 1px;
         }
         p {
-            color: #ccc;
-            font-size: 15px;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-        .features-list {
-            text-align: left;
-            background: #1a1a1a;
-            padding: 20px 25px;
-            border-radius: 8px;
-            margin: 25px 0;
-            border-left: 3px solid #dfc285;
-        }
-        .features-list li {
-            color: #ddd;
+            color: #bbb;
             font-size: 14px;
-            margin-bottom: 10px;
+            line-height: 1.6;
+            margin-bottom: 35px;
+            font-weight: 300;
         }
-        .btn-ingresar-portal {
-            display: inline-block;
+        .btn-ingresar-grande {
+            display: block;
             background: linear-gradient(135deg, #dfc285, #c5a059);
             color: #0d0d0d;
             text-decoration: none;
-            padding: 16px 35px;
+            padding: 18px 25px;
             font-weight: 700;
-            border-radius: 6px;
+            border-radius: 8px;
             text-transform: uppercase;
             letter-spacing: 2px;
-            font-size: 14px;
-            box-shadow: 0 4px 15px rgba(223,194,133,0.3);
-            transition: transform 0.2s;
-            margin-top: 10px;
+            font-size: 15px;
+            box-shadow: 0 6px 20px rgba(223, 194, 133, 0.35);
+            transition: all 0.3s ease;
         }
-        .btn-ingresar-portal:hover {
-            transform: scale(1.02);
+        .btn-ingresar-grande:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(223, 194, 133, 0.5);
         }
-        .footer-landing {
-            text-align: center;
-            font-size: 12px;
+        .footer-text {
+            margin-top: 25px;
+            font-size: 11px;
             color: #666;
-            padding: 20px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
     </style>
 </head>
 <body>
 
-    <header style="padding: 20px; text-align: center; border-bottom: 1px solid #222;">
-        <img src="img/logo.png" alt="Masajistas Privé" style="max-height: 45px; width: auto; display: block; margin: 0 auto;">
-    </header>
+    <div class="landing-box">
+        <!-- Logo Grande Centrado -->
+        <img src="img/logo.png" alt="Masajistas Privé" class="landing-logo">
 
-    <main style="padding: 0 20px;">
-        <div class="landing-container">
-            <h1>El arte del bienestar corporal en Buenos Aires</h1>
-            <p>Especialistas en masajes descontracturantes, terapéuticos y recuperación física para profesionales y vecinos de CABA. Un espacio diseñado para liberar tensiones y renovar la energía corporal.</p>
-            
-            <ul class="features-list">
-                <li>✨ Gabinetes climatizados con absoluto confort y discreción.</li>
-                <li>🌿 Técnicas profesionales enfocadas en alivio cervical y lumbar.</li>
-                <li>⏱️ Atención personalizada con reserva previa de turnos.</li>
-            </ul>
+        <h1>Portal de Bienestar y Masajes en CABA</h1>
+        <p>Espacio exclusivo de atención profesional, gabinetes acondicionados y servicios independientes con reserva previa.</p>
 
-            <p style="font-size: 14px; color: #aaa;">Conocé a los profesionales disponibles, visualiza los gabinetes y agenda tu sesión.</p>
+        <!-- Botón Gigante y Llamativo -->
+        <a href="index.html" class="btn-ingresar-grande">Ingresar al Portal &rarr;</a>
 
-            <a href="index.html" class="btn-ingresar-portal">Ver Directorio y Gabinetes &rarr;</a>
+        <div class="footer-text">
+            © 2026 Masajistas Privé. Todos los derechos reservados.
         </div>
-    </main>
-
-    <footer class="footer-landing">
-        <p>© 2026 Centro de Bienestar CABA. Todos los derechos reservados.</p>
-    </footer>
+    </div>
 
 </body>
 </html>
