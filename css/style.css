@@ -747,16 +747,10 @@ body.perfil-body .whatsapp-sticky-btn:hover {
 }
 
 /* ========================================================= */
-/* OCULTAMIENTO PREVENTIVO DE WHATSAPP (CONTROL DE PAUSA)     */
-/* ========================================================= */
-.btn-whatsapp, .whatsapp-sticky-btn {
-    display: none !important;
-}
-
-/* ========================================================= */
 /* BLINDAJE ABSOLUTO PARA PERFILES PAUSADOS                   */
 /* ========================================================= */
 body.perfil-pausado .btn-whatsapp,
+body.perfil-pausado #whatsappStickyCTA,
 body.perfil-pausado .whatsapp-sticky-btn {
     display: none !important;
     visibility: hidden !important;
