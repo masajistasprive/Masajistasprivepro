@@ -12,7 +12,7 @@
     });
 })();
 
-// comentarios.js - Motor Global, Visor con Marca de Agua, Slider Táctil, Comentarios con Estrellas Bilingües, Visitas y Botón Flotante
+// comentarios.js - Motor Global, Visor con Marca de Agua, Slider Táctil, Comentarios con Estrellas Bilingües, Visitas, Botón Flotante y Control de Pausa
 (function() {
     // Diccionario de textos bilingües para los comentarios
     const dictComentarios = {
@@ -264,7 +264,7 @@
         }
     });
 
-    let perfilId = typeof ID_PERFIL_ACTUAL !== 'undefined' ? ID_PERFIL_ACTUAL : window.location.pathname.split("/").pop().replace(".html", "");
+    let perfilId = typeof ID_PERFIL_ACTUAL !== 'undefined' ? ID_PERFIL_ACTUAL : window.location.pathname.split("/").pop().replace(".html", "").trim();
     if (!perfilId || perfilId === "") perfilId = "general";
 
     const contenedorDestino = document.getElementById('seccion-comentarios');
@@ -600,3 +600,45 @@ function registrarVisitaPerfil() {
 }
 
 registrarVisitaPerfil();
+
+/* ========================================================= */
+/* CONTROL GLOBAL DE ESTADO (OCULTAR WHATSAPP SI ESTÁ PAUSADO)*/
+/* ========================================================= */
+(function() {
+    window.addEventListener('DOMContentLoaded', () => {
+        let path = window.location.pathname;
+        let perfilId = path.split("/").pop().replace(".html", "").trim();
+        
+        if (!perfilId || perfilId === "index" || perfilId === "foro" || perfilId === "") return;
+
+        try {
+            if (typeof firebase !== 'undefined') {
+                if (!firebase.apps.length) {
+                    firebase.initializeApp({
+                        apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
+                        authDomain: "masajistasprivepro.firebaseapp.com",
+                        projectId: "masajistasprivepro",
+                        storageBucket: "masajistasprivepro.firebasestorage.app",
+                        messagingSenderId: "768677270509",
+                        appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
+                        measurementId: "G-SBN70C32JF"
+                    });
+                }
+                const db = firebase.firestore();
+                db.collection("config_perfiles").doc(perfilId).get().then((doc) => {
+                    if (doc.exists && doc.data().estado === 'pausado') {
+                        const btnWpp = document.querySelector('.btn-whatsapp');
+                        if (btnWpp) btnWpp.style.display = 'none';
+                        
+                        const stickyWpp = document.getElementById('whatsappStickyCTA');
+                        if (stickyWpp) stickyWpp.style.display = 'none';
+                    }
+                }).catch(err => {
+                    console.error("Error consultando estado del perfil:", err);
+                });
+            }
+        } catch (e) {
+            console.error("Error en control global de pausa:", e);
+        }
+    });
+})();
