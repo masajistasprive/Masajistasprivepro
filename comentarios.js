@@ -602,17 +602,28 @@ function registrarVisitaPerfil() {
 registrarVisitaPerfil();
 
 /* ========================================================= */
-/* CONTROL GLOBAL DE ESTADO (VERIFICACIÓN SEGURA POR TÍTULO) */
+/* CONTROL GLOBAL DE ESTADO (MAPEO INTELIGENTE A FIRESTORE)   */
 /* ========================================================= */
 (function() {
     window.addEventListener('DOMContentLoaded', () => {
-        let tituloElemento = document.querySelector('.perfil-titulo-seccion h2');
-        if (!tituloElemento) return;
+        let path = window.location.pathname;
+        let perfilId = path.split("/").pop().replace(".html", "").trim().toLowerCase();
+        
+        if (!perfilId || perfilId === "index" || perfilId === "foro" || perfilId === "") return;
 
-        let nombrePerfil = tituloElemento.textContent.trim().toLowerCase()
-            .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        // Diccionario de correspondencia exacta con los IDs de Firebase de tu panel
+        const mapaPerfiles = {
+            "mora": "mora-sensual",
+            "luly": "luly-sensual",
+            "matias": "matias",
+            "lupita": "lupita",
+            "pamela": "pamela",
+            "renata": "renata",
+            "sol": "sol",
+            "zaira": "zaira"
+        };
 
-        if (!nombrePerfil) return;
+        let docIdFirebase = mapaPerfiles[perfilId] || perfilId;
 
         try {
             if (typeof firebase !== 'undefined') {
@@ -628,7 +639,7 @@ registrarVisitaPerfil();
                     });
                 }
                 const db = firebase.firestore();
-                db.collection("config_perfiles").doc(nombrePerfil).get().then((doc) => {
+                db.collection("config_perfiles").doc(docIdFirebase).get().then((doc) => {
                     // Si el perfil está marcado específicamente como 'pausado' en Firebase
                     if (doc.exists && doc.data().estado === 'pausado') {
                         const eliminarBotones = () => {
@@ -643,7 +654,6 @@ registrarVisitaPerfil();
                         setTimeout(eliminarBotones, 250);
                         setTimeout(eliminarBotones, 700);
                     }
-                    // Si no está pausado, no alteramos nada y permitimos que opere con normalidad.
                 }).catch(err => {
                     console.error("Error consultando estado en Firestore:", err);
                 });
