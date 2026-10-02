@@ -602,7 +602,7 @@ function registrarVisitaPerfil() {
 registrarVisitaPerfil();
 
 /* ========================================================= */
-/* CONTROL GLOBAL DE ESTADO (DESTRUCCIÓN TOTAL SI ESTÁ PAUSADO) */
+/* CONTROL GLOBAL DE ESTADO (VERIFICACIÓN ABSOLUTA)          */
 /* ========================================================= */
 (function() {
     window.addEventListener('DOMContentLoaded', () => {
@@ -611,6 +611,7 @@ registrarVisitaPerfil();
         
         if (!perfilId || perfilId === "index" || perfilId === "foro" || perfilId === "") return;
 
+        // Mapeo exhaustivo de todos los perfiles de la web
         const mapaPerfiles = {
             "mora": "mora-sensual",
             "luly": "luly-sensual",
@@ -640,24 +641,16 @@ registrarVisitaPerfil();
                 const db = firebase.firestore();
                 db.collection("config_perfiles").doc(docIdFirebase).get().then((doc) => {
                     if (doc.exists && doc.data().estado === 'pausado') {
-                        const destruirBotones = () => {
-                            const btnWpp = document.querySelector('.btn-whatsapp');
-                            if (btnWpp) btnWpp.remove();
-                            
-                            const stickyWpp = document.getElementById('whatsappStickyCTA');
-                            if (stickyWpp) stickyWpp.remove();
+                        document.body.classList.add('perfil-pausado');
+
+                        const aniquilarBotones = () => {
+                            document.querySelectorAll('.btn-whatsapp, #whatsappStickyCTA, .whatsapp-sticky-btn').forEach(el => el.remove());
                         };
 
-                        destruirBotones();
-
-                        // Observador para interceptar y destruir cualquier botón que intente crearse tarde
-                        const observer = new MutationObserver((mutations, obs) => {
-                            destruirBotones();
-                        });
-                        observer.observe(document.body, { childList: true, subtree: true });
-
-                        // Apagar el observador a los 4 segundos por rendimiento
-                        setTimeout(() => observer.disconnect(), 4000);
+                        aniquilarBotones();
+                        setTimeout(aniquilarBotones, 100);
+                        setTimeout(aniquilarBotones, 400);
+                        setTimeout(aniquilarBotones, 900);
                     }
                 }).catch(err => {
                     console.error("Error consultando estado en Firestore:", err);
