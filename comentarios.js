@@ -640,24 +640,32 @@ registrarVisitaPerfil();
                 }
                 const db = firebase.firestore();
                 
-                // onSnapshot escucha en tiempo real cualquier cambio en la base de datos
                 db.collection("config_perfiles").doc(docIdFirebase).onSnapshot((doc) => {
                     if (doc.exists && doc.data().estado === 'pausado') {
-                        document.body.classList.add('perfil-pausado');
+                        // Inyectar estilo de ocultamiento forzado de emergencia de forma directa en el head
+                        if (!document.getElementById('estiloPausadoForzado')) {
+                            const stylePausa = document.createElement('style');
+                            stylePausa.id = 'estiloPausadoForzado';
+                            stylePausa.innerHTML = `
+                                .btn-whatsapp, #whatsappStickyCTA, .whatsapp-sticky-btn {
+                                    display: none !important;
+                                    visibility: hidden !important;
+                                    opacity: 0 !important;
+                                    pointer-events: none !important;
+                                }
+                            `;
+                            document.head.appendChild(stylePausa);
+                        }
 
+                        // Destrucción física de los elementos si ya fueron creados
                         const aniquilarBotones = () => {
                             document.querySelectorAll('.btn-whatsapp, #whatsappStickyCTA, .whatsapp-sticky-btn').forEach(el => el.remove());
                         };
 
                         aniquilarBotones();
-
-                        // Observador por si el DOM los vuelve a renderizar tarde
-                        const observer = new MutationObserver(() => {
-                            aniquilarBotones();
-                        });
-                        observer.observe(document.body, { childList: true, subtree: true });
-                    } else if (doc.exists && doc.data().estado === 'activo') {
-                        document.body.classList.remove('perfil-pausado');
+                        setTimeout(aniquilarBotones, 100);
+                        setTimeout(aniquilarBotones, 400);
+                        setTimeout(aniquilarBotones, 800);
                     }
                 });
             }
