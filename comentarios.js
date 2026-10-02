@@ -41,7 +41,7 @@
             sinExperiencias: "No experiences yet. Be the first to leave one!",
             meGusta: "Like",
             destacado: "★ Featured",
-            eliminar: "🗑️ Delete",
+            eliminar: "🗑️️ Delete",
             alertaIncompleto: "Please fill in your name, select a rating, and write your experience.",
             confirmEliminar: "Are you sure you want to delete this comment?",
             adjuntoTexto: "✓ Attached file: "
@@ -602,7 +602,7 @@ function registrarVisitaPerfil() {
 registrarVisitaPerfil();
 
 /* ========================================================= */
-/* CONTROL GLOBAL DE ESTADO (OCULTAR WHATSAPP SI ESTÁ PAUSADO)*/
+/* CONTROL GLOBAL DE ESTADO (MOSTRAR U OCULTAR WHATSAPP)     */
 /* ========================================================= */
 (function() {
     window.addEventListener('DOMContentLoaded', () => {
@@ -626,19 +626,24 @@ registrarVisitaPerfil();
                 }
                 const db = firebase.firestore();
                 db.collection("config_perfiles").doc(perfilId).get().then((doc) => {
-                    if (doc.exists && doc.data().estado === 'pausado') {
+                    // Si el perfil NO está pausado, los mostramos removiendo el display none
+                    if (!doc.exists || doc.data().estado !== 'pausado') {
                         const btnWpp = document.querySelector('.btn-whatsapp');
-                        if (btnWpp) btnWpp.style.display = 'none';
+                        if (btnWpp) btnWpp.style.display = 'block';
                         
                         const stickyWpp = document.getElementById('whatsappStickyCTA');
-                        if (stickyWpp) stickyWpp.style.display = 'none';
+                        if (stickyWpp) stickyWpp.style.display = 'flex';
                     }
                 }).catch(err => {
-                    console.error("Error consultando estado del perfil:", err);
+                    // Si falla la red, por seguridad los mostramos para no perder consultas
+                    const btnWpp = document.querySelector('.btn-whatsapp');
+                    if (btnWpp) btnWpp.style.display = 'block';
+                    const stickyWpp = document.getElementById('whatsappStickyCTA');
+                    if (stickyWpp) stickyWpp.style.display = 'flex';
                 });
             }
         } catch (e) {
-            console.error("Error en control global de pausa:", e);
+            console.error("Error en control global de estado:", e);
         }
     });
 })();
