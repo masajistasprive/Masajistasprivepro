@@ -86,7 +86,11 @@
         <p class="copyright" data-i18n="footerCopy">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
     </footer>
 
-    <!-- Motor de Traducción de Perfil -->
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+    <!-- Motor de Traducción de Perfil y Control Directo de Pausa -->
     <script>
         const traduccionesPerfil = {
             es: {
@@ -218,6 +222,41 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             aplicarIdiomaPerfil(idiomaPerfil);
+
+            // Verificación y destrucción directa desde el HTML de la página
+            try {
+                if (typeof firebase !== 'undefined') {
+                    if (!firebase.apps.length) {
+                        firebase.initializeApp({
+                            apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
+                            authDomain: "masajistasprivepro.firebaseapp.com",
+                            projectId: "masajistasprivepro",
+                            storageBucket: "masajistasprivepro.firebasestorage.app",
+                            messagingSenderId: "768677270509",
+                            appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
+                            measurementId: "G-SBN70C32JF"
+                        });
+                    }
+                    const db = firebase.firestore();
+                    let perfilActual = window.location.pathname.split("/").pop().replace(".html", "").trim().toLowerCase();
+
+                    db.collection("config_perfiles").doc(perfilActual).onSnapshot((doc) => {
+                        if (doc.exists && doc.data().estado === 'pausado') {
+                            const btnHtml = document.getElementById('btnWhatsappMatias');
+                            if (btnHtml) btnHtml.remove();
+                            
+                            const stickyWpp = document.getElementById('whatsappStickyCTA');
+                            if (stickyWpp) stickyWpp.remove();
+
+                            const stylePausa = document.createElement('style');
+                            stylePausa.innerHTML = `#btnWhatsappMatias, #whatsappStickyCTA, .btn-whatsapp, .whatsapp-sticky-btn { display: none !important; }`;
+                            document.head.appendChild(stylePausa);
+                        }
+                    });
+                }
+            } catch(e) {
+                console.error("Error en pausa directa:", e);
+            }
         });
 
         function cambiarFoto(element) {
