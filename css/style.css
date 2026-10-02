@@ -745,3 +745,10 @@ body.perfil-body .whatsapp-sticky-btn:hover {
         font-size: 26px !important;
     }
 }
+
+/* ========================================================= */
+/* OCULTAMIENTO PREVENTIVO DE WHATSAPP (CONTROL DE PAUSA)     */
+/* ========================================================= */
+.btn-whatsapp, .whatsapp-sticky-btn {
+    display: none !important;
+}
