@@ -193,7 +193,7 @@
         </div>
     </div>
 
-    <!-- Plantilla Oficial Bilingüe con Diccionario y Comentarios -->
+    <!-- Plantilla Oficial Bilingüe con Control de Pausa y Comentarios -->
     <script type="text/template" id="plantillaFicha"><![CDATA[<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -214,7 +214,7 @@
             <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">
         </div>
         <div class="header-right" style="display: flex; align-items: center; gap: 10px;">
-            <button id="btn-idioma" onclick="cambiarIdiomaPerfil()" style="background: transparent; border: 1px solid rgba(223, 194, 133, 0.4); color: #dfc285; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 10px; font-weight: 600; font-family: 'Montserrat', sans-serif; letter-spacing: 1px; transition: all 0.3s;">
+            <button id="btn-idioma" onclick="cambiarIdiomaPerfil()" style="background: rgba(223, 194, 133, 0.12); border: 1px solid #dfc285; color: #dfc285; padding: 7px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; font-family: 'Montserrat', sans-serif; letter-spacing: 1.5px; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.4);">
                 🇺🇸 EN
             </button>
             <a href="index.html" class="btn-buscar">
@@ -254,7 +254,7 @@
                 </div>
             </div>
 
-            <a href="https://wa.me/{{whatsapp}}?text=Hola%20{{nombreEnc}},%20vi%20tu%20perfil%20en%20Masajistas%20Privé" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
+            <a href="https://wa.me/{{whatsapp}}?text=Hola%20{{nombreEnc}},%20vi%20tu%20perfil%20en%20Masajistas%20Privé" target="_blank" rel="noopener noreferrer" class="btn-whatsapp" id="btnWhatsappPerfil">
                 💬 <span data-i18n="btnWpp">Contactar por WhatsApp</span>
             </a>
         </div>
@@ -267,7 +267,11 @@
         <p class="copyright" data-i18n="footerCopy">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
     </footer>
 
-    <!-- Motor de Traducción de Perfil -->
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+    <!-- Motor de Traducción de Perfil y Control Directo de Pausa -->
     <script>
         const traduccionesPerfil = {
             es: {
@@ -334,6 +338,41 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             aplicarIdiomaPerfil(idiomaPerfil);
+
+            // Verificación y destrucción directa desde el HTML de la página
+            try {
+                if (typeof firebase !== 'undefined') {
+                    if (!firebase.apps.length) {
+                        firebase.initializeApp({
+                            apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
+                            authDomain: "masajistasprivepro.firebaseapp.com",
+                            projectId: "masajistasprivepro",
+                            storageBucket: "masajistasprivepro.firebasestorage.app",
+                            messagingSenderId: "768677270509",
+                            appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
+                            measurementId: "G-SBN70C32JF"
+                        });
+                    }
+                    const db = firebase.firestore();
+                    let perfilActual = window.location.pathname.split("/").pop().replace(".html", "").trim().toLowerCase();
+
+                    db.collection("config_perfiles").doc(perfilActual).onSnapshot((doc) => {
+                        if (doc.exists && doc.data().estado === 'pausado') {
+                            const btnHtml = document.getElementById('btnWhatsappPerfil');
+                            if (btnHtml) btnHtml.remove();
+                            
+                            const stickyWpp = document.getElementById('whatsappStickyCTA');
+                            if (stickyWpp) stickyWpp.remove();
+
+                            const stylePausa = document.createElement('style');
+                            stylePausa.innerHTML = `#btnWhatsappPerfil, #whatsappStickyCTA, .btn-whatsapp, .whatsapp-sticky-btn { display: none !important; }`;
+                            document.head.appendChild(stylePausa);
+                        }
+                    });
+                }
+            } catch(e) {
+                console.error("Error en pausa directa:", e);
+            }
         });
 
         function cambiarFoto(element) {
