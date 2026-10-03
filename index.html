@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="main-title">Masajistas Privé | Portal Exclusivo</title>
-    <!-- VERSIÓN FINAL CORREGIDA Y ORDENADA DEL INDEX -->
     <link rel="stylesheet" href="css/style.css?v=3.8">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,14 +15,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Masajistas Privé">
-
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DXX740HP41"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-DXX740HP41');
-    </script>
 </head>
 <body>
 
@@ -62,9 +53,23 @@
 
     <div class="destacadas-container-wrapper">
         <h3 class="destacadas-titulo" data-i18n="destacadasTitulo">Destacadas</h3>
-        <!-- Contenedor dinámico limpio que se llenará estrictamente con lo que indique Firebase -->
-        <div class="stories-container" id="stories-container-dinamico">
-            <!-- Se cargará automáticamente desde Firebase sin rezagos -->
+        <div class="stories-container">
+            <a href="prada.html" class="story-item">
+                <div class="story-ring"><img src="img/prada1.jpg" alt="Prada"></div>
+                <span>Prada</span>
+            </a>
+            <a href="mariela.html" class="story-item">
+                <div class="story-ring"><img src="img/mariela5.jpg" alt="Mariela"></div>
+                <span>Mariela</span>
+            </a>
+            <a href="lupita.html" class="story-item">
+                <div class="story-ring"><img src="img/lupita1.jpg" alt="Lupita"></div>
+                <span>Lupita</span>
+            </a>
+            <a href="sol.html" class="story-item">
+                <div class="story-ring"><img src="img/sol1.jpg" alt="Sol"></div>
+                <span>Sol</span>
+            </a>
         </div>
     </div>
 
@@ -84,20 +89,7 @@
         <!-- Sección Terapéuticas -->
         <h2 class="section-heading" data-section="terapeuticas" data-i18n="seccionTerapeuticas">Masajistas Terapéuticas</h2>
         <div class="grid-perfiles" id="grid-terapeuticas">
-            <a href="perfil.html?id=jennyfer" class="card-link" data-categoria="terapeuticas" data-perfilid="jennyfer">
-                <article class="card">
-                    <div class="card-image">
-                        <img src="img/jennyfer1.jpg" alt="Jennyfer" loading="lazy">
-                        <span class="badge-verificado" data-i18n="badgeVerificado">✓ Verificado</span>
-                        <div class="card-gradient-overlay">
-                            <h3>Jennyfer</h3>
-                            <span class="zona">📍 TRIBUNALES</span>
-                            <span class="modalidad-tag" data-i18n="modConsultorio">Consultorio propio</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-            <a href="perfil.html?id=prada" class="card-link" data-categoria="terapeuticas" data-perfilid="prada">
+            <a href="prada.html" class="card-link" data-categoria="terapeuticas">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/prada1.jpg" alt="Prada" loading="lazy">
@@ -110,7 +102,7 @@
                     </div>
                 </article>
             </a>
-            <a href="perfil.html?id=mariela" class="card-link" data-categoria="terapeuticas" data-perfilid="mariela">
+            <a href="mariela.html" class="card-link" data-categoria="terapeuticas">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/mariela5.jpg" alt="Mariela" loading="lazy">
@@ -123,7 +115,7 @@
                     </div>
                 </article>
             </a>
-            <a href="perfil.html?id=daniela" class="card-link" data-categoria="terapeuticas" data-perfilid="daniela">
+            <a href="daniela.html" class="card-link" data-categoria="terapeuticas">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/daniela1.jpg" alt="Daniela" loading="lazy">
@@ -136,7 +128,7 @@
                     </div>
                 </article>
             </a>
-            <a href="perfil.html?id=zaira" class="card-link" data-categoria="terapeuticas" data-perfilid="zaira">
+            <a href="zaira.html" class="card-link" data-categoria="terapeuticas">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/zaira1.jpg" alt="Zaira" loading="lazy">
@@ -149,7 +141,7 @@
                     </div>
                 </article>
             </a>
-            <a href="perfil.html?id=luly" class="card-link" data-categoria="terapeuticas" data-perfilid="luly">
+            <a href="luly.html" class="card-link" data-categoria="terapeuticas">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/luly1.jpg" alt="Luly" loading="lazy">
@@ -162,7 +154,7 @@
                     </div>
                 </article>
             </a>
-            <a href="perfil.html?id=mora" class="card-link" data-categoria="terapeuticas" data-perfilid="mora">
+            <a href="mora.html" class="card-link" data-categoria="terapeuticas">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/mora1.jpg" alt="Mora" loading="lazy">
@@ -175,7 +167,7 @@
                     </div>
                 </article>
             </a>
-            <a href="perfil.html?id=lupita" class="card-link" data-categoria="terapeuticas" data-perfilid="lupita">
+            <a href="lupita.html" class="card-link" data-categoria="terapeuticas">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/lupita1.jpg" alt="Lupita" loading="lazy">
@@ -202,7 +194,7 @@
         <!-- Sección Sensuales -->
         <h2 class="section-heading" data-section="sensuales" style="margin-top: 2rem;" data-i18n="seccionSensuales">Masajistas Sensuales</h2>
         <div class="grid-perfiles" id="grid-sensuales">
-            <a href="perfil.html?id=renata" class="card-link" data-categoria="sensuales" data-perfilid="renata">
+            <a href="renata.html" class="card-link" data-categoria="sensuales">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/renata1.jpg" alt="Renata" loading="lazy">
@@ -215,20 +207,7 @@
                     </div>
                 </article>
             </a>
-            <a href="perfil.html?id=deby" class="card-link" data-categoria="sensuales" data-perfilid="deby">
-                <article class="card">
-                    <div class="card-image">
-                        <img src="img/deby1.jpg" alt="Deby" loading="lazy">
-                        <span class="badge-verificado" data-i18n="badgeVerificado">✓ Verificado</span>
-                        <div class="card-gradient-overlay">
-                            <h3>Deby</h3>
-                            <span class="zona">📍 CABALLITO</span>
-                            <span class="modalidad-tag" data-i18n="modGabinete">Gabinete propio</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-            <a href="perfil.html?id=donatella" class="card-link" data-categoria="sensuales" data-perfilid="donatella">
+            <a href="donatella.html" class="card-link" data-categoria="sensuales">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/donatella1.jpg" alt="Donatella" loading="lazy">
@@ -241,7 +220,7 @@
                     </div>
                 </article>
             </a>
-            <a href="perfil.html?id=celeste" class="card-link" data-categoria="sensuales" data-perfilid="celeste">
+            <a href="celeste.html" class="card-link" data-categoria="sensuales">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/celeste1.jpg" alt="Celeste" loading="lazy">
@@ -254,7 +233,7 @@
                     </div>
                 </article>
             </a>
-            <a href="perfil.html?id=mia" class="card-link" data-categoria="sensuales" data-perfilid="mia">
+            <a href="mia.html" class="card-link" data-categoria="sensuales">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/mia1.jpg" alt="Mía" loading="lazy">
@@ -267,7 +246,7 @@
                     </div>
                 </article>
             </a>
-            <a href="perfil.html?id=sol" class="card-link" data-categoria="sensuales" data-perfilid="sol">
+            <a href="sol.html" class="card-link" data-categoria="sensuales">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/sol1.jpg" alt="Sol" loading="lazy">
@@ -280,7 +259,7 @@
                     </div>
                 </article>
             </a>
-            <a href="perfil.html?id=pamela" class="card-link" data-categoria="sensuales" data-perfilid="pamela">
+            <a href="pamela.html" class="card-link" data-categoria="sensuales">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/pamela3.jpg" alt="Pamela" loading="lazy">
@@ -293,7 +272,7 @@
                     </div>
                 </article>
             </a>
-            <a href="perfil.html?id=luly-sensual" class="card-link" data-categoria="sensuales" data-perfilid="luly-sensual">
+            <a href="luly-sensual.html" class="card-link" data-categoria="sensuales">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/luly5.jpg" alt="Luly" loading="lazy">
@@ -306,7 +285,7 @@
                     </div>
                 </article>
             </a>
-            <a href="perfil.html?id=mora-sensual" class="card-link" data-categoria="sensuales" data-perfilid="mora-sensual">
+            <a href="mora-sensual.html" class="card-link" data-categoria="sensuales">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/mora5.jpg" alt="Mora" loading="lazy">
@@ -333,19 +312,6 @@
         <!-- Sección Masculinos -->
         <h2 class="section-heading" data-section="masculinos" style="margin-top: 2rem;" data-i18n="seccionMasculinos">Masajistas Masculinos</h2>
         <div class="grid-perfiles" id="grid-masculinos">
-            <a href="perfil.html?id=matias" class="card-link" data-categoria="masculinos" data-perfilid="matias">
-                <article class="card">
-                    <div class="card-image">
-                        <img src="img/matias1.jpg" alt="Matias" loading="lazy">
-                        <span class="badge-verificado" data-i18n="badgeVerificado">✓ Verificado</span>
-                        <div class="card-gradient-overlay">
-                            <h3>Matias</h3>
-                            <span class="zona">📍 RECOLETA</span>
-                            <span class="modalidad-tag" data-i18n="modGabinete">Gabinete propio</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
             <a href="https://wa.me/5491131774848?text=Hola,%20quiero%20publicar%20mi%20anuncio%20en%20Masajistas%20Prive" target="_blank" class="card-ad-link" data-categoria="masculinos">
                 <article class="card-ad">
                     <div class="ad-content">
@@ -430,131 +396,10 @@
             <div class="footer-legal">
                 <p data-i18n="footerLegal">Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.</p>
                 <p style="margin-top: 6px;" data-i18n="footerMarcas">Todo el contenido, marcas y logotipos pertenecen a sus respectivos dueños.</p>
-                <div id="contador-visitas-global" style="margin-top: 12px; color: #dfc285; font-size: 13px; font-weight: 500;">
-                    👁 <span data-i18n="visitasTotales">Visitas totales al portal</span>: <span id="visitas-total-num" data-i18n="cargando">Cargando...</span>
-                </div>
                 <p class="copyright" style="margin-top: 8px; color: #dfc285; font-size: 12px;" data-i18n="footerCopy">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
             </div>
         </div>
     </footer>
-
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
-            authDomain: "masajistasprivepro.firebaseapp.com",
-            projectId: "masajistasprivepro",
-            storageBucket: "masajistasprivepro.firebasestorage.app",
-            messagingSenderId: "768677270509",
-            appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
-            measurementId: "G-SBN70C32JF"
-        };
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        const db = firebase.firestore();
-
-        const modalEdad = document.getElementById('modal-edad');
-        const btnMayor = document.getElementById('btn-mayor');
-
-        if (sessionStorage.getItem('edadVerificada') === 'true') {
-            if (modalEdad) modalEdad.style.display = 'none';
-        }
-
-        if (btnMayor && modalEdad) {
-            btnMayor.addEventListener('click', () => {
-                sessionStorage.setItem('edadVerificada', 'true');
-                modalEdad.style.display = 'none';
-            });
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            aplicarIdioma(localStorage.getItem('idiomaPrive') || 'es');
-
-            db.collection("config_perfiles").onSnapshot((snapshot) => {
-                let destacadasHTML = "";
-
-                snapshot.forEach(doc => {
-                    let data = doc.data();
-                    let perfilId = doc.id;
-                    let estado = data.estado || "activo";
-                    let esDestacada = data.destacada === true;
-                    let nombre = data.nombre || perfilId;
-                    
-                    // LECTURA CORRECTA DE LA FOTO PRINCIPAL ACTUAL (Sin arrastrar fotos viejas)
-                    let img = 'img/logo.png';
-                    if (data.fotos && Array.isArray(data.fotos) && data.fotos.length > 0) {
-                        let fotosValidas = data.fotos.filter(f => f && typeof f === 'string' && f.trim() !== "");
-                        if (fotosValidas.length > 0) {
-                            img = fotosValidas[0];
-                        } else if (data.img) {
-                            img = data.img;
-                        }
-                    } else if (data.img) {
-                        img = data.img;
-                    }
-
-                    let categoria = data.categoria || 'terapeuticas';
-                    let zona = data.zona || 'CABA';
-                    let modalidad = data.modalidad || 'Gabinete propio';
-                    let archivoHtml = 'perfil.html?id=' + perfilId;
-
-                    document.querySelectorAll(`[data-perfilid="${perfilId}"]`).forEach(el => {
-                        el.style.display = (estado === 'pausado') ? 'none' : '';
-                        const linkEl = el.tagName === 'A' ? el : el.closest('a');
-                        if (linkEl && !linkEl.classList.contains('card-ad-link')) {
-                            linkEl.href = archivoHtml;
-                        }
-                    });
-
-                    if (esDestacada && estado !== 'pausado') {
-                        destacadasHTML += `
-                            <a href="${archivoHtml}" class="story-item" data-destacadaid="${perfilId}">
-                                <div class="story-ring"><img src="${img}" alt="${nombre}" onerror="this.src='img/logo.png'"></div>
-                                <span>${nombre}</span>
-                            </a>
-                        `;
-                    }
-
-                    const gridContainer = document.getElementById(`grid-${categoria}`);
-                    if (gridContainer && estado !== 'pausado') {
-                        let tarjetaExistente = gridContainer.querySelector(`[data-perfilid="${perfilId}"]`);
-                        if (!tarjetaExistente) {
-                            let nuevaTarjeta = `
-                                <a href="${archivoHtml}" class="card-link" data-categoria="${categoria}" data-perfilid="${perfilId}">
-                                    <article class="card">
-                                        <div class="card-image">
-                                            <img src="${img}" alt="${nombre}" loading="lazy" onerror="this.src='img/logo.png'">
-                                            <span class="badge-verificado" data-i18n="badgeVerificado">✓ Verificado</span>
-                                            <div class="card-gradient-overlay">
-                                                <h3>${nombre}</h3>
-                                                <span class="zona">📍 ${zona}</span>
-                                                <span class="modalidad-tag">${modalidad}</span>
-                                            </div>
-                                        </div>
-                                    </article>
-                                </a>
-                            `;
-                            const botonAnuncio = gridContainer.querySelector('.card-ad-link');
-                            if (botonAnuncio) {
-                                botonAnuncio.insertAdjacentHTML('beforebegin', nuevaTarjeta);
-                            } else {
-                                gridContainer.insertAdjacentHTML('beforeend', nuevaTarjeta);
-                            }
-                        }
-                    }
-                });
-
-                const storiesContainer = document.getElementById('stories-container-dinamico');
-                if (storiesContainer) {
-                    storiesContainer.innerHTML = destacadasHTML !== "" ? destacadasHTML : '';
-                }
-            });
-        });
-    </script>
 
     <script>
         const traducciones = {
@@ -592,13 +437,12 @@
                 cargandoCotizacion: "Cargando cotización actual...",
                 editorialSub: "Editorial & Bienestar",
                 cuadernoTitulo: "Cuaderno Privé",
-                cuadernoDesc: "Crónicas urbanas, secretos de gabinete y el arte del relax absoluto en CABA.",
+                cuadernoDesc: "Crónicas urbanas, secretos de gabinete y el arte del relax absoluto em CABA.",
                 leerCompleto: "Leer artículo completo &rarr;",
                 btnCerrar: "Cerrar",
                 siguenos: "Síguenos",
-                footerLegal: "Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.",
+                footerLegal: "Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas são independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.",
                 footerMarcas: "Todo el contenido, marcas y logotipos pertenecen a sus respectivos dueños.",
-                visitasTotales: "Visitas totales al portal",
                 footerCopy: "© 2026 Masajistas Privé. Todos los derechos reservados."
             },
             en: {
@@ -641,7 +485,6 @@
                 siguenos: "Follow Us",
                 footerLegal: "This is an exclusive site for adults (+18). The published advertisers are independent and have no employment, corporate, or dependency relationship with this portal.",
                 footerMarcas: "All content, trademarks, and logos belong to their respective owners.",
-                visitasTotales: "Total portal visits",
                 footerCopy: "© 2026 Masajistas Privé. All rights reserved."
             },
             pt: {
@@ -684,7 +527,6 @@
                 siguenos: "Siga-nos",
                 footerLegal: "Este é um site exclusivo para adultos (+18). Os anunciantes publicados são independentes e não possuem vínculo empregatício, societário ou de dependência com este portal.",
                 footerMarcas: "Todo o conteúdo, marcas e logotipos pertencem aos seus respectivos donos.",
-                visitasTotales: "Visitas totais ao portal",
                 footerCopy: "© 2026 Masajistas Privé. Todos os direitos reservados."
             },
             fr: {
@@ -727,7 +569,6 @@
                 siguenos: "Suivez-nous",
                 footerLegal: "Ceci est un site exclusif pour adultes (+18). Les annonceurs publiés sont indépendants et n'ont aucun lien d'emploi, d'entreprise ou de dépendance avec ce portail.",
                 footerMarcas: "Tout le contenu, les marques et les logos appartiennent à leurs propriétaires respectifs.",
-                visitasTotales: "Total des visites du portail",
                 footerCopy: "© 2026 Masajistas Privé. Tous droits réservés."
             }
         };
@@ -737,56 +578,32 @@
                 {
                     categoria: "Bienestar & CABA",
                     titulo: "El ritual post-oficina: Cómo desconectar del microcentro en diez minutos",
-                    extracto: "El ruido de la City porteña, el subte colapsado y las pantallas cargan de tensión invisible la zona cervical. Claves para entender por qué una pausa programada en gabinete cambia por completo la noche.",
-                    cuerpo: "El ritmo de Buenos Aires tiene una exigencia particular. Salir de una oficina en Microcentro o Tribunales a las 18:00 horas implica someter al cuerpo a un nivel de cortisol elevado de forma crónica.\n\nLa desconexión no ocurre sola al llegar a casa; el cerebro sigue procesando pendientes. Ingresar a un espacio climatizado, con iluminación tenue, aromas de sándalo y música ambiental adecuada permite un reseteo físico inmediato. El tacto profesional sobre los puntos gatillo no es un lujo estético, es una necesidad fisiológica para evitar que el estrés se convierta en migrañas o contracturas crónicas."
-                },
-                {
-                    categoria: "Técnicas & Conexión",
-                    titulo: "Más allá del masaje: La importancia de la atmósfera y la confianza previa",
-                    extracto: "Un buen encuentro de relax se construye desde el primer mensaje de coordinación. Qué factores determinan que una sesión pase de ser correcta a ser absolutamente inolvidable.",
-                    cuerpo: "La experiencia de un masaje de alto nivel depende en un 50% de la técnica manual y en el otro 50% del entorno y la sintonía entre el profesional y quien busca el espacio.\n\nLa discreción, la pulcritud absoluta del gabinete y la claridad en los tiempos de la sesión generan un marco de seguridad mental indispensable. Cuando el cliente logra apagar el teléfono y entregarse por completo a los sentidos, la circulación se reactiva y la liberación de endorfinas se multiplica exponencialmente."
+                    extracto: "El ruido de la City porteña, el subte colapsado y las pantallas cargan de tensión invisible la zona cervical.",
+                    cuerpo: "El ritmo de Buenos Aires exige una pausa programada."
                 }
             ],
             en: [
                 {
                     categoria: "Wellness & BA",
                     titulo: "The Post-Office Ritual: How to Disconnect from Downtown in Ten Minutes",
-                    extracto: "The noise of Buenos Aires' City, the crowded subway, and screens fill the cervical area with invisible tension. Keys to understanding why a scheduled session completely changes the night.",
-                    cuerpo: "The pace of Buenos Aires has a particular demand. Leaving an office in Microcentro or Tribunales at 6:00 PM means subjecting the body to chronically elevated cortisol levels.\n\nDisconnection doesn't happen just by getting home; the brain keeps processing pending tasks. Entering a climate-controlled space with dim lighting, sandalwood aromas, and ambient music allows an immediate physical reset. Professional touch on trigger points is not an aesthetic luxury, it is a physiological necessity to prevent stress from turning into chronic migraines or muscle knots."
-                },
-                {
-                    categoria: "Techniques & Connection",
-                    titulo: "Beyond the Massage: The Importance of Atmosphere and Prior Trust",
-                    extracto: "A good relaxation encounter is built from the very first coordination message. What factors determine whether a session goes from good to unforgettable.",
-                    cuerpo: "The experience of a high-level massage depends 50% on manual technique and 50% on the environment and harmony between the professional and the client.\n\nDiscretion, absolute cleanliness of the studio, and clarity regarding session times create an indispensable framework of mental security. When clients manage to turn off their phones and completely surrender to their senses, circulation reactivates and endorphin release multiplies exponentially."
+                    extracto: "The noise of Buenos Aires' City fills the cervical area with invisible tension.",
+                    cuerpo: "The pace of Buenos Aires demands a scheduled pause."
                 }
             ],
             pt: [
                 {
                     categoria: "Bem-estar & BA",
                     titulo: "O ritual pós-escritório: Como se desconectar do centro em dez minutos",
-                    extracto: "O barulho da City portenha, o metrô lotado e as telas carregam a cervical de tensão invisível. Chaves para entender por que uma pausa programada muda completamente a noite.",
-                    cuerpo: "O ritmo de Buenos Aires tem uma exigência particular. Sair de um escritório no Microcentro ou Tribunales às 18h significa submeter o corpo a um nível de cortisol cronicamente elevado.\n\nA desconexão não acontece sozinha ao chegar em casa; o cérebro continua processando pendências. Entrar em um espaço climatizado, com iluminação suave, aromas de sándalo e música ambiente permite um reset físico imediato."
-                },
-                {
-                    categoria: "Técnicas & Conexão",
-                    titulo: "Além da massagem: A importância da atmosfera e da confiança prévia",
-                    extracto: "Um bom encontro de relaxamento é construído desde a primeira mensagem de coordenação. Quais fatores determinam se uma sessão passa de boa a inesquecível.",
-                    cuerpo: "A experiência de uma massagem de alto nível depende 50% da técnica manual e 50% do ambiente e da harmonia entre o profissional e o cliente.\n\nA discrição, a limpeza absoluta do estúdio e a clareza nos horários criam uma moldura de segurança mental indispensável."
+                    extracto: "O barulho da City portenha carrega a cervical de tensão.",
+                    cuerpo: "O ritmo de Buenos Aires exige uma pausa programada."
                 }
             ],
             fr: [
                 {
                     categoria: "Bien-être & BA",
                     titulo: "Le rituel post-bureau : Comment déconnecter du centre en dix minutes",
-                    extracto: "Le bruit de la ville, le métro bondé et les écrans chargent la zone cervicale d'une tension invisible. Les clés pour comprendre pourquoi une pause programmée change toute la soirée.",
-                    cuerpo: "Le rythme de Buenos Aires est particulièrement exigeant. Sortir d'un bureau au Microcentro ou à Tribunales à 18h soumet le corps à un niveau de cortisol chroniquement élevé.\n\nLa déconnexion ne se fait pas toute seule en rentrant chez soi. Entrer dans un espace climatisé, à l'éclairage tamisé, aux arômes de santal et à la musique ambiante permet une réinitialisation physique immédiate."
-                },
-                {
-                    categoria: "Techniques & Connexion",
-                    titulo: "Au-delà du massage : L'importance de l'atmosphère et de la confiance préalable",
-                    extracto: "Une bonne rencontre de détente se construit dès le premier message de coordination. Quels facteurs déterminent le succès d'une séance.",
-                    cuerpo: "L'expérience d'un massage de haut niveau dépend à 50 % de la technique manuelle et à 50 % de l'environnement et de l'harmonie entre le professionnel et le client.\n\nLa discrétion, la propreté absolue et la clarté des horaires garantissent une sécurité mentale indispensable."
+                    extracto: "Le bruit de la ville charge la zone cervicale d'une tension invisible.",
+                    cuerpo: "Le rythme de Buenos Aires exige une pause."
                 }
             ]
         };
@@ -829,33 +646,15 @@
         }
 
         function cargarArticulosDelDia() {
-            const hoy = new Date();
-            const diaDelAnio = Math.floor((hoy - new Date(hoy.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
-            
-            const listaActual = bancoArticulos[idiomaActual] || bancoArticulos['es'];
-            const index1 = diaDelAnio % listaActual.length;
-            const index2 = (diaDelAnio + 1) % listaActual.length;
-
-            const art1 = listaActual[index1];
-            const art2 = listaActual[index2];
-            const textoBtnLeer = traducciones[idiomaActual].leerCompleto;
-
             const contenedor = document.getElementById('cuaderno-rotativo');
             if(!contenedor) return;
-
+            const listaActual = bancoArticulos[idiomaActual] || bancoArticulos['es'];
+            const art = listaActual[0];
             contenedor.innerHTML = `
-                <div class="blog-card" onclick="abrirArticulo('${art1.titulo.replace(/'/g, "\\'")}', '${art1.cuerpo.replace(/'/g, "\\'").replace(/\n/g, '\\n')}', '${art1.categoria}')">
-                    <span style="color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; display: block; margin-bottom: 6px;">${art1.categoria}</span>
-                    <h3 style="color: #ffffff; font-size: 22px; font-weight: 600; margin-bottom: 10px; font-family: 'Cormorant Garamond', serif;">${art1.titulo}</h3>
-                    <p style="color: #bcbbb5; font-size: 14px; font-weight: 300; margin-bottom: 15px;">${art1.extracto}</p>
-                    <span style="color: #dfc285; font-size: 13px; font-weight: 600; letter-spacing: 1px;">${textoBtnLeer}</span>
-                </div>
-
-                <div class="blog-card" onclick="abrirArticulo('${art2.titulo.replace(/'/g, "\\'")}', '${art2.cuerpo.replace(/'/g, "\\'").replace(/\n/g, '\\n')}', '${art2.categoria}')">
-                    <span style="color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; display: block; margin-bottom: 6px;">${art2.categoria}</span>
-                    <h3 style="color: #ffffff; font-size: 22px; font-weight: 600; margin-bottom: 10px; font-family: 'Cormorant Garamond', serif;">${art2.titulo}</h3>
-                    <p style="color: #bcbbb5; font-size: 14px; font-weight: 300; margin-bottom: 15px;">${art2.extracto}</p>
-                    <span style="color: #dfc285; font-size: 13px; font-weight: 600; letter-spacing: 1px;">${textoBtnLeer}</span>
+                <div class="blog-card" onclick="abrirArticulo('${art.titulo}', '${art.cuerpo}', '${art.categoria}')">
+                    <span style="color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 2px;">${art.categoria}</span>
+                    <h3 style="color: #ffffff; font-size: 22px; margin-bottom: 10px; font-family: 'Cormorant Garamond', serif;">${art.titulo}</h3>
+                    <p style="color: #bcbbb5; font-size: 14px;">${art.extracto}</p>
                 </div>
             `;
         }
@@ -871,63 +670,13 @@
             document.getElementById('modalArticulo').style.display = 'none';
         }
 
-        function registrarYMostrarVisitasGlobales() {
-            try {
-                const docRef = db.collection("estadisticas_visitas").doc("portal_index");
-
-                if (!sessionStorage.getItem("visitaRegistradaIndex")) {
-                    sessionStorage.setItem("visitaRegistradaIndex", "true");
-                    docRef.set({
-                        visitas: firebase.firestore.FieldValue.increment(1)
-                    }, { merge: true }).catch(err => {});
-                }
-
-                docRef.onSnapshot((doc) => {
-                    if (doc.exists) {
-                        const total = doc.data().visitas || 0;
-                        document.getElementById('visitas-total-num').textContent = total.toLocaleString('es-AR');
-                    }
-                });
-            } catch (e) {}
-        }
-
         async function obtenerClimaCABA() {
             try {
                 const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=-34.6132&longitude=-58.3816&current=temperature_2m,relative_humidity_2m,weather_code&timezone=America%2FArgentina%2FBuenos_Aires');
                 const data = await response.json();
-                
                 const temp = Math.round(data.current.temperature_2m);
                 const humedad = data.current.relative_humidity_2m;
-                const codigoClima = data.current.weather_code;
-                
-                const horaActual = new Date().getHours();
-                const esDeNoche = horaActual < 6 || horaActual >= 20;
-
-                let icono = '☁️';
-                let estado = 'Nublado';
-                
-                if (codigoClima === 0) {
-                    icono = esDeNoche ? '🌙' : '☀';
-                    estado = esDeNoche ? 'Noche despejada' : 'Despejado';
-                } else if (codigoClima >= 1 && codigoClima <= 2) {
-                    icono = esDeNoche ? '☁' : '⛅';
-                    estado = 'Parcialmente nublado';
-                } else if (codigoClima === 3) {
-                    icono = '☁';
-                    estado = 'Nublado';
-                } else if ((codigoClima >= 51 && codigoClima <= 67) || (codigoClima >= 80 && codigoClima <= 99)) {
-                    icono = '🌧️';
-                    estado = 'Lloviendo';
-                }
-
-                document.getElementById('clima-info').innerHTML = `
-                    <span style="font-size: 20px; vertical-align: middle; margin-right: 4px;">${icono}</span>
-                    <span style="color: #dfc285; font-size: 20px; font-weight: 600; font-family: 'Cormorant Garamond', serif;">${temp} °C</span> 
-                    <span style="margin: 0 6px; color: #555;">|</span> 
-                    <span>${estado}</span>
-                    <span style="margin: 0 6px; color: #555;">|</span> 
-                    Humedad: ${humedad}%
-                `;
+                document.getElementById('clima-info').innerHTML = `Buenos Aires (CABA) — <span style="color: #dfc285; font-weight: 600;">${temp} °C</span> | Humedad: ${humedad}%`;
             } catch (error) {}
         }
 
@@ -935,17 +684,27 @@
             try {
                 const response = await fetch('https://dolarapi.com/v1/dolares/blue');
                 const data = await response.json();
-                document.getElementById('dolar-info').innerHTML = `
-                    <span style="color: #dfc285; font-weight: 600;">Dólar Blue</span> — Compra: $${data.compra} | Venta: $${data.venta}
-                `;
+                document.getElementById('dolar-info').innerHTML = `<span style="color: #dfc285; font-weight: 600;">Dólar Blue</span> — Compra: $${data.compra} | Venta: $${data.venta}`;
             } catch (error) {}
         }
 
         window.addEventListener('load', () => {
-            registrarYMostrarVisitasGlobales();
+            aplicarIdioma(idiomaActual);
             obtenerClimaCABA();
             obtenerDolar();
         });
+
+        const modalEdad = document.getElementById('modal-edad');
+        const btnMayor = document.getElementById('btn-mayor');
+        if (sessionStorage.getItem('edadVerificada') === 'true' && modalEdad) {
+            modalEdad.style.display = 'none';
+        }
+        if (btnMayor && modalEdad) {
+            btnMayor.addEventListener('click', () => {
+                sessionStorage.setItem('edadVerificada', 'true');
+                modalEdad.style.display = 'none';
+            });
+        }
 
         const pills = document.querySelectorAll('.pill-btn');
         const cards = document.querySelectorAll('.card-link');
