@@ -3,132 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Control Maestro - Masajistas Privé</title>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+    <title>Panel de Administración | Masajistas Privé</title>
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        body { background: #080808; color: #e0e0e0; font-family: 'Montserrat', sans-serif; padding: 20px; }
-        .admin-container { max-width: 950px; margin: 0 auto; background: rgba(22, 22, 24, 0.95); padding: 30px; border-radius: 12px; border: 1px solid rgba(223, 194, 133, 0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
-        h1, h2 { font-family: 'Cormorant Garamond', serif; color: #dfc285; text-align: center; }
-        h1 { margin-bottom: 25px; font-size: 2.2rem; }
-        h2 { font-size: 1.5rem; border-bottom: 1px solid #222; padding-bottom: 10px; margin-bottom: 20px; text-align: left; }
-        
-        .seccion-panel { background: #141414; border: 1px solid #222; border-radius: 10px; padding: 20px; margin-bottom: 25px; }
-        
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 15px; }
-        .form-group { display: flex; flex-direction: column; gap: 5px; }
-        label { font-size: 0.8rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
-        input, select, textarea { padding: 10px; background: #1a1a1a; border: 1px solid #333; border-radius: 6px; color: #fff; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; }
-        input:focus, select:focus, textarea:focus { outline: none; border-color: #dfc285; }
-        textarea { resize: vertical; height: 70px; grid-column: 1 / -1; }
-
-        .fotos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; grid-column: 1 / -1; background: #111; padding: 15px; border-radius: 8px; border: 1px dashed #333; }
-
-        .perfil-row { display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; padding: 15px; margin-bottom: 12px; border-radius: 8px; border: 1px solid rgba(223,194,133,0.15); flex-wrap: wrap; gap: 10px; }
-        .perfil-info-detalles { display: flex; align-items: center; gap: 15px; }
-        .perfil-miniatura { width: 45px; height: 45px; object-fit: cover; border-radius: 50%; border: 1px solid #dfc285; }
-
-        .acciones-grupo { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
-        .btn-accion { padding: 8px 12px; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; font-size: 10px; text-transform: uppercase; transition: all 0.2s; }
-        .btn-accion:hover { opacity: 0.85; }
-        .btn-activo { background: #25d366; color: #0d0d0d; }
-        .btn-pausado { background: #ff5555; color: #fff; }
-        .btn-eliminar { background: #8B0000; color: #fff; }
-        .btn-editar { background: #3498db; color: #fff; }
-        .btn-crear { background: #dfc285; color: #0d0d0d; width: 100%; padding: 14px; font-weight: bold; font-size: 12px; letter-spacing: 1px; margin-top: 10px; }
-
-        #loginBox { text-align: center; padding: 50px; }
-        input[type="password"] { padding: 12px; border-radius: 6px; border: 1px solid #dfc285; background: #1a1a1a; color: #fff; margin-right: 10px; width: 220px; }
+        body.admin-body { background-color: #0d0d0d; color: #e5e5e5; font-family: 'Montserrat', sans-serif; margin: 0; padding: 20px; }
+        .admin-container { max-width: 1100px; margin: 0 auto; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(223, 194, 133, 0.3); padding-bottom: 20px; margin-bottom: 30px; }
+        .admin-header h1 { color: #dfc285; font-family: 'Cormorant Garamond', serif; font-size: 28px; margin: 0; }
+        .card-admin { background: #141414; border: 1px solid rgba(223, 194, 133, 0.2); border-radius: 10px; padding: 25px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .card-admin h2 { color: #dfc285; font-size: 20px; margin-top: 0; font-family: 'Cormorant Garamond', serif; border-bottom: 1px solid rgba(223, 194, 133, 0.1); padding-bottom: 10px; }
+        textarea.html-input { width: 100%; height: 150px; background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 12px; resize: vertical; box-sizing: border-box; }
+        textarea.html-input:focus { border-color: #dfc285; outline: none; }
+        .btn-prive { background: #dfc285; color: #0d0d0d; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; transition: all 0.3s; margin-top: 10px; }
+        .btn-prive:hover { background: #c5a86d; }
+        table.admin-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
+        table.admin-table th, table.admin-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #222; }
+        table.admin-table th { color: #dfc285; font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; }
+        .badge-estado { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; text-transform: uppercase; }
+        .badge-activo { background: rgba(46, 204, 113, 0.15); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.3); }
+        .badge-pausado { background: rgba(231, 76, 60, 0.15); color: #e74c3c; border: 1px solid rgba(231, 76, 60, 0.3); }
+        .btn-accion { background: transparent; border: 1px solid #444; color: #ccc; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; margin-right: 5px; transition: all 0.2s; }
+        .btn-accion:hover { border-color: #dfc285; color: #dfc285; }
+        .btn-danger:hover { border-color: #e74c3c; color: #e74c3c; }
+        .switch-destacada { cursor: pointer; color: #777; font-size: 18px; }
+        .switch-destacada.active { color: #dfc285; text-shadow: 0 0 8px rgba(223, 194, 133, 0.6); }
     </style>
 </head>
-<body>
+<body class="admin-body">
 
     <div class="admin-container">
-        <h1>Panel de Control Maestro</h1>
-        
-        <div id="loginBox">
-            <p style="margin-bottom: 15px;">Ingresa la contraseña de administración:</p>
-            <input type="password" id="adminPass" placeholder="Contraseña">
-            <button onclick="verificarAdmin()" class="btn-accion btn-activo" style="padding: 12px 20px;">Entrar</button>
+        <header class="admin-header">
+            <h1>Panel de Administración — Masajistas Privé</h1>
+            <a href="index.html" style="color: #dfc285; text-decoration: none; font-size: 13px;">← Volver al Portal</a>
+        </header>
+
+        <!-- SECCIÓN: IMPORTADOR DE HTML -->
+        <div class="card-admin">
+            <h2>📥 Importar / Escanear Ficha HTML</h2>
+            <p style="font-size: 13px; color: #aaa; margin-bottom: 15px;">Pegá aquí el código HTML completo de la masajista (ej. Prada o Celeste). El sistema extraerá automáticamente sus datos, fotos, categoría y traducciones para crear su ficha dinámica en Firebase.</p>
+            <textarea id="htmlSourceInput" class="html-input" placeholder="Pegá el código HTML completo aquí..."></textarea>
+            <div style="margin-top: 15px; display: flex; gap: 15px; align-items: center;">
+                <select id="selectCategoriaImport" style="background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 13px;">
+                    <option value="terapeuticas">Categoría: Terapéuticas</option>
+                    <option value="sensuales">Categoría: Sensuales</option>
+                    <option value="masculinos">Categoría: Masculinos</option>
+                    <option value="fantasias">Categoría: Fantasías</option>
+                </select>
+                <button type="button" class="btn-prive" onclick="procesarEscanerHTML()">Escanear y Guardar en Firebase</button>
+            </div>
+            <div id="importStatus" style="margin-top: 12px; font-size: 13px; font-weight: 500;"></div>
         </div>
 
-        <div id="dashboard" style="display: none;">
-            
-            <!-- FORMULARIO DE ALTA / EDICIÓN -->
-            <div class="seccion-panel">
-                <h2 id="tituloFormulario">➕ Dar de Alta Nuevo Perfil</h2>
-                <input type="hidden" id="editandoId" value="">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>ID / Nombre de archivo (ej: catalina)</label>
-                        <input type="text" id="nuevoId" placeholder="catalina">
-                    </div>
-                    <div class="form-group">
-                        <label>Nombre Visible</label>
-                        <input type="text" id="nuevoNombre" placeholder="Catalina">
-                    </div>
-                    <div class="form-group">
-                        <label>Categoría</label>
-                        <select id="nuevaCategoria">
-                            <option value="terapeuticas">Terapéuticas</option>
-                            <option value="sensuales">Sensuales</option>
-                            <option value="masculinos">Masculinos</option>
-                            <option value="fantasias">Fantasías</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Zona / Barrio</label>
-                        <input type="text" id="nuevaZona" placeholder="RECOLETA">
-                    </div>
-                    <div class="form-group">
-                        <label>Modalidad</label>
-                        <input type="text" id="nuevaModalidad" value="Gabinete propio">
-                    </div>
-                    <div class="form-group">
-                        <label>WhatsApp (núm sin símbolos)</label>
-                        <input type="text" id="nuevoWpp" placeholder="54911...">
-                    </div>
-                    <div class="form-group">
-                        <label>Horarios</label>
-                        <input type="text" id="nuevosHorarios" value="Lunes a sábados de 9 a 21 hs.">
-                    </div>
-                    
-                    <!-- SECCIÓN DE HASTA 10 FOTOS -->
-                    <div class="form-group" style="grid-column: 1 / -1;">
-                        <label style="color: #dfc285; font-weight: bold; margin-bottom: 5px;">Galería de Fotos (Hasta 10 fotos — La Foto 1 es la principal)</label>
-                        <div class="fotos-grid" id="contenedorFotosAdmin">
-                            <input type="text" class="input-foto" placeholder="img/perfil1.jpg">
-                            <input type="text" class="input-foto" placeholder="img/perfil2.jpg">
-                            <input type="text" class="input-foto" placeholder="img/perfil3.jpg">
-                            <input type="text" class="input-foto" placeholder="img/perfil4.jpg">
-                            <input type="text" class="input-foto" placeholder="img/perfil5.jpg">
-                            <input type="text" class="input-foto" placeholder="img/perfil6.jpg">
-                            <input type="text" class="input-foto" placeholder="img/perfil7.jpg">
-                            <input type="text" class="input-foto" placeholder="img/perfil8.jpg">
-                            <input type="text" class="input-foto" placeholder="img/perfil9.jpg">
-                            <input type="text" class="input-foto" placeholder="img/perfil10.jpg">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <textarea id="nuevaBio" placeholder="Escribe aquí la biografía y servicios en Español (Se traducirá automáticamente al Inglés, Portugués y Francés)..."></textarea>
-                    </div>
-                </div>
-                <button onclick="guardarPerfil()" class="btn-accion btn-crear" id="btnGuardarTexto">Publicar Perfil en la Web al Instante</button>
+        <!-- SECCIÓN: LISTADO GENERAL DE MODELOS -->
+        <div class="card-admin">
+            <h2>📋 Nómina de Modelos y Gestión en Tiempo Real</h2>
+            <div style="overflow-x: auto;">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Zona</th>
+                            <th>Categoría</th>
+                            <th>Visitas</th>
+                            <th>Estado</th>
+                            <th>Destacada (Gold)</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaModelosBody">
+                        <tr><td colspan="7" style="text-align: center; color: #777;">Cargando modelos desde Firebase...</td></tr>
+                    </tbody>
+                </table>
             </div>
-
-            <!-- GESTIÓN DE PERFILES -->
-            <div class="seccion-panel">
-                <h2>📋 Perfiles Activos, Pausados y Destacadas</h2>
-                <div id="listaPerfilesAdmin">
-                    <p style='color: #dfc285;'>Cargando perfiles desde la base de datos...</p>
-                </div>
-            </div>
-
         </div>
     </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <script>
         const firebaseConfig = {
@@ -140,229 +93,167 @@
             appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
             measurementId: "G-SBN70C32JF"
         };
-        
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
         const db = firebase.firestore();
 
-        function verificarAdmin() {
-            const pass = document.getElementById('adminPass').value;
-            if (pass === "prive2026") {
-                document.getElementById('loginBox').style.display = 'none';
-                document.getElementById('dashboard').style.display = 'block';
-                cargarPanelMaestro();
-            } else {
-                alert("Contraseña incorrecta.");
-            }
-        }
+        // Función inteligente para escanear el HTML pegado
+        function procesarEscanerHTML() {
+            const rawHtml = document.getElementById('htmlSourceInput').value;
+            const statusDiv = document.getElementById('importStatus');
+            const categoria = document.getElementById('selectCategoriaImport').value;
 
-        async function cargarPanelMaestro() {
-            const contenedor = document.getElementById('listaPerfilesAdmin');
-
-            try {
-                const snapVisitas = await db.collection("estadisticas_visitas").get();
-                let visitasMap = {};
-                snapVisitas.forEach(doc => {
-                    visitasMap[doc.id] = doc.data().visitas || 0;
-                });
-
-                db.collection("config_perfiles").onSnapshot((snapshot) => {
-                    contenedor.innerHTML = "";
-
-                    if (snapshot.empty) {
-                        contenedor.innerHTML = "<p style='color: #888;'>No hay perfiles cargados todavía.</p>";
-                        return;
-                    }
-
-                    snapshot.forEach(doc => {
-                        let idPerfil = doc.id;
-                        let data = doc.data();
-                        let estado = data.estado || "activo";
-                        let esDestacada = data.destacada === true;
-                        let totalVisitas = visitasMap[idPerfil] || 0;
-                        let imgPerfil = (data.fotos && data.fotos.length > 0) ? data.fotos[0] : (data.img || 'img/logo.png');
-                        let nombrePerfil = data.nombre || idPerfil;
-
-                        const div = document.createElement('div');
-                        div.className = 'perfil-row';
-                        div.innerHTML = `
-                            <div class="perfil-info-detalles">
-                                <img src="${imgPerfil}" class="perfil-miniatura" onerror="this.src='img/logo.png'">
-                                <div>
-                                    <strong style="color: #dfc285; font-size: 16px; text-transform: capitalize;">${nombrePerfil}</strong> (${idPerfil}.html)
-                                    <br><small style="color: #888;">Categoría: ${data.categoria || 'N/A'} | Visitas: <b style="color:#fff;">${totalVisitas}</b> | Estado: <b style="${estado==='activo'?'color:#25d366':'color:#ff5555'}">${estado.toUpperCase()}</b></small>
-                                </div>
-                            </div>
-                            <div class="acciones-grupo">
-                                <button onclick="window.toggleDestacada('${idPerfil}', ${!esDestacada})" class="btn-accion" style="background: ${esDestacada ? '#dfc285; color: #0d0d0d;' : '#222; color: #aaa;'}">
-                                    ${esDestacada ? '⭐' : '☆'}
-                                </button>
-                                <button onclick="window.cargarEdicion('${idPerfil}')" class="btn-accion btn-editar">Editar</button>
-                                ${estado === 'activo' 
-                                    ? `<button onclick="window.cambiarEstado('${idPerfil}', 'pausado')" class="btn-accion btn-pausado">Pausar</button>` 
-                                    : `<button onclick="window.cambiarEstado('${idPerfil}', 'activo')" class="btn-accion btn-activo">Activar</button>`
-                                }
-                                <button onclick="window.eliminarPerfil('${idPerfil}')" class="btn-accion btn-eliminar">Eliminar</button>
-                            </div>
-                        `;
-                        contenedor.appendChild(div);
-                    });
-                });
-
-            } catch (e) {
-                console.error(e);
-                contenedor.innerHTML = "<p style='color: #ff5555;'>Error al cargar los datos desde Firebase.</p>";
-            }
-        }
-
-        // Función de cambio de estado corregida y blindada
-        window.cambiarEstado = function(idPerfil, nuevoEstado) {
-            db.collection("config_perfiles").doc(idPerfil).set({ 
-                estado: nuevoEstado 
-            }, { merge: true }).then(() => {
-                console.log(`Estado de ${idPerfil} actualizado a: ${nuevoEstado}`);
-            }).catch(err => {
-                console.error("Error al actualizar estado:", err);
-                alert("No se pudo cambiar el estado.");
-            });
-        };
-
-        window.toggleDestacada = function(idPerfil, estadoDestacada) {
-            db.collection("config_perfiles").doc(idPerfil).set({ destacada: estadoDestacada }, { merge: true });
-        };
-
-        window.eliminarPerfil = function(idPerfil) {
-            if (confirm(`¿Estás seguro de eliminar definitivamente a ${idPerfil}?`)) {
-                db.collection("config_perfiles").doc(idPerfil).delete().then(() => {
-                    alert("Perfil eliminado con éxito.");
-                }).catch(err => alert("Error al eliminar."));
-            }
-        };
-
-        window.cargarEdicion = async function(idPerfil) {
-            const doc = await db.collection("config_perfiles").doc(idPerfil).get();
-            if (doc.exists) {
-                const d = doc.data();
-                document.getElementById('editandoId').value = d.id || idPerfil;
-                document.getElementById('nuevoId').value = d.id || idPerfil;
-                document.getElementById('nuevoId').disabled = true;
-                document.getElementById('nuevoNombre').value = d.nombre || '';
-                document.getElementById('nuevaCategoria').value = d.categoria || 'terapeuticas';
-                document.getElementById('nuevaZona').value = d.zona || '';
-                document.getElementById('nuevaModalidad').value = d.modalidad || '';
-                document.getElementById('nuevoWpp').value = d.whatsapp || '';
-                document.getElementById('nuevosHorarios').value = d.horarios || '';
-                document.getElementById('nuevaBio').value = d.bio || '';
-                
-                // Cargar hasta 10 fotos
-                const inputsFotos = document.querySelectorAll('.input-foto');
-                inputsFotos.forEach(inp => inp.value = '');
-                let listaFotos = d.fotos || [d.img];
-                listaFotos.forEach((f, idx) => {
-                    if (inputsFotos[idx]) inputsFotos[idx].value = f;
-                });
-
-                document.getElementById('tituloFormulario').textContent = "✏️ Editando Perfil: " + d.nombre;
-                document.getElementById('btnGuardarTexto').textContent = "Guardar Cambios al Instante";
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        };
-
-        // Función inteligente para traducir biografía a los 4 idiomas mediante API pública de traducción
-        async function traducirTexto(texto, idiomaDestino) {
-            if (!texto) return "";
-            try {
-                const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=es&tl=${idiomaDestino}&dt=t&q=` + encodeURIComponent(texto));
-                const data = await res.json();
-                return data[0].map(item => item[0]).join('');
-            } catch(e) {
-                return texto;
-            }
-        }
-
-        window.guardarPerfil = async function() {
-            const editId = document.getElementById('editandoId').value;
-            const id = document.getElementById('nuevoId').value.trim().toLowerCase().replace(/\s+/g, '');
-            const nombre = document.getElementById('nuevoNombre').value.trim();
-            const categoria = document.getElementById('nuevaCategoria').value;
-            const zona = document.getElementById('nuevaZona').value.trim().toUpperCase();
-            const modalidad = document.getElementById('nuevaModalidad').value.trim();
-            const whatsapp = document.getElementById('nuevoWpp').value.trim();
-            const horarios = document.getElementById('nuevosHorarios').value.trim();
-            const bioEs = document.getElementById('nuevaBio').value.trim();
-
-            if (!id || !nombre) {
-                alert("Completa el ID y el Nombre.");
+            if (!rawHtml.trim()) {
+                statusDiv.style.color = '#e74c3c';
+                statusDiv.textContent = '❌ Por favor, pegá el código HTML antes de escanear.';
                 return;
             }
 
-            // Recopilar galerías de fotos (hasta 10)
-            let fotosArray = [];
-            document.querySelectorAll('.input-foto').forEach(inp => {
-                if (inp.value.trim() !== "") {
-                    fotosArray.push(inp.value.trim());
+            try {
+                // Parser DOM seguro para leer el HTML recibido
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(rawHtml, 'text/html');
+
+                // Extracción inteligente de datos con selectores de tus fichas
+                const titleText = doc.querySelector('title')?.textContent || '';
+                const nombre = titleText.split('|')[0].trim() || 'Desconocida';
+                const idSlug = nombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '');
+
+                const zonaEl = doc.querySelector('[data-i18n="valorZona"]') || doc.querySelector('.perfil-ubicacion strong');
+                const zona = zonaEl ? zonaEl.textContent.trim() : 'CABA';
+
+                const modalEl = doc.querySelector('[data-i18n="valorModalidad"]') || doc.querySelector('.perfil-modalidad strong');
+                const modalidad = modalEl ? modalEl.textContent.trim() : 'Gabinete propio';
+
+                const descEl = doc.querySelector('[data-i18n="descPerfil"]') || doc.querySelector('.perfil-descripcion p');
+                const descripcion = descEl ? descEl.textContent.trim() : '';
+
+                const wppEl = doc.querySelector('.btn-whatsapp');
+                let whatsappLink = wppEl ? wppEl.getAttribute('href') : '';
+                let telefono = '';
+                if (whatsappLink) {
+                    const matchPhone = whatsappLink.match(/phone=([0-9]+)/) || whatsappLink.match(/wa\.me\/([0-9]+)/);
+                    if (matchPhone) telefono = matchPhone[1];
                 }
-            });
 
-            if (fotosArray.length === 0) {
-                fotosArray.push("img/logo.png");
+                // Extracción de fotos
+                const fotoPrincipal = doc.getElementById('fotoPrincipal')?.getAttribute('src') || 'img/monograma.png';
+                const miniaturas = Array.from(doc.querySelectorAll('.galeria-miniaturas img')).map(img => img.getAttribute('src'));
+
+                // Objeto estructurado listo para Firebase
+                const perfilData = {
+                    nombre: nombre,
+                    idSlug: idSlug,
+                    zona: zona,
+                    modalidad: modalidad,
+                    categoria: categoria,
+                    descripcion: descripcion,
+                    whatsapp: telefono,
+                    whatsappLink: whatsappLink,
+                    fotoPrincipal: fotoPrincipal,
+                    fotosGaleria: miniaturas.length > 0 ? miniaturas : [fotoPrincipal],
+                    estado: 'activa', // activa o pausada
+                    destacada: false,
+                    visitas: 0,
+                    fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                // Guardar en Firestore colección 'modelos_prive'
+                db.collection("modelos_prive").doc(idSlug).set(perfilData, { merge: true })
+                    .then(() => {
+                        statusDiv.style.color = '#2ecc71';
+                        statusDiv.textContent = `✅ ¡Perfil de ${nombre} escaneado y guardado correctamente en Firebase!`;
+                        document.getElementById('htmlSourceInput').value = '';
+                        cargarModelosAdmin();
+                    })
+                    .catch(err => {
+                        statusDiv.style.color = '#e74c3c';
+                        statusDiv.textContent = `❌ Error al guardar en Firebase: ` + err.message;
+                    });
+
+            } catch (error) {
+                statusDiv.style.color = '#e74c3c';
+                statusDiv.textContent = `❌ Error al procesar el HTML. Verificá que el código sea correcto.`;
             }
+        }
 
-            // Traducir automáticamente biografía a EN, PT y FR
-            const btn = document.getElementById('btnGuardarTexto');
-            btn.textContent = "Traduciendo y guardando en Firebase...";
-            btn.disabled = true;
-
-            const bioEn = await traducirTexto(bioEs, 'en');
-            const bioPt = await traducirTexto(bioEs, 'pt');
-            const bioFr = await traducirTexto(bioEs, 'fr');
-
-            const perfilData = {
-                id: id,
-                nombre: nombre,
-                categoria: categoria,
-                zona: zona,
-                modalidad: modalidad,
-                whatsapp: whatsapp,
-                img: fotosArray[0],
-                fotos: fotosArray,
-                horarios: horarios,
-                bio: bioEs,
-                traducciones: {
-                    en: { bio: bioEn },
-                    pt: { bio: bioPt },
-                    fr: { bio: bioFr }
+        // Cargar lista de modelos en la tabla del panel
+        function cargarModelosAdmin() {
+            const tbody = document.getElementById('tablaModelosBody');
+            db.collection("modelos_prive").onSnapshot((snapshot) => {
+                if (snapshot.empty) {
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #777;">No hay perfiles cargados todavía. Usá el importador de arriba.</td></tr>`;
+                    return;
                 }
-            };
 
-            if (!editId) {
-                perfilData.estado = "activo";
-                perfilData.destacada = false;
-                perfilData.creado = new Date().toISOString();
-            }
+                let htmlContent = '';
+                snapshot.forEach((docSnap) => {
+                    const m = docSnap.data();
+                    const docId = docSnap.id;
+                    const esActiva = m.estado !== 'pausado';
+                    const esDestacada = m.destacada === true;
 
-            db.collection("config_perfiles").doc(id).set(perfilData, { merge: true }).then(() => {
-                alert(editId ? "¡Perfil actualizado y traducido con éxito!" : "¡Perfil creado y traducido con éxito!");
-                
-                document.getElementById('editandoId').value = '';
-                document.getElementById('nuevoId').value = '';
-                document.getElementById('nuevoId').disabled = false;
-                document.getElementById('nuevoNombre').value = '';
-                document.getElementById('nuevaZona').value = '';
-                document.getElementById('nuevaBio').value = '';
-                document.querySelectorAll('.input-foto').forEach(inp => inp.value = '');
-                
-                document.getElementById('tituloFormulario').textContent = "➕ Dar de Alta Nuevo Perfil";
-                btn.textContent = "Publicar Perfil en la Web al Instante";
-                btn.disabled = false;
-            }).catch(err => {
-                console.error(err);
-                btn.textContent = "Publicar Perfil en la Web al Instante";
-                btn.disabled = false;
-                alert("Error al guardar en Firebase.");
+                    htmlContent += `
+                        <tr>
+                            <td><strong>${m.nombre}</strong></td>
+                            <td>${m.zona}</td>
+                            <td style="text-transform: capitalize;">${m.categoria}</td>
+                            <td>👁 ${(m.visitas || 0).toLocaleString()}</td>
+                            <td>
+                                <span class="badge-estado ${esActiva ? 'badge-activo' : 'badge-pausado'}">
+                                    ${esActiva ? 'Activa' : 'Pausada'}
+                                </span>
+                            </td>
+                            <td style="text-align: center;">
+                                <span class="switch-destacada ${esDestacada ? 'active' : ''}" onclick="toggleDestacada('${docId}', ${!esDestacada})" title="Marcar / Desmarcar como Destacada">
+                                    ★
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn-accion" onclick="toggleEstado('${docId}', '${m.estado}')">
+                                    ${esActiva ? 'Pausar' : 'Activar'}
+                                </button>
+                                <button class="btn-accion btn-danger" onclick="eliminarPerfil('${docId}', '${m.nombre}')">Eliminar</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                tbody.innerHTML = htmlContent;
             });
-        };
+        }
+
+        // Cambiar estado Activa / Pausada (para cuando no pagan o vencen)
+        function toggleEstado(docId, estadoActual) {
+            const nuevoEstado = (estadoActual === 'pausado') ? 'activa' : 'pausado';
+            db.collection("modelos_prive").doc(docId).update({
+                estado: nuevoEstado
+            }).then(() => {
+                console.log("Estado actualizado");
+            });
+        }
+
+        // Cambiar si es Destacada (Gold) con el botón de estrella ⭐
+        function toggleDestacada(docId, nuevoValor) {
+            db.collection("modelos_prive").doc(docId).update({
+                destacada: nuevoValor
+            }).then(() => {
+                console.log("Destacada actualizada");
+            });
+        }
+
+        // Eliminar perfil
+        function eliminarPerfil(docId, nombre) {
+            if (confirm(`¿Estás seguro de eliminar permanentemente a ${nombre} de la base de datos?`)) {
+                db.collection("modelos_prive").doc(docId).delete().then(() => {
+                    alert(`Perfil de ${nombre} eliminado.`);
+                });
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            cargarModelosAdmin();
+        });
     </script>
 </body>
 </html>
