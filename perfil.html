@@ -188,14 +188,14 @@
                 document.getElementById('perfilModalidad').textContent = datosPerfilGlobal.modalidad || 'Gabinete propio';
                 document.getElementById('perfilHorarios').textContent = datosPerfilGlobal.horarios || 'Lunes a Sábados de 09 a 21 hs.';
 
-                // Cargar galería de fotos de forma robusta (soporta múltiples fotos y limpia vacíos)
+                // Cargar galería de fotos filtrando estrictamente los casilleros vacíos
                 let listaFotos = [];
-                if (datosPerfilGlobal.fotos && Array.isArray(datosPerfilGlobal.fotos) && datosPerfilGlobal.fotos.length > 0) {
-                    listaFotos = datosPerfilGlobal.fotos.filter(f => f && f.trim() !== "");
+                if (datosPerfilGlobal.fotos && Array.isArray(datosPerfilGlobal.fotos)) {
+                    listaFotos = datosPerfilGlobal.fotos.filter(f => f && typeof f === 'string' && f.trim() !== "" && !f.includes("logo.png"));
                 }
                 
                 if (listaFotos.length === 0) {
-                    if (datosPerfilGlobal.img) {
+                    if (datosPerfilGlobal.img && datosPerfilGlobal.img.trim() !== "") {
                         listaFotos = [datosPerfilGlobal.img];
                     } else {
                         listaFotos = ['img/logo.png'];
@@ -205,7 +205,7 @@
                 // Asignar foto principal
                 document.getElementById('fotoPrincipal').src = listaFotos[0];
 
-                // Generar todas las miniaturas en la galería
+                // Generar únicamente las miniaturas válidas
                 const contenedorMini = document.getElementById('galeriaMiniaturas');
                 let miniaturasHTML = "";
                 listaFotos.forEach(foto => {
