@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Perfil | Masajistas Privé</title>
+    <link rel="stylesheet" href="css/style.css?v=3.9">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400&amp;family=Montserrat:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="img/monograma.png">
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+</head>
+<body style="background: #0d0d0d; color: #fff; font-family: 'Montserrat', sans-serif; margin: 0; padding: 0;">
+
+    <header class="header-prive" style="padding: 15px 20px; text-align: center; border-bottom: 1px solid rgba(223, 194, 133, 0.2);">
+        <a href="index.html">
+            <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande" style="max-height: 50px;">
+        </a>
+    </header>
+
+    <main class="container" style="max-width: 800px; margin: 40px auto; padding: 0 20px;">
+        <div id="perfil-contenido" style="background: #141414; border: 1px solid rgba(223, 194, 133, 0.3); border-radius: 12px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); text-align: center;">
+            <p style="color: #dfc285; font-size: 16px;">Cargando perfil exclusivo...</p>
+        </div>
+    </main>
+
+    <script>
+        // Inicializar Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
+            authDomain: "masajistasprivepro.firebaseapp.com",
+            projectId: "masajistasprivepro",
+            storageBucket: "masajistasprivepro.firebasestorage.app",
+            messagingSenderId: "768677270509",
+            appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
+            measurementId: "G-SBN70C32JF"
+        };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
+        // Obtener el ID desde la URL (ej: perfil.html?id=catalina)
+        const urlParams = new URLSearchParams(window.location.search);
+        const perfilId = urlParams.get('id');
+
+        async function cargarDatosPerfil() {
+            const contenedor = document.getElementById('perfil-contenido');
+
+            if (!perfilId) {
+                contenedor.innerHTML = `<h2 style="color: #ff5555;">Perfil no encontrado</h2><p style="color: #ccc;">No se especificó ninguna masajista.</p><a href="index.html" style="color: #dfc285; display:inline-block; margin-top:15px;">Volver al inicio</a>`;
+                return;
+            }
+
+            try {
+                // Registrar visita al perfil en Firebase
+                const docRef = db.collection("config_perfiles").doc(perfilId);
+                const docSnap = await docRef.get();
+
+                if (!docSnap.exists) {
+                    contenedor.innerHTML = `<h2 style="color: #ff5555;">Perfil no disponible</h2><p style="color: #ccc;">Este perfil ya no se encuentra activo o fue eliminado.</p><a href="index.html" style="color: #dfc285; display:inline-block; margin-top:15px;">Volver al inicio</a>`;
+                    return;
+                }
+
+                const data = docSnap.data();
+
+                // Si está pausado, mostrar aviso
+                if (data.estado === 'pausado') {
+                    contenedor.innerHTML = `<h2 style="color: #dfc285;">Perfil Pausado Temporalmente</h2><p style="color: #ccc;">Esta anunciante no se encuentra disponible en este momento.</p><a href="index.html" style="color: #dfc285; display:inline-block; margin-top:15px;">Volver al inicio</a>`;
+                    return;
+                }
+
+                // Incrementar contador de visitas de este perfil específico
+                db.collection("estadisticas_visitas").doc(perfilId).set({
+                    visitas: firebase.firestore.FieldValue.increment(1)
+                }, { merge: true }).catch(err => {});
+
+                // Rellenar datos en la página
+                document.getElementById('page-title').textContent = `${data.nombre || 'Perfil'} | Masajistas Privé`;
+
+                let wppLink = data.whatsapp ? `https://wa.me/${data.whatsapp}?text=Hola%20${encodeURIComponent(data.nombre)},%20vi%20tu%20perfil%20en%20Masajistas%20Prive` : '#';
+
+                contenedor.innerHTML = `
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
+                        <img src="${data.img || 'img/logo.png'}" alt="${data.nombre}" style="width: 220px; height: 220px; object-fit: cover; border-radius: 50%; border: 3px solid #dfc285; box-shadow: 0 5px 20px rgba(223,194,133,0.3);" onerror="this.src='img/logo.png'">
+                        
+                        <div>
+                            <span style="color: #dfc285; font-size: 12px; text-transform: uppercase; letter-spacing: 2px;">✓ Perfil Verificado</span>
+                            <h1 style="font-family: 'Cormorant Garamond', serif; color: #dfc285; font-size: 36px; margin: 10px 0;">${data.nombre}</h1>
+                            <p style="color: #aaa; font-size: 14px; margin: 0;">📍 <b>Zona:</b> ${data.zona || 'CABA'} &nbsp;|&nbsp; 💼 <b>Modalidad:</b> ${data.modalidad || 'Gabinete propio'}</p>
+                        </div>
+
+                        <div style="background: #1a1a1a; border: 1px solid rgba(223,194,133,0.15); border-radius: 8px; padding: 20px; width: 100%; text-align: left; margin-top: 10px;">
+                            <h3 style="color: #dfc285; font-family: 'Cormorant Garamond', serif; font-size: 20px; margin-top: 0;">Sobre mí y Servicios</h3>
+                            <p style="color: #ccc; font-size: 14px; line-height: 1.8; white-space: pre-line;">${data.bio || 'Atención personalizada y relax absoluto en un ambiente climatizado, discreto y de máxima pulcritud.'}</p>
+                            <p style="color: #888; font-size: 13px; margin-bottom: 0;">🕒 <b>Horarios:</b> ${data.horarios || 'Lunes a sábados de 9 a 21 hs.'}</p>
+                        </div>
+
+                        ${data.whatsapp ? `
+                            <a href="${wppLink}" target="_blank" style="background: #25d366; color: #0d0d0d; padding: 14px 30px; border-radius: 6px; font-weight: bold; text-decoration: none; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; display: inline-block; margin-top: 15px; box-shadow: 0 4px 15px rgba(37,211,102,0.4);">
+                                💬 Contactar por WhatsApp
+                            </a>
+                        ` : ''}
+
+                        <div style="margin-top: 20px;">
+                            <a href="index.html" style="color: #888; font-size: 13px; text-decoration: none;">← Volver al portal principal</a>
+                        </div>
+                    </div>
+                `;
+
+            } catch (error) {
+                console.error("Error al cargar perfil:", error);
+                contenedor.innerHTML = `<h2 style="color: #ff5555;">Error</h2><p style="color: #ccc;">No se pudo cargar la información del perfil.</p>`;
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', cargarDatosPerfil);
+    </script>
+</body>
+</html>
