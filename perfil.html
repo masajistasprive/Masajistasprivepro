@@ -130,36 +130,43 @@
                 document.getElementById('perfilModalidad').textContent = datosPerfilGlobal.modalidad || 'Gabinete propio';
                 document.getElementById('perfilHorarios').textContent = datosPerfilGlobal.horarios || 'Lunes a Sábados de 09 a 21 hs.';
 
-                // EXTRACCIÓN Y FILTRADO LIMPIO: Solo descarta casilleros vacíos o archivos de logo institucional
+                // LIMPIEZA DE FOTOS DE FIREBASE
                 let listaFotos = [];
-                let fuenteDatos = datosPerfilGlobal.fotos || (datosPerfilGlobal.img ? [datosPerfilGlobal.img] : []);
-
-                if (Array.isArray(fuenteDatos)) {
-                    listaFotos = fuenteDatos.filter(f => {
+                if (datosPerfilGlobal.fotos && Array.isArray(datosPerfilGlobal.fotos)) {
+                    listaFotos = datosPerfilGlobal.fotos.filter(f => {
                         if (!f || typeof f !== 'string') return false;
-                        let limpio = f.trim().toLowerCase();
-                        if (limpio === "" || limpio.includes("logo.png") || limpio.includes("monograma.png")) {
+                        let limpio = f.trim();
+                        if (limpio === "" || limpio.toLowerCase().includes("logo.png") || limpio.toLowerCase().includes("monograma.png")) {
                             return false;
                         }
                         return true;
                     });
                 }
 
-                // Respaldo de seguridad
-                if (listaFotos.length === 0) {
-                    listaFotos = [datosPerfilGlobal.img || 'img/logo.png'];
+                // SI FIREBASE SOLO TIENE 1 FOTO (O NINGUNA VÁLIDA), CONSTRUIMOS LA GALERÍA ESTÁNDAR AUTOMÁTICAMENTE
+                if (listaFotos.length <= 1) {
+                    let baseImg = listaFotos[0] || datosPerfilGlobal.img || `img/${perfilId}1.jpg`;
+                    // Limpiamos la extensión base para generar hasta 4 fotos correlativas (ej: prada1.jpg, prada2.jpg, prada3.jpg, prada4.jpg)
+                    listaFotos = [
+                        baseImg,
+                        baseImg.replace('1.jpg', '2.jpg').replace('1.jpeg', '2.jpeg'),
+                        baseImg.replace('1.jpg', '3.jpg').replace('1.jpeg', '3.jpeg'),
+                        baseImg.replace('1.jpg', '4.jpg').replace('1.jpeg', '4.jpeg')
+                    ];
                 }
 
-                // Definir la foto principal inicial arriba
+                // Asignar la foto principal inicial arriba
                 const imgPrincipal = document.getElementById('fotoPrincipal');
                 imgPrincipal.src = listaFotos[0];
 
-                // Generar miniaturas funcionales
+                // Generar miniaturas funcionales con control de error (si una foto no existe en la carpeta, se oculta sola)
                 const contenedorMini = document.getElementById('galeriaMiniaturas');
                 let miniaturasHTML = "";
                 
                 listaFotos.forEach(foto => {
-                    miniaturasHTML += `<img src="${foto}" alt="Foto" onclick="seleccionarFotoMiniatura('${foto}')" onerror="this.style.display='none'">`;
+                    if (foto) {
+                        miniaturasHTML += `<img src="${foto}" alt="Foto" onclick="seleccionarFotoMiniatura('${foto}')" onerror="this.style.display='none'">`;
+                    }
                 });
                 
                 contenedorMini.innerHTML = miniaturasHTML;
