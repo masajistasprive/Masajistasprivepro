@@ -8,6 +8,23 @@
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        img {
+            -webkit-user-select: none !important;
+            user-select: none !important;
+            -webkit-user-drag: none !important;
+        }
+        #priveLightbox {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.96) !important;
+            z-index: 9999999 !important;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(12px);
+            user-select: none;
+            -webkit-user-select: none;
+        }
         .star-rating {
             display: inline-flex;
             gap: 4px;
@@ -24,6 +41,17 @@
     </style>
 </head>
 <body class="perfil-body">
+
+    <!-- Visor de Pantalla Completa Táctil (Lightbox) -->
+    <div id="priveLightbox">
+        <div style="position: relative; display: flex; justify-content: center; align-items: center; max-width: 90vw; max-height: 85vh; width: 100%;">
+            <button id="priveLbPrev" style="position: absolute; left: 10px; background: rgba(0,0,0,0.6); border: 1px solid #dfc285; color: #dfc285; font-size: 24px; padding: 10px 15px; cursor: pointer; border-radius: 50%; z-index: 10000001; outline: none;">&#10094;</button>
+            <img id="priveLightboxImg" style="display: block; max-width: 80vw; max-height: 85vh; border-radius: 8px; border: 1px solid rgba(223,194,133,0.4); box-shadow: 0 20px 50px rgba(0,0,0,0.95); object-fit: contain; pointer-events: none;">
+            <button id="priveLbNext" style="position: absolute; right: 10px; background: rgba(0,0,0,0.6); border: 1px solid #dfc285; color: #dfc285; font-size: 24px; padding: 10px 15px; cursor: pointer; border-radius: 50%; z-index: 10000001; outline: none;">&#10095;</button>
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 180px; height: 80px; background-image: url('img/logo.png'); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: 0.3; pointer-events: none; z-index: 10000000;"></div>
+        </div>
+        <button id="priveLbClose" style="position: absolute; top: 20px; right: 25px; background: none; border: none; color: #dfc285; font-size: 36px; cursor: pointer; z-index: 10000002;">&times;</button>
+    </div>
 
     <!-- Header Estilo App de Lujo con Logo Grande y Selector de Idioma -->
     <header class="header-prive">
@@ -142,6 +170,7 @@
                 datosModeloActual = doc.data();
                 renderizarPerfil(datosModeloActual);
                 inicializarLogicaComentarios();
+                inicializarVisorFotosDinamico();
             }).catch(error => {
                 container.innerHTML = `<p style="color:#e74c3c; text-align:center;">Error al cargar el perfil.</p>`;
             });
@@ -264,11 +293,87 @@
             `;
 
             document.getElementById('perfil-title').textContent = `${m.nombre} | Masajistas Privé`;
+            setTimeout(inicializarVisorFotosDinamico, 300);
         }
 
         function cambiarFoto(element) {
             const fotoPrincipal = document.getElementById('fotoPrincipal');
             if (fotoPrincipal) fotoPrincipal.src = element.src;
+        }
+
+        // Motor del Visor Táctil de Fotos (Lightbox)
+        function inicializarVisorFotosDinamico() {
+            const lightbox = document.getElementById('priveLightbox');
+            if (!lightbox) return;
+
+            const miniaturas = document.querySelectorAll('.galeria-miniaturas img, .perfil-galeria-grid img');
+            let listaUrlsFotos = [];
+            miniaturas.forEach(img => {
+                if (img.src && !listaUrlsFotos.includes(img.src)) {
+                    listaUrlsFotos.push(img.src);
+                }
+            });
+
+            if (listaUrlsFotos.length === 0) {
+                const fotoPrin = document.getElementById('fotoPrincipal');
+                if (fotoPrin) listaUrlsFotos.push(fotoPrin.src);
+            }
+
+            let indiceLightboxActual = 0;
+
+            function actualizarImagenLightbox(index) {
+                if (listaUrlsFotos.length === 0) return;
+                if (index < 0) index = listaUrlsFotos.length - 1;
+                if (index >= listaUrlsFotos.length) index = 0;
+                indiceLightboxActual = index;
+                
+                const lbImg = document.getElementById('priveLightboxImg');
+                if (lbImg) {
+                    lbImg.style.opacity = '0.3';
+                    setTimeout(() => {
+                        lbImg.src = listaUrlsFotos[indiceLightboxActual];
+                        lbImg.style.opacity = '1';
+                    }, 100);
+                }
+            }
+
+            const btnPrev = document.getElementById('priveLbPrev');
+            const btnNext = document.getElementById('priveLbNext');
+            const btnClose = document.getElementById('priveLbClose');
+
+            if(btnPrev) btnPrev.onclick = (e) => { e.stopPropagation(); actualizarImagenLightbox(indiceLightboxActual - 1); };
+            if(btnNext) btnNext.onclick = (e) => { e.stopPropagation(); actualizarImagenLightbox(indiceLightboxActual + 1); };
+            if(btnClose) btnClose.onclick = () => { lightbox.style.display = 'none'; };
+            lightbox.onclick = (e) => { if (e.target.id === 'priveLightbox') lightbox.style.display = 'none'; };
+
+            let touchStartX = 0;
+            lightbox.ontouchstart = (e) => { touchStartX = e.changedTouches[0].screenX; };
+            lightbox.ontouchend = (e) => {
+                let touchEndX = e.changedTouches[0].screenX;
+                if (touchEndX < touchStartX - 40) {
+                    actualizarImagenLightbox(indiceLightboxActual + 1);
+                } else if (touchEndX > touchStartX + 40) {
+                    actualizarImagenLightbox(indiceLightboxActual - 1);
+                }
+            };
+
+            const fotosConVisor = document.querySelectorAll('.perfil-galeria-grid .foto-principal, img#fotoPrincipal, .galeria-miniaturas img');
+            fotosConVisor.forEach(img => {
+                img.style.cursor = 'zoom-in';
+                if (!img.getAttribute('data-visor-vinculado')) {
+                    img.setAttribute('data-visor-vinculado', 'true');
+                    img.onclick = function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const urlActual = this.src;
+                        let idxEncontrado = listaUrlsFotos.indexOf(urlActual);
+                        indiceLightboxActual = idxEncontrado !== -1 ? idxEncontrado : 0;
+                        
+                        actualizarImagenLightbox(indiceLightboxActual);
+                        lightbox.style.display = 'flex';
+                    };
+                }
+            });
         }
 
         function inicializarLogicaComentarios() {
