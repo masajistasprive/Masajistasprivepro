@@ -29,11 +29,11 @@
 
     <main class="container perfil-container" id="perfil-contenido-principal">
         
-        <!-- Galería de Fotos Dinámica -->
+        <!-- Galería de Fotos Dinámica (Hasta 10 fotos) -->
         <div class="perfil-galeria-grid">
             <img src="img/logo.png" alt="Perfil" class="foto-principal" id="fotoPrincipal">
             <div class="galeria-miniaturas" id="galeriaMiniaturas">
-                <!-- Se cargan dinámicamente -->
+                <!-- Se cargan dinámicamente desde Firebase -->
             </div>
         </div>
 
@@ -86,7 +86,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <script>
-        // Obtener el ID desde la URL (ej: perfil.html?id=prada)
         const urlParams = new URLSearchParams(window.location.search);
         const perfilId = urlParams.get('id');
 
@@ -104,6 +103,56 @@
         }
         const db = firebase.firestore();
 
+        let datosPerfilGlobal = null;
+        let idiomaActual = localStorage.getItem('idiomaPrive') || 'es';
+
+        const textosUI = {
+            es: { btnVolver: "← Volver", labelZona: "Zona:", labelModalidad: "Modalidad:", tituloSobreMi: "Descripción", labelHorarios: "Días y horarios:", labelEquipamiento: "Equipamiento y servicios:", labelPagos: "Medios de pago:", labelTurnos: "Modalidad de turnos:", btnWpp: "Contactar por WhatsApp", footerLegal: "Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.", footerCopy: "© 2026 Masajistas Privé. Todos los derechos reservados." },
+            en: { btnVolver: "← Back", labelZona: "Area:", labelModalidad: "Modality:", tituloSobreMi: "Description", labelHorarios: "Days and hours:", labelEquipamiento: "Equipment and services:", labelPagos: "Payment methods:", labelTurnos: "Appointment modality:", btnWpp: "Contact via WhatsApp", footerLegal: "This is an adult site (+18). Advertisers have no employment relationship with the portal.", footerCopy: "© 2026 Masajistas Privé. All rights reserved." },
+            pt: { btnVolver: "← Voltar", labelZona: "Zona:", labelModalidad: "Modalidade:", tituloSobreMi: "Descrição", labelHorarios: "Dias e horários:", labelEquipamiento: "Equipamentos e serviços:", labelPagos: "Formas de pagamento:", labelTurnos: "Modalidade de turnos:", btnWpp: "Contatar pelo WhatsApp", footerLegal: "Este é um site adulto (+18). Os anunciantes não possuem vínculo empregatício com o portal.", footerCopy: "© 2026 Masajistas Privé. Todos os direitos reservados." },
+            fr: { btnVolver: "← Retour", labelZona: "Zone:", labelModalidad: "Modalité:", tituloSobreMi: "Description", labelHorarios: "Jours et heures:", labelEquipamiento: "Équipement et services:", labelPagos: "Moyens de paiement:", labelTurnos: "Modalité de réservation:", btnWpp: "Contacter par WhatsApp", footerLegal: "Ceci est un site pour adultes (+18). Les annonceurs n'ont pas de lien de travail avec le portail.", footerCopy: "© 2026 Masajistas Privé. Tous droits réservés." }
+        };
+
+        function cambiarIdiomaPerfil() {
+            if (idiomaActual === 'es') idiomaActual = 'en';
+            else if (idiomaActual === 'en') idiomaActual = 'pt';
+            else if (idiomaActual === 'pt') idiomaActual = 'fr';
+            else idiomaActual = 'es';
+
+            localStorage.setItem('idiomaPrive', idiomaActual);
+            actualizarTextosInterfaz();
+        }
+
+        function actualizarTextosInterfaz() {
+            const btn = document.getElementById('btn-idioma');
+            if(btn) {
+                if (idiomaActual === 'es') btn.innerHTML = '🇺🇸 EN';
+                else if (idiomaActual === 'en') btn.innerHTML = '🇧🇷 PT';
+                else if (idiomaActual === 'pt') btn.innerHTML = '🇫🇷 FR';
+                else btn.innerHTML = '🇦🇷 ES';
+            }
+
+            const t = textosUI[idiomaActual] || textosUI['es'];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const clave = el.getAttribute('data-i18n');
+                if (t[clave]) el.textContent = t[clave];
+            });
+
+            if (datosPerfilGlobal) {
+                renderizarBioSegunIdioma();
+            }
+        }
+
+        function renderizarBioSegunIdioma() {
+            if (!datosPerfilGlobal) return;
+            let bioTexto = datosPerfilGlobal.bio || '';
+
+            if (idiomaActual !== 'es' && datosPerfilGlobal.traducciones && datosPerfilGlobal.traducciones[idiomaActual]) {
+                bioTexto = datosPerfilGlobal.traducciones[idiomaActual].bio || bioTexto;
+            }
+            document.getElementById('perfilBio').textContent = bioTexto;
+        }
+
         async function cargarPerfilDinamico() {
             if (!perfilId) {
                 document.getElementById('perfil-contenido-principal').innerHTML = '<h2 style="color:#dfc285; text-align:center; padding:50px;">Perfil no especificado.</h2>';
@@ -119,9 +168,9 @@
                     return;
                 }
 
-                const data = docSnap.data();
+                datosPerfilGlobal = docSnap.data();
 
-                if (data.estado === 'pausado') {
+                if (datosPerfilGlobal.estado === 'pausado') {
                     document.getElementById('perfil-contenido-principal').innerHTML = '<h2 style="color:#dfc285; text-align:center; padding:50px;">Este perfil se encuentra pausado temporalmente.</h2>';
                     return;
                 }
@@ -131,31 +180,32 @@
                     visitas: firebase.firestore.FieldValue.increment(1)
                 }, { merge: true }).catch(err => {});
 
-                // Rellenar datos en la plantilla original de lujo
-                document.getElementById('page-title').textContent = `${data.nombre || 'Perfil'} | Masajistas Privé`;
-                document.getElementById('perfilNombre').textContent = data.nombre || 'Perfil';
-                document.getElementById('perfilZona').textContent = data.zona || 'CABA';
-                document.getElementById('perfilModalidad').textContent = data.modalidad || 'Gabinete propio';
-                document.getElementById('perfilBio').textContent = data.bio || 'Atención personalizada y relax absoluto en ambiente climatizado.';
-                document.getElementById('perfilHorarios').textContent = data.horarios || 'Lunes a Sábados de 09 a 21 hs.';
+                // Rellenar datos fijos
+                document.getElementById('page-title').textContent = `${datosPerfilGlobal.nombre || 'Perfil'} | Masajistas Privé`;
+                document.getElementById('perfilNombre').textContent = datosPerfilGlobal.nombre || 'Perfil';
+                document.getElementById('perfilZona').textContent = datosPerfilGlobal.zona || 'CABA';
+                document.getElementById('perfilModalidad').textContent = datosPerfilGlobal.modalidad || 'Gabinete propio';
+                document.getElementById('perfilHorarios').textContent = datosPerfilGlobal.horarios || 'Lunes a Sábados de 09 a 21 hs.';
 
-                // Foto principal y miniaturas automáticas
-                const imgPrincipal = data.img || 'img/logo.png';
-                document.getElementById('fotoPrincipal').src = imgPrincipal;
+                // Cargar galería de fotos (soporta hasta 10 fotos del panel)
+                let listaFotos = datosPerfilGlobal.fotos || [datosPerfilGlobal.img || 'img/logo.png'];
+                document.getElementById('fotoPrincipal').src = listaFotos[0];
 
-                // Generar galería miniatura (si tiene más fotos o repetimos la principal para mantener el diseño)
                 const contenedorMini = document.getElementById('galeriaMiniaturas');
-                let miniaturasHTML = `<img src="${imgPrincipal}" alt="Foto" onclick="cambiarFoto(this)">`;
-                
-                // Si el sistema guarda más fotos en un array en el futuro, las podemos sumar acá. Por ahora usa la principal.
+                let miniaturasHTML = "";
+                listaFotos.forEach(foto => {
+                    miniaturasHTML += `<img src="${foto}" alt="Foto" onclick="cambiarFoto(this)" onerror="this.src='img/logo.png'">`;
+                });
                 contenedorMini.innerHTML = miniaturasHTML;
 
                 // Configurar WhatsApp
-                if (data.whatsapp) {
+                if (datosPerfilGlobal.whatsapp) {
                     const btnWpp = document.getElementById('btnWhatsappPerfil');
-                    btnWpp.href = `https://wa.me/${data.whatsapp}?text=Hola%20${encodeURIComponent(data.nombre)},%20vi%20tu%20perfil%20en%20Masajistas%20Privé`;
+                    btnWpp.href = `https://wa.me/${datosPerfilGlobal.whatsapp}?text=Hola%20${encodeURIComponent(datosPerfilGlobal.nombre)},%20vi%20tu%20perfil%20en%20Masajistas%20Privé`;
                     btnWpp.style.display = 'inline-flex';
                 }
+
+                actualizarTextosInterfaz();
 
             } catch (e) {
                 console.error("Error al cargar perfil:", e);
