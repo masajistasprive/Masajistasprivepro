@@ -4,32 +4,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="page-title">Perfil | Masajistas Privé</title>
-    <link rel="stylesheet" href="css/style.css?v=3.9">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400&amp;family=Montserrat:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="img/monograma.png">
-    
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body style="background: #0d0d0d; color: #fff; font-family: 'Montserrat', sans-serif; margin: 0; padding: 0;">
+<body class="perfil-body">
 
-    <header class="header-prive" style="padding: 15px 20px; text-align: center; border-bottom: 1px solid rgba(223, 194, 133, 0.2);">
-        <a href="index.html">
-            <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande" style="max-height: 50px;">
-        </a>
+    <!-- Header Estilo App de Lujo con Logo Grande y Selector de Idioma -->
+    <header class="header-prive">
+        <div class="header-left">
+            <img src="img/monograma.png" alt="Monograma" class="header-monograma">
+        </div>
+        <div class="header-center">
+            <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">
+        </div>
+        <div class="header-right" style="display: flex; align-items: center; gap: 10px;">
+            <button id="btn-idioma" onclick="cambiarIdiomaPerfil()" style="background: rgba(223, 194, 133, 0.12); border: 1px solid #dfc285; color: #dfc285; padding: 7px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; font-family: 'Montserrat', sans-serif; letter-spacing: 1.5px; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.4);">
+                🇺🇸 EN
+            </button>
+            <a href="index.html" class="btn-buscar">
+                <span data-i18n="btnVolver">← Volver</span>
+            </a>
+        </div>
     </header>
 
-    <main class="container" style="max-width: 800px; margin: 40px auto; padding: 0 20px;">
-        <div id="perfil-contenido" style="background: #141414; border: 1px solid rgba(223, 194, 133, 0.3); border-radius: 12px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); text-align: center;">
-            <p style="color: #dfc285; font-size: 16px;">Cargando perfil exclusivo...</p>
+    <main class="container perfil-container" id="perfil-contenido-principal">
+        
+        <!-- Galería de Fotos Dinámica -->
+        <div class="perfil-galeria-grid">
+            <img src="img/logo.png" alt="Perfil" class="foto-principal" id="fotoPrincipal">
+            <div class="galeria-miniaturas" id="galeriaMiniaturas">
+                <!-- Se cargan dinámicamente -->
+            </div>
         </div>
+
+        <!-- Información Dinámica -->
+        <div class="perfil-info">
+            <div class="perfil-titulo-seccion">
+                <h2 id="perfilNombre">Cargando...</h2>
+                <span class="badge-verificado" data-i18n="badgeVerificado">✓ Privé Verificado</span>
+            </div>
+
+            <p class="perfil-ubicacion">📍 <span data-i18n="labelZona">Zona:</span> <strong id="perfilZona">-</strong></p>
+            <p class="perfil-modalidad">🏠 <span data-i18n="labelModalidad">Modalidad:</span> <strong id="perfilModalidad">Gabinete propio</strong></p>
+
+            <div class="perfil-descripcion">
+                <h3 data-i18n="tituloSobreMi">Descripción</h3>
+                <p id="perfilBio">Cargando descripción...</p>
+            </div>
+
+            <div class="perfil-detalles">
+                <div class="detalle-item">
+                    <span data-i18n="labelHorarios">Días y horarios:</span> <span id="perfilHorarios">Lunes a Sábados de 09 a 21 hs.</span>
+                </div>
+                <div class="detalle-item">
+                    <span data-i18n="labelEquipamiento">Equipamiento y servicios:</span> <span>Camilla, tatami, aire acondicionado, servicio de ducha.</span>
+                </div>
+                <div class="detalle-item">
+                    <span data-i18n="labelPagos">Medios de pago:</span> <span>Efectivo, transferencia bancaria, Mercado Pago.</span>
+                </div>
+                <div class="detalle-item">
+                    <span data-i18n="labelTurnos">Modalidad de turnos:</span> <span>Reserva previa por WhatsApp.</span>
+                </div>
+            </div>
+
+            <a href="#" target="_blank" rel="noopener noreferrer" class="btn-whatsapp" id="btnWhatsappPerfil" style="display: none;">
+                💬 <span data-i18n="btnWpp">Contactar por WhatsApp</span>
+            </a>
+        </div>
+
+        <div id="seccion-comentarios"></div>
+
     </main>
 
+    <footer class="footer">
+        <p data-i18n="footerLegal">Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.</p>
+        <p class="copyright" data-i18n="footerCopy">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
     <script>
-        // Inicializar Firebase
+        // Obtener el ID desde la URL (ej: perfil.html?id=prada)
+        const urlParams = new URLSearchParams(window.location.search);
+        const perfilId = urlParams.get('id');
+
         const firebaseConfig = {
             apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
             authDomain: "masajistasprivepro.firebaseapp.com",
@@ -44,81 +104,71 @@
         }
         const db = firebase.firestore();
 
-        // Obtener el ID desde la URL (ej: perfil.html?id=catalina)
-        const urlParams = new URLSearchParams(window.location.search);
-        const perfilId = urlParams.get('id');
-
-        async function cargarDatosPerfil() {
-            const contenedor = document.getElementById('perfil-contenido');
-
+        async function cargarPerfilDinamico() {
             if (!perfilId) {
-                contenedor.innerHTML = `<h2 style="color: #ff5555;">Perfil no encontrado</h2><p style="color: #ccc;">No se especificó ninguna masajista.</p><a href="index.html" style="color: #dfc285; display:inline-block; margin-top:15px;">Volver al inicio</a>`;
+                document.getElementById('perfil-contenido-principal').innerHTML = '<h2 style="color:#dfc285; text-align:center; padding:50px;">Perfil no especificado.</h2>';
                 return;
             }
 
             try {
-                // Registrar visita al perfil en Firebase
                 const docRef = db.collection("config_perfiles").doc(perfilId);
                 const docSnap = await docRef.get();
 
                 if (!docSnap.exists) {
-                    contenedor.innerHTML = `<h2 style="color: #ff5555;">Perfil no disponible</h2><p style="color: #ccc;">Este perfil ya no se encuentra activo o fue eliminado.</p><a href="index.html" style="color: #dfc285; display:inline-block; margin-top:15px;">Volver al inicio</a>`;
+                    document.getElementById('perfil-contenido-principal').innerHTML = '<h2 style="color:#dfc285; text-align:center; padding:50px;">Este perfil no existe o fue eliminado.</h2>';
                     return;
                 }
 
                 const data = docSnap.data();
 
-                // Si está pausado, mostrar aviso
                 if (data.estado === 'pausado') {
-                    contenedor.innerHTML = `<h2 style="color: #dfc285;">Perfil Pausado Temporalmente</h2><p style="color: #ccc;">Esta anunciante no se encuentra disponible en este momento.</p><a href="index.html" style="color: #dfc285; display:inline-block; margin-top:15px;">Volver al inicio</a>`;
+                    document.getElementById('perfil-contenido-principal').innerHTML = '<h2 style="color:#dfc285; text-align:center; padding:50px;">Este perfil se encuentra pausado temporalmente.</h2>';
                     return;
                 }
 
-                // Incrementar contador de visitas de este perfil específico
+                // Registrar visita
                 db.collection("estadisticas_visitas").doc(perfilId).set({
                     visitas: firebase.firestore.FieldValue.increment(1)
                 }, { merge: true }).catch(err => {});
 
-                // Rellenar datos en la página
+                // Rellenar datos en la plantilla original de lujo
                 document.getElementById('page-title').textContent = `${data.nombre || 'Perfil'} | Masajistas Privé`;
+                document.getElementById('perfilNombre').textContent = data.nombre || 'Perfil';
+                document.getElementById('perfilZona').textContent = data.zona || 'CABA';
+                document.getElementById('perfilModalidad').textContent = data.modalidad || 'Gabinete propio';
+                document.getElementById('perfilBio').textContent = data.bio || 'Atención personalizada y relax absoluto en ambiente climatizado.';
+                document.getElementById('perfilHorarios').textContent = data.horarios || 'Lunes a Sábados de 09 a 21 hs.';
 
-                let wppLink = data.whatsapp ? `https://wa.me/${data.whatsapp}?text=Hola%20${encodeURIComponent(data.nombre)},%20vi%20tu%20perfil%20en%20Masajistas%20Prive` : '#';
+                // Foto principal y miniaturas automáticas
+                const imgPrincipal = data.img || 'img/logo.png';
+                document.getElementById('fotoPrincipal').src = imgPrincipal;
 
-                contenedor.innerHTML = `
-                    <div style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
-                        <img src="${data.img || 'img/logo.png'}" alt="${data.nombre}" style="width: 220px; height: 220px; object-fit: cover; border-radius: 50%; border: 3px solid #dfc285; box-shadow: 0 5px 20px rgba(223,194,133,0.3);" onerror="this.src='img/logo.png'">
-                        
-                        <div>
-                            <span style="color: #dfc285; font-size: 12px; text-transform: uppercase; letter-spacing: 2px;">✓ Perfil Verificado</span>
-                            <h1 style="font-family: 'Cormorant Garamond', serif; color: #dfc285; font-size: 36px; margin: 10px 0;">${data.nombre}</h1>
-                            <p style="color: #aaa; font-size: 14px; margin: 0;">📍 <b>Zona:</b> ${data.zona || 'CABA'} &nbsp;|&nbsp; 💼 <b>Modalidad:</b> ${data.modalidad || 'Gabinete propio'}</p>
-                        </div>
+                // Generar galería miniatura (si tiene más fotos o repetimos la principal para mantener el diseño)
+                const contenedorMini = document.getElementById('galeriaMiniaturas');
+                let miniaturasHTML = `<img src="${imgPrincipal}" alt="Foto" onclick="cambiarFoto(this)">`;
+                
+                // Si el sistema guarda más fotos en un array en el futuro, las podemos sumar acá. Por ahora usa la principal.
+                contenedorMini.innerHTML = miniaturasHTML;
 
-                        <div style="background: #1a1a1a; border: 1px solid rgba(223,194,133,0.15); border-radius: 8px; padding: 20px; width: 100%; text-align: left; margin-top: 10px;">
-                            <h3 style="color: #dfc285; font-family: 'Cormorant Garamond', serif; font-size: 20px; margin-top: 0;">Sobre mí y Servicios</h3>
-                            <p style="color: #ccc; font-size: 14px; line-height: 1.8; white-space: pre-line;">${data.bio || 'Atención personalizada y relax absoluto en un ambiente climatizado, discreto y de máxima pulcritud.'}</p>
-                            <p style="color: #888; font-size: 13px; margin-bottom: 0;">🕒 <b>Horarios:</b> ${data.horarios || 'Lunes a sábados de 9 a 21 hs.'}</p>
-                        </div>
+                // Configurar WhatsApp
+                if (data.whatsapp) {
+                    const btnWpp = document.getElementById('btnWhatsappPerfil');
+                    btnWpp.href = `https://wa.me/${data.whatsapp}?text=Hola%20${encodeURIComponent(data.nombre)},%20vi%20tu%20perfil%20en%20Masajistas%20Privé`;
+                    btnWpp.style.display = 'inline-flex';
+                }
 
-                        ${data.whatsapp ? `
-                            <a href="${wppLink}" target="_blank" style="background: #25d366; color: #0d0d0d; padding: 14px 30px; border-radius: 6px; font-weight: bold; text-decoration: none; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; display: inline-block; margin-top: 15px; box-shadow: 0 4px 15px rgba(37,211,102,0.4);">
-                                💬 Contactar por WhatsApp
-                            </a>
-                        ` : ''}
-
-                        <div style="margin-top: 20px;">
-                            <a href="index.html" style="color: #888; font-size: 13px; text-decoration: none;">← Volver al portal principal</a>
-                        </div>
-                    </div>
-                `;
-
-            } catch (error) {
-                console.error("Error al cargar perfil:", error);
-                contenedor.innerHTML = `<h2 style="color: #ff5555;">Error</h2><p style="color: #ccc;">No se pudo cargar la información del perfil.</p>`;
+            } catch (e) {
+                console.error("Error al cargar perfil:", e);
             }
         }
 
-        window.addEventListener('DOMContentLoaded', cargarDatosPerfil);
+        window.addEventListener('DOMContentLoaded', cargarPerfilDinamico);
+
+        function cambiarFoto(element) {
+            const fotoPrincipal = document.getElementById('fotoPrincipal');
+            fotoPrincipal.src = element.src;
+        }
     </script>
+    <script src="comentarios.js"></script>
 </body>
 </html>
