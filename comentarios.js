@@ -244,58 +244,73 @@
     }
     if (!perfilId || perfilId === "") perfilId = "general";
 
-    const contenedorDestino = document.getElementById('seccion-comentarios');
-    if (!contenedorDestino) return;
+    // Función para verificar y crear el contenedor de comentarios si aún no existe en el DOM dinámico
+    function asegurarContenedorComentarios() {
+        let contenedorDestino = document.getElementById('seccion-comentarios');
+        if (!contenedorDestino) {
+            const mainContainer = document.querySelector('main.container') || document.body;
+            contenedorDestino = document.createElement('div');
+            contenedorDestino.id = 'seccion-comentarios';
+            contenedorDestino.style.cssText = "grid-column: 1 / -1; width: 100%; box-sizing: border-box; margin-top: 30px;";
+            mainContainer.appendChild(contenedorDestino);
+        }
+        return contenedorDestino;
+    }
 
     const langInit = obtenerLangActual();
     const tInit = dictComentarios[langInit] || dictComentarios['es'];
 
-    // Inyectar estructura de la casilla de comentarios
-    contenedorDestino.innerHTML = `
-        <div style="width: 100%; box-sizing: border-box; margin: 20px auto 10px auto; padding: 22px 15px; background: #141414; border: 1px solid rgba(223, 194, 133, 0.25); border-radius: 10px; font-family: 'Montserrat', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-            <h3 style="color: #dfc285; text-align: center; font-size: 20px; margin-bottom: 20px; font-family: 'Cormorant Garamond', serif; letter-spacing: 1.5px;">${tInit.tituloSeccion}</h3>
-            
-            <div style="display: flex; flex-direction: column; gap: 12px; width: 100%; box-sizing: border-box;">
-                <div style="display: flex; align-items: center; justify-content: space-between; background: #1a1a1a; padding: 10px 15px; border-radius: 6px; border: 1px solid rgba(223, 194, 133, 0.3);">
-                    <span style="font-size: 13px; color: #dfc285; font-weight: 500;">${tInit.labelEstrellas}</span>
-                    <div class="star-rating">
-                        <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="5 estrellas">★</label>
-                        <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 estrellas">★</label>
-                        <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 estrellas">★</label>
-                        <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 estrella">★</label>
-                        <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 estrella">★</label>
+    function montarCasillaComentarios() {
+        const contenedorDestino = asegurarContenedorComentarios();
+        contenedorDestino.innerHTML = `
+            <div style="width: 100%; box-sizing: border-box; margin: 20px auto 10px auto; padding: 22px 15px; background: #141414; border: 1px solid rgba(223, 194, 133, 0.25); border-radius: 10px; font-family: 'Montserrat', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                <h3 style="color: #dfc285; text-align: center; font-size: 20px; margin-bottom: 20px; font-family: 'Cormorant Garamond', serif; letter-spacing: 1.5px;">${tInit.tituloSeccion}</h3>
+                
+                <div style="display: flex; flex-direction: column; gap: 12px; width: 100%; box-sizing: border-box;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; background: #1a1a1a; padding: 10px 15px; border-radius: 6px; border: 1px solid rgba(223, 194, 133, 0.3);">
+                        <span style="font-size: 13px; color: #dfc285; font-weight: 500;">${tInit.labelEstrellas}</span>
+                        <div class="star-rating">
+                            <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="5 estrellas">★</label>
+                            <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 estrellas">★</label>
+                            <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 estrellas">★</label>
+                            <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 estrella">★</label>
+                            <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 estrella">★</label>
+                        </div>
                     </div>
-                </div>
 
-                <input type="text" id="pAuthor" placeholder="${tInit.placeholderNombre}" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a !important; color: #fff !important; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
-                
-                <textarea id="pText" rows="3" placeholder="${tInit.placeholderTexto}" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a !important; color: #fff !important; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px; resize: vertical;"></textarea>
-                
-                <div style="display: flex; gap: 8px; align-items: center; background: #1a1a1a; padding: 10px 12px; border-radius: 6px; border: 1px solid rgba(223, 194, 133, 0.3); flex-wrap: wrap; width: 100%; box-sizing: border-box;">
-                    <button type="button" onclick="window.agregarEmojiPerfil('😊')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Sonrisa">😊</button>
-                    <button type="button" onclick="window.agregarEmojiPerfil('👍')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Pulgar arriba">👍</button>
-                    <button type="button" onclick="window.agregarEmojiPerfil('🔥')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Fuego">🔥</button>
-                    <button type="button" onclick="window.agregarEmojiPerfil('❤️')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Corazón">❤️</button>
-                    <button type="button" onclick="window.agregarEmojiPerfil('⭐')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Estrella">⭐</button>
+                    <input type="text" id="pAuthor" placeholder="${tInit.placeholderNombre}" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a !important; color: #fff !important; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
                     
-                    <label title="Adjuntar foto" style="color: #dfc285; cursor: pointer; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; background: rgba(223,194,133,0.1); width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(223, 194, 133, 0.4); margin-left: auto; transition: all 0.3s ease;">
-                        📎 <input type="file" id="pImageFile" accept="image/*" onchange="window.previewPerfilFile()" style="display:none;">
-                    </label>
+                    <textarea id="pText" rows="3" placeholder="${tInit.placeholderTexto}" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a !important; color: #fff !important; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px; resize: vertical;"></textarea>
+                    
+                    <div style="display: flex; gap: 8px; align-items: center; background: #1a1a1a; padding: 10px 12px; border-radius: 6px; border: 1px solid rgba(223, 194, 133, 0.3); flex-wrap: wrap; width: 100%; box-sizing: border-box;">
+                        <button type="button" onclick="window.agregarEmojiPerfil('😊')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Sonrisa">😊</button>
+                        <button type="button" onclick="window.agregarEmojiPerfil('👍')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Pulgar arriba">👍</button>
+                        <button type="button" onclick="window.agregarEmojiPerfil('🔥')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Fuego">🔥</button>
+                        <button type="button" onclick="window.agregarEmojiPerfil('❤️')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Corazón">❤️</button>
+                        <button type="button" onclick="window.agregarEmojiPerfil('⭐')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Estrella">⭐</button>
+                        
+                        <label title="Adjuntar foto" style="color: #dfc285; cursor: pointer; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; background: rgba(223,194,133,0.1); width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(223, 194, 133, 0.4); margin-left: auto; transition: all 0.3s ease;">
+                            📎 <input type="file" id="pImageFile" accept="image/*" onchange="window.previewPerfilFile()" style="display:none;">
+                        </label>
+                    </div>
+                    <span id="pFileName" style="font-size: 11px; color: #dfc285; font-style: italic; padding-left: 2px;"></span>
+
+                    <button onclick="window.enviarComentarioPerfil()" style="background: linear-gradient(135deg, #dfc285, #c5a059); color: #0d0d0d; border: none; padding: 14px; cursor: pointer; border-radius: 6px; font-weight: 600; width: 100% !important; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-family: 'Montserrat', sans-serif; box-shadow: 0 4px 15px rgba(223,194,133,0.25);">${tInit.btnPublicar}</button>
                 </div>
-                <span id="pFileName" style="font-size: 11px; color: #dfc285; font-style: italic; padding-left: 2px;"></span>
 
-                <button onclick="window.enviarComentarioPerfil()" style="background: linear-gradient(135deg, #dfc285, #c5a059); color: #0d0d0d; border: none; padding: 14px; cursor: pointer; border-radius: 6px; font-weight: 600; width: 100% !important; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-family: 'Montserrat', sans-serif; box-shadow: 0 4px 15px rgba(223,194,133,0.25);">${tInit.btnPublicar}</button>
-            </div>
+                <div id="pCommentsContainer" style="margin-top: 25px; width: 100%; box-sizing: border-box;">
+                    <p style="text-align: center; color: #888; font-size: 13px; font-style: italic;">${tInit.cargando}</p>
+                </div>
 
-            <div id="pCommentsContainer" style="margin-top: 25px; width: 100%; box-sizing: border-box;">
-                <p style="text-align: center; color: #888; font-size: 13px; font-style: italic;">${tInit.cargando}</p>
+                <div style="text-align: center; margin-top: 35px; font-size: 11px;">
+                    <span onclick="window.activarAdminPerfil()" style="cursor: pointer; color: #555; text-transform: uppercase; letter-spacing: 1px;" onmouseover="this.style.color='#dfc285'" onmouseout="this.style.color='#555'">Admin</span>
+                </div>
             </div>
+        `;
+    }
 
-            <div style="text-align: center; margin-top: 35px; font-size: 11px;">
-                <span onclick="window.activarAdminPerfil()" style="cursor: pointer; color: #555; text-transform: uppercase; letter-spacing: 1px;" onmouseover="this.style.color='#dfc285'" onmouseout="this.style.color='#555'">Admin</span>
-            </div>
-        </div>
-    `;
+    montarCasillaComentarios();
+    setTimeout(montarCasillaComentarios, 600); // Doble reintento por si el perfil dinámico de Firebase tarda en renderizar
 
     // Inicializar Firebase y lógica de comentarios
     if (typeof firebase === 'undefined') {
