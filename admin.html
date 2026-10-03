@@ -11,14 +11,14 @@
     <style>
         body { background: #080808; color: #e0e0e0; font-family: 'Montserrat', sans-serif; padding: 20px; }
         .admin-container { max-width: 900px; margin: 0 auto; background: rgba(22, 22, 24, 0.9); padding: 30px; border-radius: 12px; border: 1px solid rgba(223, 194, 133, 0.3); }
-        h1 { font-family: 'Cormorant Garamond', serif; color: #dfc285; text-align: center; }
+        h1 { font-family: 'Cormorant Garamond', serif; color: #dfc285; text-align: center; margin-bottom: 25px; }
         .perfil-row { display: flex; justify-content: space-between; align-items: center; background: #141414; padding: 15px; margin-bottom: 12px; border-radius: 8px; border: 1px solid rgba(223,194,133,0.15); flex-wrap: wrap; gap: 10px; }
-        .btn-accion { padding: 8px 14px; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; font-size: 11px; text-transform: uppercase; }
+        .btn-accion { padding: 10px 18px; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; font-size: 11px; text-transform: uppercase; transition: opacity 0.2s; }
+        .btn-accion:hover { opacity: 0.85; }
         .btn-activo { background: #25d366; color: #0d0d0d; }
         .btn-pausado { background: #ff5555; color: #fff; }
-        .btn-eliminar { background: #8B0000; color: #fff; }
         #loginBox { text-align: center; padding: 50px; }
-        input[type="password"] { padding: 12px; border-radius: 6px; border: 1px solid #dfc285; background: #1a1a1a; color: #fff; margin-right: 10px; }
+        input[type="password"] { padding: 12px; border-radius: 6px; border: 1px solid #dfc285; background: #1a1a1a; color: #fff; margin-right: 10px; width: 220px; }
     </style>
 </head>
 <body>
@@ -27,18 +27,24 @@
         <h1>Panel de Control Maestro</h1>
         
         <div id="loginBox">
-            <p>Ingresa la contraseña de administración:</p>
+            <p style="margin-bottom: 15px;">Ingresa la contraseña de administración:</p>
             <input type="password" id="adminPass" placeholder="Contraseña">
             <button onclick="verificarAdmin()" class="btn-accion btn-activo" style="padding: 12px 20px;">Entrar</button>
         </div>
 
-        <div id="dashboard" style="display: none; margin-top: 20px;">
-            <p style="color: #888; font-size: 13px; margin-bottom: 20px;">Perfiles detectados automáticamente desde tu página principal:</p>
-            <div id="listaPerfilesAdmin">Escaneando perfiles del índice...</div>
+        <div id="dashboard" style="display: none; margin-top: 10px;">
+            <p style="color: #888; font-size: 13px; margin-bottom: 20px;">Control en tiempo real de perfiles y estados en la plataforma:</p>
+            <div id="listaPerfilesAdmin"><p style='color: #dfc285;'>Cargando perfiles desde la base de datos...</p></div>
         </div>
     </div>
 
     <script>
+        // Lista oficial de perfiles registrados en el portal
+        const perfilesRegistrados = [
+            "jennyfer", "prada", "mariela", "daniela", "zaira", "luly", "mora", "lupita",
+            "renata", "deby", "donatella", "celeste", "mia", "sol", "pamela", "luly-sensual", "mora-sensual"
+        ];
+
         const firebaseConfig = {
             apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
             authDomain: "masajistasprivepro.firebaseapp.com",
@@ -53,58 +59,30 @@
             firebase.initializeApp(firebaseConfig);
         }
         const db = firebase.firestore();
-        let htmlOriginalIndex = "";
 
         function verificarAdmin() {
             const pass = document.getElementById('adminPass').value;
             if (pass === "prive2026") {
                 document.getElementById('loginBox').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'block';
-                escanearIndexYConstruirPanel();
+                cargarPanelMaestro();
             } else {
                 alert("Contraseña incorrecta.");
             }
         }
 
-        async function escanearIndexYConstruirPanel() {
+        async function cargarPanelMaestro() {
             const contenedor = document.getElementById('listaPerfilesAdmin');
-            contenedor.innerHTML = "<p style='color: #dfc285;'>Leyendo perfiles publicados en el índice...</p>";
 
             try {
-                const response = await fetch('index.html?' + new Date().getTime());
-                htmlOriginalIndex = await response.text();
-                
-                const parser = new DOMParser();
-                const docHtml = parser.parseFromString(htmlOriginalIndex, 'text/html');
-                
-                const links = docHtml.querySelectorAll('.card-link');
-                let perfilesDetectados = new Set();
-
-                const mapaPerfiles = {
-                    "mora": "mora-sensual",
-                    "luly": "luly-sensual"
-                };
-
-                links.forEach(link => {
-                    let href = link.getAttribute('href');
-                    if (href && href.endsWith('.html') && !href.startsWith('http')) {
-                        let nombreId = href.replace('.html', '').trim().toLowerCase();
-                        let idReal = mapaPerfiles[nombreId] || nombreId;
-                        perfilesDetectados.add(idReal);
-                    }
-                });
-
-                if (perfilesDetectados.size === 0) {
-                    contenedor.innerHTML = "<p style='color: #ff5555;'>No se encontraron perfiles en el index.</p>";
-                    return;
-                }
-
+                // Obtener visitas de la colección
                 const snapVisitas = await db.collection("estadisticas_visitas").get();
                 let visitasMap = {};
                 snapVisitas.forEach(doc => {
                     visitasMap[doc.id] = doc.data().visitas || 0;
                 });
 
+                // Obtener estados actuales de la colección config_perfiles
                 const snapConfig = await db.collection("config_perfiles").get();
                 let estadosMap = {};
                 snapConfig.forEach(doc => {
@@ -113,7 +91,7 @@
 
                 contenedor.innerHTML = "";
 
-                perfilesDetectados.forEach(idPerfil => {
+                perfilesRegistrados.forEach(idPerfil => {
                     let estado = estadosMap[idPerfil] || "activo";
                     let totalVisitas = visitasMap[idPerfil] || 0;
 
@@ -122,14 +100,13 @@
                     div.innerHTML = `
                         <div>
                             <strong style="color: #dfc285; font-size: 16px; text-transform: capitalize;">${idPerfil}</strong>
-                            <br><small style="color: #888;">Visitas totales: <b style="color:#fff;">${totalVisitas}</b> | Estado: <b style="${estado==='activo'?'color:#25d366':'color:#ff5555'}">${estado.toUpperCase()}</b></small>
+                            <br><small style="color: #888;">Visitas totales: <b style="color:#fff;">${totalVisitas}</b> | Estado en Index: <b style="${estado==='activo'?'color:#25d366':'color:#ff5555'}">${estado.toUpperCase()}</b></small>
                         </div>
-                        <div style="display: flex; gap: 8px;">
+                        <div>
                             ${estado === 'activo' 
-                                ? `<button onclick="window.cambiarEstado('${idPerfil}', 'pausado')" class="btn-accion btn-pausado">Pausar</button>` 
-                                : `<button onclick="window.cambiarEstado('${idPerfil}', 'activo')" class="btn-accion btn-activo">Activar</button>`
+                                ? `<button onclick="window.cambiarEstado('${idPerfil}', 'pausado')" class="btn-accion btn-pausado">Pausar / Ocultar</button>` 
+                                : `<button onclick="window.cambiarEstado('${idPerfil}', 'activo')" class="btn-accion btn-activo">Activar Perfil</button>`
                             }
-                            <button onclick="window.removerDelIndex('${idPerfil}')" class="btn-accion btn-eliminar">Borrar del Index</button>
                         </div>
                     `;
                     contenedor.appendChild(div);
@@ -137,7 +114,7 @@
 
             } catch (e) {
                 console.error(e);
-                contenedor.innerHTML = "<p style='color: #ff5555;'>Error al escanear los perfiles del index.</p>";
+                contenedor.innerHTML = "<p style='color: #ff5555;'>Error al cargar los datos desde Firebase.</p>";
             }
         }
 
@@ -145,58 +122,11 @@
             db.collection("config_perfiles").doc(idPerfil).set({
                 estado: nuevoEstado
             }, { merge: true }).then(() => {
-                alert(`El perfil de ${idPerfil} ahora está ${nuevoEstado}.`);
-                escanearIndexYConstruirPanel();
+                alert(`El perfil de ${idPerfil} ahora está ${nuevoEstado}. Ya se actualizó en la página principal.`);
+                cargarPanelMaestro();
             }).catch(err => {
                 console.error("Error al actualizar:", err);
                 alert("No se pudo actualizar el estado en Firebase.");
-            });
-        };
-
-        window.removerDelIndex = function(idPerfil) {
-            if (!confirm(`¿Estás seguro de quitar a ${idPerfil} del index y pausarlo?`)) return;
-
-            // Primero pausamos en Firebase
-            db.collection("config_perfiles").doc(idPerfil).set({
-                estado: "pausado"
-            }, { merge: true }).then(() => {
-                // Generamos el archivo index actualizado sin la tarjeta de este perfil
-                const parser = new DOMParser();
-                const docHtml = parser.parseFromString(htmlOriginalIndex, 'text/html');
-                
-                const links = docHtml.querySelectorAll('.card-link');
-                let tarjetaEliminada = false;
-
-                links.forEach(link => {
-                    let href = link.getAttribute('href');
-                    if (href && href.includes(idPerfil)) {
-                        link.remove();
-                        tarjetaEliminada = true;
-                    }
-                });
-
-                if (tarjetaEliminada) {
-                    const nuevoHtml = '<!DOCTYPE html>\n' + docHtml.documentElement.outerHTML;
-                    
-                    // Creamos un archivo descargable temporal para que lo reemplaces fácilmente en tu hosting
-                    const blob = new Blob([nuevoHtml], { type: 'text/html;charset=utf-8' });
-                    const url = URL.createObjectURL(blob);
-                    
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'index.html';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-
-                    alert(`¡Perfil ${idPerfil} removido del index! Se descargó tu nuevo 'index.html' limpio para que lo subas al servidor.`);
-                    escanearIndexYConstruirPanel();
-                } else {
-                    alert("No se encontró la tarjeta exacta en el HTML para eliminar.");
-                }
-            }).catch(err => {
-                console.error(err);
-                alert("Error al procesar la baja.");
             });
         };
     </script>
