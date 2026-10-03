@@ -17,6 +17,7 @@
         textarea.html-input:focus { border-color: #dfc285; outline: none; }
         input[type="text"] { width: 100%; background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px 12px; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 13px; box-sizing: border-box; }
         input[type="text"]:focus { border-color: #dfc285; outline: none; }
+        input[type="file"] { background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 8px; border-radius: 6px; width: 100%; font-size: 12px; box-sizing: border-box; cursor: pointer; }
         .btn-prive { background: #dfc285; color: #0d0d0d; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer; font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 1.5px; transition: all 0.3s; }
         .btn-prive:hover { background: #c5a86d; }
         .btn-traducir { background: rgba(223, 194, 133, 0.15); border: 1px solid #dfc285; color: #dfc285; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; margin-bottom: 15px; display: inline-flex; align-items: center; gap: 6px; }
@@ -49,7 +50,6 @@
         .metodo-panel { display: none; }
         .metodo-panel.active { display: block; }
 
-        /* Estilos del Modal de Edición */
         #modalEditar { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 99999; padding: 20px; box-sizing: border-box; }
         .modal-content { background: #141414; border: 1px solid #dfc285; border-radius: 10px; width: 100%; max-width: 700px; padding: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); max-height: 90vh; overflow-y: auto; }
         .modal-content h3 { color: #dfc285; font-family: 'Cormorant Garamond', serif; font-size: 24px; margin-top: 0; border-bottom: 1px solid rgba(223,194,133,0.2); padding-bottom: 10px; }
@@ -67,13 +67,12 @@
         <div class="card-admin">
             <h2>➕ Crear o Importar Nueva Ficha</h2>
             
-            <!-- Selector de Método -->
             <div class="metodo-selector">
-                <div id="btnMetodoMano" class="btn-metodo active" onclick="cambiarMetodo('mano')">✍️ Escribir a Mano + Traducir</div>
+                <div id="btnMetodoMano" class="btn-metodo active" onclick="cambiarMetodo('mano')">✍️ Escribir a Mano + Subir Fotos</div>
                 <div id="btnMetodoHtml" class="btn-metodo" onclick="cambiarMetodo('html')">📥 Importar Código HTML</div>
             </div>
 
-            <!-- MÉTODO 1: ESCRIBIR A MANO -->
+            <!-- MÉTODO 1: ESCRIBIR A MANO CON SUBIDA DIRECTA DE FOTOS -->
             <div id="panelMetodoMano" class="metodo-panel active">
                 <div class="form-grid">
                     <div class="form-row">
@@ -99,14 +98,18 @@
                     </div>
                 </div>
 
-                <div class="form-grid">
-                    <div class="form-row">
-                        <label>URL Foto Principal (ej. img/luly1.jpg):</label>
-                        <input type="text" id="inputFotoPrincipal" placeholder="img/luly1.jpg">
+                <!-- SECCIÓN DE SELECCIÓN DE FOTOS DIRECTO DE LA GALERÍA -->
+                <div class="form-grid" style="background: #1a1a1a; padding: 15px; border-radius: 8px; border: 1px solid #333; margin-bottom: 15px;">
+                    <div class="form-row" style="margin-bottom: 0;">
+                        <label style="color: #dfc285;">📸 Subir Foto Principal de la Galería:</label>
+                        <input type="file" id="fileFotoPrincipal" accept="image/*" onchange="subirFotoDirecta(this, 'urlFotoPrincipal')">
+                        <input type="hidden" id="urlFotoPrincipal">
+                        <div id="statusFotoPrin" style="font-size: 11px; color: #888; margin-top: 4px;"></div>
                     </div>
-                    <div class="form-row">
-                        <label>Fotos de Galería (separadas por coma):</label>
-                        <input type="text" id="inputFotosGaleria" placeholder="img/luly1.jpg, img/luly2.jpg">
+                    <div class="form-row" style="margin-bottom: 0;">
+                        <label style="color: #dfc285;">📸 Subir hasta 4 Fotos de Miniaturas:</label>
+                        <input type="file" id="fileFotosGaleria" accept="image/*" multiple onchange="subirGaleriaDirecta(this)">
+                        <div id="statusGaleria" style="font-size: 11px; color: #888; margin-top: 4px;"></div>
                     </div>
                 </div>
 
@@ -177,7 +180,7 @@
                         <div class="form-row"><label>Paragraphe 1 (FR):</label><textarea id="desc1_fr" class="html-input"></textarea></div>
                         <div class="form-row"><label>Paragraphe 2 (FR):</label><textarea id="desc2_fr" class="html-input"></textarea></div>
                         <div class="form-grid">
-                            <div class="form-row"><label>Horaires (FR):</label><input type="text" id="horarios_fr"></div>
+                            <div class="form-row"><label>Horaires (FR):</label><input type="text" id="horaires_fr"></div>
                             <div class="form-row"><label>Attention (FR):</label><input type="text" id="atencion_fr"></div>
                         </div>
                     </div>
@@ -318,6 +321,7 @@
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 
     <script>
         const firebaseConfig = {
@@ -333,6 +337,46 @@
             firebase.initializeApp(firebaseConfig);
         }
         const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        let fotosGaleriaSubidas = [];
+
+        function subirFotoDirecta(input, targetId) {
+            const file = input.files[0];
+            if (!file) return;
+            const status = document.getElementById('statusFotoPrin');
+            status.textContent = "⏳ Subiendo foto principal...";
+
+            const storageRef = storage.ref(`modelos/${Date.now()}_${file.name}`);
+            storageRef.put(file).then(snapshot => {
+                snapshot.ref.getDownloadURL().then(downloadURL => {
+                    document.getElementById(targetId).value = downloadURL;
+                    status.textContent = "✅ ¡Foto principal subida con éxito!";
+                });
+            }).catch(err => {
+                status.textContent = "❌ Error al subir la foto.";
+            });
+        }
+
+        function subirGaleriaDirecta(input) {
+            const files = input.files;
+            if (!files.length) return;
+            const status = document.getElementById('statusGaleria');
+            status.textContent = `⏳ Subiendo ${files.length} fotos...`;
+            fotosGaleriaSubidas = [];
+
+            let subidas = 0;
+            Array.from(files).forEach((file, index) => {
+                const storageRef = storage.ref(`modelos/galeria_${Date.now()}_${index}_${file.name}`);
+                storageRef.put(file).then(snapshot => {
+                    snapshot.ref.getDownloadURL().then(downloadURL => {
+                        fotosGaleriaSubidas.push(downloadURL);
+                        subidas++;
+                        status.textContent = `✅ Subidas ${subidas} de ${files.length} fotos.`;
+                    });
+                });
+            });
+        }
 
         function cambiarMetodo(metodo) {
             document.getElementById('btnMetodoMano').classList.remove('active');
@@ -406,9 +450,8 @@
 
             const categoria = document.getElementById('inputCategoria').value;
             const whatsapp = document.getElementById('inputWhatsapp').value.trim();
-            const fotoPrincipal = document.getElementById('inputFotoPrincipal').value.trim() || 'img/monograma.png';
-            const galeriaRaw = document.getElementById('inputFotosGaleria').value.trim();
-            const fotosGaleria = galeriaRaw ? galeriaRaw.split(',').map(s => s.trim()).filter(Boolean) : [fotoPrincipal];
+            const fotoPrincipal = document.getElementById('urlFotoPrincipal').value.trim() || 'img/monograma.png';
+            const fotosGaleria = fotosGaleriaSubidas.length > 0 ? fotosGaleriaSubidas : [fotoPrincipal];
 
             let traducciones = { es: {}, en: {}, pt: {}, fr: {} };
             ['es', 'en', 'pt', 'fr'].forEach(l => {
@@ -428,7 +471,7 @@
                     labelAtencion: l === 'es' ? 'Atención:' : (l === 'en' ? 'Care:' : (l === 'pt' ? 'Atendimento:' : 'Attention :')),
                     valorAtencion: document.getElementById(`atencion_${l}`).value.trim(),
                     btnWpp: l === 'es' ? 'Contactar por WhatsApp' : (l === 'en' ? 'Contact via WhatsApp' : (l === 'pt' ? 'Contatar por WhatsApp' : 'Contacter par WhatsApp')),
-                    footerLegal: "Este es un sitio exclusivo para adultos (+18)...",
+                    footerLegal: "Este é um site para adultos (+18)...",
                     footerCopy: "© 2026 Masajistas Privé. Todos os direitos reservados."
                 };
             });
@@ -675,9 +718,10 @@
             document.getElementById('inputNombre').value = '';
             document.getElementById('inputSlug').value = '';
             document.getElementById('inputWhatsapp').value = '';
-            document.getElementById('inputFotoPrincipal').value = '';
-            document.getElementById('inputFotosGaleria').value = '';
             document.getElementById('statusAdmin').textContent = '';
+            document.getElementById('statusFotoPrin').textContent = '';
+            document.getElementById('statusGaleria').textContent = '';
+            fotosGaleriaSubidas = [];
         }
 
         function toggleEstado(docId, estadoActual) {
