@@ -106,11 +106,11 @@
                 <input type="text" id="editNombre">
             </div>
             <div class="form-row">
-                <label>Zona:</label>
+                <label>Zona (ES):</label>
                 <input type="text" id="editZona">
             </div>
             <div class="form-row">
-                <label>Modalidad:</label>
+                <label>Modalidad (ES):</label>
                 <input type="text" id="editModalidad">
             </div>
             <div class="form-row">
@@ -131,7 +131,7 @@
                 <input type="text" id="editFotoPrincipal">
             </div>
             <div class="form-row">
-                <label>Descripción:</label>
+                <label>Descripción (ES):</label>
                 <textarea id="editDescripcion" class="html-input" style="height: 90px;"></textarea>
             </div>
             <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
@@ -160,7 +160,7 @@
         }
         const db = firebase.firestore();
 
-        // Escanear e importar HTML
+        // Escanear e importar HTML absorbiendo todo el objeto de traducciones original
         function procesarEscanerHTML() {
             const rawHtml = document.getElementById('htmlSourceInput').value;
             const customId = document.getElementById('customIdInput').value.trim();
@@ -180,7 +180,6 @@
                 const titleText = doc.querySelector('title')?.textContent || '';
                 const nombre = titleText.split('|')[0].trim() || 'Desconocida';
                 
-                // Si el usuario puso un ID manual (ej. luly-sensual), se respeta. Si no, se genera solo.
                 const idSlug = customId !== '' ? customId.toLowerCase().replace(/[^a-z0-9\-]/g, '') : nombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '');
 
                 const zonaEl = doc.querySelector('[data-i18n="valorZona"]') || doc.querySelector('.perfil-ubicacion strong');
@@ -203,6 +202,17 @@
                 const fotoPrincipal = doc.getElementById('fotoPrincipal')?.getAttribute('src') || 'img/monograma.png';
                 const miniaturas = Array.from(doc.querySelectorAll('.galeria-miniaturas img')).map(img => img.getAttribute('src'));
 
+                // Extraer de forma inteligente el bloque completo de traducciones del HTML original
+                const traduccionesMatch = rawHtml.match(/const traduccionesPerfil\s*=\s*({[\s\S]*?});/);
+                let traduccionesObj = {};
+                if (traduccionesMatch) {
+                    try {
+                        traduccionesObj = eval(`(${traduccionesMatch[1]})`);
+                    } catch (e) {
+                        console.error("Aviso: No se pudo evaluar el objeto de traducciones", e);
+                    }
+                }
+
                 const perfilData = {
                     nombre: nombre,
                     idSlug: idSlug,
@@ -214,6 +224,7 @@
                     whatsappLink: whatsappLink,
                     fotoPrincipal: fotoPrincipal,
                     fotosGaleria: miniaturas.length > 0 ? miniaturas : [fotoPrincipal],
+                    traducciones: traduccionesObj, // <--- Conserva las descripciones largas en ES, EN, PT y FR
                     estado: 'activa',
                     destacada: false,
                     visitas: 0,
@@ -223,7 +234,7 @@
                 db.collection("modelos_prive").doc(idSlug).set(perfilData, { merge: true })
                     .then(() => {
                         statusDiv.style.color = '#2ecc71';
-                        statusDiv.textContent = `✅ ¡Perfil de ${nombre} (ID: ${idSlug}) guardado correctamente!`;
+                        statusDiv.textContent = `✅ ¡Perfil de ${nombre} (ID: ${idSlug}) guardado con todas sus traducciones!`;
                         document.getElementById('htmlSourceInput').value = '';
                         document.getElementById('customIdInput').value = '';
                         cargarModelosAdmin();
@@ -239,7 +250,6 @@
             }
         }
 
-        // Cargar lista de modelos en tiempo real
         function cargarModelosAdmin() {
             const tbody = document.getElementById('tablaModelosBody');
             db.collection("modelos_prive").onSnapshot((snapshot) => {
@@ -286,7 +296,6 @@
             });
         }
 
-        // Funciones del Modal de Edición
         function abrirModalEditar(docId) {
             db.collection("modelos_prive").doc(docId).get().then((doc) => {
                 if (doc.exists) {
@@ -310,22 +319,36 @@
 
         function guardarEdicionPerfil() {
             const docId = document.getElementById('editDocId').value;
-            const datosActualizados = {
-                nombre: document.getElementById('editNombre').value.trim(),
-                zona: document.getElementById('editZona').value.trim(),
-                modalidad: document.getElementById('editModalidad').value.trim(),
-                categoria: document.getElementById('editCategoria').value,
-                whatsappLink: document.getElementById('editWhatsappLink').value.trim(),
-                fotoPrincipal: document.getElementById('editFotoPrincipal').value.trim(),
-                descripcion: document.getElementById('editDescripcion').value.trim(),
-                fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
-            };
+            const nuevaDesc = document.getElementById('editDescripcion').value.trim();
+            const nuevaZona = document.getElementById('editZona').value.trim();
+            const nuevaModalidad = document.getElementById('editModalidad').value.trim();
 
-            db.collection("modelos_prive").doc(docId).update(datosActualizados).then(() => {
-                alert("¡Perfil actualizado con éxito!");
-                cerrarModalEditar();
-            }).catch(err => {
-                alert("Error al actualizar: " + err.message);
+            db.collection("modelos_prive").doc(docId).get().then((doc) => {
+                let mData = doc.data();
+                // Actualizar también dentro del objeto de traducciones si existe el campo en español
+                if (!mData.traducciones) mData.traducciones = {};
+                if (!mData.traducciones.es) mData.traducciones.es = {};
+                
+                mData.traducciones.es.descPerfil = nuevaDesc;
+                mData.traducciones.es.valorZona = nuevaZona;
+                mData.traducciones.es.valorModalidad = nuevaModalidad;
+
+                const datosActualizados = {
+                    nombre: document.getElementById('editNombre').value.trim(),
+                    zona: nuevaZona,
+                    modalidad: nuevaModalidad,
+                    categoria: document.getElementById('editCategoria').value,
+                    whatsappLink: document.getElementById('editWhatsappLink').value.trim(),
+                    fotoPrincipal: document.getElementById('editFotoPrincipal').value.trim(),
+                    descripcion: nuevaDesc,
+                    traducciones: mData.traducciones,
+                    fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                db.collection("modelos_prive").doc(docId).update(datosActualizados).then(() => {
+                    alert("¡Perfil actualizado con éxito!");
+                    cerrarModalEditar();
+                });
             });
         }
 
