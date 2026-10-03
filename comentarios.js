@@ -12,7 +12,7 @@
     });
 })();
 
-// comentarios.js - Motor Global Optimizado con Firebase Firestore y Visor de Fotos
+// comentarios.js - Motor Global Optimizado con Firebase, Visor Táctil y Comentarios
 (function() {
     const dictComentarios = {
         es: {
@@ -81,7 +81,7 @@
         return localStorage.getItem('idiomaPrive') || 'es';
     }
 
-    // 1. Blindaje contra click derecho en imágenes
+    // 1. Blindaje contra click derecho en imágenes y atajos
     document.addEventListener('contextmenu', (e) => {
         if (e.target.tagName === 'IMG') {
             e.preventDefault();
@@ -96,7 +96,7 @@
         }
     });
 
-    // Inyectar estilos visuales necesarios (Lightbox y Estrellas)
+    // Inyectar estilos visuales necesarios (Lightbox, Estrellas y Seguridad)
     const styleAnim = document.createElement('style');
     styleAnim.innerHTML = `
         img {
@@ -113,7 +113,6 @@
             justify-content: center;
             align-items: center;
             backdrop-filter: blur(12px);
-            cursor: zoom-out;
             user-select: none;
             -webkit-user-select: none;
         }
@@ -133,45 +132,108 @@
     `;
     document.head.appendChild(styleAnim);
 
-    // 2. Visor de Pantalla Completa (Lightbox Dinámico Global)
-    function inicializarVisorFotos() {
+    // 2. Visor de Pantalla Completa Táctil (Swipe y Flechas)
+    function inicializarVisorFotosDinamico() {
         let lightbox = document.getElementById('priveLightbox');
         if (!lightbox) {
             lightbox = document.createElement('div');
             lightbox.id = 'priveLightbox';
+            lightbox.style.cssText = `
+                display: none;
+                position: fixed;
+                top: 0; left: 0; width: 100vw; height: 100vh;
+                background: rgba(0, 0, 0, 0.96) !important;
+                z-index: 9999999 !important;
+                justify-content: center;
+                align-items: center;
+                backdrop-filter: blur(12px);
+                user-select: none;
+                -webkit-user-select: none;
+            `;
             lightbox.innerHTML = `
-                <div style="position: relative; display: flex; justify-content: center; align-items: center; max-width: 90vw; max-height: 85vh;">
-                    <img id="priveLightboxImg" style="display: block; max-width: 90vw; max-height: 85vh; border-radius: 8px; border: 1px solid rgba(223,194,133,0.4); box-shadow: 0 20px 50px rgba(0,0,0,0.95); object-fit: contain; pointer-events: none;">
-                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 180px; height: 80px; background-image: url('img/logo.png'); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: 0.4; pointer-events: none; z-index: 10000000;"></div>
+                <div style="position: relative; display: flex; justify-content: center; align-items: center; max-width: 90vw; max-height: 85vh; width: 100%;">
+                    <button id="priveLbPrev" style="position: absolute; left: 10px; background: rgba(0,0,0,0.6); border: 1px solid #dfc285; color: #dfc285; font-size: 24px; padding: 10px 15px; cursor: pointer; border-radius: 50%; z-index: 10000001; outline: none;">&#10094;</button>
+                    <img id="priveLightboxImg" style="display: block; max-width: 80vw; max-height: 85vh; border-radius: 8px; border: 1px solid rgba(223,194,133,0.4); box-shadow: 0 20px 50px rgba(0,0,0,0.95); object-fit: contain; pointer-events: none;">
+                    <button id="priveLbNext" style="position: absolute; right: 10px; background: rgba(0,0,0,0.6); border: 1px solid #dfc285; color: #dfc285; font-size: 24px; padding: 10px 15px; cursor: pointer; border-radius: 50%; z-index: 10000001; outline: none;">&#10095;</button>
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 180px; height: 80px; background-image: url('img/logo.png'); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: 0.3; pointer-events: none; z-index: 10000000;"></div>
                 </div>
+                <button id="priveLbClose" style="position: absolute; top: 20px; right: 25px; background: none; border: none; color: #dfc285; font-size: 36px; cursor: pointer; z-index: 10000002;">&times;</button>
             `;
             document.body.appendChild(lightbox);
-            lightbox.onclick = () => { lightbox.style.display = 'none'; };
+
+            document.getElementById('priveLbClose').onclick = () => { lightbox.style.display = 'none'; };
+            lightbox.onclick = (e) => { if (e.target.id === 'priveLightbox') lightbox.style.display = 'none'; };
         }
 
-        // Buscar tanto la foto principal estática como la dinámica generada por Firebase
-        const fotosConVisor = document.querySelectorAll('.perfil-galeria-grid .foto-principal, img#fotoPrincipal, .grid-perfiles .card-image img, .story-ring img');
+        const miniaturas = document.querySelectorAll('.galeria-miniaturas img, .perfil-galeria-grid img');
+        let listaUrlsFotos = [];
+        miniaturas.forEach(img => {
+            if (img.src && !listaUrlsFotos.includes(img.src)) {
+                listaUrlsFotos.push(img.src);
+            }
+        });
+
+        if (listaUrlsFotos.length === 0) {
+            const fotoPrin = document.getElementById('fotoPrincipal');
+            if (fotoPrin) listaUrlsFotos.push(fotoPrin.src);
+        }
+
+        let indiceLightboxActual = 0;
+
+        function actualizarImagenLightbox(index) {
+            if (listaUrlsFotos.length === 0) return;
+            if (index < 0) index = listaUrlsFotos.length - 1;
+            if (index >= listaUrlsFotos.length) index = 0;
+            indiceLightboxActual = index;
+            
+            const lbImg = document.getElementById('priveLightboxImg');
+            if (lbImg) {
+                lbImg.style.opacity = '0.3';
+                setTimeout(() => {
+                    lbImg.src = listaUrlsFotos[indiceLightboxActual];
+                    lbImg.style.opacity = '1';
+                }, 100);
+            }
+        }
+
+        const btnPrev = document.getElementById('priveLbPrev');
+        const btnNext = document.getElementById('priveLbNext');
+        if(btnPrev) btnPrev.onclick = (e) => { e.stopPropagation(); actualizarImagenLightbox(indiceLightboxActual - 1); };
+        if(btnNext) btnNext.onclick = (e) => { e.stopPropagation(); actualizarImagenLightbox(indiceLightboxActual + 1); };
+
+        let touchStartX = 0;
+        lightbox.ontouchstart = (e) => { touchStartX = e.changedTouches[0].screenX; };
+        lightbox.ontouchend = (e) => {
+            let touchEndX = e.changedTouches[0].screenX;
+            if (touchEndX < touchStartX - 40) {
+                actualizarImagenLightbox(indiceLightboxActual + 1);
+            } else if (touchEndX > touchStartX + 40) {
+                actualizarImagenLightbox(indiceLightboxActual - 1);
+            }
+        };
+
+        const fotosConVisor = document.querySelectorAll('.perfil-galeria-grid .foto-principal, img#fotoPrincipal, .galeria-miniaturas img');
         fotosConVisor.forEach(img => {
             img.style.cursor = 'zoom-in';
-            // Evitar duplicar eventos
-            if (!img.getAttribute('data-visor-activo')) {
-                img.setAttribute('data-visor-activo', 'true');
+            if (!img.getAttribute('data-visor-vinculado')) {
+                img.setAttribute('data-visor-vinculado', 'true');
                 img.onclick = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    const lb = document.getElementById('priveLightbox');
-                    const lbImg = document.getElementById('priveLightboxImg');
-                    lbImg.src = this.src;
-                    lb.style.display = 'flex';
+                    const urlActual = this.src;
+                    let idxEncontrado = listaUrlsFotos.indexOf(urlActual);
+                    indiceLightboxActual = idxEncontrado !== -1 ? idxEncontrado : 0;
+                    
+                    actualizarImagenLightbox(indiceLightboxActual);
+                    lightbox.style.display = 'flex';
                 };
             }
         });
     }
 
-    // Ejecutar de forma continua y segura para asegurar que detecte la foto principal cargada dinámicamente
     window.addEventListener('DOMContentLoaded', () => {
-        setTimeout(inicializarVisorFotos, 400);
-        setTimeout(inicializarVisorFotos, 1200);
+        setTimeout(inicializarVisorFotosDinamico, 500);
+        setTimeout(inicializarVisorFotosDinamico, 1500);
     });
 
     // Detectar ID actual de la masajista
@@ -329,7 +391,7 @@
 
             if (snapshot.empty) {
                 container.innerHTML = `<p style='color: #777; font-size: 13px; text-align: center; font-style: italic;'>${t.sinExperiencias}</p>`;
-                inicializarVisorFotos();
+                inicializarVisorFotosDinamico();
                 return;
             }
 
@@ -374,7 +436,7 @@
                 container.appendChild(div);
             });
 
-            inicializarVisorFotos();
+            inicializarVisorFotosDinamico();
         });
 
         window.enviarComentarioPerfil = function() {
