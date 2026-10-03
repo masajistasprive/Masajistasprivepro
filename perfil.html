@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="perfilTitle">Daniela | Masajistas Privé</title>
+    <title id="perfil-title">Perfil | Masajistas Privé</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -16,7 +16,9 @@
             <img src="img/monograma.png" alt="Monograma" class="header-monograma">
         </div>
         <div class="header-center">
-            <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">
+            <a href="index.html">
+                <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">
+            </a>
         </div>
         <div class="header-right" style="display: flex; align-items: center; gap: 10px;">
             <button id="btn-idioma" onclick="cambiarIdiomaPerfil()" style="background: rgba(223, 194, 133, 0.12); border: 1px solid #dfc285; color: #dfc285; padding: 7px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; font-family: 'Montserrat', sans-serif; letter-spacing: 1.5px; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.4);">
@@ -28,51 +30,10 @@
         </div>
     </header>
 
-    <main class="container perfil-container">
-        
-        <!-- Galería de 4 Fotos -->
-        <div class="perfil-galeria-grid">
-            <img src="img/daniela1.jpg" alt="Daniela" class="foto-principal" id="fotoPrincipal">
-            <div class="galeria-miniaturas">
-                <img src="img/daniela1.jpg" alt="Daniela 1" onclick="cambiarFoto(this)">
-                <img src="img/daniela2.jpg" alt="Daniela 2" onclick="cambiarFoto(this)">
-                <img src="img/daniela3.jpg" alt="Daniela 3" onclick="cambiarFoto(this)">
-                <img src="img/daniela4.jpg" alt="Daniela 4" onclick="cambiarFoto(this)">
-            </div>
+    <main class="container perfil-container" id="perfil-content-box">
+        <div style="text-align: center; color: #dfc285; padding: 50px 0; font-family: 'Montserrat', sans-serif;">
+            Cargando perfil...
         </div>
-
-        <!-- Información de Daniela -->
-        <div class="perfil-info">
-            <div class="perfil-titulo-seccion">
-                <h2>Daniela</h2>
-                <span class="badge-verificado" data-i18n="badgeVerificado">✓ Privé Verificado</span>
-            </div>
-
-            <p class="perfil-ubicacion">📍 <span data-i18n="labelZona">Zona:</span> <strong data-i18n="valorZona">Microcentro CABA</strong></p>
-            <p class="perfil-modalidad">🏠 <span data-i18n="labelModalidad">Modalidad:</span> <strong data-i18n="valorModalidad">Departamento propio</strong></p>
-
-            <div class="perfil-descripcion">
-                <h3 data-i18n="tituloSobreMi">Sobre mí y Servicios</h3>
-                <p data-i18n="descPerfil1">Te recibo en un espacio privado, limpio, cómodo y totalmente discreto. Brindo masajes relajantes, descontracturantes, deportivos y sensuales, con una atención cálida, respetuosa y personalizada.</p>
-                <p style="margin-top: 0.5rem;" data-i18n="descPerfil2">Cada sesión está pensada para ayudarte a liberar tensiones, desconectar del estrés y disfrutar de un momento único de bienestar. La experiencia se completa con un relajante relax manual.</p>
-            </div>
-
-            <div class="perfil-detalles">
-                <div class="detalle-item">
-                    <span data-i18n="labelHorarios">Horarios:</span> <span data-i18n="valorHorarios">Lunes a sábado de 11 a 19 hs.</span>
-                </div>
-                <div class="detalle-item">
-                    <span data-i18n="labelAtencion">Atención:</span> <span data-i18n="valorAtencion">Tu comodidad, privacidad y satisfacción son mi prioridad.</span>
-                </div>
-            </div>
-
-            <a href="https://wa.me/5491124983744?text=Hola%20Daniela,%20vi%20tu%20perfil%20en%20Masajistas%20Privé" target="_blank" rel="noopener noreferrer" class="btn-whatsapp" id="btnWhatsappDaniela">
-                💬 <span data-i18n="btnWpp">Contactar por WhatsApp</span>
-            </a>
-        </div>
-
-        <div id="seccion-comentarios"></div>
-
     </main>
 
     <footer class="footer">
@@ -80,92 +41,37 @@
         <p class="copyright" data-i18n="footerCopy">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
     </footer>
 
-    <!-- Firebase SDK para control de estado -->
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
-    <!-- Motor de Traducción de Perfil y Verificación de Estado -->
     <script>
-        const traduccionesPerfil = {
-            es: {
-                perfilTitle: "Daniela | Masajistas Privé",
-                btnVolver: "← Volver",
-                badgeVerificado: "✓ Privé Verificado",
-                labelZona: "Zona:",
-                valorZona: "Microcentro CABA",
-                labelModalidad: "Modalidad:",
-                valorModalidad: "Departamento propio",
-                tituloSobreMi: "Sobre mí y Servicios",
-                descPerfil1: "Te recibo en un espacio privado, limpio, cómodo y totalmente discreto. Brindo masajes relajantes, descontracturantes, deportivos y sensuales, con una atención cálida, respetuosa y personalizada.",
-                descPerfil2: "Cada sesión está pensada para ayudarte a liberar tensiones, desconectar del estrés y disfrutar de un momento único de bienestar. La experiencia se completa con un relajante relax manual.",
-                labelHorarios: "Horarios:",
-                valorHorarios: "Lunes a sábado de 11 a 19 hs.",
-                labelAtencion: "Atención:",
-                valorAtencion: "Tu comodidad, privacidad y satisfacción son mi prioridad.",
-                btnWpp: "Contactar por WhatsApp",
-                footerLegal: "Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.",
-                footerCopy: "© 2026 Masajistas Privé. Todos los derechos reservados."
-            },
-            en: {
-                perfilTitle: "Daniela | Masajistas Privé",
-                btnVolver: "← Back",
-                badgeVerificado: "✓ Privé Verified",
-                labelZona: "Area:",
-                valorZona: "Downtown Buenos Aires",
-                labelModalidad: "Modality:",
-                valorModalidad: "Private apartment",
-                tituloSobreMi: "About Me and Services",
-                descPerfil1: "I welcome you to a private, clean, comfortable, and completely discreet space. I provide relaxing, decontracturing, sports, and sensual massages with warm, respectful, and personalized care.",
-                descPerfil2: "Each session is designed to help you release tension, disconnect from stress, and enjoy a unique moment of well-being. The experience is completed with a relaxing manual release.",
-                labelHorarios: "Hours:",
-                valorHorarios: "Monday to Saturday from 11 a.m. to 7 p.m.",
-                labelAtencion: "Care:",
-                valorAtencion: "Your comfort, privacy, and satisfaction are my priority.",
-                btnWpp: "Contact via WhatsApp",
-                footerLegal: "This is an adult site (+18). Advertisers have no employment relationship with the portal.",
-                footerCopy: "© 2026 Masajistas Privé. All rights reserved."
-            },
-            pt: {
-                perfilTitle: "Daniela | Masajistas Privé",
-                btnVolver: "← Voltar",
-                badgeVerificado: "✓ Privé Verificado",
-                labelZona: "Zona:",
-                valorZona: "Microcentro CABA",
-                labelModalidade: "Modalidade:",
-                valorModalidad: "Apartamento próprio",
-                tituloSobreMi: "Sobre mim e Serviços",
-                descPerfil1: "Recebo você em um espaço privado, limpo, confortável e totalmente discreto. Ofereço massagens relaxantes, descontraentes, esportivas e sensuais, com atendimento caloroso, respeitoso e personalizado.",
-                descPerfil2: "Cada sessão foi pensada para ajudar você a liberar tensões, desconectar do estresse e desfrutar de um momento único de bem-estar. A experiência é complementada com um relaxamento manual.",
-                labelHorarios: "Horários:",
-                valorHorarios: "Segunda a sábado das 11h às 19h.",
-                labelAtencion: "Atendimento:",
-                valorAtencion: "Seu conforto, privacidade e satisfação são minha prioridade.",
-                btnWpp: "Contatar por WhatsApp",
-                footerLegal: "Este é um site para adultos (+18). Os anunciantes não têm vínculo empregatício com o portal.",
-                footerCopy: "© 2026 Masajistas Privé. Todos os direitos reservados."
-            },
-            fr: {
-                perfilTitle: "Daniela | Masajistas Privé",
-                btnVolver: "← Retour",
-                badgeVerificado: "✓ Privé Vérifié",
-                labelZona: "Zone :",
-                valorZona: "Microcentro CABA",
-                labelModalidad: "Modalité :",
-                valorModalidad: "Appartement privé",
-                tituloSobreMi: "À propos de moi et Services",
-                descPerfil1: "Je vous reçois dans un espace privé, propre, confortable et totalement discret. Je propose des massages relaxants, décontracturants, sportifs et sensuels avec un service chaleureux et personnalisé.",
-                descPerfil2: "Chaque séance est conçue pour vous aider à relâcher les tensions, déconnecter du stress et profiter d'un moment unique de bien-être. L'expérience se complète par un relâchement manuel relaxant.",
-                labelHorarios: "Horaires :",
-                valorHorarios: "Lundi au samedi de 11h00 à 19h00.",
-                labelAtencion: "Attention :",
-                valorAtencion: "Votre confort, votre intimité et votre satisfaction sont ma priorité.",
-                btnWpp: "Contacter par WhatsApp",
-                footerLegal: "Ceci est un site pour adultes (+18). Les annonceurs n'ont aucun lien d'emploi avec le portail.",
-                footerCopy: "© 2026 Masajistas Privé. Tous droits réservés."
-            }
+        const firebaseConfig = {
+            apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
+            authDomain: "masajistasprivepro.firebaseapp.com",
+            projectId: "masajistasprivepro",
+            storageBucket: "masajistasprivepro.firebasestorage.app",
+            messagingSenderId: "768677270509",
+            appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
+            measurementId: "G-SBN70C32JF"
         };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const perfilId = urlParams.get('id');
 
         let idiomaPerfil = localStorage.getItem('idiomaPrive') || 'es';
+        let datosModeloActual = null;
+
+        const etiquetasIdiomas = {
+            es: { btnVolver: "← Volver", badgeVerificado: "✓ Privé Verificado", labelZona: "Zona:", labelModalidad: "Modalidad:", tituloDesc: "Sobre mí y Servicios", btnWpp: "Contactar por WhatsApp", footerLegal: "Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.", footerCopy: "© 2026 Masajistas Privé. Todos los derechos reservados." },
+            en: { btnVolver: "← Back", badgeVerificado: "✓ Privé Verified", labelZona: "Area:", labelModalidad: "Modality:", tituloDesc: "About Me and Services", btnWpp: "Contact via WhatsApp", footerLegal: "This is an adult site (+18). Advertisers have no employment relationship with the portal.", footerCopy: "© 2026 Masajistas Privé. All rights reserved." },
+            pt: { btnVolver: "← Voltar", badgeVerificado: "✓ Privé Verificado", labelZona: "Zona:", labelModalidade: "Modalidade:", tituloDesc: "Sobre mim e Serviços", btnWpp: "Contatar por WhatsApp", footerLegal: "Este é um site para adultos (+18). Os anunciantes não têm vínculo empregatício com o portal.", footerCopy: "© 2026 Masajistas Privé. Todos os direitos reservados." },
+            fr: { btnVolver: "← Retour", badgeVerificado: "✓ Privé Vérifié", labelZona: "Zone :", labelModalidad: "Modalité :", tituloDesc: "À propos de moi et Services", btnWpp: "Contacter par WhatsApp", footerLegal: "Ceci est un site pour adultes (+18). Les annonceurs n'ont aucun lien d'emploi avec le portail.", footerCopy: "© 2026 Masajistas Privé. Tous droits réservés." }
+        };
 
         function aplicarIdiomaPerfil(lang) {
             idiomaPerfil = lang;
@@ -179,16 +85,15 @@
                 else btn.innerHTML = '🇦🇷 ES';
             }
 
+            const labels = etiquetasIdiomas[lang] || etiquetasIdiomas['es'];
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const clave = el.getAttribute('data-i18n');
-                if (traduccionesPerfil[lang] && traduccionesPerfil[lang][clave] !== undefined) {
-                    if(el.tagName === 'TITLE') {
-                        document.title = traduccionesPerfil[lang][clave];
-                    } else {
-                        el.textContent = traduccionesPerfil[lang][clave];
-                    }
-                }
+                if (labels[clave]) el.textContent = labels[clave];
             });
+
+            if (datosModeloActual) {
+                renderizarPerfil(datosModeloActual);
+            }
         }
 
         function cambiarIdiomaPerfil() {
@@ -198,42 +103,119 @@
             else aplicarIdiomaPerfil('es');
         }
 
-        function verificarEstadoPerfilFirebase() {
-            try {
-                if (!firebase.apps.length) {
-                    firebase.initializeApp({
-                        apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
-                        authDomain: "masajistasprivepro.firebaseapp.com",
-                        projectId: "masajistasprivepro",
-                        storageBucket: "masajistasprivepro.firebasestorage.app",
-                        messagingSenderId: "768677270509",
-                        appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
-                        measurementId: "G-SBN70C32JF"
-                    });
+        function cargarPerfilDinamico() {
+            const container = document.getElementById('perfil-content-box');
+
+            if (!perfilId) {
+                container.innerHTML = `<h2 style="color:#e74c3c; text-align:center;">Perfil no encontrado</h2><p style="text-align:center;"><a href="index.html" style="color:#dfc285;">Volver al inicio</a></p>`;
+                return;
+            }
+
+            const docRef = db.collection("modelos_prive").doc(perfilId);
+
+            // Registrar visita interna de forma invisible
+            const visitaKey = `visitaRegistrada_${perfilId}`;
+            if (!sessionStorage.getItem(visitaKey)) {
+                sessionStorage.setItem(visitaKey, "true");
+                docRef.update({
+                    visitas: firebase.firestore.FieldValue.increment(1)
+                }).catch(err => {});
+            }
+
+            docRef.get().then((doc) => {
+                if (!doc.exists) {
+                    container.innerHTML = `<h2 style="color:#e74c3c; text-align:center;">El perfil solicitado no existe o fue removido.</h2><p style="text-align:center;"><a href="index.html" style="color:#dfc285;">Volver al inicio</a></p>`;
+                    return;
                 }
-                const db = firebase.firestore();
-                db.collection("config_perfiles").doc("daniela").get().then((doc) => {
-                    if (doc.exists && doc.data().estado === 'pausado') {
-                        const btnWpp = document.getElementById('btnWhatsappDaniela');
-                        if (btnWpp) btnWpp.style.display = 'none';
-                    }
+
+                datosModeloActual = doc.data();
+                renderizarPerfil(datosModeloActual);
+            }).catch(error => {
+                container.innerHTML = `<p style="color:#e74c3c; text-align:center;">Error al cargar el perfil.</p>`;
+            });
+        }
+
+        function renderizarPerfil(m) {
+            const container = document.getElementById('perfil-content-box');
+            const lang = idiomaPerfil;
+            const labels = etiquetasIdiomas[lang] || etiquetasIdiomas['es'];
+
+            // Extraer traducciones completas desde Firebase según el idioma seleccionado
+            const traduccionesModelo = m.traducciones || {};
+            const langData = traduccionesModelo[lang] || traduccionesModelo['es'] || {};
+
+            const zonaTexto = langData.valorZona || m.zona || '';
+            const modalidadTexto = langData.valorModalidad || m.modalidad || '';
+            
+            // Unir descripciones largas si existen en el diccionario de la modelo (descPerfil1 + descPerfil2) o usar la descripción general
+            let descripcionTexto = '';
+            if (langData.descPerfil1) {
+                descripcionTexto = langData.descPerfil1;
+                if (langData.descPerfil2) descripcionTexto += '\n\n' + langData.descPerfil2;
+            } else {
+                descripcionTexto = langData.descPerfil || m.descripcion || 'Atención personalizada en ambiente climatizado y privado.';
+            }
+
+            const ocultarWpp = m.estado === 'pausado' ? 'display: none;' : '';
+
+            let miniaturasHTML = '';
+            if (m.fotosGaleria && m.fotosGaleria.length > 0) {
+                m.fotosGaleria.forEach(fotoUrl => {
+                    miniaturasHTML += `<img src="${fotoUrl}" alt="${m.nombre}" onclick="cambiarFoto(this)">`;
                 });
-            } catch (e) {
-                console.error("Error verificando estado:", e);
+            } else {
+                miniaturasHTML = `<img src="${m.fotoPrincipal}" alt="${m.nombre}" onclick="cambiarFoto(this)">`;
+            }
+
+            container.innerHTML = `
+                <!-- Galería de Fotos -->
+                <div class="perfil-galeria-grid">
+                    <img src="${m.fotoPrincipal}" alt="${m.nombre}" class="foto-principal" id="fotoPrincipal">
+                    <div class="galeria-miniaturas">
+                        ${miniaturasHTML}
+                    </div>
+                </div>
+
+                <!-- Información de la Modelo -->
+                <div class="perfil-info">
+                    <div class="perfil-titulo-seccion">
+                        <h2>${m.nombre}</h2>
+                        <span class="badge-verificado">${labels.badgeVerificado}</span>
+                    </div>
+
+                    <p class="perfil-ubicacion">📍 ${labels.labelZona} <strong>${zonaTexto}</strong></p>
+                    <p class="perfil-modalidad">🏠 ${labels.labelModalidad} <strong>${modalidadTexto}</strong></p>
+
+                    <div class="perfil-descripcion">
+                        <h3>${labels.tituloDesc}</h3>
+                        <p style="white-space: pre-line;">${descripcionTexto}</p>
+                    </div>
+
+                    <a href="${m.whatsappLink || 'https://wa.me/' + m.whatsapp}" target="_blank" rel="noopener noreferrer" class="btn-whatsapp" style="${ocultarWpp}">
+                        💬 <span>${labels.btnWpp}</span>
+                    </a>
+                </div>
+
+                <!-- Casilla de Comentarios / Experiencias -->
+                <div id="seccion-comentarios" style="grid-column: 1 / -1; margin-top: 30px;"></div>
+            `;
+
+            document.getElementById('perfil-title').textContent = `${m.nombre} | Masajistas Privé`;
+        }
+
+        function cambiarFoto(element) {
+            const fotoPrincipal = document.getElementById('fotoPrincipal');
+            if (fotoPrincipal) {
+                fotoPrincipal.src = element.src;
             }
         }
 
         window.addEventListener('DOMContentLoaded', () => {
             aplicarIdiomaPerfil(idiomaPerfil);
-            verificarEstadoPerfilFirebase();
+            cargarPerfilDinamico();
         });
-
-        function cambiarFoto(element) {
-            const fotoPrincipal = document.getElementById('fotoPrincipal');
-            fotoPrincipal.src = element.src;
-        }
     </script>
-    
     <script src="comentarios.js"></script>
+
 </body>
 </html>
