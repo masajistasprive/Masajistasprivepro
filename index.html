@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="main-title">Masajistas Privé | Portal Exclusivo</title>
-    <!-- VERSIÓN ORIGINAL RESTAURADA Y COMPLETA -->
+    <!-- VERSIÓN ORIGINAL CONECTADA A FIREBASE PARA FILTRAR PAUSADOS -->
     <link rel="stylesheet" href="css/style.css?v=3.8">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -64,23 +64,23 @@
     <div class="destacadas-container-wrapper">
         <h3 class="destacadas-titulo" data-i18n="destacadasTitulo">Destacadas</h3>
         <div class="stories-container">
-            <a href="jennyfer.html" class="story-item">
+            <a href="jennyfer.html" class="story-item" data-perfilid="jennyfer">
                 <div class="story-ring"><img src="img/jennyfer1.jpg" alt="Jennyfer"></div>
                 <span>Jennyfer</span>
             </a>
-            <a href="deby.html" class="story-item">
+            <a href="deby.html" class="story-item" data-perfilid="deby">
                 <div class="story-ring"><img src="img/deby1.jpg" alt="Deby"></div>
                 <span>Deby</span>
             </a>
-            <a href="prada.html" class="story-item">
+            <a href="prada.html" class="story-item" data-perfilid="prada">
                 <div class="story-ring"><img src="img/prada1.jpg" alt="Prada"></div>
                 <span>Prada</span>
             </a>
-            <a href="lupita.html" class="story-item">
+            <a href="lupita.html" class="story-item" data-perfilid="lupita">
                 <div class="story-ring"><img src="img/lupita1.jpg" alt="Lupita"></div>
                 <span>Lupita</span>
             </a>
-            <a href="sol.html" class="story-item">
+            <a href="sol.html" class="story-item" data-perfilid="sol">
                 <div class="story-ring"><img src="img/sol1.jpg" alt="Sol"></div>
                 <span>Sol</span>
             </a>
@@ -103,7 +103,7 @@
         <!-- Sección Terapéuticas -->
         <h2 class="section-heading" data-section="terapeuticas" data-i18n="seccionTerapeuticas">Masajistas Terapéuticas</h2>
         <div class="grid-perfiles" id="grid-terapeuticas">
-            <a href="jennyfer.html" class="card-link" data-categoria="terapeuticas">
+            <a href="jennyfer.html" class="card-link" data-categoria="terapeuticas" data-perfilid="jennyfer">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/jennyfer1.jpg" alt="Jennyfer" loading="lazy">
@@ -116,7 +116,7 @@
                     </div>
                 </article>
             </a>
-            <a href="prada.html" class="card-link" data-categoria="terapeuticas">
+            <a href="prada.html" class="card-link" data-categoria="terapeuticas" data-perfilid="prada">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/prada1.jpg" alt="Prada" loading="lazy">
@@ -129,7 +129,7 @@
                     </div>
                 </article>
             </a>
-            <a href="mariela.html" class="card-link" data-categoria="terapeuticas">
+            <a href="mariela.html" class="card-link" data-categoria="terapeuticas" data-perfilid="mariela">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/mariela5.jpg" alt="Mariela" loading="lazy">
@@ -142,7 +142,7 @@
                     </div>
                 </article>
             </a>
-            <a href="daniela.html" class="card-link" data-categoria="terapeuticas">
+            <a href="daniela.html" class="card-link" data-categoria="terapeuticas" data-perfilid="daniela">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/daniela1.jpg" alt="Daniela" loading="lazy">
@@ -155,7 +155,7 @@
                     </div>
                 </article>
             </a>
-            <a href="zaira.html" class="card-link" data-categoria="terapeuticas">
+            <a href="zaira.html" class="card-link" data-categoria="terapeuticas" data-perfilid="zaira">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/zaira1.jpg" alt="Zaira" loading="lazy">
@@ -168,7 +168,7 @@
                     </div>
                 </article>
             </a>
-            <a href="luly.html" class="card-link" data-categoria="terapeuticas">
+            <a href="luly.html" class="card-link" data-categoria="terapeuticas" data-perfilid="luly">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/luly1.jpg" alt="Luly" loading="lazy">
@@ -181,7 +181,7 @@
                     </div>
                 </article>
             </a>
-            <a href="mora.html" class="card-link" data-categoria="terapeuticas">
+            <a href="mora.html" class="card-link" data-categoria="terapeuticas" data-perfilid="mora">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/mora1.jpg" alt="Mora" loading="lazy">
@@ -194,7 +194,7 @@
                     </div>
                 </article>
             </a>
-            <a href="lupita.html" class="card-link" data-categoria="terapeuticas">
+            <a href="lupita.html" class="card-link" data-categoria="terapeuticas" data-perfilid="lupita">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/lupita1.jpg" alt="Lupita" loading="lazy">
@@ -221,7 +221,7 @@
         <!-- Sección Sensuales -->
         <h2 class="section-heading" data-section="sensuales" style="margin-top: 2rem;" data-i18n="seccionSensuales">Masajistas Sensuales</h2>
         <div class="grid-perfiles" id="grid-sensuales">
-            <a href="renata.html" class="card-link" data-categoria="sensuales">
+            <a href="renata.html" class="card-link" data-categoria="sensuales" data-perfilid="renata">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/renata1.jpg" alt="Renata" loading="lazy">
@@ -234,7 +234,7 @@
                     </div>
                 </article>
             </a>
-            <a href="deby.html" class="card-link" data-categoria="sensuales">
+            <a href="deby.html" class="card-link" data-categoria="sensuales" data-perfilid="deby">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/deby1.jpg" alt="Deby" loading="lazy">
@@ -247,7 +247,7 @@
                     </div>
                 </article>
             </a>
-            <a href="donatella.html" class="card-link" data-categoria="sensuales">
+            <a href="donatella.html" class="card-link" data-categoria="sensuales" data-perfilid="donatella">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/donatella1.jpg" alt="Donatella" loading="lazy">
@@ -260,7 +260,7 @@
                     </div>
                 </article>
             </a>
-            <a href="celeste.html" class="card-link" data-categoria="sensuales">
+            <a href="celeste.html" class="card-link" data-categoria="sensuales" data-perfilid="celeste">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/celeste1.jpg" alt="Celeste" loading="lazy">
@@ -273,7 +273,7 @@
                     </div>
                 </article>
             </a>
-            <a href="mia.html" class="card-link" data-categoria="sensuales">
+            <a href="mia.html" class="card-link" data-categoria="sensuales" data-perfilid="mia">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/mia1.jpg" alt="Mía" loading="lazy">
@@ -286,7 +286,7 @@
                     </div>
                 </article>
             </a>
-            <a href="sol.html" class="card-link" data-categoria="sensuales">
+            <a href="sol.html" class="card-link" data-categoria="sensuales" data-perfilid="sol">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/sol1.jpg" alt="Sol" loading="lazy">
@@ -299,7 +299,7 @@
                     </div>
                 </article>
             </a>
-            <a href="pamela.html" class="card-link" data-categoria="sensuales">
+            <a href="pamela.html" class="card-link" data-categoria="sensuales" data-perfilid="pamela">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/pamela3.jpg" alt="Pamela" loading="lazy">
@@ -312,7 +312,7 @@
                     </div>
                 </article>
             </a>
-            <a href="luly-sensual.html" class="card-link" data-categoria="sensuales">
+            <a href="luly-sensual.html" class="card-link" data-categoria="sensuales" data-perfilid="luly-sensual">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/luly5.jpg" alt="Luly" loading="lazy">
@@ -325,7 +325,7 @@
                     </div>
                 </article>
             </a>
-            <a href="mora-sensual.html" class="card-link" data-categoria="sensuales">
+            <a href="mora-sensual.html" class="card-link" data-categoria="sensuales" data-perfilid="mora-sensual">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/mora5.jpg" alt="Mora" loading="lazy">
@@ -352,7 +352,7 @@
         <!-- Sección Masculinos -->
         <h2 class="section-heading" data-section="masculinos" style="margin-top: 2rem;" data-i18n="seccionMasculinos">Masajistas Masculinos</h2>
         <div class="grid-perfiles" id="grid-masculinos">
-            <a href="matias.html" class="card-link" data-categoria="masculinos">
+            <a href="matias.html" class="card-link" data-categoria="masculinos" data-perfilid="matias">
                 <article class="card">
                     <div class="card-image">
                         <img src="img/matias1.jpg" alt="Matias" loading="lazy">
@@ -457,9 +457,46 @@
         </div>
     </footer>
 
-    <!-- Firebase SDK para el contador global -->
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+    <script>
+        // Inicializar Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
+            authDomain: "masajistasprivepro.firebaseapp.com",
+            projectId: "masajistasprivepro",
+            storageBucket: "masajistasprivepro.firebasestorage.app",
+            messagingSenderId: "768677270509",
+            appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
+            measurementId: "G-SBN70C32JF"
+        };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
+        // Script sincronizado para ocultar automáticamente perfiles pausados desde el Admin
+        window.addEventListener('DOMContentLoaded', () => {
+            db.collection("config_perfiles").onSnapshot((snapshot) => {
+                snapshot.forEach(doc => {
+                    let data = doc.data();
+                    let perfilId = doc.id;
+                    if (data.estado === 'pausado') {
+                        // Oculta tanto la tarjeta del index como el círculo de destacadas si está pausada
+                        document.querySelectorAll(`[data-perfilid="${perfilId}"]`).forEach(el => {
+                            el.style.display = 'none';
+                        });
+                    } else {
+                        document.querySelectorAll(`[data-perfilid="${perfilId}"]`).forEach(el => {
+                            el.style.display = '';
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 
     <script>
         // --- DICCIONARIO CUATRILINGÜE (ES / EN / PT / FR) ---
