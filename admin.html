@@ -24,6 +24,8 @@
         input:focus, select:focus, textarea:focus { outline: none; border-color: #dfc285; }
         textarea { resize: vertical; height: 70px; grid-column: 1 / -1; }
 
+        .fotos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; grid-column: 1 / -1; background: #111; padding: 15px; border-radius: 8px; border: 1px dashed #333; }
+
         .perfil-row { display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; padding: 15px; margin-bottom: 12px; border-radius: 8px; border: 1px solid rgba(223,194,133,0.15); flex-wrap: wrap; gap: 10px; }
         .perfil-info-detalles { display: flex; align-items: center; gap: 15px; }
         .perfil-miniatura { width: 45px; height: 45px; object-fit: cover; border-radius: 50%; border: 1px solid #dfc285; }
@@ -89,15 +91,29 @@
                         <input type="text" id="nuevoWpp" placeholder="54911...">
                     </div>
                     <div class="form-group">
-                        <label>Ruta de la Foto (ej: img/catalina1.jpg)</label>
-                        <input type="text" id="nuevaFoto" placeholder="img/catalina1.jpg" value="img/">
-                    </div>
-                    <div class="form-group">
                         <label>Horarios</label>
                         <input type="text" id="nuevosHorarios" value="Lunes a sábados de 9 a 21 hs.">
                     </div>
+                    
+                    <!-- SECCIÓN DE HASTA 10 FOTOS -->
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label style="color: #dfc285; font-weight: bold; margin-bottom: 5px;">Galería de Fotos (Hasta 10 fotos — La Foto 1 es la principal)</label>
+                        <div class="fotos-grid" id="contenedorFotosAdmin">
+                            <input type="text" class="input-foto" placeholder="img/perfil1.jpg">
+                            <input type="text" class="input-foto" placeholder="img/perfil2.jpg">
+                            <input type="text" class="input-foto" placeholder="img/perfil3.jpg">
+                            <input type="text" class="input-foto" placeholder="img/perfil4.jpg">
+                            <input type="text" class="input-foto" placeholder="img/perfil5.jpg">
+                            <input type="text" class="input-foto" placeholder="img/perfil6.jpg">
+                            <input type="text" class="input-foto" placeholder="img/perfil7.jpg">
+                            <input type="text" class="input-foto" placeholder="img/perfil8.jpg">
+                            <input type="text" class="input-foto" placeholder="img/perfil9.jpg">
+                            <input type="text" class="input-foto" placeholder="img/perfil10.jpg">
+                        </div>
+                    </div>
+
                     <div class="form-group">
-                        <textarea id="nuevaBio" placeholder="Escribe aquí la biografía y servicios de la profesional..."></textarea>
+                        <textarea id="nuevaBio" placeholder="Escribe aquí la biografía y servicios en Español (Se traducirá automáticamente al Inglés, Portugués y Francés)..."></textarea>
                     </div>
                 </div>
                 <button onclick="guardarPerfil()" class="btn-accion btn-crear" id="btnGuardarTexto">Publicar Perfil en la Web al Instante</button>
@@ -130,27 +146,6 @@
         }
         const db = firebase.firestore();
 
-        const perfilesBaseDefault = [
-            { id: "jennyfer", nombre: "Jennyfer", categoria: "terapeuticas", img: "img/jennyfer1.jpg" },
-            { id: "prada", nombre: "Prada", categoria: "terapeuticas", img: "img/prada1.jpg" },
-            { id: "mariela", nombre: "Mariela", categoria: "terapeuticas", img: "img/mariela5.jpg" },
-            { id: "daniela", nombre: "Daniela", categoria: "terapeuticas", img: "img/daniela1.jpg" },
-            { id: "zaira", nombre: "Zaira", categoria: "terapeuticas", img: "img/zaira1.jpg" },
-            { id: "luly", nombre: "Luly", categoria: "terapeuticas", img: "img/luly1.jpg" },
-            { id: "mora", nombre: "Mora", categoria: "terapeuticas", img: "img/mora1.jpg" },
-            { id: "lupita", nombre: "Lupita", categoria: "terapeuticas", img: "img/lupita1.jpg" },
-            { id: "renata", nombre: "Renata", categoria: "sensuales", img: "img/renata1.jpg" },
-            { id: "deby", nombre: "Deby", categoria: "sensuales", img: "img/deby1.jpg" },
-            { id: "donatella", nombre: "Donatella", categoria: "sensuales", img: "img/donatella1.jpg" },
-            { id: "celeste", nombre: "Celeste", categoria: "sensuales", img: "img/celeste1.jpg" },
-            { id: "mia", nombre: "Mía", categoria: "sensuales", img: "img/mia1.jpg" },
-            { id: "sol", nombre: "Sol", categoria: "sensuales", img: "img/sol1.jpg" },
-            { id: "pamela", nombre: "Pamela", categoria: "sensuales", img: "img/pamela3.jpg" },
-            { id: "luly-sensual", nombre: "Luly (Sensual)", categoria: "sensuales", img: "img/luly5.jpg" },
-            { id: "mora-sensual", nombre: "Mora (Sensual)", categoria: "sensuales", img: "img/mora5.jpg" },
-            { id: "matias", nombre: "Matias", categoria: "masculinos", img: "img/matias1.jpg" }
-        ];
-
         function verificarAdmin() {
             const pass = document.getElementById('adminPass').value;
             if (pass === "prive2026") {
@@ -166,21 +161,6 @@
             const contenedor = document.getElementById('listaPerfilesAdmin');
 
             try {
-                for (let p of perfilesBaseDefault) {
-                    let docRef = db.collection("config_perfiles").doc(p.id);
-                    let docSnap = await docRef.get();
-                    if (!docSnap.exists) {
-                        await docRef.set({
-                            id: p.id,
-                            nombre: p.nombre,
-                            categoria: p.categoria,
-                            img: p.img,
-                            estado: "activo",
-                            destacada: false
-                        });
-                    }
-                }
-
                 const snapVisitas = await db.collection("estadisticas_visitas").get();
                 let visitasMap = {};
                 snapVisitas.forEach(doc => {
@@ -201,7 +181,7 @@
                         let estado = data.estado || "activo";
                         let esDestacada = data.destacada === true;
                         let totalVisitas = visitasMap[idPerfil] || 0;
-                        let imgPerfil = data.img || 'img/logo.png';
+                        let imgPerfil = (data.fotos && data.fotos.length > 0) ? data.fotos[0] : (data.img || 'img/logo.png');
                         let nombrePerfil = data.nombre || idPerfil;
 
                         const div = document.createElement('div');
@@ -258,23 +238,42 @@
                 const d = doc.data();
                 document.getElementById('editandoId').value = d.id || idPerfil;
                 document.getElementById('nuevoId').value = d.id || idPerfil;
-                document.getElementById('nuevoId').disabled = true; // No permitir cambiar ID en edición
+                document.getElementById('nuevoId').disabled = true;
                 document.getElementById('nuevoNombre').value = d.nombre || '';
                 document.getElementById('nuevaCategoria').value = d.categoria || 'terapeuticas';
                 document.getElementById('nuevaZona').value = d.zona || '';
                 document.getElementById('nuevaModalidad').value = d.modalidad || '';
                 document.getElementById('nuevoWpp').value = d.whatsapp || '';
-                document.getElementById('nuevaFoto').value = d.img || 'img/';
                 document.getElementById('nuevosHorarios').value = d.horarios || '';
                 document.getElementById('nuevaBio').value = d.bio || '';
                 
+                // Cargar hasta 10 fotos
+                const inputsFotos = document.querySelectorAll('.input-foto');
+                inputsFotos.forEach(inp => inp.value = '');
+                let listaFotos = d.fotos || [d.img];
+                listaFotos.forEach((f, idx) => {
+                    if (inputsFotos[idx]) inputsFotos[idx].value = f;
+                });
+
                 document.getElementById('tituloFormulario').textContent = "✏️ Editando Perfil: " + d.nombre;
                 document.getElementById('btnGuardarTexto').textContent = "Guardar Cambios al Instante";
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         };
 
-        window.guardarPerfil = function() {
+        // Función inteligente para traducir biografía a los 4 idiomas mediante API pública de traducción
+        async function traducirTexto(texto, idiomaDestino) {
+            if (!texto) return "";
+            try {
+                const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=es&tl=${idiomaDestino}&dt=t&q=` + encodeURIComponent(texto));
+                const data = await res.json();
+                return data[0].map(item => item[0]).join('');
+            } catch(e) {
+                return texto; // Si falla por red, devuelve el texto original en español
+            }
+        }
+
+        window.guardarPerfil = async function() {
             const editId = document.getElementById('editandoId').value;
             const id = document.getElementById('nuevoId').value.trim().toLowerCase().replace(/\s+/g, '');
             const nombre = document.getElementById('nuevoNombre').value.trim();
@@ -282,14 +281,34 @@
             const zona = document.getElementById('nuevaZona').value.trim().toUpperCase();
             const modalidad = document.getElementById('nuevaModalidad').value.trim();
             const whatsapp = document.getElementById('nuevoWpp').value.trim();
-            const img = document.getElementById('nuevaFoto').value.trim();
             const horarios = document.getElementById('nuevosHorarios').value.trim();
-            const bio = document.getElementById('nuevaBio').value.trim();
+            const bioEs = document.getElementById('nuevaBio').value.trim();
 
             if (!id || !nombre) {
                 alert("Completa el ID y el Nombre.");
                 return;
             }
+
+            // Recopilar galerías de fotos (hasta 10)
+            let fotosArray = [];
+            document.querySelectorAll('.input-foto').forEach(inp => {
+                if (inp.value.trim() !== "") {
+                    fotosArray.push(inp.value.trim());
+                }
+            });
+
+            if (fotosArray.length === 0) {
+                fotosArray.push("img/logo.png");
+            }
+
+            // Traducir automáticamente biografía a EN, PT y FR
+            const btn = document.getElementById('btnGuardarTexto');
+            btn.textContent = "Traduciendo y guardando en Firebase...";
+            btn.disabled = true;
+
+            const bioEn = await traducirTexto(bioEs, 'en');
+            const bioPt = await traducirTexto(bioEs, 'pt');
+            const bioFr = await traducirTexto(bioEs, 'fr');
 
             const perfilData = {
                 id: id,
@@ -298,9 +317,15 @@
                 zona: zona,
                 modalidad: modalidad,
                 whatsapp: whatsapp,
-                img: img || 'img/logo.png',
+                img: fotosArray[0], // Foto principal para las tarjetas del index
+                fotos: fotosArray,   // Array con hasta 10 fotos para la galería
                 horarios: horarios,
-                bio: bio
+                bio: bioEs,
+                traducciones: {
+                    en: { bio: bioEn },
+                    pt: { bio: bioPt },
+                    fr: { bio: bioFr }
+                }
             };
 
             if (!editId) {
@@ -310,19 +335,23 @@
             }
 
             db.collection("config_perfiles").doc(id).set(perfilData, { merge: true }).then(() => {
-                alert(editId ? "¡Perfil actualizado con éxito!" : "¡Perfil creado con éxito!");
+                alert(editId ? "¡Perfil actualizado y traducido con éxito!" : "¡Perfil creado y traducido con éxito!");
                 
-                // Limpiar formulario y restablecer modo
                 document.getElementById('editandoId').value = '';
                 document.getElementById('nuevoId').value = '';
                 document.getElementById('nuevoId').disabled = false;
                 document.getElementById('nuevoNombre').value = '';
                 document.getElementById('nuevaZona').value = '';
                 document.getElementById('nuevaBio').value = '';
+                document.querySelectorAll('.input-foto').forEach(inp => inp.value = '');
+                
                 document.getElementById('tituloFormulario').textContent = "➕ Dar de Alta Nuevo Perfil";
-                document.getElementById('btnGuardarTexto').textContent = "Publicar Perfil en la Web al Instante";
+                btn.textContent = "Publicar Perfil en la Web al Instante";
+                btn.disabled = false;
             }).catch(err => {
                 console.error(err);
+                btn.textContent = "Publicar Perfil en la Web al Instante";
+                btn.disabled = false;
                 alert("Error al guardar en Firebase.");
             });
         };
