@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Administración Empresarial | Masajistas Privé</title>
+    <title>Panel de Administración | Masajistas Privé</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -13,11 +13,11 @@
         .admin-header h1 { color: #dfc285; font-family: 'Cormorant Garamond', serif; font-size: 28px; margin: 0; }
         .card-admin { background: #141414; border: 1px solid rgba(223, 194, 133, 0.2); border-radius: 10px; padding: 25px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .card-admin h2 { color: #dfc285; font-size: 20px; margin-top: 0; font-family: 'Cormorant Garamond', serif; border-bottom: 1px solid rgba(223, 194, 133, 0.1); padding-bottom: 10px; }
-        textarea.html-input { width: 100%; height: 90px; background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 13px; resize: vertical; box-sizing: border-box; }
+        textarea.html-input { width: 100%; height: 130px; background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 13px; resize: vertical; box-sizing: border-box; }
         textarea.html-input:focus { border-color: #dfc285; outline: none; }
         input[type="text"] { width: 100%; background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px 12px; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 13px; box-sizing: border-box; }
         input[type="text"]:focus { border-color: #dfc285; outline: none; }
-        .btn-prive { background: #dfc285; color: #0d0d0d; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer; font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 1.5px; transition: all 0.3s; }
+        .btn-prive { background: #dfc285; color: #0d0d0d; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; transition: all 0.3s; }
         .btn-prive:hover { background: #c5a86d; }
         .btn-traducir { background: rgba(223, 194, 133, 0.15); border: 1px solid #dfc285; color: #dfc285; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; margin-bottom: 15px; display: inline-flex; align-items: center; gap: 6px; }
         .btn-traducir:hover { background: #dfc285; color: #0d0d0d; }
@@ -33,12 +33,14 @@
         .switch-destacada { cursor: pointer; color: #777; font-size: 18px; }
         .switch-destacada.active { color: #dfc285; text-shadow: 0 0 8px rgba(223, 194, 133, 0.6); }
 
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 15px; }
+        /* Estilos del Modal de Edición con el diseño original */
+        #modalEditar { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 99999; padding: 20px; box-sizing: border-box; }
+        .modal-content { background: #141414; border: 1px solid #dfc285; border-radius: 10px; width: 100%; max-width: 700px; padding: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); max-height: 90vh; overflow-y: auto; }
+        .modal-content h3 { color: #dfc285; font-family: 'Cormorant Garamond', serif; font-size: 24px; margin-top: 0; border-bottom: 1px solid rgba(223,194,133,0.2); padding-bottom: 10px; }
         .form-row { margin-bottom: 15px; }
-        .form-row label { display: block; font-size: 11px; color: #dfc285; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
-        
+        .form-row label { display: block; font-size: 12px; color: #dfc285; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
         .lang-tabs { display: flex; gap: 5px; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        .lang-tab { background: #1a1a1a; border: 1px solid #444; color: #aaa; padding: 6px 15px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+        .lang-tab { background: #1a1a1a; border: 1px solid #444; color: #aaa; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600; text-transform: uppercase; }
         .lang-tab.active { background: #dfc285; color: #0d0d0d; border-color: #dfc285; }
         .lang-section { display: none; }
         .lang-section.active { display: block; }
@@ -52,129 +54,33 @@
             <a href="index.html" style="color: #dfc285; text-decoration: none; font-size: 13px;">← Volver al Portal</a>
         </header>
 
-        <!-- SECCIÓN: CREAR / EDITAR FICHA EMPRESARIAL -->
+        <!-- SECCIÓN: IMPORTADOR DE HTML -->
         <div class="card-admin">
-            <h2 id="tituloPanelForm">➕ Crear Nueva Ficha y Publicar al Instante</h2>
-            <input type="hidden" id="editDocId">
+            <h2>📥 Importar / Escanear Ficha HTML</h2>
+            <p style="font-size: 13px; color: #aaa; margin-bottom: 15px;">Pegá aquí el código HTML completo de la masajista. Si es un perfil con sufijo (ej. <em>luly-sensual</em>), escribilo manualmente en la casilla de ID.</p>
             
-            <div class="form-grid">
-                <div class="form-row">
-                    <label>Nombre de la Modelo:</label>
-                    <input type="text" id="inputNombre" placeholder="Ej: Donatella">
-                </div>
-                <div class="form-row">
-                    <label>ID Único / Slug (Ej: donatella):</label>
-                    <input type="text" id="inputSlug" placeholder="Se genera solo si lo dejás vacío">
-                </div>
-                <div class="form-row">
-                    <label>Categoría:</label>
-                    <select id="inputCategoria" style="width: 100%; background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px 12px; border-radius: 6px; font-size: 13px;">
-                        <option value="terapeuticas">Terapéuticas</option>
-                        <option value="sensuales">Sensuales</option>
-                        <option value="masculinos">Masculinos</option>
-                        <option value="fantasias">Fantasías</option>
-                    </select>
-                </div>
-                <div class="form-row">
-                    <label>Teléfono WhatsApp (Ej: 54911...):</label>
-                    <input type="text" id="inputWhatsapp" placeholder="54911...">
-                </div>
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; font-size: 11px; color: #dfc285; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">ID Único / Slug para Firebase:</label>
+                <input type="text" id="customIdInput" placeholder="Ej: luly-sensual (si se deja vacío, se genera solo)">
             </div>
 
-            <div class="form-grid">
-                <div class="form-row">
-                    <label>URL Foto Principal (ej. img/donatella1.jpg):</label>
-                    <input type="text" id="inputFotoPrincipal" placeholder="img/donatella1.jpg">
-                </div>
-                <div class="form-row">
-                    <label>Fotos de Galería (separadas por coma):</label>
-                    <input type="text" id="inputFotosGaleria" placeholder="img/donatella1.jpg, img/donatella2.jpg">
-                </div>
+            <textarea id="htmlSourceInput" class="html-input" placeholder="Pegá el código HTML completo aquí..."></textarea>
+            
+            <div style="margin-top: 15px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                <select id="selectCategoriaImport" style="background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px 12px; border-radius: 6px; font-size: 13px;">
+                    <option value="terapeuticas">Categoría: Terapéuticas</option>
+                    <option value="sensuales">Categoría: Sensuales</option>
+                    <option value="masculinos">Categoría: Masculinos</option>
+                    <option value="fantasias">Categoría: Fantasías</option>
+                </select>
+                <button type="button" class="btn-prive" onclick="procesarEscanerHTML()">Escanear y Guardar en Firebase</button>
             </div>
-
-            <!-- Botón de Traducción Automática Inteligente -->
-            <div style="margin-top: 15px; border-top: 1px solid rgba(223,194,133,0.2); padding-top: 15px;">
-                <button type="button" class="btn-traducir" onclick="traducirAutomaticamenteAdmin()">✨ Traducir automáticamente campos de Español a Inglés, Portugués y Francés</button>
-                <div id="tradStatusAdmin" style="font-size: 12px; color: #dfc285; margin-top: 5px;"></div>
-            </div>
-
-            <!-- SOLAPAS DE IDIOMAS -->
-            <div style="margin-top: 15px;">
-                <label style="display: block; color: #dfc285; font-size: 12px; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; font-weight: 600;">Textos y Traducciones:</label>
-                <div class="lang-tabs">
-                    <div class="lang-tab active" onclick="cambiarTabAdmin('es')">🇪🇸 Español</div>
-                    <div class="lang-tab" onclick="cambiarTabAdmin('en')">🇺🇸 Inglés</div>
-                    <div class="lang-tab" onclick="cambiarTabAdmin('pt')">🇧🇷 Portugués</div>
-                    <div class="lang-tab" onclick="cambiarTabAdmin('fr')">🇫🇷 Francés</div>
-                </div>
-
-                <!-- Español -->
-                <div id="admin-lang-es" class="lang-section active">
-                    <div class="form-grid">
-                        <div class="form-row"><label>Zona (ES):</label><input type="text" id="zona_es" placeholder="Ej: Microcentro CABA"></div>
-                        <div class="form-row"><label>Modalidad (ES):</label><input type="text" id="modalidad_es" placeholder="Ej: Departamento propio"></div>
-                    </div>
-                    <div class="form-row"><label>Párrafo de Descripción 1 (ES):</label><textarea id="desc1_es" class="html-input" placeholder="Te recibo en un espacio privado..."></textarea></div>
-                    <div class="form-row"><label>Párrafo de Descripción 2 (ES):</label><textarea id="desc2_es" class="html-input" placeholder="Cada sesión está pensada..."></textarea></div>
-                    <div class="form-grid">
-                        <div class="form-row"><label>Horarios (ES):</label><input type="text" id="horarios_es" placeholder="Lunes a sábado de 11 a 19 hs."></div>
-                        <div class="form-row"><label>Atención / Detalles (ES):</label><input type="text" id="atencion_es" placeholder="Tu comodidad y privacidad son mi prioridad."></div>
-                    </div>
-                </div>
-
-                <!-- Inglés -->
-                <div id="admin-lang-en" class="lang-section">
-                    <div class="form-grid">
-                        <div class="form-row"><label>Area (EN):</label><input type="text" id="zona_en"></div>
-                        <div class="form-row"><label>Modality (EN):</label><input type="text" id="modalidad_en"></div>
-                    </div>
-                    <div class="form-row"><label>Paragraph 1 (EN):</label><textarea id="desc1_en" class="html-input"></textarea></div>
-                    <div class="form-row"><label>Paragraph 2 (EN):</label><textarea id="desc2_en" class="html-input"></textarea></div>
-                    <div class="form-grid">
-                        <div class="form-row"><label>Hours (EN):</label><input type="text" id="horarios_en"></div>
-                        <div class="form-row"><label>Care (EN):</label><input type="text" id="atencion_en"></div>
-                    </div>
-                </div>
-
-                <!-- Portugués -->
-                <div id="admin-lang-pt" class="lang-section">
-                    <div class="form-grid">
-                        <div class="form-row"><label>Zona (PT):</label><input type="text" id="zona_pt"></div>
-                        <div class="form-row"><label>Modalidade (PT):</label><input type="text" id="modalidad_pt"></div>
-                    </div>
-                    <div class="form-row"><label>Parágrafo 1 (PT):</label><textarea id="desc1_pt" class="html-input"></textarea></div>
-                    <div class="form-row"><label>Parágrafo 2 (PT):</label><textarea id="desc2_pt" class="html-input"></textarea></div>
-                    <div class="form-grid">
-                        <div class="form-row"><label>Horários (PT):</label><input type="text" id="horarios_pt"></div>
-                        <div class="form-row"><label>Atendimento (PT):</label><input type="text" id="atencion_pt"></div>
-                    </div>
-                </div>
-
-                <!-- Francés -->
-                <div id="admin-lang-fr" class="lang-section">
-                    <div class="form-grid">
-                        <div class="form-row"><label>Zone (FR):</label><input type="text" id="zona_fr"></div>
-                        <div class="form-row"><label>Modalité (FR):</label><input type="text" id="modalidad_fr"></div>
-                    </div>
-                    <div class="form-row"><label>Paragraphe 1 (FR):</label><textarea id="desc1_fr" class="html-input"></textarea></div>
-                    <div class="form-row"><label>Paragraphe 2 (FR):</label><textarea id="desc2_fr" class="html-input"></textarea></div>
-                    <div class="form-grid">
-                        <div class="form-row"><label>Horaires (FR):</label><input type="text" id="horaires_fr"></div>
-                        <div class="form-row"><label>Attention (FR):</label><input type="text" id="atencion_fr"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div style="margin-top: 25px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
-                <button type="button" class="btn-prive" onclick="publicarFichaEmpresarial()">🚀 Publicar Ficha de Inmediato</button>
-                <button type="button" class="btn-accion" onclick="limpiarFormularioAdmin()" style="padding: 12px 20px;">Limpiar Formulario</button>
-            </div>
-            <div id="statusAdmin" style="margin-top: 15px; font-weight: 500; font-size: 13px;"></div>
+            <div id="importStatus" style="margin-top: 12px; font-size: 13px; font-weight: 500;"></div>
         </div>
 
-        <!-- SECCIÓN: LISTADO GENERAL -->
+        <!-- SECCIÓN: LISTADO GENERAL DE MODELOS -->
         <div class="card-admin">
-            <h2>📋 Nómina de Modelos Publicadas</h2>
+            <h2>📋 Nómina de Modelos y Gestión en Tiempo Real</h2>
             <div style="overflow-x: auto;">
                 <table class="admin-table">
                     <thead>
@@ -185,13 +91,90 @@
                             <th>Categoría</th>
                             <th>Visitas</th>
                             <th>Estado</th>
-                            <th>Destacada</th>
+                            <th>Destacada (Gold)</th>
                         </tr>
                     </thead>
                     <tbody id="tablaModelosBody">
-                        <tr><td colspan="7" style="text-align: center; color: #777;">Cargando nómina...</td></tr>
+                        <tr><td colspan="7" style="text-align: center; color: #777;">Cargando modelos desde Firebase...</td></tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE EDICIÓN MULTILINGÜE -->
+    <div id="modalEditar">
+        <div class="modal-content">
+            <h3>Editar Perfil y Traducciones</h3>
+            <input type="hidden" id="editDocId">
+            
+            <div class="form-row">
+                <label>Nombre General:</label>
+                <input type="text" id="editNombre">
+            </div>
+            <div class="form-row">
+                <label>Categoría:</label>
+                <select id="editCategoria" style="width: 100%; background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px 12px; border-radius: 6px; font-size: 13px;">
+                    <option value="terapeuticas">Terapéuticas</option>
+                    <option value="sensuales">Sensuales</option>
+                    <option value="masculinos">Masculinos</option>
+                    <option value="fantasias">Fantasías</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <label>Enlace de WhatsApp (wa.me/...):</label>
+                <input type="text" id="editWhatsappLink">
+            </div>
+            <div class="form-row">
+                <label>URL Foto Principal:</label>
+                <input type="text" id="editFotoPrincipal">
+            </div>
+
+            <!-- Botón de Traducción Automática Inteligente -->
+            <div style="margin-top: 20px; border-top: 1px solid rgba(223,194,133,0.2); padding-top: 15px;">
+                <button type="button" class="btn-traducir" onclick="traducirAutomaticamenteES()">✨ Traducir automáticamente a Inglés, Portugués y Francés</button>
+                <div id="tradStatus" style="font-size: 12px; color: #dfc285; margin-top: 5px;"></div>
+            </div>
+
+            <!-- Selector de Idiomas para las traducciones -->
+            <div style="margin-top: 15px;">
+                <label style="margin-bottom: 8px;">Traducciones de Zona y Descripción:</label>
+                <div class="lang-tabs">
+                    <div class="lang-tab active" onclick="cambiarTabLang('es')">🇪🇸 Español</div>
+                    <div class="lang-tab" onclick="cambiarTabLang('en')">🇺🇸 Inglés</div>
+                    <div class="lang-tab" onclick="cambiarTabLang('pt')">🇧🇷 Portugués</div>
+                    <div class="lang-tab" onclick="cambiarTabLang('fr')">🇫🇷 Francés</div>
+                </div>
+
+                <!-- Español -->
+                <div id="lang-es" class="lang-section active">
+                    <div class="form-row"><label>Zona (ES):</label><input type="text" id="editZona_es"></div>
+                    <div class="form-row"><label>Modalidad (ES):</label><input type="text" id="editModalidad_es"></div>
+                    <div class="form-row"><label>Descripción (ES):</label><textarea id="editDesc_es" class="html-input" style="height: 100px;"></textarea></div>
+                </div>
+                <!-- Inglés -->
+                <div id="lang-en" class="lang-section">
+                    <div class="form-row"><label>Area (EN):</label><input type="text" id="editZona_en"></div>
+                    <div class="form-row"><label>Modality (EN):</label><input type="text" id="editModalidad_en"></div>
+                    <div class="form-row"><label>Description (EN):</label><textarea id="editDesc_en" class="html-input" style="height: 100px;"></textarea></div>
+                </div>
+                <!-- Portugués -->
+                <div id="lang-pt" class="lang-section">
+                    <div class="form-row"><label>Zona (PT):</label><input type="text" id="editZona_pt"></div>
+                    <div class="form-row"><label>Modalidade (PT):</label><input type="text" id="editModalidad_pt"></div>
+                    <div class="form-row"><label>Descrição (PT):</label><textarea id="editDesc_pt" class="html-input" style="height: 100px;"></textarea></div>
+                </div>
+                <!-- Francés -->
+                <div id="lang-fr" class="lang-section">
+                    <div class="form-row"><label>Zone (FR):</label><input type="text" id="editZona_fr"></div>
+                    <div class="form-row"><label>Modalité (FR):</label><input type="text" id="editModalidad_fr"></div>
+                    <div class="form-row"><label>Description (FR):</label><textarea id="editDesc_fr" class="html-input" style="height: 100px;"></textarea></div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                <button type="button" class="btn-accion" onclick="cerrarModalEditar()" style="padding: 10px 20px;">Cancelar</button>
+                <button type="button" class="btn-prive" onclick="guardarEdicionPerfil()">Guardar Todos los Cambios</button>
             </div>
         </div>
     </div>
@@ -215,123 +198,105 @@
         }
         const db = firebase.firestore();
 
-        function cambiarTabAdmin(lang) {
-            document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.lang-section').forEach(s => s.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            document.getElementById(`admin-lang-${lang}`).classList.add('active');
-        }
+        function procesarEscanerHTML() {
+            const rawHtml = document.getElementById('htmlSourceInput').value;
+            const customId = document.getElementById('customIdInput').value.trim();
+            const statusDiv = document.getElementById('importStatus');
+            const categoria = document.getElementById('selectCategoriaImport').value;
 
-        async function traducirAutomaticamenteAdmin() {
-            const status = document.getElementById('tradStatusAdmin');
-            status.textContent = "⏳ Traduciendo textos del español automáticamente...";
-            
-            const campos = ['zona', 'modalidad', 'desc1', 'desc2', 'horarios', 'atencion'];
-            const destinos = [
-                { code: 'en', suf: 'en' },
-                { code: 'pt', suf: 'pt' },
-                { code: 'fr', suf: 'fr' }
-            ];
-
-            try {
-                for (let dest of destinos) {
-                    for (let campo of campos) {
-                        let valEs = document.getElementById(`${campo}_es`).value;
-                        if (valEs.trim()) {
-                            let res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(valEs)}&langpair=es|${dest.code}`);
-                            let data = await res.json();
-                            if (data && data.responseData) {
-                                document.getElementById(`${campo}_${dest.suf}`).value = data.responseData.translatedText;
-                            }
-                        }
-                    }
-                }
-                status.textContent = "✅ ¡Traducción automática completada con éxito!";
-            } catch (e) {
-                status.textContent = "❌ Error al traducir de forma automática.";
-            }
-        }
-
-        function publicarFichaEmpresarial() {
-            const nombre = document.getElementById('inputNombre').value.trim();
-            let slug = document.getElementById('inputSlug').value.trim().toLowerCase().replace(/[^a-z0-9\-]/g, '');
-            const statusDiv = document.getElementById('statusAdmin');
-
-            if (!nombre) {
+            if (!rawHtml.trim()) {
                 statusDiv.style.color = '#e74c3c';
-                statusDiv.textContent = '❌ Por favor, ingresá al menos el nombre de la modelo.';
+                statusDiv.textContent = '❌ Por favor, pegá el código HTML antes de escanear.';
                 return;
             }
 
-            if (!slug) {
-                slug = nombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '');
-            }
+            try {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(rawHtml, 'text/html');
 
-            const categoria = document.getElementById('inputCategoria').value;
-            const whatsapp = document.getElementById('inputWhatsapp').value.trim();
-            const fotoPrincipal = document.getElementById('inputFotoPrincipal').value.trim() || 'img/monograma.png';
-            const galeriaRaw = document.getElementById('inputFotosGaleria').value.trim();
-            const fotosGaleria = galeriaRaw ? galeriaRaw.split(',').map(s => s.trim()).filter(Boolean) : [fotoPrincipal];
+                const titleText = doc.querySelector('title')?.textContent || '';
+                const nombre = titleText.split('|')[0].trim() || 'Desconocida';
+                
+                const idSlug = customId !== '' ? customId.toLowerCase().replace(/[^a-z0-9\-]/g, '') : nombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '');
 
-            let traducciones = { es: {}, en: {}, pt: {}, fr: {} };
-            ['es', 'en', 'pt', 'fr'].forEach(l => {
-                traducciones[l] = {
-                    perfilTitle: `${nombre} | Masajistas Privé`,
-                    btnVolver: l === 'es' ? '← Volver' : (l === 'en' ? '← Back' : (l === 'pt' ? '← Voltar' : '← Retour')),
-                    badgeVerificado: l === 'es' ? '✓ Privé Verificado' : (l === 'en' ? '✓ Privé Verified' : '✓ Privé Verificado'),
-                    labelZona: l === 'es' ? 'Zona:' : (l === 'en' ? 'Area:' : (l === 'pt' ? 'Zona:' : 'Zone :')),
-                    valorZona: document.getElementById(`zona_${l}`).value.trim(),
-                    labelModalidad: l === 'es' ? 'Modalidad:' : (l === 'en' ? 'Modality:' : (l === 'pt' ? 'Modalidade:' : 'Modalité :')),
-                    valorModalidad: document.getElementById(`modalidad_${l}`).value.trim(),
-                    tituloSobreMi: l === 'es' ? 'Sobre mí y Servicios' : (l === 'en' ? 'About Me and Services' : (l === 'pt' ? 'Sobre mim e Serviços' : 'À propos de moi et Services')),
-                    descPerfil1: document.getElementById(`desc1_${l}`).value.trim(),
-                    descPerfil2: document.getElementById(`desc2_${l}`).value.trim(),
-                    labelHorarios: l === 'es' ? 'Horarios:' : (l === 'en' ? 'Hours:' : (l === 'pt' ? 'Horários:' : 'Horaires :')),
-                    valorHorarios: document.getElementById(`horarios_${l}`).value.trim(),
-                    labelAtencion: l === 'es' ? 'Atención:' : (l === 'en' ? 'Care:' : (l === 'pt' ? 'Atendimento:' : 'Attention :')),
-                    valorAtencion: document.getElementById(`atencion_${l}`).value.trim(),
-                    btnWpp: l === 'es' ? 'Contactar por WhatsApp' : (l === 'en' ? 'Contact via WhatsApp' : (l === 'pt' ? 'Contatar por WhatsApp' : 'Contacter par WhatsApp')),
-                    footerLegal: "Este es un sitio exclusivo para adultos (+18)...",
-                    footerCopy: "© 2026 Masajistas Privé. Todos os direitos reservados."
+                const zonaEl = doc.querySelector('[data-i18n="valorZona"]') || doc.querySelector('.perfil-ubicacion strong');
+                const zona = zonaEl ? zonaEl.textContent.trim() : 'CABA';
+
+                const modalEl = doc.querySelector('[data-i18n="valorModalidad"]') || doc.querySelector('.perfil-modalidad strong');
+                const modalidad = modalEl ? modalEl.textContent.trim() : 'Gabinete propio';
+
+                const descEl = doc.querySelector('[data-i18n="descPerfil"]') || doc.querySelector('.perfil-descripcion p');
+                const descripcion = descEl ? descEl.textContent.trim() : '';
+
+                const wppEl = doc.querySelector('.btn-whatsapp');
+                let whatsappLink = wppEl ? wppEl.getAttribute('href') : '';
+                let telefono = '';
+                if (whatsappLink) {
+                    const matchPhone = whatsappLink.match(/phone=([0-9]+)/) || whatsappLink.match(/wa\.me\/([0-9]+)/);
+                    if (matchPhone) telefono = matchPhone[1];
+                }
+
+                const fotoPrincipal = doc.getElementById('fotoPrincipal')?.getAttribute('src') || 'img/monograma.png';
+                const miniaturas = Array.from(doc.querySelectorAll('.galeria-miniaturas img')).map(img => img.getAttribute('src'));
+
+                let traduccionesObj = { es: {}, en: {}, pt: {}, fr: {} };
+                const regexTrad = /const\s+traduccionesPerfil\s*=\s*({[\s\S]*?});/m;
+                const matchTrad = rawHtml.match(regexTrad);
+                if (matchTrad) {
+                    try {
+                        traduccionesObj = Function('"use strict"; return (' + matchTrad[1] + ')')();
+                    } catch (e) {
+                        console.error("Error al parsear traducciones:", e);
+                    }
+                }
+
+                if (!traduccionesObj.es) traduccionesObj.es = {};
+                traduccionesObj.es.valorZona = traduccionesObj.es.valorZona || zona;
+                traduccionesObj.es.valorModalidad = traduccionesObj.es.valorModalidad || modalidad;
+                traduccionesObj.es.descPerfil = traduccionesObj.es.descPerfil || descripcion;
+
+                const perfilData = {
+                    nombre: nombre,
+                    idSlug: idSlug,
+                    zona: zona,
+                    modalidad: modalidad,
+                    categoria: categoria,
+                    descripcion: descripcion,
+                    whatsapp: telefono,
+                    whatsappLink: whatsappLink,
+                    fotoPrincipal: fotoPrincipal,
+                    fotosGaleria: miniaturas.length > 0 ? miniaturas : [fotoPrincipal],
+                    traducciones: traduccionesObj,
+                    estado: 'activa',
+                    destacada: false,
+                    visitas: 0,
+                    fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
                 };
-            });
 
-            const datosModelo = {
-                nombre: nombre,
-                idSlug: slug,
-                categoria: categoria,
-                whatsapp: whatsapp,
-                whatsappLink: `https://wa.me/${whatsapp}?text=Hola%20${encodeURIComponent(nombre)},%20vi%20tu%20perfil%20en%20Masajistas%20Privé`,
-                fotoPrincipal: fotoPrincipal,
-                fotosGaleria: fotosGaleria,
-                zona: traducciones.es.valorZona,
-                modalidad: traducciones.es.valorModalidad,
-                descripcion: traducciones.es.descPerfil1,
-                traducciones: traducciones,
-                estado: 'activa',
-                destacada: false,
-                visitas: 0,
-                fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
-            };
+                db.collection("modelos_prive").doc(idSlug).set(perfilData, { merge: true })
+                    .then(() => {
+                        statusDiv.style.color = '#2ecc71';
+                        statusDiv.textContent = `✅ ¡Perfil de ${nombre} guardado con todas sus traducciones multilingües!`;
+                        document.getElementById('htmlSourceInput').value = '';
+                        document.getElementById('customIdInput').value = '';
+                        cargarModelosAdmin();
+                    })
+                    .catch(err => {
+                        statusDiv.style.color = '#e74c3c';
+                        statusDiv.textContent = `❌ Error al guardar en Firebase: ` + err.message;
+                    });
 
-            db.collection("modelos_prive").doc(slug).set(datosModelo, { merge: true })
-                .then(() => {
-                    statusDiv.style.color = '#2ecc71';
-                    statusDiv.textContent = `🚀 ¡Ficha de ${nombre} publicada con éxito! Ya se puede ver en el portal.`;
-                    limpiarFormularioAdmin();
-                    cargarNovedadesAdmin();
-                })
-                .catch(err => {
-                    statusDiv.style.color = '#e74c3c';
-                    statusDiv.textContent = `❌ Error al publicar: ` + err.message;
-                });
+            } catch (error) {
+                statusDiv.style.color = '#e74c3c';
+                statusDiv.textContent = `❌ Error al procesar el código HTML.`;
+            }
         }
 
-        function cargarNovedadesAdmin() {
+        function cargarModelosAdmin() {
             const tbody = document.getElementById('tablaModelosBody');
             db.collection("modelos_prive").onSnapshot((snapshot) => {
                 if (snapshot.empty) {
-                    tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #777;">No hay perfiles publicados todavía.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #777;">No hay perfiles cargados todavía.</td></tr>`;
                     return;
                 }
 
@@ -345,16 +310,16 @@
                     htmlContent += `
                         <tr>
                             <td>
-                                <strong style="font-size: 15px; display: block; margin-bottom: 6px;">${m.nombre}</strong>
+                                <strong style="font-size: 14px; display: block; margin-bottom: 5px;">${m.nombre}</strong>
                                 <div style="display: flex; gap: 4px; flex-wrap: wrap;">
-                                    <button class="btn-accion" onclick="editarModeloAdmin('${docId}')">Editar</button>
-                                    <button class="btn-accion" onclick="toggleEstadoAdmin('${docId}', '${m.estado}')">${esActiva ? 'Pausar' : 'Activar'}</button>
-                                    <button class="btn-accion btn-danger" onclick="eliminarModeloAdmin('${docId}', '${m.nombre}')">Eliminar</button>
+                                    <button class="btn-accion" onclick="abrirModalEditar('${docId}')">Editar</button>
+                                    <button class="btn-accion" onclick="toggleEstado('${docId}', '${m.estado}')">${esActiva ? 'Pausar' : 'Activar'}</button>
+                                    <button class="btn-accion btn-danger" onclick="eliminarPerfil('${docId}', '${m.nombre}')">Eliminar</button>
                                 </div>
                             </td>
                             <td><code style="color:#dfc285; background:#1e1e1e; padding:2px 6px; border-radius:4px;">${docId}</code></td>
-                            <td>${m.zona || '-'}</td>
-                            <td style="text-transform: capitalize;">${m.categoria || '-'}</td>
+                            <td>${m.zona}</td>
+                            <td style="text-transform: capitalize;">${m.categoria}</td>
                             <td>👁 ${(m.visitas || 0).toLocaleString()}</td>
                             <td>
                                 <span class="badge-estado ${esActiva ? 'badge-activo' : 'badge-pausado'}">
@@ -362,7 +327,7 @@
                                 </span>
                             </td>
                             <td style="text-align: center;">
-                                <span class="switch-destacada ${esDestacada ? 'active' : ''}" onclick="toggleDestacadaAdmin('${docId}', ${!esDestacada})">★</span>
+                                <span class="switch-destacada ${esDestacada ? 'active' : ''}" onclick="toggleDestacada('${docId}', ${!esDestacada})" title="Marcar / Desmarcar como Destacada">★</span>
                             </td>
                         </tr>
                     `;
@@ -371,72 +336,135 @@
             });
         }
 
-        function editarModeloAdmin(docId) {
+        function cambiarTabLang(lang) {
+            document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.lang-section').forEach(s => s.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            document.getElementById(`lang-${lang}`).classList.add('active');
+        }
+
+        function abrirModalEditar(docId) {
             db.collection("modelos_prive").doc(docId).get().then((doc) => {
                 if (doc.exists) {
                     const m = doc.data();
                     document.getElementById('editDocId').value = docId;
-                    document.getElementById('inputNombre').value = m.nombre || '';
-                    document.getElementById('inputSlug').value = docId;
-                    document.getElementById('inputCategoria').value = m.categoria || 'terapeuticas';
-                    document.getElementById('inputWhatsapp').value = m.whatsapp || '';
-                    document.getElementById('inputFotoPrincipal').value = m.fotoPrincipal || '';
-                    document.getElementById('inputFotosGaleria').value = m.fotosGaleria ? m.fotosGaleria.join(', ') : '';
+                    document.getElementById('editNombre').value = m.nombre || '';
+                    document.getElementById('editCategoria').value = m.categoria || 'terapeuticas';
+                    document.getElementById('editWhatsappLink').value = m.whatsappLink || '';
+                    document.getElementById('editFotoPrincipal').value = m.fotoPrincipal || '';
+                    document.getElementById('tradStatus').textContent = '';
 
                     const trad = m.traducciones || {};
                     ['es', 'en', 'pt', 'fr'].forEach(l => {
                         const tLang = trad[l] || {};
-                        document.getElementById(`zona_${l}`).value = tLang.valorZona || '';
-                        document.getElementById(`modalidad_${l}`).value = tLang.valorModalidad || '';
-                        document.getElementById(`desc1_${l}`).value = tLang.descPerfil1 || '';
-                        document.getElementById(`desc2_${l}`).value = tLang.descPerfil2 || '';
-                        document.getElementById(`horarios_${l}`).value = tLang.valorHorarios || '';
-                        document.getElementById(`atencion_${l}`).value = tLang.valorAtencion || '';
+                        document.getElementById(`editZona_${l}`).value = tLang.valorZona || m.zona || '';
+                        document.getElementById(`editModalidad_${l}`).value = tLang.valorModalidad || m.modalidad || '';
+                        document.getElementById(`editDesc_${l}`).value = tLang.descPerfil || m.descripcion || '';
                     });
 
-                    document.getElementById('tituloPanelForm').textContent = `✏️ Editando Ficha de: ${m.nombre}`;
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    document.getElementById('modalEditar').style.display = 'flex';
                 }
             });
         }
 
-        function limpiarFormularioAdmin() {
-            document.getElementById('editDocId').value = '';
-            document.getElementById('inputNombre').value = '';
-            document.getElementById('inputSlug').value = '';
-            document.getElementById('inputWhatsapp').value = '';
-            document.getElementById('inputFotoPrincipal').value = '';
-            document.getElementById('inputFotosGaleria').value = '';
-            document.getElementById('statusAdmin').textContent = '';
-            document.getElementById('tradStatusAdmin').textContent = '';
-            document.getElementById('tituloPanelForm').textContent = '➕ Crear Nueva Ficha y Publicar al Instante';
+        async function traducirAutomaticamenteES() {
+            const status = document.getElementById('tradStatus');
+            status.textContent = "⏳ Traduciendo textos automáticamente...";
             
-            ['es', 'en', 'pt', 'fr'].forEach(l => {
-                document.getElementById(`zona_${l}`).value = '';
-                document.getElementById(`modalidad_${l}`).value = '';
-                document.getElementById(`desc1_${l}`).value = '';
-                document.getElementById(`desc2_${l}`).value = '';
-                document.getElementById(`horarios_${l}`).value = '';
-                document.getElementById(`atencion_${l}`).value = '';
+            const zonaEs = document.getElementById('editZona_es').value;
+            const modalidadEs = document.getElementById('editModalidad_es').value;
+            const descEs = document.getElementById('editDesc_es').value;
+
+            const idiomasDestino = [
+                { code: 'en', suf: 'en' },
+                { code: 'pt', suf: 'pt' },
+                { code: 'fr', suf: 'fr' }
+            ];
+
+            try {
+                for (let dest of idiomasDestino) {
+                    if (zonaEs) {
+                        let resZona = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(zonaEs)}&langpair=es|${dest.code}`);
+                        let dataZona = await resZona.json();
+                        if (dataZona && dataZona.responseData) {
+                            document.getElementById(`editZona_${dest.suf}`).value = dataZona.responseData.translatedText;
+                        }
+                    }
+                    if (modalidadEs) {
+                        let resMod = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(modalidadEs)}&langpair=es|${dest.code}`);
+                        let dataMod = await resMod.json();
+                        if (dataMod && dataMod.responseData) {
+                            document.getElementById(`editModalidad_${dest.suf}`).value = dataMod.responseData.translatedText;
+                        }
+                    }
+                    if (descEs) {
+                        let resDesc = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(descEs)}&langpair=es|${dest.code}`);
+                        let dataDesc = await resDesc.json();
+                        if (dataDesc && dataDesc.responseData) {
+                            document.getElementById(`editDesc_${dest.suf}`).value = dataDesc.responseData.translatedText;
+                        }
+                    }
+                }
+                status.textContent = "✅ ¡Traducción automática completada con éxito!";
+            } catch (e) {
+                status.textContent = "❌ Error al traducir de forma automática.";
+            }
+        }
+
+        function cerrarModalEditar() {
+            document.getElementById('modalEditar').style.display = 'none';
+        }
+
+        function guardarEdicionPerfil() {
+            const docId = document.getElementById('editDocId').value;
+            
+            db.collection("modelos_prive").doc(docId).get().then((doc) => {
+                let mData = doc.data();
+                if (!mData.traducciones) mData.traducciones = {};
+
+                ['es', 'en', 'pt', 'fr'].forEach(l => {
+                    if (!mData.traducciones[l]) mData.traducciones[l] = {};
+                    mData.traducciones[l].valorZona = document.getElementById(`editZona_${l}`).value.trim();
+                    mData.traducciones[l].valorModalidad = document.getElementById(`editModalidad_${l}`).value.trim();
+                    mData.traducciones[l].descPerfil = document.getElementById(`editDesc_${l}`).value.trim();
+                });
+
+                const datosActualizados = {
+                    nombre: document.getElementById('editNombre').value.trim(),
+                    zona: mData.traducciones.es.valorZona,
+                    modalidad: mData.traducciones.es.valorModalidad,
+                    categoria: document.getElementById('editCategoria').value,
+                    whatsappLink: document.getElementById('editWhatsappLink').value.trim(),
+                    fotoPrincipal: document.getElementById('editFotoPrincipal').value.trim(),
+                    descripcion: mData.traducciones.es.descPerfil,
+                    traducciones: mData.traducciones,
+                    fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                db.collection("modelos_prive").doc(docId).update(datosActualizados).then(() => {
+                    alert("¡Perfil y traducciones actualizadas con éxito!");
+                    cerrarModalEditar();
+                });
             });
         }
 
-        function toggleEstadoAdmin(docId, estadoActual) {
-            db.collection("modelos_prive").doc(docId).update({ estado: (estadoActual === 'pausado') ? 'activa' : 'pausado' });
+        function toggleEstado(docId, estadoActual) {
+            const nuevoEstado = (estadoActual === 'pausado') ? 'activa' : 'pausado';
+            db.collection("modelos_prive").doc(docId).update({ estado: nuevoEstado });
         }
 
-        function toggleDestacadaAdmin(docId, nuevoValor) {
+        function toggleDestacada(docId, nuevoValor) {
             db.collection("modelos_prive").doc(docId).update({ destacada: nuevoValor });
         }
 
-        function eliminarModeloAdmin(docId, nombre) {
-            if (confirm(`¿Estás seguro de eliminar a ${nombre}?`)) {
+        function eliminarPerfil(docId, nombre) {
+            if (confirm(`¿Estás seguro de eliminar permanentemente a ${nombre} (${docId})?`)) {
                 db.collection("modelos_prive").doc(docId).delete();
             }
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            cargarNovedadesAdmin();
+            cargarModelosAdmin();
         });
     </script>
 </body>
