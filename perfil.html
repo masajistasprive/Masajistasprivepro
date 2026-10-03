@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">Perfil | Masajistas Privé</title>
+    <title id="perfil-title">Perfil | Masajistas Privé</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -27,53 +27,10 @@
         </div>
     </header>
 
-    <main class="container perfil-container" id="perfil-contenido-principal">
-        
-        <!-- Galería de Fotos Dinámica -->
-        <div class="perfil-galeria-grid">
-            <img src="img/logo.png" alt="Perfil" class="foto-principal" id="fotoPrincipal">
-            <div class="galeria-miniaturas" id="galeriaMiniaturas">
-                <!-- Se cargan dinámicamente -->
-            </div>
+    <main class="container perfil-container" id="perfil-content-box">
+        <div style="text-align: center; color: #dfc285; padding: 50px 0; font-family: 'Montserrat', sans-serif;">
+            Cargando perfil...
         </div>
-
-        <!-- Información Dinámica -->
-        <div class="perfil-info">
-            <div class="perfil-titulo-seccion">
-                <h2 id="perfilNombre">Cargando...</h2>
-                <span class="badge-verificado" data-i18n="badgeVerificado">✓ Privé Verificado</span>
-            </div>
-
-            <p class="perfil-ubicacion">📍 <span data-i18n="labelZona">Zona:</span> <strong id="perfilZona">-</strong></p>
-            <p class="perfil-modalidad">🏠 <span data-i18n="labelModalidad">Modalidad:</span> <strong id="perfilModalidad">Gabinete propio</strong></p>
-
-            <div class="perfil-descripcion">
-                <h3 data-i18n="tituloSobreMi">Descripción</h3>
-                <p id="perfilBio">Cargando descripción...</p>
-            </div>
-
-            <div class="perfil-detalles">
-                <div class="detalle-item">
-                    <span data-i18n="labelHorarios">Días y horarios:</span> <span id="perfilHorarios">Lunes a Sábados de 09 a 21 hs.</span>
-                </div>
-                <div class="detalle-item">
-                    <span data-i18n="labelEquipamiento">Equipamiento y servicios:</span> <span>Camilla, tatami, aire acondicionado, servicio de ducha.</span>
-                </div>
-                <div class="detalle-item">
-                    <span data-i18n="labelPagos">Medios de pago:</span> <span>Efectivo, transferencia bancaria, Mercado Pago.</span>
-                </div>
-                <div class="detalle-item">
-                    <span data-i18n="labelTurnos">Modalidad de turnos:</span> <span>Reserva previa por WhatsApp.</span>
-                </div>
-            </div>
-
-            <a href="#" target="_blank" rel="noopener noreferrer" class="btn-whatsapp" id="btnWhatsappPerfil" style="display: none;">
-                💬 <span data-i18n="btnWpp">Contactar por WhatsApp</span>
-            </a>
-        </div>
-
-        <div id="seccion-comentarios"></div>
-
     </main>
 
     <footer class="footer">
@@ -81,15 +38,11 @@
         <p class="copyright" data-i18n="footerCopy">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
     </footer>
 
-    <!-- Firebase SDK -->
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <script>
-        // Obtener el ID desde la URL (ej: perfil.html?id=prada)
-        const urlParams = new URLSearchParams(window.location.search);
-        const perfilId = urlParams.get('id');
-
         const firebaseConfig = {
             apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
             authDomain: "masajistasprivepro.firebaseapp.com",
@@ -104,71 +57,110 @@
         }
         const db = firebase.firestore();
 
-        async function cargarPerfilDinamico() {
+        // Obtener el ID de la masajista desde la URL (ej. perfil.html?id=prada)
+        const urlParams = new URLSearchParams(window.location.search);
+        const perfilId = urlParams.get('id');
+
+        function cargarPerfilDinamico() {
+            const container = document.getElementById('perfil-content-box');
+
             if (!perfilId) {
-                document.getElementById('perfil-contenido-principal').innerHTML = '<h2 style="color:#dfc285; text-align:center; padding:50px;">Perfil no especificado.</h2>';
+                container.innerHTML = `<h2 style="color:#e74c3c; text-align:center;">Perfil no encontrado</h2><p style="text-align:center;"><a href="index.html" style="color:#dfc285;">Volver al inicio</a></p>`;
                 return;
             }
 
-            try {
-                const docRef = db.collection("config_perfiles").doc(perfilId);
-                const docSnap = await docRef.get();
+            const docRef = db.collection("modelos_prive").doc(perfilId);
 
-                if (!docSnap.exists) {
-                    document.getElementById('perfil-contenido-principal').innerHTML = '<h2 style="color:#dfc285; text-align:center; padding:50px;">Este perfil no existe o fue eliminado.</h2>';
-                    return;
-                }
-
-                const data = docSnap.data();
-
-                if (data.estado === 'pausado') {
-                    document.getElementById('perfil-contenido-principal').innerHTML = '<h2 style="color:#dfc285; text-align:center; padding:50px;">Este perfil se encuentra pausado temporalmente.</h2>';
-                    return;
-                }
-
-                // Registrar visita
-                db.collection("estadisticas_visitas").doc(perfilId).set({
+            // Registrar visita en tiempo real (incrementa +1)
+            const visitaKey = `visitaRegistrada_${perfilId}`;
+            if (!sessionStorage.getItem(visitaKey)) {
+                sessionStorage.setItem(visitaKey, "true");
+                docRef.update({
                     visitas: firebase.firestore.FieldValue.increment(1)
-                }, { merge: true }).catch(err => {});
+                }).catch(err => {});
+            }
 
-                // Rellenar datos en la plantilla original de lujo
-                document.getElementById('page-title').textContent = `${data.nombre || 'Perfil'} | Masajistas Privé`;
-                document.getElementById('perfilNombre').textContent = data.nombre || 'Perfil';
-                document.getElementById('perfilZona').textContent = data.zona || 'CABA';
-                document.getElementById('perfilModalidad').textContent = data.modalidad || 'Gabinete propio';
-                document.getElementById('perfilBio').textContent = data.bio || 'Atención personalizada y relax absoluto en ambiente climatizado.';
-                document.getElementById('perfilHorarios').textContent = data.horarios || 'Lunes a Sábados de 09 a 21 hs.';
-
-                // Foto principal y miniaturas automáticas
-                const imgPrincipal = data.img || 'img/logo.png';
-                document.getElementById('fotoPrincipal').src = imgPrincipal;
-
-                // Generar galería miniatura (si tiene más fotos o repetimos la principal para mantener el diseño)
-                const contenedorMini = document.getElementById('galeriaMiniaturas');
-                let miniaturasHTML = `<img src="${imgPrincipal}" alt="Foto" onclick="cambiarFoto(this)">`;
-                
-                // Si el sistema guarda más fotos en un array en el futuro, las podemos sumar acá. Por ahora usa la principal.
-                contenedorMini.innerHTML = miniaturasHTML;
-
-                // Configurar WhatsApp
-                if (data.whatsapp) {
-                    const btnWpp = document.getElementById('btnWhatsappPerfil');
-                    btnWpp.href = `https://wa.me/${data.whatsapp}?text=Hola%20${encodeURIComponent(data.nombre)},%20vi%20tu%20perfil%20en%20Masajistas%20Privé`;
-                    btnWpp.style.display = 'inline-flex';
+            // Traer datos de Firebase
+            docRef.get().then((doc) => {
+                if (!doc.exists) {
+                    container.innerHTML = `<h2 style="color:#e74c3c; text-align:center;">El perfil solicitado no existe o fue removido.</h2><p style="text-align:center;"><a href="index.html" style="color:#dfc285;">Volver al inicio</a></p>`;
+                    return;
                 }
 
-            } catch (e) {
-                console.error("Error al cargar perfil:", e);
-            }
-        }
+                const m = doc.data();
 
-        window.addEventListener('DOMContentLoaded', cargarPerfilDinamico);
+                // Si está pausado, ocultamos el botón de WhatsApp
+                const ocultarWpp = m.estado === 'pausado' ? 'display: none;' : '';
+
+                // Construir las miniaturas de la galería dinámicamente
+                let miniaturasHTML = '';
+                if (m.fotosGaleria && m.fotosGaleria.length > 0) {
+                    m.fotosGaleria.forEach(fotoUrl => {
+                        miniaturasHTML += `<img src="${fotoUrl}" alt="${m.nombre}" onclick="cambiarFoto(this)">`;
+                    });
+                } else {
+                    miniaturasHTML = `<img src="${m.fotoPrincipal}" alt="${m.nombre}" onclick="cambiarFoto(this)">`;
+                }
+
+                // Renderizar la estructura idéntica a tus HTMLs originales con los datos de Firebase
+                container.innerHTML = `
+                    <!-- Galería de Fotos -->
+                    <div class="perfil-galeria-grid">
+                        <img src="${m.fotoPrincipal}" alt="${m.nombre}" class="foto-principal" id="fotoPrincipal">
+                        <div class="galeria-miniaturas">
+                            ${miniaturasHTML}
+                        </div>
+                    </div>
+
+                    <!-- Información de la Modelo -->
+                    <div class="perfil-info">
+                        <div class="perfil-titulo-seccion">
+                            <h2>${m.nombre}</h2>
+                            <span class="badge-verificado">✓ Privé Verificado</span>
+                        </div>
+
+                        <p class="perfil-ubicacion">📍 Zona: <strong>${m.zona}</strong></p>
+                        <p class="perfil-modalidad">🏠 Modalidad: <strong>${m.modalidad}</strong></p>
+
+                        <div class="perfil-descripcion">
+                            <h3>Descripción</h3>
+                            <p>${m.descripcion || 'Atención personalizada en ambiente climatizado y privado.'}</p>
+                        </div>
+
+                        <a href="${m.whatsappLink || 'https://wa.me/' + m.whatsapp}" target="_blank" rel="noopener noreferrer" class="btn-whatsapp" style="${ocultarWpp}">
+                            💬 Contactar por WhatsApp
+                        </a>
+
+                        <div style="margin-top: 20px; font-size: 12px; color: #666; text-align: right;">
+                            Visitas al perfil: 👁 ${(m.visitas || 0).toLocaleString()}
+                        </div>
+                    </div>
+
+                    <div id="seccion-comentarios"></div>
+                `;
+
+                document.getElementById('perfil-title').textContent = `${m.nombre} | Masajistas Privé`;
+            }).catch(error => {
+                container.innerHTML = `<p style="color:#e74c3c; text-align:center;">Error al cargar el perfil.</p>`;
+            });
+        }
 
         function cambiarFoto(element) {
             const fotoPrincipal = document.getElementById('fotoPrincipal');
-            fotoPrincipal.src = element.src;
+            if (fotoPrincipal) {
+                fotoPrincipal.src = element.src;
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            cargarPerfilDinamico();
+        });
+
+        function cambiarIdiomaPerfil() {
+            alert("Sistema dinámico conectado a Firebase.");
         }
     </script>
     <script src="comentarios.js"></script>
+
 </body>
 </html>
