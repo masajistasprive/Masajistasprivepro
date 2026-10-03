@@ -20,7 +20,7 @@
             <button id="btn-idioma" onclick="cambiarIdiomaPerfil()" style="background: rgba(223, 194, 133, 0.12); border: 1px solid #dfc285; color: #dfc285; padding: 7px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; font-family: 'Montserrat', sans-serif; letter-spacing: 1.5px;">
                 🇺🇸 EN
             </button>
-            <a href="index.html" class="btn-buscar"><span>← Volver</span></a>
+            <a href="index.html" class="btn-buscar"><span id="txt-volver">← Volver</span></a>
         </div>
     </header>
 
@@ -34,26 +34,26 @@
         <div class="perfil-info">
             <div class="perfil-titulo-seccion">
                 <h2 id="perfilNombre">Cargando...</h2>
-                <span class="badge-verificado">✓ Privé Verificado</span>
+                <span class="badge-verificado" id="txt-verificado">✓ Privé Verificado</span>
             </div>
 
-            <p class="perfil-ubicacion">📍 Zona: <strong id="perfilZona">-</strong></p>
-            <p class="perfil-modalidad">🏠 Modalidad: <strong id="perfilModalidad">Gabinete propio</strong></p>
+            <p class="perfil-ubicacion"><span id="txt-zona">📍 Zona</span>: <strong id="perfilZona">-</strong></p>
+            <p class="perfil-modalidad"><span id="txt-modalidad">🏠 Modalidad</span>: <strong id="perfilModalidad">Gabinete propio</strong></p>
 
             <div class="perfil-descripcion">
-                <h3>Descripción</h3>
+                <h3 id="txt-descripcion">Descripción</h3>
                 <p id="perfilBio">Cargando descripción...</p>
             </div>
 
             <div class="perfil-detalles">
-                <div class="detalle-item"><span>Días y horarios:</span> <span id="perfilHorarios">Lunes a Sábados de 09 a 21 hs.</span></div>
-                <div class="detalle-item"><span>Equipamiento y servicios:</span> <span>Camilla, tatami, aire acondicionado, servicio de ducha.</span></div>
-                <div class="detalle-item"><span>Medios de pago:</span> <span>Efectivo, transferencia bancaria, Mercado Pago.</span></div>
-                <div class="detalle-item"><span>Modalidad de turnos:</span> <span>Reserva previa por WhatsApp.</span></div>
+                <div class="detalle-item"><span id="txt-horarios">Días y horarios:</span> <span id="perfilHorarios">Lunes a Sábados de 09 a 21 hs.</span></div>
+                <div class="detalle-item"><span id="txt-equipamiento">Equipamiento y servicios:</span> <span>Camilla, tatami, aire acondicionado, servicio de ducha.</span></div>
+                <div class="detalle-item"><span id="txt-pagos">Medios de pago:</span> <span>Efectivo, transferencia bancaria, Mercado Pago.</span></div>
+                <div class="detalle-item"><span id="txt-turnos">Modalidad de turnos:</span> <span>Reserva previa por WhatsApp.</span></div>
             </div>
 
             <a href="#" target="_blank" rel="noopener noreferrer" class="btn-whatsapp" id="btnWhatsappPerfil" style="display: none;">
-                💬 <span>Contactar por WhatsApp</span>
+                💬 <span id="txt-wpp">Contactar por WhatsApp</span>
             </a>
         </div>
 
@@ -62,8 +62,8 @@
     </main>
 
     <footer class="footer">
-        <p>Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.</p>
-        <p class="copyright">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
+        <p id="txt-footer-1">Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.</p>
+        <p class="copyright" id="txt-footer-2">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
     </footer>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -88,6 +88,70 @@
         let datosPerfilGlobal = null;
         let idiomaActual = localStorage.getItem('idiomaPrive') || 'es';
 
+        // Diccionario de traducciones para los textos fijos de la interfaz de perfil
+        const dicPerfil = {
+            es: {
+                enBtn: "🇺🇸 EN",
+                volver: "← Volver",
+                verificado: "✓ Privé Verificado",
+                zona: "📍 Zona",
+                modalidad: "🏠 Modalidad",
+                descripcion: "Descripción",
+                horarios: "Días y horarios:",
+                equipamiento: "Equipamiento y servicios:",
+                pagos: "Medios de pago:",
+                turnos: "Modalidad de turnos:",
+                wpp: "Contactar por WhatsApp",
+                footer1: "Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.",
+                footer2: "© 2026 Masajistas Privé. Todos los derechos reservados."
+            },
+            en: {
+                enBtn: "🇧🇷 PT",
+                volver: "← Back",
+                verificado: "✓ Privé Verified",
+                zona: "📍 Zone",
+                modalidad: "🏠 Modality",
+                descripcion: "Description",
+                horarios: "Days and hours:",
+                equipamiento: "Equipment and services:",
+                pagos: "Payment methods:",
+                turnos: "Booking modality:",
+                wpp: "Contact via WhatsApp",
+                footer1: "This is an adult site (+18). Advertisers have no employment relationship with the portal.",
+                footer2: "© 2026 Masajistas Privé. All rights reserved."
+            },
+            pt: {
+                enBtn: "🇫🇷 FR",
+                volver: "← Voltar",
+                verificado: "✓ Privé Verificado",
+                zona: "📍 Zona",
+                modalidad: "🏠 Modalidade",
+                descripcion: "Descrição",
+                horarios: "Dias e horários:",
+                equipamiento: "Equipamentos e serviços:",
+                pagos: "Métodos de pagamento:",
+                turnos: "Modalidade de turnos:",
+                wpp: "Contatar pelo WhatsApp",
+                footer1: "Este é um site para adultos (+18). Os anunciantes não têm vínculo empregatício com o portal.",
+                footer2: "© 2026 Masajistas Privé. Todos os direitos reservados."
+            },
+            fr: {
+                enBtn: "🇦🇷 ES",
+                volver: "← Retour",
+                verificado: "✓ Privé Vérifié",
+                zona: "📍 Zone",
+                modalidad: "🏠 Modalité",
+                descripcion: "Description",
+                horarios: "Jours et horaires:",
+                equipamiento: "Équipement et services:",
+                pagos: "Moyens de paiement:",
+                turnos: "Modalité de réservation:",
+                wpp: "Contacter via WhatsApp",
+                footer1: "Ceci est un site pour adultes (+18). Les annonceurs n'ont aucun lien de subordination avec le portail.",
+                footer2: "© 2026 Masajistas Privé. Tous droits réservés."
+            }
+        };
+
         function cambiarIdiomaPerfil() {
             if (idiomaActual === 'es') idiomaActual = 'en';
             else if (idiomaActual === 'en') idiomaActual = 'pt';
@@ -99,17 +163,33 @@
         }
 
         function actualizarTextosInterfaz() {
+            const t = dicPerfil[idiomaActual] || dicPerfil.es;
+
+            // Botón de idioma
             const btn = document.getElementById('btn-idioma');
-            if(btn) {
-                if (idiomaActual === 'es') btn.innerHTML = '🇺🇸 EN';
-                else if (idiomaActual === 'en') btn.innerHTML = '🇧🇷 PT';
-                else if (idiomaActual === 'pt') btn.innerHTML = '🇫🇷 FR';
-                else btn.innerHTML = '🇦🇷 ES';
-            }
-            if (datosPerfilGlobal && datosPerfilGlobal.traducciones && datosPerfilGlobal.traducciones[idiomaActual]) {
-                document.getElementById('perfilBio').textContent = datosPerfilGlobal.traducciones[idiomaActual].bio || datosPerfilGlobal.bio;
-            } else if (datosPerfilGlobal) {
-                document.getElementById('perfilBio').textContent = datosPerfilGlobal.bio || '';
+            if(btn) btn.innerHTML = t.enBtn;
+
+            // Textos fijos
+            document.getElementById('txt-volver').textContent = t.volver;
+            document.getElementById('txt-verificado').textContent = t.verificado;
+            document.getElementById('txt-zona').textContent = t.zona;
+            document.getElementById('txt-modalidad').textContent = t.modalidad;
+            document.getElementById('txt-descripcion').textContent = t.descripcion;
+            document.getElementById('txt-horarios').textContent = t.horarios;
+            document.getElementById('txt-equipamiento').textContent = t.equipamiento;
+            document.getElementById('txt-pagos').textContent = t.pagos;
+            document.getElementById('txt-turnos').textContent = t.turnos;
+            document.getElementById('txt-wpp').textContent = t.wpp;
+            document.getElementById('txt-footer-1').textContent = t.footer1;
+            document.getElementById('txt-footer-2').textContent = t.footer2;
+
+            // Biografía (traducción guardada en Firebase o fallback)
+            if (datosPerfilGlobal) {
+                if (datosPerfilGlobal.traducciones && datosPerfilGlobal.traducciones[idiomaActual] && datosPerfilGlobal.traducciones[idiomaActual].bio) {
+                    document.getElementById('perfilBio').textContent = datosPerfilGlobal.traducciones[idiomaActual].bio;
+                } else {
+                    document.getElementById('perfilBio').textContent = datosPerfilGlobal.bio || '';
+                }
             }
         }
 
@@ -130,11 +210,10 @@
                 document.getElementById('perfilModalidad').textContent = datosPerfilGlobal.modalidad || 'Gabinete propio';
                 document.getElementById('perfilHorarios').textContent = datosPerfilGlobal.horarios || 'Lunes a Sábados de 09 a 21 hs.';
 
-                // Foto principal
+                // Foto principal y miniaturas funcionando
                 let fotoPrincipalUrl = datosPerfilGlobal.img || `img/${perfilId}1.jpg`;
                 document.getElementById('fotoPrincipal').src = fotoPrincipalUrl;
 
-                // Galería de miniaturas automática basada en el ID
                 let listaFotos = [
                     `img/${perfilId}1.jpg`,
                     `img/${perfilId}2.jpg`,
