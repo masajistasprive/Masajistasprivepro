@@ -130,7 +130,7 @@
                 document.getElementById('perfilModalidad').textContent = datosPerfilGlobal.modalidad || 'Gabinete propio';
                 document.getElementById('perfilHorarios').textContent = datosPerfilGlobal.horarios || 'Lunes a Sábados de 09 a 21 hs.';
 
-                // Filtro ultra blindado: SOLO acepta rutas que parezcan imágenes reales
+                // Filtro limpio y seguro: Acepta cualquier foto real y descarta casilleros vacíos o placeholders viejos
                 let listaFotos = [];
                 let fuenteDatos = datosPerfilGlobal.fotos || (datosPerfilGlobal.img ? [datosPerfilGlobal.img] : []);
 
@@ -138,22 +138,22 @@
                     listaFotos = fuenteDatos.filter(f => {
                         if (!f || typeof f !== 'string') return false;
                         let limpio = f.trim().toLowerCase();
-                        // Descarta vacíos, placeholders de ejemplo y logos
-                        if (limpio === "" || limpio.includes("logo.png") || limpio.includes("monograma.png") || limpio.includes("perfil1.jpg")) return false;
-                        // Debe tener pinta de archivo de imagen
-                        return limpio.includes(".jpg") || limpio.includes(".jpeg") || limpio.includes(".png") || limpio.includes(".webp") || limpio.includes("img/");
+                        if (limpio === "" || limpio.includes("logo.png") || limpio.includes("monograma.png")) return false;
+                        // Descarta los textos de ejemplo viejos del panel si quedaron guardados
+                        if (limpio.includes("perfil1.jpg") || limpio.includes("perfil2.jpg") || limpio.includes("perfil3.jpg") || limpio.includes("perfil4.jpg") || limpio.includes("perfil5.jpg") || limpio.includes("perfil6.jpg") || limpio.includes("perfil7.jpg") || limpio.includes("perfil8.jpg") || limpio.includes("perfil9.jpg") || limpio.includes("perfil10.jpg")) return false;
+                        return true;
                     });
                 }
 
                 if (listaFotos.length === 0) {
-                    listaFotos = ['img/logo.png'];
+                    listaFotos = [datosPerfilGlobal.img || 'img/logo.png'];
                 }
 
                 document.getElementById('fotoPrincipal').src = listaFotos[0];
 
                 let miniaturasHTML = "";
                 listaFotos.forEach(foto => {
-                    miniaturasHTML += `<img src="${foto}" alt="Foto" onclick="document.getElementById('fotoPrincipal').src='${foto}'" onerror="this.style.display='none'">`;
+                    miniaturasHTML += `<img src="${foto}" alt="Foto" onclick="document.getElementById('fotoPrincipal').src='${foto}'" onerror="this.src='img/logo.png'">`;
                 });
                 document.getElementById('galeriaMiniaturas').innerHTML = miniaturasHTML;
 
