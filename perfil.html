@@ -7,6 +7,21 @@
     <title id="perfil-title">Perfil | Masajistas Privé</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .star-rating {
+            display: inline-flex;
+            gap: 4px;
+            cursor: pointer;
+            font-size: 22px;
+            direction: rtl;
+            justify-content: flex-end;
+        }
+        .star-rating input { display: none; }
+        .star-rating label { color: #444; transition: color 0.2s; }
+        .star-rating input:checked ~ label, 
+        .star-rating label:hover, 
+        .star-rating label:hover ~ label { color: #dfc285; }
+    </style>
 </head>
 <body class="perfil-body">
 
@@ -61,71 +76,27 @@
         const db = firebase.firestore();
 
         const urlParams = new URLSearchParams(window.location.search);
-        const perfilId = urlParams.get('id');
+        const perfilId = urlParams.get('id') || window.location.pathname.split("/").pop().replace(".html", "").trim() || "general";
 
         let idiomaPerfil = localStorage.getItem('idiomaPrive') || 'es';
         let datosModeloActual = null;
 
         const etiquetasIdiomas = {
             es: { 
-                btnVolver: "← Volver", 
-                badgeVerificado: "✓ Privé Verificado", 
-                labelZona: "Zona:", 
-                labelModalidad: "Modalidad:", 
-                tituloDesc: "Descripción", 
-                labelTecnicas: "Técnicas de masaje:",
-                labelHorarios: "Días y horarios:",
-                labelEquipamiento: "Equipamiento y servicios:",
-                labelPagos: "Medios de pago:",
-                labelTurnos: "Modalidad de turnos:",
-                btnWpp: "Contactar por WhatsApp", 
-                footerLegal: "Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.", 
-                footerCopy: "© 2026 Masajistas Privé. Todos los derechos reservados." 
+                btnVolver: "← Volver", badgeVerificado: "✓ Privé Verificado", labelZona: "Zona:", labelModalidad: "Modalidad:", tituloDesc: "Descripción", labelTecnicas: "Técnicas de masaje:", labelHorarios: "Días y horarios:", labelEquipamiento: "Equipamiento y servicios:", labelPagos: "Medios de pago:", labelTurnos: "Modalidad de turnos:", btnWpp: "Contactar por WhatsApp",
+                tituloSeccionComentarios: "Experiencias y Comentarios", labelEstrellas: "Calificación:", placeholderNombre: "Tu nombre o apodo", placeholderTexto: "Escribe tu experiencia...", btnPublicar: "Publicar Experiencia", cargandoComentarios: "Cargando experiencias...", sinExperiencias: "No hay experiencias aún. ¡Sé el primero en dejar una!", meGusta: "Me gusta", destacado: "★ Destacado", eliminar: "🗑️ Eliminar", alertaIncompleto: "Por favor completá tu nombre, elegí una calificación y escribí tu experiencia."
             },
             en: { 
-                btnVolver: "← Back", 
-                badgeVerificado: "✓ Privé Verified", 
-                labelZona: "Area:", 
-                labelModalidad: "Modality:", 
-                tituloDesc: "Description", 
-                labelTecnicas: "Massage techniques:",
-                labelHorarios: "Days and hours:",
-                labelEquipamiento: "Equipment and services:",
-                labelPagos: "Payment methods:",
-                labelTurnos: "Appointment modality:",
-                btnWpp: "Contact via WhatsApp", 
-                footerLegal: "This is an adult site (+18). Advertisers have no employment relationship with the portal.", 
-                footerCopy: "© 2026 Masajistas Privé. All rights reserved." 
+                btnVolver: "← Back", badgeVerificado: "✓ Privé Verified", labelZona: "Area:", labelModalidad: "Modality:", tituloDesc: "Description", labelTecnicas: "Massage techniques:", labelHorarios: "Days and hours:", labelEquipamiento: "Equipment and services:", labelPagos: "Payment methods:", labelTurnos: "Appointment modality:", btnWpp: "Contact via WhatsApp",
+                tituloSeccionComentarios: "Experiences and Reviews", labelEstrellas: "Rating:", placeholderNombre: "Your name or nickname", placeholderTexto: "Write about your experience...", btnPublicar: "Publish Experience", cargandoComentarios: "Loading experiences...", sinExperiencias: "No experiences yet. Be the first to leave one!", meGusta: "Like", destacado: "★ Featured", eliminar: "🗑 Delete", alertaIncompleto: "Please fill in your name, select a rating, and write your experience."
             },
             pt: { 
-                btnVolver: "← Voltar", 
-                badgeVerificado: "✓ Privé Verificado", 
-                labelZona: "Zona:", 
-                labelModalidade: "Modalidade:", 
-                tituloDesc: "Descrição", 
-                labelTecnicas: "Técnicas de massagem:",
-                labelHorarios: "Dias e horários:",
-                labelEquipamiento: "Equipamentos e serviços:",
-                labelPagos: "Meios de pagamento:",
-                labelTurnos: "Modalidade de agendamento:",
-                btnWpp: "Contatar por WhatsApp", 
-                footerLegal: "Este é um site para adultos (+18). Os anunciantes não têm vínculo empregatício com o portal.", 
-                footerCopy: "© 2026 Masajistas Privé. Todos os direitos reservados." 
+                btnVolver: "← Voltar", badgeVerificado: "✓ Privé Verificado", labelZona: "Zona:", labelModalidade: "Modalidade:", tituloDesc: "Descrição", labelTecnicas: "Técnicas de massagem:", labelHorarios: "Dias e horários:", labelEquipamiento: "Equipamentos e serviços:", labelPagos: "Meios de pagamento:", labelTurnos: "Modalidade de agendamento:", btnWpp: "Contatar por WhatsApp",
+                tituloSeccionComentarios: "Experiências e Comentários", labelEstrellas: "Avaliação:", placeholderNombre: "Seu nome ou apelido", placeholderTexto: "Escreva sua experiência...", btnPublicar: "Publicar Experiência", cargandoComentarios: "Carregando experiências...", sinExperiencias: "Nenhuma experiência ainda. Seja o primeiro a deixar uma!", meGusta: "Curtir", destacado: "★ Destaque", eliminar: "🗑 Excluir", alertaIncompleto: "Por favor, preencha seu nome, selecione uma avaliação e escreva sua experiência."
             },
             fr: { 
-                btnVolver: "← Retour", 
-                badgeVerificado: "✓ Privé Vérifié", 
-                labelZona: "Zone :", 
-                labelModalidad: "Modalité :", 
-                tituloDesc: "Description", 
-                labelTecnicas: "Techniques de massage :",
-                labelHorarios: "Jours et horaires :",
-                labelEquipamiento: "Équipements et services :",
-                labelPagos: "Modes de paiement :",
-                labelTurnos: "Modalité de réservation :",
-                btnWpp: "Contacter par WhatsApp", 
-                footerLegal: "Ceci est un site pour adultes (+18). Les annonceurs n'ont aucun lien d'emploi avec le portail.", 
-                footerCopy: "© 2026 Masajistas Privé. Tous droits réservés." 
+                btnVolver: "← Retour", badgeVerificado: "✓ Privé Vérifié", labelZona: "Zone :", labelModalidad: "Modalité :", tituloDesc: "Description", labelTecnicas: "Techniques de massage :", labelHorarios: "Jours et horaires :", labelEquipamiento: "Équipements et services :", labelPagos: "Modes de paiement :", labelTurnos: "Modalité de réservation :", btnWpp: "Contacter par WhatsApp",
+                tituloSeccionComentarios: "Expériences et Avis", labelEstrellas: "Évaluation :", placeholderNombre: "Votre nom ou pseudo", placeholderTexto: "Écrivez votre expérience...", btnPublicar: "Publier l'expérience", cargandoComentarios: "Chargement des avis...", sinExperiencias: "Aucun avis pour le moment. Soyez le premier à en laisser un !", meGusta: "J'aime", destacado: "★ En vedette", eliminar: "🗑 Supprimer", alertaIncompleto: "Veuillez remplir votre nom, sélectionner une note et écrire votre avis."
             }
         };
 
@@ -155,30 +126,22 @@
 
         function cargarPerfilDinamico() {
             const container = document.getElementById('perfil-content-box');
-
             if (!perfilId) {
-                container.innerHTML = `<h2 style="color:#e74c3c; text-align:center;">Perfil no encontrado</h2><p style="text-align:center;"><a href="index.html" style="color:#dfc285;">Volver al inicio</a></p>`;
+                container.innerHTML = `<h2 style="color:#e74c3c; text-align:center;">Perfil no encontrado</h2>`;
                 return;
             }
 
             const docRef = db.collection("modelos_prive").doc(perfilId);
 
-            const visitaKey = `visitaRegistrada_${perfilId}`;
-            if (!sessionStorage.getItem(visitaKey)) {
-                sessionStorage.setItem(visitaKey, "true");
-                docRef.update({
-                    visitas: firebase.firestore.FieldValue.increment(1)
-                }).catch(err => {});
-            }
-
             docRef.get().then((doc) => {
                 if (!doc.exists) {
-                    container.innerHTML = `<h2 style="color:#e74c3c; text-align:center;">El perfil solicitado no existe o fue removido.</h2><p style="text-align:center;"><a href="index.html" style="color:#dfc285;">Volver al inicio</a></p>`;
+                    container.innerHTML = `<h2 style="color:#e74c3c; text-align:center;">El perfil solicitado no existe o fue removido.</h2>`;
                     return;
                 }
 
                 datosModeloActual = doc.data();
                 renderizarPerfil(datosModeloActual);
+                inicializarLogicaComentarios();
             }).catch(error => {
                 container.innerHTML = `<p style="color:#e74c3c; text-align:center;">Error al cargar el perfil.</p>`;
             });
@@ -194,8 +157,6 @@
 
             const zonaTexto = langData.valorZona || m.zona || '';
             const modalidadTexto = langData.valorModalidad || m.modalidad || '';
-            
-            // Lectura correcta de los párrafos 1 y 2
             const desc1 = langData.descPerfil1 || m.descripcion || '';
             const desc2 = langData.descPerfil2 || '';
             const descripcionTexto = desc2 ? `${desc1}\n\n${desc2}` : desc1;
@@ -205,7 +166,6 @@
             const equipamientoTexto = langData.valorEquipamiento || '';
             const pagosTexto = langData.valorPagos || '';
             const turnosTexto = langData.valorTurnos || '';
-
             const ocultarWpp = m.estado === 'pausado' ? 'display: none;' : '';
 
             let miniaturasHTML = '';
@@ -218,23 +178,12 @@
             }
 
             let detallesHtml = '';
-            if (horariosTexto) {
-                detallesHtml += `<div class="detalle-item"><span>${labels.labelHorarios}</span> <span>${horariosTexto}</span></div>`;
-            }
-            if (equipamientoTexto) {
-                detallesHtml += `<div class="detalle-item"><span>${labels.labelEquipamiento}</span> <span>${equipamientoTexto}</span></div>`;
-            }
-            if (pagosTexto) {
-                detallesHtml += `<div class="detalle-item"><span>${labels.labelPagos}</span> <span>${pagosTexto}</span></div>`;
-            }
-            if (turnosTexto) {
-                detallesHtml += `<div class="detalle-item"><span>${labels.labelTurnos}</span> <span>${turnosTexto}</span></div>`;
-            }
+            if (horariosTexto) detallesHtml += `<div class="detalle-item"><span>${labels.labelHorarios}</span> <span>${horariosTexto}</span></div>`;
+            if (equipamientoTexto) detallesHtml += `<div class="detalle-item"><span>${labels.labelEquipamiento}</span> <span>${equipamientoTexto}</span></div>`;
+            if (pagosTexto) detallesHtml += `<div class="detalle-item"><span>${labels.labelPagos}</span> <span>${pagosTexto}</span></div>`;
+            if (turnosTexto) detallesHtml += `<div class="detalle-item"><span>${labels.labelTurnos}</span> <span>${turnosTexto}</span></div>`;
 
-            let tecnicasHtml = '';
-            if (tecnicasTexto) {
-                tecnicasHtml = `<div style="margin-top: 0.5rem; color: #94a3b8; font-size: 0.9rem;"><strong>${labels.labelTecnicas}</strong> <span>${tecnicasTexto}</span></div>`;
-            }
+            let tecnicasHtml = tecnicasTexto ? `<div style="margin-top: 0.5rem; color: #94a3b8; font-size: 0.9rem;"><strong>${labels.labelTecnicas}</strong> <span>${tecnicasTexto}</span></div>` : '';
 
             container.innerHTML = `
                 <!-- Galería de Fotos -->
@@ -268,8 +217,50 @@
                     </a>
                 </div>
 
-                <!-- Casilla de Comentarios / Experiencias -->
-                <div id="seccion-comentarios" style="grid-column: 1 / -1; margin-top: 30px;"></div>
+                <!-- SECCIÓN DE COMENTARIOS INTEGRADA AL PIE -->
+                <div style="grid-column: 1 / -1; width: 100%; box-sizing: border-box; margin-top: 40px; padding: 25px 20px; background: #141414; border: 1px solid rgba(223, 194, 133, 0.25); border-radius: 10px; font-family: 'Montserrat', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                    <h3 style="color: #dfc285; text-align: center; font-size: 22px; margin-bottom: 20px; font-family: 'Cormorant Garamond', serif; letter-spacing: 1.5px;">${labels.tituloSeccionComentarios}</h3>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 12px; width: 100%; box-sizing: border-box;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; background: #1a1a1a; padding: 10px 15px; border-radius: 6px; border: 1px solid rgba(223, 194, 133, 0.3);">
+                            <span style="font-size: 13px; color: #dfc285; font-weight: 500;">${labels.labelEstrellas}</span>
+                            <div class="star-rating">
+                                <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="5 estrellas">★</label>
+                                <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 estrellas">★</label>
+                                <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 estrellas">★</label>
+                                <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 estrella">★</label>
+                                <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 estrella">★</label>
+                            </div>
+                        </div>
+
+                        <input type="text" id="pAuthor" placeholder="${labels.placeholderNombre}" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a !important; color: #fff !important; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
+                        
+                        <textarea id="pText" rows="3" placeholder="${labels.placeholderTexto}" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a !important; color: #fff !important; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px; resize: vertical;"></textarea>
+                        
+                        <div style="display: flex; gap: 8px; align-items: center; background: #1a1a1a; padding: 10px 12px; border-radius: 6px; border: 1px solid rgba(223, 194, 133, 0.3); flex-wrap: wrap; width: 100%; box-sizing: border-box;">
+                            <button type="button" onclick="window.agregarEmojiPerfil('😊')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">😊</button>
+                            <button type="button" onclick="window.agregarEmojiPerfil('👍')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">👍</button>
+                            <button type="button" onclick="window.agregarEmojiPerfil('🔥')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">🔥</button>
+                            <button type="button" onclick="window.agregarEmojiPerfil('❤️')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">❤️</button>
+                            <button type="button" onclick="window.agregarEmojiPerfil('⭐')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">⭐</button>
+                            
+                            <label title="Adjuntar foto" style="color: #dfc285; cursor: pointer; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; background: rgba(223,194,133,0.1); width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(223, 194, 133, 0.4); margin-left: auto;">
+                                📎 <input type="file" id="pImageFile" accept="image/*" onchange="window.previewPerfilFile()" style="display:none;">
+                            </label>
+                        </div>
+                        <span id="pFileName" style="font-size: 11px; color: #dfc285; font-style: italic;"></span>
+
+                        <button onclick="window.enviarComentarioPerfil()" style="background: linear-gradient(135deg, #dfc285, #c5a059); color: #0d0d0d; border: none; padding: 14px; cursor: pointer; border-radius: 6px; font-weight: 600; width: 100% !important; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-family: 'Montserrat', sans-serif; box-shadow: 0 4px 15px rgba(223,194,133,0.25);">${labels.btnPublicar}</button>
+                    </div>
+
+                    <div id="pCommentsContainer" style="margin-top: 25px; width: 100%; box-sizing: border-box;">
+                        <p style="text-align: center; color: #888; font-size: 13px; font-style: italic;">${labels.cargandoComentarios}</p>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 35px; font-size: 11px;">
+                        <span onclick="window.activarAdminPerfil()" style="cursor: pointer; color: #555; text-transform: uppercase; letter-spacing: 1px;">Admin</span>
+                    </div>
+                </div>
             `;
 
             document.getElementById('perfil-title').textContent = `${m.nombre} | Masajistas Privé`;
@@ -277,8 +268,158 @@
 
         function cambiarFoto(element) {
             const fotoPrincipal = document.getElementById('fotoPrincipal');
-            if (fotoPrincipal) {
-                fotoPrincipal.src = element.src;
+            if (fotoPrincipal) fotoPrincipal.src = element.src;
+        }
+
+        function inicializarLogicaComentarios() {
+            let isAdminPerfil = sessionStorage.getItem("priveAdmin") === "true";
+
+            window.activarAdminPerfil = function() {
+                const pass = prompt("Contraseña de administrador:");
+                if (pass === "prive2026") {
+                    isAdminPerfil = true;
+                    sessionStorage.setItem("priveAdmin", "true");
+                    alert("Modo administrador activado.");
+                    location.reload();
+                } else if (pass !== null) {
+                    alert("Contraseña incorrecta.");
+                }
+            };
+
+            window.agregarEmojiPerfil = function(emoji) {
+                const txt = document.getElementById('pText');
+                if(txt) { txt.value += emoji; txt.focus(); }
+            };
+
+            window.previewPerfilFile = function() {
+                const input = document.getElementById('pImageFile');
+                const span = document.getElementById('pFileName');
+                if (input && input.files && input.files[0]) {
+                    span.textContent = "✓ Archivo adjunto: " + input.files[0].name;
+                } else if(span) {
+                    span.textContent = "";
+                }
+            };
+
+            function comprimirImagenPerfil(callback) {
+                const input = document.getElementById('pImageFile');
+                if (!input || !input.files || !input.files[0]) {
+                    callback(null);
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        let w = img.width, h = img.height;
+                        const max = 500;
+                        if (w > h && w > max) { h *= max / w; w = max; }
+                        else if (h > max) { w *= max / h; h = max; }
+                        canvas.width = w; canvas.height = h;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, w, h);
+                        callback(canvas.toDataURL('image/jpeg', 0.7));
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+
+            db.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").onSnapshot((snapshot) => {
+                const container = document.getElementById('pCommentsContainer');
+                if (!container) return;
+                container.innerHTML = "";
+
+                if (snapshot.empty) {
+                    container.innerHTML = `<p style='color: #777; font-size: 13px; text-align: center; font-style: italic;'>No hay experiencias aún. ¡Sé el primero en dejar una!</p>`;
+                    return;
+                }
+
+                let lista = [];
+                snapshot.forEach(doc => lista.push({ id: doc.id, ...doc.data() }));
+                
+                lista.sort((a, b) => {
+                    const scoreA = (a.likes || 0) + (a.image ? 5 : 0);
+                    const scoreB = (b.likes || 0) + (b.image ? 5 : 0);
+                    if (scoreB !== scoreA) return scoreB - scoreA;
+                    return (b.fecha?.toMillis() || 0) - (a.fecha?.toMillis() || 0);
+                });
+
+                lista.forEach(data => {
+                    const fechaStr = data.fecha ? new Date(data.fecha.toDate()).toLocaleString() : 'Hace un momento';
+                    const likes = data.likes || 0;
+                    const numEstrellas = data.rating || 5;
+                    const estrellasHtml = '★'.repeat(numEstrellas) + '☆'.repeat(5 - numEstrellas);
+
+                    const imgHtml = data.image ? `<img src="${data.image}" style="max-width: 100%; max-height: 180px; border-radius: 6px; margin-top: 10px; display: block; object-fit: cover; border: 1px solid rgba(223,194,133,0.4);" alt="Adjunto">` : '';
+                    const deleteBtn = isAdminPerfil ? `<button onclick="window.borrarComentarioPerfil('${data.id}')" style="background:none; border:none; color:#ff5555; cursor:pointer; font-size:11px; font-weight:bold; float:right; text-transform: uppercase;">Eliminar</button>` : '';
+
+                    const div = document.createElement('div');
+                    div.style.cssText = "font-size: 13px; margin-bottom: 15px; color: #ccc; word-break: break-word; background: #1a1a1a; padding: 15px; border-radius: 6px; position: relative; border-left: 3px solid #dfc285; border: 1px solid rgba(223,194,133,0.15); width: 100%; box-sizing: border-box;";
+                    div.innerHTML = `
+                        ${deleteBtn}
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                <span style="color: #dfc285; font-weight: bold; margin-right: 6px;">${escapeHtmlPerfil(data.autor)}:</span>
+                                <span style="color: #dfc285; font-size: 14px; letter-spacing: 2px;">${estrellasHtml}</span>
+                            </div>
+                            <span style="color: #e5e0d8; line-height: 1.5; display: block; margin-top: 4px;">${escapeHtmlPerfil(data.contenido)}</span>
+                            ${imgHtml}
+                            <span style="font-size: 11px; color: #777; margin-left: 2px; display: block; margin-top: 8px;">${fechaStr}</span>
+                        </div>
+                        <div style="margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 8px; display: flex; align-items: center; justify-content: space-between;">
+                            <button onclick="window.darLikePerfil('${data.id}', ${likes})" style="background:none; border:none; color:#dfc285; cursor:pointer; font-size:12px; font-weight:600; display:flex; align-items:center; gap:5px;">👍 Me gusta (<span id="plikes-${data.id}">${likes}</span>)</button>
+                            ${data.image ? `<span style="font-size: 10px; color: #dfc285; background: rgba(223,194,133,0.1); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(223,194,133,0.3); text-transform: uppercase;">★ Destacado</span>` : ''}
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+            });
+
+            window.enviarComentarioPerfil = function() {
+                const autor = document.getElementById('pAuthor').value.trim();
+                const contenido = document.getElementById('pText').value.trim();
+                const ratingSeleccionado = document.querySelector('input[name="rating"]:checked');
+
+                if (!autor || !contenido || !ratingSeleccionado) {
+                    alert("Por favor completá tu nombre, elegí una calificación y escribí tu experiencia.");
+                    return;
+                }
+
+                comprimirImagenPerfil((base64) => {
+                    db.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").add({
+                        autor: autor,
+                        contenido: contenido,
+                        rating: parseInt(ratingSeleccionado.value),
+                        image: base64 || "",
+                        likes: 0,
+                        fecha: firebase.firestore.FieldValue.serverTimestamp()
+                    }).then(() => {
+                        document.getElementById('pAuthor').value = '';
+                        document.getElementById('pText').value = '';
+                        document.getElementById('pImageFile').value = '';
+                        document.getElementById('pFileName').textContent = '';
+                        document.querySelectorAll('input[name="rating"]').forEach(r => r.checked = false);
+                    });
+                });
+            };
+
+            window.darLikePerfil = function(msgId, currentLikes) {
+                db.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").doc(msgId).update({
+                    likes: currentLikes + 1
+                });
+            };
+
+            window.borrarComentarioPerfil = function(msgId) {
+                if (confirm("¿Estás seguro de eliminar este comentario?")) {
+                    db.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").doc(msgId).delete();
+                }
+            };
+
+            function escapeHtmlPerfil(text) {
+                if (!text) return '';
+                return text.replace(/[&<>"']/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;' }[m]));
             }
         }
 
@@ -287,7 +428,6 @@
             cargarPerfilDinamico();
         });
     </script>
-    <script src="comentarios.js"></script>
 
 </body>
 </html>
