@@ -255,15 +255,22 @@
                 document.getElementById('nuevosHorarios').value = d.horarios || '';
                 document.getElementById('nuevaBio').value = d.bio || '';
                 
-                // Cargar hasta 10 fotos
+                // Cargar todas las fotos guardadas en sus respectivos casilleros (hasta 10)
                 const inputsFotos = document.querySelectorAll('.input-foto');
                 inputsFotos.forEach(inp => inp.value = '');
-                let listaFotos = d.fotos || [d.img];
+                
+                let listaFotos = d.fotos || [];
+                if (listaFotos.length === 0 && d.img) {
+                    listaFotos = [d.img];
+                }
+
                 listaFotos.forEach((f, idx) => {
-                    if (inputsFotos[idx]) inputsFotos[idx].value = f;
+                    if (inputsFotos[idx]) {
+                        inputsFotos[idx].value = f;
+                    }
                 });
 
-                document.getElementById('tituloFormulario').textContent = "✏️ Editando Perfil: " + d.nombre;
+                document.getElementById('tituloFormulario').textContent = "✏️ Editando Perfil: " + (d.nombre || idPerfil);
                 document.getElementById('btnGuardarTexto').textContent = "Guardar Cambios al Instante";
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
