@@ -174,7 +174,7 @@
         }
         const db = firebase.firestore();
 
-        // Cargar perfiles dinámicamente desde Firebase en tiempo real
+        // Cargar perfiles dinámicamente desde Firebase en tiempo real con orden aleatorio
         function cargarPerfilesDinamicos() {
             db.collection("config_perfiles").onSnapshot((snapshot) => {
                 document.getElementById('grid-terapeuticas').innerHTML = '';
@@ -183,6 +183,10 @@
                 document.getElementById('grid-fantasias').innerHTML = '';
                 document.getElementById('stories-container').innerHTML = '';
 
+                let perfilesTerapeuticas = [];
+                let perfilesSensuales = [];
+                let perfilesMasculinos = [];
+                let perfilesFantasias = [];
                 let destacadasHTML = '';
 
                 snapshot.forEach(doc => {
@@ -193,8 +197,6 @@
 
                     let categoria = p.categoria || 'terapeuticas';
                     let perfilId = p.id || doc.id;
-                    
-                    // Si el archivo físico existe lo abre directo, sino usa la plantilla universal
                     let archivoHtml = perfilId + '.html'; 
                     let nombre = p.nombre || 'Perfil';
                     let zona = p.zona || 'CABA';
@@ -217,10 +219,11 @@
                         </a>
                     `;
 
-                    const grid = document.getElementById('grid-' + categoria);
-                    if (grid) {
-                        grid.insertAdjacentHTML('beforeend', tarjetaHTML);
-                    }
+                    // Clasificar por categoría para la mezcla aleatoria
+                    if (categoria === 'terapeuticas') perfilesTerapeuticas.push(tarjetaHTML);
+                    else if (categoria === 'sensuales') perfilesSensuales.push(tarjetaHTML);
+                    else if (categoria === 'masculinos') perfilesMasculinos.push(tarjetaHTML);
+                    else if (categoria === 'fantasias') perfilesFantasias.push(tarjetaHTML);
 
                     // Agregar a burbujas superiores solo si está marcada como destacada en el admin
                     if (p.destacada === true) {
@@ -233,6 +236,22 @@
                     }
                 });
 
+                // Función de barajado aleatorio (Fisher-Yates)
+                function mezclarArray(array) {
+                    for (let i = array.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [array[i], array[j]] = [array[j], array[i]];
+                    }
+                    return array;
+                }
+
+                // Insertar los perfiles mezclados al azar en cada grilla correspondiente
+                mezclarArray(perfilesTerapeuticas).forEach(html => document.getElementById('grid-terapeuticas').insertAdjacentHTML('beforeend', html));
+                mezclarArray(perfilesSensuales).forEach(html => document.getElementById('grid-sensuales').insertAdjacentHTML('beforeend', html));
+                mezclarArray(perfilesMasculinos).forEach(html => document.getElementById('grid-masculinos').insertAdjacentHTML('beforeend', html));
+                mezclarArray(perfilesFantasias).forEach(html => document.getElementById('grid-fantasias').insertAdjacentHTML('beforeend', html));
+
+                // Agregar los botones de publicidad estáticos al final de cada grilla
                 agregarBotonesAnuncio();
                 document.getElementById('stories-container').innerHTML = destacadasHTML;
                 aplicarIdioma(idiomaActual);
@@ -455,7 +474,7 @@
         function cambiarIdioma() {
             if (idiomaActual === 'es') aplicarIdioma('en');
             else if (idiomaActual === 'en') aplicarIdioma('pt');
-            else if (idiomaActual === 'pt') aplicarIdioma('fr')
+            else if (idiomaActual === 'pt') aplicarIdioma('fr');
             else aplicarIdioma('es');
         }
 
