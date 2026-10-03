@@ -57,9 +57,85 @@
         }
         const db = firebase.firestore();
 
-        // Obtener el ID de la masajista desde la URL (ej. perfil.html?id=prada)
         const urlParams = new URLSearchParams(window.location.search);
         const perfilId = urlParams.get('id');
+
+        let idiomaPerfil = localStorage.getItem('idiomaPrive') || 'es';
+        let datosModeloActual = null;
+
+        const traduccionesPerfil = {
+            es: {
+                btnVolver: "← Volver",
+                badgeVerificado: "✓ Privé Verificado",
+                labelZona: "Zona:",
+                labelModalidad: "Modalidad:",
+                tituloDesc: "Descripción",
+                btnWpp: "Contactar por WhatsApp",
+                footerLegal: "Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.",
+                footerCopy: "© 2026 Masajistas Privé. Todos los derechos reservados."
+            },
+            en: {
+                btnVolver: "← Back",
+                badgeVerificado: "✓ Privé Verified",
+                labelZona: "Area:",
+                labelModalidad: "Modality:",
+                tituloDesc: "Description",
+                btnWpp: "Contact via WhatsApp",
+                footerLegal: "This is an adult site (+18). Advertisers have no employment relationship with the portal.",
+                footerCopy: "© 2026 Masajistas Privé. All rights reserved."
+            },
+            pt: {
+                btnVolver: "← Voltar",
+                badgeVerificado: "✓ Privé Verificado",
+                labelZona: "Zona:",
+                labelModalidad: "Modalidade:",
+                tituloDesc: "Descrição",
+                btnWpp: "Contatar por WhatsApp",
+                footerLegal: "Este é um site para adultos (+18). Os anunciantes não têm vínculo empregatício com o portal.",
+                footerCopy: "© 2026 Masajistas Privé. Todos os direitos reservados."
+            },
+            fr: {
+                btnVolver: "← Retour",
+                badgeVerificado: "✓ Privé Vérifié",
+                labelZona: "Zone :",
+                labelModalidad: "Modalité :",
+                tituloDesc: "Description",
+                btnWpp: "Contacter par WhatsApp",
+                footerLegal: "Ceci est un site pour adultes (+18). Les annonceurs n'ont aucun lien d'emploi avec le portail.",
+                footerCopy: "© 2026 Masajistas Privé. Tous droits réservés."
+            }
+        };
+
+        function aplicarIdiomaPerfil(lang) {
+            idiomaPerfil = lang;
+            localStorage.setItem('idiomaPrive', lang);
+
+            const btn = document.getElementById('btn-idioma');
+            if(btn) {
+                if (lang === 'es') btn.innerHTML = '🇺🇸 EN';
+                else if (lang === 'en') btn.innerHTML = '🇧🇷 PT';
+                else if (lang === 'pt') btn.innerHTML = '🇫🇷 FR';
+                else btn.innerHTML = '🇦🇷 ES';
+            }
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const clave = el.getAttribute('data-i18n');
+                if (traduccionesPerfil[lang] && traduccionesPerfil[lang][clave]) {
+                    el.textContent = traduccionesPerfil[lang][clave];
+                }
+            });
+
+            if (datosModeloActual) {
+                renderizarPerfil(datosModeloActual);
+            }
+        }
+
+        function cambiarIdiomaPerfil() {
+            if (idiomaPerfil === 'es') aplicarIdiomaPerfil('en');
+            else if (idiomaPerfil === 'en') aplicarIdiomaPerfil('pt');
+            else if (idiomaPerfil === 'pt') aplicarIdiomaPerfil('fr');
+            else aplicarIdiomaPerfil('es');
+        }
 
         function cargarPerfilDinamico() {
             const container = document.getElementById('perfil-content-box');
@@ -71,7 +147,6 @@
 
             const docRef = db.collection("modelos_prive").doc(perfilId);
 
-            // Registrar visita en tiempo real (incrementa +1)
             const visitaKey = `visitaRegistrada_${perfilId}`;
             if (!sessionStorage.getItem(visitaKey)) {
                 sessionStorage.setItem(visitaKey, "true");
@@ -80,69 +155,69 @@
                 }).catch(err => {});
             }
 
-            // Traer datos de Firebase
             docRef.get().then((doc) => {
                 if (!doc.exists) {
                     container.innerHTML = `<h2 style="color:#e74c3c; text-align:center;">El perfil solicitado no existe o fue removido.</h2><p style="text-align:center;"><a href="index.html" style="color:#dfc285;">Volver al inicio</a></p>`;
                     return;
                 }
 
-                const m = doc.data();
-
-                // Si está pausado, ocultamos el botón de WhatsApp
-                const ocultarWpp = m.estado === 'pausado' ? 'display: none;' : '';
-
-                // Construir las miniaturas de la galería dinámicamente
-                let miniaturasHTML = '';
-                if (m.fotosGaleria && m.fotosGaleria.length > 0) {
-                    m.fotosGaleria.forEach(fotoUrl => {
-                        miniaturasHTML += `<img src="${fotoUrl}" alt="${m.nombre}" onclick="cambiarFoto(this)">`;
-                    });
-                } else {
-                    miniaturasHTML = `<img src="${m.fotoPrincipal}" alt="${m.nombre}" onclick="cambiarFoto(this)">`;
-                }
-
-                // Renderizar la estructura idéntica a tus HTMLs originales con los datos de Firebase
-                container.innerHTML = `
-                    <!-- Galería de Fotos -->
-                    <div class="perfil-galeria-grid">
-                        <img src="${m.fotoPrincipal}" alt="${m.nombre}" class="foto-principal" id="fotoPrincipal">
-                        <div class="galeria-miniaturas">
-                            ${miniaturasHTML}
-                        </div>
-                    </div>
-
-                    <!-- Información de la Modelo -->
-                    <div class="perfil-info">
-                        <div class="perfil-titulo-seccion">
-                            <h2>${m.nombre}</h2>
-                            <span class="badge-verificado">✓ Privé Verificado</span>
-                        </div>
-
-                        <p class="perfil-ubicacion">📍 Zona: <strong>${m.zona}</strong></p>
-                        <p class="perfil-modalidad">🏠 Modalidad: <strong>${m.modalidad}</strong></p>
-
-                        <div class="perfil-descripcion">
-                            <h3>Descripción</h3>
-                            <p>${m.descripcion || 'Atención personalizada en ambiente climatizado y privado.'}</p>
-                        </div>
-
-                        <a href="${m.whatsappLink || 'https://wa.me/' + m.whatsapp}" target="_blank" rel="noopener noreferrer" class="btn-whatsapp" style="${ocultarWpp}">
-                            💬 Contactar por WhatsApp
-                        </a>
-
-                        <div style="margin-top: 20px; font-size: 12px; color: #666; text-align: right;">
-                            Visitas al perfil: 👁 ${(m.visitas || 0).toLocaleString()}
-                        </div>
-                    </div>
-
-                    <div id="seccion-comentarios"></div>
-                `;
-
-                document.getElementById('perfil-title').textContent = `${m.nombre} | Masajistas Privé`;
+                datosModeloActual = doc.data();
+                renderizarPerfil(datosModeloActual);
             }).catch(error => {
                 container.innerHTML = `<p style="color:#e74c3c; text-align:center;">Error al cargar el perfil.</p>`;
             });
+        }
+
+        function renderizarPerfil(m) {
+            const container = document.getElementById('perfil-content-box');
+            const t = traduccionesPerfil[idiomaPerfil] || traduccionesPerfil['es'];
+
+            const ocultarWpp = m.estado === 'pausado' ? 'display: none;' : '';
+
+            let miniaturasHTML = '';
+            if (m.fotosGaleria && m.fotosGaleria.length > 0) {
+                m.fotosGaleria.forEach(fotoUrl => {
+                    miniaturasHTML += `<img src="${fotoUrl}" alt="${m.nombre}" onclick="cambiarFoto(this)">`;
+                });
+            } else {
+                miniaturasHTML = `<img src="${m.fotoPrincipal}" alt="${m.nombre}" onclick="cambiarFoto(this)">`;
+            }
+
+            container.innerHTML = `
+                <div class="perfil-galeria-grid">
+                    <img src="${m.fotoPrincipal}" alt="${m.nombre}" class="foto-principal" id="fotoPrincipal">
+                    <div class="galeria-miniaturas">
+                        ${miniaturasHTML}
+                    </div>
+                </div>
+
+                <div class="perfil-info">
+                    <div class="perfil-titulo-seccion">
+                        <h2>${m.nombre}</h2>
+                        <span class="badge-verificado" data-i18n="badgeVerificado">${t.badgeVerificado}</span>
+                    </div>
+
+                    <p class="perfil-ubicacion">📍 <span data-i18n="labelZona">${t.labelZona}</span> <strong>${m.zona}</strong></p>
+                    <p class="perfil-modalidad">🏠 <span data-i18n="labelModalidad">${t.labelModalidad}</span> <strong>${m.modalidad}</strong></p>
+
+                    <div class="perfil-descripcion">
+                        <h3 data-i18n="tituloDesc">${t.tituloDesc}</h3>
+                        <p>${m.descripcion || 'Atención personalizada en ambiente climatizado y privado.'}</p>
+                    </div>
+
+                    <a href="${m.whatsappLink || 'https://wa.me/' + m.whatsapp}" target="_blank" rel="noopener noreferrer" class="btn-whatsapp" style="${ocultarWpp}">
+                        💬 <span data-i18n="btnWpp">${t.btnWpp}</span>
+                    </a>
+
+                    <div style="margin-top: 20px; font-size: 12px; color: #666; text-align: right;">
+                        Visitas al perfil: 👁 ${(m.visitas || 0).toLocaleString()}
+                    </div>
+                </div>
+
+                <div id="seccion-comentarios"></div>
+            `;
+
+            document.getElementById('perfil-title').textContent = `${m.nombre} | Masajistas Privé`;
         }
 
         function cambiarFoto(element) {
@@ -153,12 +228,9 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
+            aplicarIdiomaPerfil(idiomaPerfil);
             cargarPerfilDinamico();
         });
-
-        function cambiarIdiomaPerfil() {
-            alert("Sistema dinámico conectado a Firebase.");
-        }
     </script>
     <script src="comentarios.js"></script>
 
