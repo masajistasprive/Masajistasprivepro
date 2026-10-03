@@ -47,9 +47,9 @@
 
             <div class="perfil-detalles">
                 <div class="detalle-item"><span id="txt-horarios">Días y horarios:</span> <span id="perfilHorarios">Lunes a Sábados de 09 a 21 hs.</span></div>
-                <div class="detalle-item"><span id="txt-equipamiento">Equipamiento y servicios:</span> <span>Camilla, tatami, aire acondicionado, servicio de ducha.</span></div>
-                <div class="detalle-item"><span id="txt-pagos">Medios de pago:</span> <span>Efectivo, transferencia bancaria, Mercado Pago.</span></div>
-                <div class="detalle-item"><span id="txt-turnos">Modalidad de turnos:</span> <span>Reserva previa por WhatsApp.</span></div>
+                <div class="detalle-item"><span id="txt-equipamiento">Equipamiento y servicios:</span> <span id="val-equipamiento">Camilla, tatami, aire acondicionado, servicio de ducha.</span></div>
+                <div class="detalle-item"><span id="txt-pagos">Medios de pago:</span> <span id="val-pagos">Efectivo, transferencia bancaria, Mercado Pago.</span></div>
+                <div class="detalle-item"><span id="txt-turnos">Modalidad de turnos:</span> <span id="val-turnos">Reserva previa por WhatsApp.</span></div>
             </div>
 
             <a href="#" target="_blank" rel="noopener noreferrer" class="btn-whatsapp" id="btnWhatsappPerfil" style="display: none;">
@@ -88,7 +88,7 @@
         let datosPerfilGlobal = null;
         let idiomaActual = localStorage.getItem('idiomaPrive') || 'es';
 
-        // Diccionario de traducciones para los textos fijos de la interfaz de perfil
+        // Diccionario completo de traducciones para los textos fijos de la interfaz
         const dicPerfil = {
             es: {
                 enBtn: "🇺🇸 EN",
@@ -101,6 +101,9 @@
                 equipamiento: "Equipamiento y servicios:",
                 pagos: "Medios de pago:",
                 turnos: "Modalidad de turnos:",
+                valEquipamiento: "Camilla, tatami, aire acondicionado, servicio de ducha.",
+                valPagos: "Efectivo, transferencia bancaria, Mercado Pago.",
+                valTurnos: "Reserva previa por WhatsApp.",
                 wpp: "Contactar por WhatsApp",
                 footer1: "Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.",
                 footer2: "© 2026 Masajistas Privé. Todos los derechos reservados."
@@ -116,6 +119,9 @@
                 equipamiento: "Equipment and services:",
                 pagos: "Payment methods:",
                 turnos: "Booking modality:",
+                valEquipamiento: "Massage table, tatami, air conditioning, shower service.",
+                valPagos: "Cash, bank transfer, Mercado Pago.",
+                valTurnos: "Prior reservation via WhatsApp.",
                 wpp: "Contact via WhatsApp",
                 footer1: "This is an adult site (+18). Advertisers have no employment relationship with the portal.",
                 footer2: "© 2026 Masajistas Privé. All rights reserved."
@@ -131,6 +137,9 @@
                 equipamiento: "Equipamentos e serviços:",
                 pagos: "Métodos de pagamento:",
                 turnos: "Modalidade de turnos:",
+                valEquipamiento: "Maca, tatame, ar condicionado, serviço de chuveiro.",
+                valPagos: "Dinheiro, transferência bancária, Mercado Pago.",
+                valTurnos: "Reserva prévia pelo WhatsApp.",
                 wpp: "Contatar pelo WhatsApp",
                 footer1: "Este é um site para adultos (+18). Os anunciantes não têm vínculo empregatício com o portal.",
                 footer2: "© 2026 Masajistas Privé. Todos os direitos reservados."
@@ -146,6 +155,9 @@
                 equipamiento: "Équipement et services:",
                 pagos: "Moyens de paiement:",
                 turnos: "Modalité de réservation:",
+                valEquipamiento: "Table de massage, tatami, climatisation, service de douche.",
+                valPagos: "Espèces, virement bancaire, Mercado Pago.",
+                valTurnos: "Réservation préalable par WhatsApp.",
                 wpp: "Contacter via WhatsApp",
                 footer1: "Ceci est un site pour adultes (+18). Les annonceurs n'ont aucun lien de subordination avec le portail.",
                 footer2: "© 2026 Masajistas Privé. Tous droits réservés."
@@ -169,7 +181,7 @@
             const btn = document.getElementById('btn-idioma');
             if(btn) btn.innerHTML = t.enBtn;
 
-            // Textos fijos
+            // Textos fijos y etiquetas
             document.getElementById('txt-volver').textContent = t.volver;
             document.getElementById('txt-verificado').textContent = t.verificado;
             document.getElementById('txt-zona').textContent = t.zona;
@@ -179,11 +191,14 @@
             document.getElementById('txt-equipamiento').textContent = t.equipamiento;
             document.getElementById('txt-pagos').textContent = t.pagos;
             document.getElementById('txt-turnos').textContent = t.turnos;
+            document.getElementById('val-equipamiento').textContent = t.valEquipamiento;
+            document.getElementById('val-pagos').textContent = t.valPagos;
+            document.getElementById('val-turnos').textContent = t.valTurnos;
             document.getElementById('txt-wpp').textContent = t.wpp;
             document.getElementById('txt-footer-1').textContent = t.footer1;
             document.getElementById('txt-footer-2').textContent = t.footer2;
 
-            // Biografía (traducción guardada en Firebase o fallback)
+            // Biografía (traducción de Firebase o fallback)
             if (datosPerfilGlobal) {
                 if (datosPerfilGlobal.traducciones && datosPerfilGlobal.traducciones[idiomaActual] && datosPerfilGlobal.traducciones[idiomaActual].bio) {
                     document.getElementById('perfilBio').textContent = datosPerfilGlobal.traducciones[idiomaActual].bio;
@@ -210,7 +225,7 @@
                 document.getElementById('perfilModalidad').textContent = datosPerfilGlobal.modalidad || 'Gabinete propio';
                 document.getElementById('perfilHorarios').textContent = datosPerfilGlobal.horarios || 'Lunes a Sábados de 09 a 21 hs.';
 
-                // Foto principal y miniaturas funcionando
+                // Fotos y miniaturas funcionando
                 let fotoPrincipalUrl = datosPerfilGlobal.img || `img/${perfilId}1.jpg`;
                 document.getElementById('fotoPrincipal').src = fotoPrincipalUrl;
 
