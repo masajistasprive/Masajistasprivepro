@@ -13,9 +13,11 @@
         .admin-header h1 { color: #dfc285; font-family: 'Cormorant Garamond', serif; font-size: 28px; margin: 0; }
         .card-admin { background: #141414; border: 1px solid rgba(223, 194, 133, 0.2); border-radius: 10px; padding: 25px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .card-admin h2 { color: #dfc285; font-size: 20px; margin-top: 0; font-family: 'Cormorant Garamond', serif; border-bottom: 1px solid rgba(223, 194, 133, 0.1); padding-bottom: 10px; }
-        textarea.html-input { width: 100%; height: 150px; background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 12px; resize: vertical; box-sizing: border-box; }
+        textarea.html-input { width: 100%; height: 130px; background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 12px; resize: vertical; box-sizing: border-box; }
         textarea.html-input:focus { border-color: #dfc285; outline: none; }
-        .btn-prive { background: #dfc285; color: #0d0d0d; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; transition: all 0.3s; margin-top: 10px; }
+        input[type="text"] { width: 100%; background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px 12px; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 13px; box-sizing: border-box; }
+        input[type="text"]:focus { border-color: #dfc285; outline: none; }
+        .btn-prive { background: #dfc285; color: #0d0d0d; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; transition: all 0.3s; }
         .btn-prive:hover { background: #c5a86d; }
         table.admin-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
         table.admin-table th, table.admin-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #222; }
@@ -28,6 +30,13 @@
         .btn-danger:hover { border-color: #e74c3c; color: #e74c3c; }
         .switch-destacada { cursor: pointer; color: #777; font-size: 18px; }
         .switch-destacada.active { color: #dfc285; text-shadow: 0 0 8px rgba(223, 194, 133, 0.6); }
+
+        /* Estilos del Modal de Edición */
+        #modalEditar { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 99999; padding: 20px; box-sizing: border-box; }
+        .modal-content { background: #141414; border: 1px solid #dfc285; border-radius: 10px; width: 100%; max-width: 600px; padding: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); max-height: 90vh; overflow-y: auto; }
+        .modal-content h3 { color: #dfc285; font-family: 'Cormorant Garamond', serif; font-size: 24px; margin-top: 0; border-bottom: 1px solid rgba(223,194,133,0.2); padding-bottom: 10px; }
+        .form-row { margin-bottom: 15px; }
+        .form-row label { display: block; font-size: 12px; color: #aaa; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
     </style>
 </head>
 <body class="admin-body">
@@ -41,10 +50,17 @@
         <!-- SECCIÓN: IMPORTADOR DE HTML -->
         <div class="card-admin">
             <h2>📥 Importar / Escanear Ficha HTML</h2>
-            <p style="font-size: 13px; color: #aaa; margin-bottom: 15px;">Pegá aquí el código HTML completo de la masajista (ej. Prada o Celeste). El sistema extraerá automáticamente sus datos, fotos, categoría y traducciones para crear su ficha dinámica en Firebase.</p>
+            <p style="font-size: 13px; color: #aaa; margin-bottom: 15px;">Pegá aquí el código HTML completo de la masajista. Si es un perfil con sufijo (ej. <em>luly-sensual</em>), escribilo manualmente en la casilla de ID para evitar conflictos.</p>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; font-size: 11px; color: #dfc285; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">ID Único / Slug para Firebase (ej. prada, luly-sensual, mora-sensual):</label>
+                <input type="text" id="customIdInput" placeholder="Ej: luly-sensual (si se deja vacío, se genera solo)">
+            </div>
+
             <textarea id="htmlSourceInput" class="html-input" placeholder="Pegá el código HTML completo aquí..."></textarea>
-            <div style="margin-top: 15px; display: flex; gap: 15px; align-items: center;">
-                <select id="selectCategoriaImport" style="background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 13px;">
+            
+            <div style="margin-top: 15px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                <select id="selectCategoriaImport" style="background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px 12px; border-radius: 6px; font-size: 13px;">
                     <option value="terapeuticas">Categoría: Terapéuticas</option>
                     <option value="sensuales">Categoría: Sensuales</option>
                     <option value="masculinos">Categoría: Masculinos</option>
@@ -63,6 +79,7 @@
                     <thead>
                         <tr>
                             <th>Nombre</th>
+                            <th>ID (Slug)</th>
                             <th>Zona</th>
                             <th>Categoría</th>
                             <th>Visitas</th>
@@ -72,9 +89,54 @@
                         </tr>
                     </thead>
                     <tbody id="tablaModelosBody">
-                        <tr><td colspan="7" style="text-align: center; color: #777;">Cargando modelos desde Firebase...</td></tr>
+                        <tr><td colspan="8" style="text-align: center; color: #777;">Cargando modelos desde Firebase...</td></tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE EDICIÓN -->
+    <div id="modalEditar">
+        <div class="modal-content">
+            <h3>Editar Perfil de Modelo</h3>
+            <input type="hidden" id="editDocId">
+            <div class="form-row">
+                <label>Nombre:</label>
+                <input type="text" id="editNombre">
+            </div>
+            <div class="form-row">
+                <label>Zona:</label>
+                <input type="text" id="editZona">
+            </div>
+            <div class="form-row">
+                <label>Modalidad:</label>
+                <input type="text" id="editModalidad">
+            </div>
+            <div class="form-row">
+                <label>Categoría:</label>
+                <select id="editCategoria" style="width: 100%; background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px 12px; border-radius: 6px; font-size: 13px;">
+                    <option value="terapeuticas">Terapéuticas</option>
+                    <option value="sensuales">Sensuales</option>
+                    <option value="masculinos">Masculinos</option>
+                    <option value="fantasias">Fantasías</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <label>Enlace de WhatsApp (wa.me/...):</label>
+                <input type="text" id="editWhatsappLink">
+            </div>
+            <div class="form-row">
+                <label>URL Foto Principal:</label>
+                <input type="text" id="editFotoPrincipal">
+            </div>
+            <div class="form-row">
+                <label>Descripción:</label>
+                <textarea id="editDescripcion" class="html-input" style="height: 90px;"></textarea>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                <button type="button" class="btn-accion" onclick="cerrarModalEditar()" style="padding: 10px 20px;">Cancelar</button>
+                <button type="button" class="btn-prive" onclick="guardarEdicionPerfil()">Guardar Cambios</button>
             </div>
         </div>
     </div>
@@ -98,9 +160,10 @@
         }
         const db = firebase.firestore();
 
-        // Función inteligente para escanear el HTML pegado
+        // Escanear e importar HTML
         function procesarEscanerHTML() {
             const rawHtml = document.getElementById('htmlSourceInput').value;
+            const customId = document.getElementById('customIdInput').value.trim();
             const statusDiv = document.getElementById('importStatus');
             const categoria = document.getElementById('selectCategoriaImport').value;
 
@@ -111,14 +174,14 @@
             }
 
             try {
-                // Parser DOM seguro para leer el HTML recibido
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(rawHtml, 'text/html');
 
-                // Extracción inteligente de datos con selectores de tus fichas
                 const titleText = doc.querySelector('title')?.textContent || '';
                 const nombre = titleText.split('|')[0].trim() || 'Desconocida';
-                const idSlug = nombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '');
+                
+                // Si el usuario puso un ID manual (ej. luly-sensual), se respeta. Si no, se genera solo.
+                const idSlug = customId !== '' ? customId.toLowerCase().replace(/[^a-z0-9\-]/g, '') : nombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '');
 
                 const zonaEl = doc.querySelector('[data-i18n="valorZona"]') || doc.querySelector('.perfil-ubicacion strong');
                 const zona = zonaEl ? zonaEl.textContent.trim() : 'CABA';
@@ -137,11 +200,9 @@
                     if (matchPhone) telefono = matchPhone[1];
                 }
 
-                // Extracción de fotos
                 const fotoPrincipal = doc.getElementById('fotoPrincipal')?.getAttribute('src') || 'img/monograma.png';
                 const miniaturas = Array.from(doc.querySelectorAll('.galeria-miniaturas img')).map(img => img.getAttribute('src'));
 
-                // Objeto estructurado listo para Firebase
                 const perfilData = {
                     nombre: nombre,
                     idSlug: idSlug,
@@ -153,37 +214,37 @@
                     whatsappLink: whatsappLink,
                     fotoPrincipal: fotoPrincipal,
                     fotosGaleria: miniaturas.length > 0 ? miniaturas : [fotoPrincipal],
-                    estado: 'activa', // activa o pausada
+                    estado: 'activa',
                     destacada: false,
                     visitas: 0,
                     fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
-                // Guardar en Firestore colección 'modelos_prive'
                 db.collection("modelos_prive").doc(idSlug).set(perfilData, { merge: true })
                     .then(() => {
                         statusDiv.style.color = '#2ecc71';
-                        statusDiv.textContent = `✅ ¡Perfil de ${nombre} escaneado y guardado correctamente en Firebase!`;
+                        statusDiv.textContent = `✅ ¡Perfil de ${nombre} (ID: ${idSlug}) guardado correctamente!`;
                         document.getElementById('htmlSourceInput').value = '';
+                        document.getElementById('customIdInput').value = '';
                         cargarModelosAdmin();
                     })
                     .catch(err => {
                         statusDiv.style.color = '#e74c3c';
-                        statusDiv.textContent = `❌ Error al guardar en Firebase: ` + err.message;
+                        statusDiv.textContent = `❌ Error al guardar: ` + err.message;
                     });
 
             } catch (error) {
                 statusDiv.style.color = '#e74c3c';
-                statusDiv.textContent = `❌ Error al procesar el HTML. Verificá que el código sea correcto.`;
+                statusDiv.textContent = `❌ Error al procesar el código HTML.`;
             }
         }
 
-        // Cargar lista de modelos en la tabla del panel
+        // Cargar lista de modelos en tiempo real
         function cargarModelosAdmin() {
             const tbody = document.getElementById('tablaModelosBody');
             db.collection("modelos_prive").onSnapshot((snapshot) => {
                 if (snapshot.empty) {
-                    tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #777;">No hay perfiles cargados todavía. Usá el importador de arriba.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #777;">No hay perfiles cargados todavía.</td></tr>`;
                     return;
                 }
 
@@ -197,6 +258,7 @@
                     htmlContent += `
                         <tr>
                             <td><strong>${m.nombre}</strong></td>
+                            <td><code style="color:#dfc285; background:#1e1e1e; padding:2px 6px; border-radius:4px;">${docId}</code></td>
                             <td>${m.zona}</td>
                             <td style="text-transform: capitalize;">${m.categoria}</td>
                             <td>👁 ${(m.visitas || 0).toLocaleString()}</td>
@@ -211,6 +273,7 @@
                                 </span>
                             </td>
                             <td>
+                                <button class="btn-accion" onclick="abrirModalEditar('${docId}')">Editar</button>
                                 <button class="btn-accion" onclick="toggleEstado('${docId}', '${m.estado}')">
                                     ${esActiva ? 'Pausar' : 'Activar'}
                                 </button>
@@ -223,31 +286,61 @@
             });
         }
 
-        // Cambiar estado Activa / Pausada (para cuando no pagan o vencen)
+        // Funciones del Modal de Edición
+        function abrirModalEditar(docId) {
+            db.collection("modelos_prive").doc(docId).get().then((doc) => {
+                if (doc.exists) {
+                    const m = doc.data();
+                    document.getElementById('editDocId').value = docId;
+                    document.getElementById('editNombre').value = m.nombre || '';
+                    document.getElementById('editZona').value = m.zona || '';
+                    document.getElementById('editModalidad').value = m.modalidad || '';
+                    document.getElementById('editCategoria').value = m.categoria || 'terapeuticas';
+                    document.getElementById('editWhatsappLink').value = m.whatsappLink || '';
+                    document.getElementById('editFotoPrincipal').value = m.fotoPrincipal || '';
+                    document.getElementById('editDescripcion').value = m.descripcion || '';
+                    document.getElementById('modalEditar').style.display = 'flex';
+                }
+            });
+        }
+
+        function cerrarModalEditar() {
+            document.getElementById('modalEditar').style.display = 'none';
+        }
+
+        function guardarEdicionPerfil() {
+            const docId = document.getElementById('editDocId').value;
+            const datosActualizados = {
+                nombre: document.getElementById('editNombre').value.trim(),
+                zona: document.getElementById('editZona').value.trim(),
+                modalidad: document.getElementById('editModalidad').value.trim(),
+                categoria: document.getElementById('editCategoria').value,
+                whatsappLink: document.getElementById('editWhatsappLink').value.trim(),
+                fotoPrincipal: document.getElementById('editFotoPrincipal').value.trim(),
+                descripcion: document.getElementById('editDescripcion').value.trim(),
+                fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            db.collection("modelos_prive").doc(docId).update(datosActualizados).then(() => {
+                alert("¡Perfil actualizado con éxito!");
+                cerrarModalEditar();
+            }).catch(err => {
+                alert("Error al actualizar: " + err.message);
+            });
+        }
+
         function toggleEstado(docId, estadoActual) {
             const nuevoEstado = (estadoActual === 'pausado') ? 'activa' : 'pausado';
-            db.collection("modelos_prive").doc(docId).update({
-                estado: nuevoEstado
-            }).then(() => {
-                console.log("Estado actualizado");
-            });
+            db.collection("modelos_prive").doc(docId).update({ estado: nuevoEstado });
         }
 
-        // Cambiar si es Destacada (Gold) con el botón de estrella ⭐
         function toggleDestacada(docId, nuevoValor) {
-            db.collection("modelos_prive").doc(docId).update({
-                destacada: nuevoValor
-            }).then(() => {
-                console.log("Destacada actualizada");
-            });
+            db.collection("modelos_prive").doc(docId).update({ destacada: nuevoValor });
         }
 
-        // Eliminar perfil
         function eliminarPerfil(docId, nombre) {
-            if (confirm(`¿Estás seguro de eliminar permanentemente a ${nombre} de la base de datos?`)) {
-                db.collection("modelos_prive").doc(docId).delete().then(() => {
-                    alert(`Perfil de ${nombre} eliminado.`);
-                });
+            if (confirm(`¿Estás seguro de eliminar permanentemente a ${nombre} (${docId})?`)) {
+                db.collection("modelos_prive").doc(docId).delete();
             }
         }
 
