@@ -71,6 +71,8 @@
                 labelModalidad: "Modalidad:",
                 tituloDesc: "Descripción",
                 btnWpp: "Contactar por WhatsApp",
+                tituloCasilla: "Casilla de Experiencias",
+                descCasilla: "Publicá tu experiencia con respeto y cordialidad hacia las profesionales y la comunidad. Comentarios ofensivos serán eliminados.",
                 footerLegal: "Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.",
                 footerCopy: "© 2026 Masajistas Privé. Todos los derechos reservados."
             },
@@ -81,6 +83,8 @@
                 labelModalidad: "Modality:",
                 tituloDesc: "Description",
                 btnWpp: "Contact via WhatsApp",
+                tituloCasilla: "Experience Box",
+                descCasilla: "Share your experience with respect and courtesy towards professionals and the community. Offensive comments will be removed.",
                 footerLegal: "This is an adult site (+18). Advertisers have no employment relationship with the portal.",
                 footerCopy: "© 2026 Masajistas Privé. All rights reserved."
             },
@@ -88,9 +92,11 @@
                 btnVolver: "← Voltar",
                 badgeVerificado: "✓ Privé Verificado",
                 labelZona: "Zona:",
-                labelModalidad: "Modalidade:",
+                labelModalidade: "Modalidade:",
                 tituloDesc: "Descrição",
                 btnWpp: "Contatar por WhatsApp",
+                tituloCasilla: "Caixa de Experiências",
+                descCasilla: "Publique sua experiência com respeito e cordialidade. Comentários ofensivos serão removidos.",
                 footerLegal: "Este é um site para adultos (+18). Os anunciantes não têm vínculo empregatício com o portal.",
                 footerCopy: "© 2026 Masajistas Privé. Todos os direitos reservados."
             },
@@ -101,6 +107,8 @@
                 labelModalidad: "Modalité :",
                 tituloDesc: "Description",
                 btnWpp: "Contacter par WhatsApp",
+                tituloCasilla: "Boîte à Expériences",
+                descCasilla: "Partagez votre expérience avec respect. Les commentaires offensants seront supprimés.",
                 footerLegal: "Ceci est un site pour adultes (+18). Les annonceurs n'ont aucun lien d'emploi avec le portail.",
                 footerCopy: "© 2026 Masajistas Privé. Tous droits réservés."
             }
@@ -147,6 +155,7 @@
 
             const docRef = db.collection("modelos_prive").doc(perfilId);
 
+            // Sigue sumando las visitas en Firebase de forma invisible para el usuario
             const visitaKey = `visitaRegistrada_${perfilId}`;
             if (!sessionStorage.getItem(visitaKey)) {
                 sessionStorage.setItem(visitaKey, "true");
@@ -184,6 +193,7 @@
             }
 
             container.innerHTML = `
+                <!-- Galería de Fotos -->
                 <div class="perfil-galeria-grid">
                     <img src="${m.fotoPrincipal}" alt="${m.nombre}" class="foto-principal" id="fotoPrincipal">
                     <div class="galeria-miniaturas">
@@ -191,6 +201,7 @@
                     </div>
                 </div>
 
+                <!-- Información de la Modelo -->
                 <div class="perfil-info">
                     <div class="perfil-titulo-seccion">
                         <h2>${m.nombre}</h2>
@@ -208,13 +219,18 @@
                     <a href="${m.whatsappLink || 'https://wa.me/' + m.whatsapp}" target="_blank" rel="noopener noreferrer" class="btn-whatsapp" style="${ocultarWpp}">
                         💬 <span data-i18n="btnWpp">${t.btnWpp}</span>
                     </a>
-
-                    <div style="margin-top: 20px; font-size: 12px; color: #666; text-align: right;">
-                        Visitas al perfil: 👁 ${(m.visitas || 0).toLocaleString()}
-                    </div>
                 </div>
 
-                <div id="seccion-comentarios"></div>
+                <!-- Casilla de Comentarios / Experiencias -->
+                <div id="seccion-comentarios" style="grid-column: 1 / -1; margin-top: 30px;">
+                    <div style="background: #141414; border: 1px solid rgba(223, 194, 133, 0.2); border-radius: 10px; padding: 25px; color: #fff;">
+                        <h3 style="color: #dfc285; font-family: 'Cormorant Garamond', serif; font-size: 22px; margin-top: 0;" data-i18n="tituloCasilla">${t.tituloCasilla}</h3>
+                        <p style="color: #aaa; font-size: 13px; margin-bottom: 20px;" data-i18n="descCasilla">${t.descCasilla}</p>
+                        <div id="lista-comentarios-modelo">
+                            <!-- Aquí cargará el script de comentarios.js si lo tenés vinculado -->
+                        </div>
+                    </div>
+                </div>
             `;
 
             document.getElementById('perfil-title').textContent = `${m.nombre} | Masajistas Privé`;
