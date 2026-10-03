@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="main-title">Masajistas Privé | Portal Exclusivo</title>
-    <!-- VERSIÓN DEFINITIVA SIN ROMPER NADA -->
+    <!-- VERSIÓN FINAL CORREGIDA -->
     <link rel="stylesheet" href="css/style.css?v=3.8">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -62,7 +62,7 @@
 
     <div class="destacadas-container-wrapper">
         <h3 class="destacadas-titulo" data-i18n="destacadasTitulo">Destacadas</h3>
-        <div class="stories-container" id="stories-container-dinamico">
+        <div class="stories-container">
             <a href="jennyfer.html" class="story-item" data-perfilid="jennyfer">
                 <div class="story-ring"><img src="img/jennyfer1.jpg" alt="Jennyfer"></div>
                 <span>Jennyfer</span>
@@ -461,7 +461,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <script>
-        // Inicializar Firebase y Sincronizar Destacadas, Pausas y Nuevos Perfiles de forma Automática
+        // Inicializar Firebase y Sincronizar Destacadas, Pausas, Nuevos Perfiles y Modal de Edad
         const firebaseConfig = {
             apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
             authDomain: "masajistasprivepro.firebaseapp.com",
@@ -475,6 +475,21 @@
             firebase.initializeApp(firebaseConfig);
         }
         const db = firebase.firestore();
+
+        // Control del Modal de Edad
+        const modalEdad = document.getElementById('modal-edad');
+        const btnMayor = document.getElementById('btn-mayor');
+
+        if (sessionStorage.getItem('edadVerificada') === 'true') {
+            if (modalEdad) modalEdad.style.display = 'none';
+        }
+
+        if (btnMayor && modalEdad) {
+            btnMayor.addEventListener('click', () => {
+                sessionStorage.setItem('edadVerificada', 'true');
+                modalEdad.style.display = 'none';
+            });
+        }
 
         window.addEventListener('DOMContentLoaded', () => {
             db.collection("config_perfiles").onSnapshot((snapshot) => {
@@ -507,7 +522,7 @@
                         `;
                     }
 
-                    // 3. Si el perfil es NUEVO y no está en el HTML estático, lo inyectamos solo en su categoría correspondiente
+                    // 3. Inyección automática si es un perfil NUEVO creado desde el admin
                     const gridContainer = document.getElementById(`grid-${categoria}`);
                     if (gridContainer && estado !== 'pausado') {
                         let tarjetaExistente = gridContainer.querySelector(`[data-perfilid="${perfilId}"]`);
@@ -527,7 +542,6 @@
                                     </article>
                                 </a>
                             `;
-                            // Insertar antes del botón de anuncio si existe
                             const botonAnuncio = gridContainer.querySelector('.card-ad-link');
                             if (botonAnuncio) {
                                 botonAnuncio.insertAdjacentHTML('beforebegin', nuevaTarjeta);
@@ -538,7 +552,6 @@
                     }
                 });
 
-                // Actualizar contenedor de destacadas si hay marcadas desde el admin
                 if (destacadasHTML !== "") {
                     const storiesContainer = document.querySelector('.stories-container');
                     if (storiesContainer) {
