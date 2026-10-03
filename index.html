@@ -64,7 +64,7 @@
     <div class="destacadas-container-wrapper">
         <h3 class="destacadas-titulo" data-i18n="destacadasTitulo">Destacadas</h3>
         <div class="stories-container" id="stories-container">
-            <!-- Se cargará automáticamente por Firebase excluyendo a Jennyfer y Deby -->
+            <!-- Se cargará automáticamente por Firebase -->
         </div>
     </div>
 
@@ -159,28 +159,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <script>
-        // --- BASE DE DATOS MAESTRA DE PERFILES PARA EL INDEX DINÁMICO ---
-        const listadoPerfilesConfig = [
-            { id: "jennyfer", nombre: "Jennyfer", categoria: "terapeuticas", zona: "TRIBUNALES", modalidad: "modConsultorio", img: "img/jennyfer1.jpg" },
-            { id: "prada", nombre: "Prada", categoria: "terapeuticas", zona: "TRIBUNALES", modalidad: "modGabinete", img: "img/prada1.jpg" },
-            { id: "mariela", nombre: "Mariela", categoria: "terapeuticas", zona: "CONGRESO", modalidad: "modDepto", img: "img/mariela5.jpg" },
-            { id: "daniela", nombre: "Daniela", categoria: "terapeuticas", zona: "MICROCENTRO", modalidad: "modDepto", img: "img/daniela1.jpg" },
-            { id: "zaira", nombre: "Zaira", categoria: "terapeuticas", zona: "CABALLITO", modalidad: "modGabinete", img: "img/zaira1.jpg" },
-            { id: "luly", nombre: "Luly", categoria: "terapeuticas", zona: "CABA", modalidad: "modGabinete", img: "img/luly1.jpg" },
-            { id: "mora", nombre: "Mora", categoria: "terapeuticas", zona: "TRIBUNALES", modalidad: "modConsultorioHotel", img: "img/mora1.jpg" },
-            { id: "lupita", nombre: "Lupita", categoria: "terapeuticas", zona: "TRIBUNALES", modalidad: "modGabineteDomicilio", img: "img/lupita1.jpg" },
-            
-            { id: "renata", nombre: "Renata", categoria: "sensuales", zona: "MICROCENTRO", modalidad: "modDeptoPropio", img: "img/renata1.jpg" },
-            { id: "deby", nombre: "Deby", categoria: "sensuales", zona: "CABALLITO", modalidad: "modGabinete", img: "img/deby1.jpg" },
-            { id: "donatella", nombre: "Donatella", categoria: "sensuales", zona: "CABALLITO", modalidad: "modGabinete", img: "img/donatella1.jpg" },
-            { id: "celeste", nombre: "Celeste", categoria: "sensuales", zona: "CONGRESO", modalidad: "modGabineteDomicilio", img: "img/celeste1.jpg" },
-            { id: "mia", nombre: "Mía", categoria: "sensuales", zona: "CONGRESO", modalidad: "modGabineteDomicilio", img: "img/mia1.jpg" },
-            { id: "sol", nombre: "Sol", categoria: "sensuales", zona: "TRIBUNALES", modalidad: "modDepto", img: "img/sol1.jpg" },
-            { id: "pamela", nombre: "Pamela", categoria: "sensuales", zona: "TRIBUNALES", modalidad: "modDepto", img: "img/pamela3.jpg" },
-            { id: "luly-sensual", nombre: "Luly", categoria: "sensuales", zona: "CABA", modalidad: "modGabinete", img: "img/luly5.jpg" },
-            { id: "mora-sensual", nombre: "Mora", categoria: "sensuales", zona: "TRIBUNALES", modalidad: "modConsultorioDomicilio", img: "img/mora5.jpg" }
-        ];
-
         // Inicializar Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
@@ -196,14 +174,9 @@
         }
         const db = firebase.firestore();
 
-        // Cargar perfiles dinámicamente según Firebase en tiempo real
+        // Cargar perfiles dinámicamente desde Firebase en tiempo real
         function cargarPerfilesDinamicos() {
             db.collection("config_perfiles").onSnapshot((snapshot) => {
-                let estadosPausa = {};
-                snapshot.forEach(doc => {
-                    estadosPausa[doc.id] = doc.data().estado;
-                });
-
                 document.getElementById('grid-terapeuticas').innerHTML = '';
                 document.getElementById('grid-sensuales').innerHTML = '';
                 document.getElementById('grid-masculinos').innerHTML = '';
@@ -212,38 +185,46 @@
 
                 let destacadasHTML = '';
 
-                listadoPerfilesConfig.forEach(p => {
-                    if (estadosPausa[p.id] === 'pausado') return;
+                snapshot.forEach(doc => {
+                    let p = doc.data();
+                    
+                    // Si está pausado, no lo mostramos en el index
+                    if (p.estado === 'pausado') return;
 
-                    let archivoHtml = p.id + '.html';
+                    let categoria = p.categoria || 'terapeuticas';
+                    let archivoHtml = (p.id || doc.id) + '.html';
+                    let nombre = p.nombre || 'Perfil';
+                    let zona = p.zona || 'CABA';
+                    let modalidad = p.modalidad || 'Gabinete propio';
+                    let img = p.img || 'img/logo.png';
 
                     let tarjetaHTML = `
-                        <a href="${archivoHtml}" class="card-link" data-categoria="${p.categoria}">
+                        <a href="${archivoHtml}" class="card-link" data-categoria="${categoria}">
                             <article class="card">
                                 <div class="card-image">
-                                    <img src="${p.img}" alt="${p.nombre}" loading="lazy">
+                                    <img src="${img}" alt="${nombre}" loading="lazy">
                                     <span class="badge-verificado" data-i18n="badgeVerificado">✓ Verificado</span>
                                     <div class="card-gradient-overlay">
-                                        <h3>${p.nombre}</h3>
-                                        <span class="zona">📍 ${p.zona}</span>
-                                        <span class="modalidad-tag" data-i18n="${p.modalidad}">${p.modalidad}</span>
+                                        <h3>${nombre}</h3>
+                                        <span class="zona">📍 ${zona}</span>
+                                        <span class="modalidad-tag">${modalidad}</span>
                                     </div>
                                 </div>
                             </article>
                         </a>
                     `;
 
-                    const grid = document.getElementById('grid-' + p.categoria);
+                    const grid = document.getElementById('grid-' + categoria);
                     if (grid) {
                         grid.insertAdjacentHTML('beforeend', tarjetaHTML);
                     }
 
-                    // Historias destacadas (excluyendo a Jennyfer y Deby)
+                    // Historias destacadas (excluyendo a Jennyfer y Deby si así lo deseas, o sumando las nuevas)
                     if (p.id !== 'jennyfer' && p.id !== 'deby') {
                         destacadasHTML += `
                             <a href="${archivoHtml}" class="story-item">
-                                <div class="story-ring"><img src="${p.img}" alt="${p.nombre}"></div>
-                                <span>${p.nombre}</span>
+                                <div class="story-ring"><img src="${img}" alt="${nombre}"></div>
+                                <span>${nombre}</span>
                             </a>
                         `;
                     }
@@ -298,13 +279,6 @@
                 seccionMasculinos: "Masajistas Masculinos",
                 seccionFantasias: "Fantasías",
                 badgeVerificado: "✓ Verificado",
-                modConsultorio: "Consultorio propio",
-                modGabinete: "Gabinete propio",
-                modDepto: "Departamento propio",
-                modConsultorioHotel: "Consultorio / Hotel",
-                modDeptoPropio: "Depto propio",
-                modGabineteDomicilio: "Gabinete / Domicilio",
-                modConsultorioDomicilio: "Consultorio / Domicilio",
                 espacioDisponible: "Espacio Disponible",
                 publicaPerfil: "Publicá tu perfil aquí",
                 contactanos: "Contáctanos",
@@ -341,13 +315,6 @@
                 seccionMasculinos: "Male Masseurs",
                 seccionFantasias: "Fantasies",
                 badgeVerificado: "✓ Verified",
-                modConsultorio: "Private office",
-                modGabinete: "Private studio",
-                modDepto: "Private apartment",
-                modConsultorioHotel: "Office / Hotel",
-                modDeptoPropio: "Private apt",
-                modGabineteDomicilio: "Studio / Outcall",
-                modConsultorioDomicilio: "Office / Outcall",
                 espacioDisponible: "Available Space",
                 publicaPerfil: "Publish your profile here",
                 contactanos: "Contact Us",
@@ -384,13 +351,6 @@
                 seccionMasculinos: "Massagistas Masculinos",
                 seccionFantasias: "Fantasias",
                 badgeVerificado: "✓ Verificado",
-                modConsultorio: "Consultório próprio",
-                modGabinete: "Estúdio próprio",
-                modDepto: "Apartamento próprio",
-                modConsultorioHotel: "Consultório / Hotel",
-                modDeptoPropio: "Apt próprio",
-                modGabineteDomicilio: "Estúdio / Domicílio",
-                modConsultorioDomicilio: "Consultório / Domicílio",
                 espacioDisponible: "Espaço Disponível",
                 publicaPerfil: "Publique seu perfil aqui",
                 contactanos: "Contate-nos",
@@ -427,13 +387,6 @@
                 seccionMasculinos: "Masseurs",
                 seccionFantasias: "Fantasies",
                 badgeVerificado: "✓ Vérifié",
-                modConsultorio: "Cabinet privé",
-                modGabinete: "Studio privé",
-                modDepto: "Appartement privé",
-                modConsultorioHotel: "Cabinet / Hôtel",
-                modDeptoPropio: "Appart privé",
-                modGabineteDomicilio: "Studio / À domicile",
-                modConsultorioDomicilio: "Cabinet / À domicile",
                 espacioDisponible: "Espace Disponible",
                 publicaPerfil: "Publiez votre profil ici",
                 contactanos: "Contactez-nous",
@@ -559,7 +512,7 @@
             try {
                 const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=-34.6132&longitude=-58.3816&current=temperature_2m,relative_humidity_2m&timezone=America%2FArgentina%2FBuenos_Aires');
                 const data = await res.json();
-                document.getElementById('clima-info').innerHTML = `Buenos Aires (CABA) — 🌡️ ${Math.round(data.current.temperature_2m)} °C | Humedad: ${data.current.relative_humidity_2m}%`;
+                document.getElementById('clime-info').innerHTML = `Buenos Aires (CABA) — 🌡️ ${Math.round(data.current.temperature_2m)} °C | Humedad: ${data.current.relative_humidity_2m}%`;
             } catch(e) {}
         }
 
