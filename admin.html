@@ -224,7 +224,7 @@
         }
 
         window.guardarPerfil = async function() {
-            const editId = document.getElementById('editandoId').value;
+            const editId = document.getElementById('editandoId').value.trim();
             const id = document.getElementById('nuevoId').value.trim().toLowerCase().replace(/\s+/g, '');
             const nombre = document.getElementById('nuevoNombre').value.trim();
             const categoria = document.getElementById('nuevaCategoria').value;
@@ -246,47 +246,58 @@
             btn.textContent = "Guardando...";
             btn.disabled = true;
 
-            const perfilData = {
-                nombre: nombre,
-                categoria: categoria,
-                zona: zona,
-                modalidad: modalidad,
-                whatsapp: whatsapp,
-                img: fotosArray[0],
-                fotos: fotosArray,
-                horarios: horarios,
-                bio: bioEs,
-                traducciones: {
-                    en: { bio: await traducirTexto(bioEs, 'en') },
-                    pt: { bio: await traducirTexto(bioEs, 'pt') },
-                    fr: { bio: await traducirTexto(bioEs, 'fr') }
+            try {
+                const bioEn = await traducirTexto(bioEs, 'en');
+                const bioPt = await traducirTexto(bioEs, 'pt');
+                const bioFr = await traducirTexto(bioEs, 'fr');
+
+                const perfilData = {
+                    nombre: nombre,
+                    categoria: categoria,
+                    zona: zona,
+                    modalidad: modalidad,
+                    whatsapp: whatsapp,
+                    img: fotosArray[0],
+                    fotos: fotosArray,
+                    horarios: horarios,
+                    bio: bioEs,
+                    traducciones: {
+                        en: { bio: bioEn },
+                        pt: { bio: bioPt },
+                        fr: { bio: bioFr }
+                    }
+                };
+
+                if (!editId) {
+                    perfilData.id = id;
+                    perfilData.estado = "activo";
+                    perfilData.destacada = false;
                 }
-            };
 
-            if (!editId) {
-                perfilData.id = id;
-                perfilData.estado = "activo";
-                perfilData.destacada = false;
-            }
+                const targetId = editId !== "" ? editId : id;
+                await db.collection("config_perfiles").doc(targetId).set(perfilData, { merge: true });
 
-            db.collection("config_perfiles").doc(id).set(perfilData, { merge: true }).then(() => {
                 alert("¡Guardado con éxito!");
+                
                 document.getElementById('editandoId').value = '';
                 document.getElementById('nuevoId').value = '';
                 document.getElementById('nuevoId').disabled = false;
                 document.getElementById('nuevoNombre').value = '';
                 document.getElementById('nuevaZona').value = '';
-                document.getElementById('nuevaWpp').value = '';
+                document.getElementById('nuevoWpp').value = '';
+                document.getElementById('nuevosHorarios').value = 'Lunes a sábados de 9 a 21 hs.';
                 document.getElementById('nuevaBio').value = '';
                 document.querySelectorAll('.input-foto').forEach(inp => inp.value = '');
+                
                 document.getElementById('tituloFormulario').textContent = "➕ Dar de Alta Nuevo Perfil";
                 btn.textContent = "Publicar Perfil en la Web al Instante";
                 btn.disabled = false;
-            }).catch(err => {
+            } catch (err) {
+                console.error(err);
                 btn.textContent = "Publicar Perfil en la Web al Instante";
                 btn.disabled = false;
-                alert("Error al guardar.");
-            });
+                alert("Error al guardar en la base de datos.");
+            }
         };
     </script>
 </body>
