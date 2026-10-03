@@ -58,7 +58,6 @@
         .metodo-panel { display: none; }
         .metodo-panel.active { display: block; }
 
-        /* Estilos del Modal de Edición */
         #modalEditar { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 99999; padding: 20px; box-sizing: border-box; }
         .modal-content { background: #141414; border: 1px solid #dfc285; border-radius: 10px; width: 100%; max-width: 750px; padding: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); max-height: 90vh; overflow-y: auto; }
         .modal-content h3 { color: #dfc285; font-family: 'Cormorant Garamond', serif; font-size: 24px; margin-top: 0; border-bottom: 1px solid rgba(223,194,133,0.2); padding-bottom: 10px; }
@@ -92,11 +91,11 @@
             <h2>➕ Crear o Importar Nueva Ficha</h2>
             
             <div class="metodo-selector">
-                <div id="btnMetodoMano" class="btn-metodo active" onclick="cambiarMetodo('mano')">✍️ Escribir a Mano + Subir Fotos</div>
+                <div id="btnMetodoMano" class="btn-metodo active" onclick="cambiarMetodo('mano')">✍️ Escribir a Mano + Elegir Fotos</div>
                 <div id="btnMetodoHtml" class="btn-metodo" onclick="cambiarMetodo('html')">📥 Importar Código HTML</div>
             </div>
 
-            <!-- MÉTODO 1: ESCRIBIR A MANO CON SUBIDA DIRECTA DE FOTOS -->
+            <!-- MÉTODO 1: ESCRIBIR A MANO CON CARGA LOCAL DE FOTOS -->
             <div id="panelMetodoMano" class="metodo-panel active">
                 <div class="form-grid">
                     <div class="form-row">
@@ -122,18 +121,18 @@
                     </div>
                 </div>
 
-                <!-- SECCIÓN DE SELECCIÓN DE FOTOS -->
+                <!-- SECCIÓN DE SELECCIÓN DE FOTOS DIRECTO DE LA GALERÍA -->
                 <div class="form-grid" style="background: #1a1a1a; padding: 15px; border-radius: 8px; border: 1px solid #333; margin-bottom: 15px;">
                     <div class="form-row" style="margin-bottom: 0;">
-                        <label style="color: #dfc285;">📸 Subir Foto Principal de la Galería:</label>
-                        <input type="file" id="fileFotoPrincipal" accept="image/*" onchange="subirFotoDirecta(this, 'urlFotoPrincipal')">
+                        <label style="color: #dfc285;">📸 Elegir Foto Principal de la Galería:</label>
+                        <input type="file" id="fileFotoPrincipal" accept="image/*" onchange="convertirFotoLocal(this, 'urlFotoPrincipal')">
                         <input type="hidden" id="urlFotoPrincipal">
-                        <div id="statusFotoPrin" style="font-size: 11px; color: #888; margin-top: 4px;"></div>
+                        <div id="statusFotoPrin" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
                     </div>
                     <div class="form-row" style="margin-bottom: 0;">
-                        <label style="color: #dfc285;">📸 Subir hasta 4 Fotos de Miniaturas:</label>
-                        <input type="file" id="fileFotosGaleria" accept="image/*" multiple onchange="subirGaleriaDirecta(this)">
-                        <div id="statusGaleria" style="font-size: 11px; color: #888; margin-top: 4px;"></div>
+                        <label style="color: #dfc285;">📸 Elegir hasta 4 Fotos de Miniaturas:</label>
+                        <input type="file" id="fileFotosGaleria" accept="image/*" multiple onchange="convertirGaleriaLocal(this)">
+                        <div id="statusGaleria" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
                     </div>
                 </div>
 
@@ -204,7 +203,7 @@
                         <div class="form-row"><label>Paragraphe 1 (FR):</label><textarea id="desc1_fr" class="html-input"></textarea></div>
                         <div class="form-row"><label>Paragraphe 2 (FR):</label><textarea id="desc2_fr" class="html-input"></textarea></div>
                         <div class="form-grid">
-                            <div class="form-row"><label>Horaires (FR):</label><input type="text" id="horarios_fr"></div>
+                            <div class="form-row"><label>Horaires (FR):</label><input type="text" id="horaires_fr"></div>
                             <div class="form-row"><label>Attention (FR):</label><input type="text" id="atencion_fr"></div>
                         </div>
                     </div>
@@ -265,7 +264,7 @@
         </div>
     </div>
 
-    <!-- MODAL DE EDICIÓN MEJORADO CON SUBIDA DE FOTOS -->
+    <!-- MODAL DE EDICIÓN MEJORADO -->
     <div id="modalEditar">
         <div class="modal-content">
             <h3>Editar Perfil, Fotos y Traducciones</h3>
@@ -296,14 +295,14 @@
             <div class="form-grid" style="background: #1a1a1a; padding: 15px; border-radius: 8px; border: 1px solid #333; margin-bottom: 15px;">
                 <div class="form-row" style="margin-bottom: 0;">
                     <label style="color: #dfc285;">📸 Cambiar Foto Principal:</label>
-                    <input type="file" id="editFileFotoPrin" accept="image/*" onchange="subirFotoDirecta(this, 'editFotoPrincipal')">
-                    <input type="text" id="editFotoPrincipal" placeholder="URL de la foto principal" style="margin-top: 6px; font-size: 11px;">
-                    <div id="statusEditFotoPrin" style="font-size: 11px; color: #888; margin-top: 4px;"></div>
+                    <input type="file" id="editFileFotoPrin" accept="image/*" onchange="convertirFotoLocal(this, 'editFotoPrincipal')">
+                    <input type="text" id="editFotoPrincipal" placeholder="URL o código de foto" style="margin-top: 6px; font-size: 11px;">
+                    <div id="statusEditFotoPrin" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
                 </div>
                 <div class="form-row" style="margin-bottom: 0;">
                     <label style="color: #dfc285;">📸 Actualizar Galería de Fotos:</label>
-                    <input type="file" id="editFileGaleria" accept="image/*" multiple onchange="subirGaleriaEdicion(this)">
-                    <div id="statusEditGaleria" style="font-size: 11px; color: #888; margin-top: 4px;"></div>
+                    <input type="file" id="editFileGaleria" accept="image/*" multiple onchange="convertirGaleriaEdicion(this)">
+                    <div id="statusEditGaleria" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
                 </div>
             </div>
 
@@ -363,7 +362,6 @@
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 
     <script>
         const PASSWORD_ADMIN = "prive2026";
@@ -406,65 +404,59 @@
             firebase.initializeApp(firebaseConfig);
         }
         const db = firebase.firestore();
-        const storage = firebase.storage();
 
         let fotosGaleriaSubidas = [];
         let fotosGaleriaEdicion = [];
 
-        function subirFotoDirecta(input, targetId) {
+        function convertirFotoLocal(input, targetId) {
             const file = input.files[0];
             if (!file) return;
             const status = document.getElementById(targetId === 'urlFotoPrincipal' ? 'statusFotoPrin' : 'statusEditFotoPrin');
-            status.textContent = "⏳ Subiendo foto principal...";
+            status.textContent = "⏳ Procesando foto...";
 
-            const storageRef = storage.ref(`modelos/${Date.now()}_${file.name}`);
-            storageRef.put(file).then(snapshot => {
-                snapshot.ref.getDownloadURL().then(downloadURL => {
-                    document.getElementById(targetId).value = downloadURL;
-                    status.textContent = "✅ ¡Foto principal subida con éxito!";
-                });
-            }).catch(err => {
-                status.textContent = "❌ Error al subir la foto.";
-            });
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById(targetId).value = e.target.result;
+                status.textContent = "✅ ¡Foto lista para publicar!";
+            };
+            reader.readAsDataURL(file);
         }
 
-        function subirGaleriaDirecta(input) {
+        function convertirGaleriaLocal(input) {
             const files = input.files;
             if (!files.length) return;
             const status = document.getElementById('statusGaleria');
-            status.textContent = `⏳ Subiendo ${files.length} fotos...`;
+            status.textContent = `⏳ Procesando ${files.length} fotos...`;
             fotosGaleriaSubidas = [];
 
-            let subidas = 0;
-            Array.from(files).forEach((file, index) => {
-                const storageRef = storage.ref(`modelos/galeria_${Date.now()}_${index}_${file.name}`);
-                storageRef.put(file).then(snapshot => {
-                    snapshot.ref.getDownloadURL().then(downloadURL => {
-                        fotosGaleriaSubidas.push(downloadURL);
-                        subidas++;
-                        status.textContent = `✅ Subidas ${subidas} de ${files.length} fotos.`;
-                    });
-                });
+            let procesadas = 0;
+            Array.from(files).forEach((file) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    fotosGaleriaSubidas.push(e.target.result);
+                    procesadas++;
+                    status.textContent = `✅ Listas ${procesadas} de ${files.length} fotos.`;
+                };
+                reader.readAsDataURL(file);
             });
         }
 
-        function subirGaleriaEdicion(input) {
+        function convertirGaleriaEdicion(input) {
             const files = input.files;
             if (!files.length) return;
             const status = document.getElementById('statusEditGaleria');
-            status.textContent = `⏳ Subiendo ${files.length} fotos a la galería...`;
+            status.textContent = `⏳ Procesando ${files.length} fotos nuevas...`;
             fotosGaleriaEdicion = [];
 
-            let subidas = 0;
-            Array.from(files).forEach((file, index) => {
-                const storageRef = storage.ref(`modelos/galeria_edit_${Date.now()}_${index}_${file.name}`);
-                storageRef.put(file).then(snapshot => {
-                    snapshot.ref.getDownloadURL().then(downloadURL => {
-                        fotosGaleriaEdicion.push(downloadURL);
-                        subidas++;
-                        status.textContent = `✅ Subidas ${subidas} de ${files.length} fotos nuevas.`;
-                    });
-                });
+            let procesadas = 0;
+            Array.from(files).forEach((file) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    fotosGaleriaEdicion.push(e.target.result);
+                    procesadas++;
+                    status.textContent = `✅ Listas ${procesadas} de ${files.length} fotos nuevas.`;
+                };
+                reader.readAsDataURL(file);
             });
         }
 
