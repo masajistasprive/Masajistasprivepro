@@ -222,23 +222,40 @@
                 document.getElementById('perfilModalidad').textContent = datosPerfilGlobal.modalidad || 'Gabinete propio';
                 document.getElementById('perfilHorarios').textContent = datosPerfilGlobal.horarios || 'Lunes a Sábados de 09 a 21 hs.';
 
-                let fotoPrincipalUrl = datosPerfilGlobal.img || `img/${perfilId}1.jpg`;
-                document.getElementById('fotoPrincipal').src = fotoPrincipalUrl;
+                // EXTRACCIÓN REAL DE FOTOS DESDE FIREBASE (Sin mezclar nombres ajenos)
+                let listaFotos = [];
+                if (datosPerfilGlobal.fotos && Array.isArray(datosPerfilGlobal.fotos)) {
+                    listaFotos = datosPerfilGlobal.fotos.filter(f => {
+                        if (!f || typeof f !== 'string') return false;
+                        let limpio = f.trim();
+                        if (limpio === "" || limpio.toLowerCase().includes("logo.png") || limpio.toLowerCase().includes("monograma.png")) {
+                            return false;
+                        }
+                        return true;
+                    });
+                }
 
-                let listaFotos = [
-                    `img/${perfilId}1.jpg`,
-                    `img/${perfilId}2.jpg`,
-                    `img/${perfilId}3.jpg`,
-                    `img/${perfilId}4.jpg`
-                ];
+                if (listaFotos.length === 0) {
+                    if (datosPerfilGlobal.img && !datosPerfilGlobal.img.toLowerCase().includes("logo")) {
+                        listaFotos = [datosPerfilGlobal.img];
+                    } else {
+                        listaFotos = [`img/${perfilId}1.jpg`];
+                    }
+                }
 
+                // La foto principal es estrictamente la primera de la lista real de Firebase
+                document.getElementById('fotoPrincipal').src = listaFotos[0];
+
+                // Generar miniaturas con las fotos reales correspondientes a este perfil
                 let miniaturasHTML = "";
                 listaFotos.forEach(foto => {
-                    miniaturasHTML += `<img src="${foto}" alt="Foto" onclick="seleccionarFotoMiniatura('${foto}')" onerror="this.style.display='none'">`;
+                    if (foto) {
+                        miniaturasHTML += `<img src="${foto}" alt="Foto" onclick="seleccionarFotoMiniatura('${foto}')" onerror="this.style.display='none'">`;
+                    }
                 });
                 document.getElementById('galeriaMiniaturas').innerHTML = miniaturasHTML;
 
-                // Enlace de WhatsApp blindado con respaldo automático para perfiles sin número en Firebase
+                // Enlace de WhatsApp blindado con respaldo automático
                 const btnWpp = document.getElementById('btnWhatsappPerfil');
                 let numeroWpp = (datosPerfilGlobal.whatsapp && datosPerfilGlobal.whatsapp.toString().trim() !== "") 
                     ? datosPerfilGlobal.whatsapp.toString().trim() 
