@@ -447,7 +447,7 @@
 
             <div class="footer-legal">
                 <p data-i18n="footerLegal">Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.</p>
-                <p style="margin-top: 6px;" data-i18n="footerMarcas">Todo el contenido, marcas y logotipos pertenecen a sus respectivos dueños.</p>
+                <p style="margin-top: 6px;" data-i18n="footerMarcas">Todo el contenido, marcas y logotipos pertenecen a seus respectivos dueños.</p>
                 <div id="contador-visitas-global" style="margin-top: 12px; color: #dfc285; font-size: 13px; font-weight: 500;">
                     👁 <span data-i18n="visitasTotales">Visitas totales al portal</span>: <span id="visitas-total-num" data-i18n="cargando">Cargando...</span>
                 </div>
@@ -501,7 +501,20 @@
                     let estado = data.estado || "activo";
                     let esDestacada = data.destacada === true;
                     let nombre = data.nombre || perfilId;
-                    let img = (data.fotos && data.fotos.length > 0) ? data.fotos[0] : (data.img || 'img/logo.png');
+                    
+                    // CORRECCIÓN APLICADA AQUÍ: Selecciona estrictamente la foto principal correcta y actual desde Firebase
+                    let img = 'img/logo.png';
+                    if (data.fotos && Array.isArray(data.fotos) && data.fotos.length > 0) {
+                        let fotosValidas = data.fotos.filter(f => f && typeof f === 'string' && f.trim() !== "");
+                        if (fotosValidas.length > 0) {
+                            img = fotosValidas[0];
+                        } else if (data.img) {
+                            img = data.img;
+                        }
+                    } else if (data.img) {
+                        img = data.img;
+                    }
+
                     let categoria = data.categoria || 'terapeuticas';
                     let zona = data.zona || 'CABA';
                     let modalidad = data.modalidad || 'Gabinete propio';
@@ -757,7 +770,7 @@
                     categoria: "Bem-estar & BA",
                     titulo: "O ritual pós-escritório: Como se desconectar do centro em dez minutos",
                     extracto: "O barulho da City portenha, o metrô lotado e as telas carregam a cervical de tensão invisível. Chaves para entender por que uma pausa programada muda completamente a noite.",
-                    cuerpo: "O ritmo de Buenos Aires tem uma exigência particular. Sair de um escritório no Microcentro ou Tribunales às 18h significa submeter o corpo a um nível de cortisol cronicamente elevado.\n\nA desconexão não acontece sozinha ao chegar em casa; o cérebro continua processando pendências. Entrar em um espaço climatizado, com iluminação suave, aromas de sândalo e música ambiente permite um reset físico imediato."
+                    cuerpo: "O ritmo de Buenos Aires tem uma exigência particular. Sair de um escritório no Microcentro ou Tribunales às 18h significa submeter o corpo a um nível de cortisol cronicamente elevado.\n\nA desconexão não acontece sozinha ao chegar em casa; o cérebro continua processando pendências. Entrar em um espaço climatizado, com iluminação suave, aromas de sándalo e música ambiente permite um reset físico imediato."
                 },
                 {
                     categoria: "Técnicas & Conexão",
@@ -967,4 +980,4 @@
         });
     </script>
 </body>
-                            </html>
+</html>
