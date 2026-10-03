@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="main-title">Masajistas Privé | Portal Exclusivo</title>
-    <!-- VERSIÓN FINAL CORREGIDA -->
+    <!-- VERSIÓN FINAL ACOMODADA Y LIMPIA DE REZAGOS -->
     <link rel="stylesheet" href="css/style.css?v=3.8">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -62,27 +62,9 @@
 
     <div class="destacadas-container-wrapper">
         <h3 class="destacadas-titulo" data-i18n="destacadasTitulo">Destacadas</h3>
-        <div class="stories-container">
-            <a href="jennyfer.html" class="story-item" data-perfilid="jennyfer">
-                <div class="story-ring"><img src="img/jennyfer1.jpg" alt="Jennyfer"></div>
-                <span>Jennyfer</span>
-            </a>
-            <a href="deby.html" class="story-item" data-perfilid="deby">
-                <div class="story-ring"><img src="img/deby1.jpg" alt="Deby"></div>
-                <span>Deby</span>
-            </a>
-            <a href="prada.html" class="story-item" data-perfilid="prada">
-                <div class="story-ring"><img src="img/prada1.jpg" alt="Prada"></div>
-                <span>Prada</span>
-            </a>
-            <a href="lupita.html" class="story-item" data-perfilid="lupita">
-                <div class="story-ring"><img src="img/lupita1.jpg" alt="Lupita"></div>
-                <span>Lupita</span>
-            </a>
-            <a href="sol.html" class="story-item" data-perfilid="sol">
-                <div class="story-ring"><img src="img/sol1.jpg" alt="Sol"></div>
-                <span>Sol</span>
-            </a>
+        <!-- Contenedor dinámico limpio que se llenará estrictamente con lo que indique Firebase -->
+        <div class="stories-container" id="stories-container-dinamico">
+            <!-- Se cargará automáticamente desde Firebase sin rezagos -->
         </div>
     </div>
 
@@ -461,7 +443,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <script>
-        // Inicializar Firebase y Sincronizar Destacadas, Pausas, Nuevos Perfiles y Modal de Edad
+        // Inicializar Firebase y Sincronizar Destacadas (Limpio de Rezagos), Pausas y Nuevos Perfiles
         const firebaseConfig = {
             apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
             authDomain: "masajistasprivepro.firebaseapp.com",
@@ -507,16 +489,16 @@
                     let modalidad = data.modalidad || 'Gabinete propio';
                     let archivoHtml = perfilId + '.html';
 
-                    // 1. Control de Estados (Pausado / Activo) en las tarjetas estáticas existentes
+                    // 1. Control estricto de Estados (Pausado / Activo) en las tarjetas estáticas
                     document.querySelectorAll(`[data-perfilid="${perfilId}"]`).forEach(el => {
                         el.style.display = (estado === 'pausado') ? 'none' : '';
                     });
 
-                    // 2. Control de Historias Destacadas Dinámicas en la parte superior
+                    // 2. Construir únicamente las destacadas que estén activas y marcadas en el admin
                     if (esDestacada && estado !== 'pausado') {
                         destacadasHTML += `
                             <a href="${archivoHtml}" class="story-item" data-destacadaid="${perfilId}">
-                                <div class="story-ring"><img src="${img}" alt="${nombre}"></div>
+                                <div class="story-ring"><img src="${img}" alt="${nombre}" onerror="this.src='img/logo.png'"></div>
                                 <span>${nombre}</span>
                             </a>
                         `;
@@ -552,11 +534,10 @@
                     }
                 });
 
-                if (destacadasHTML !== "") {
-                    const storiesContainer = document.querySelector('.stories-container');
-                    if (storiesContainer) {
-                        storiesContainer.innerHTML = destacadasHTML;
-                    }
+                // Actualizar las historias destacadas limpiando cualquier rezago anterior por completo
+                const storiesContainer = document.getElementById('stories-container-dinamico');
+                if (storiesContainer) {
+                    storiesContainer.innerHTML = destacadasHTML !== "" ? destacadasHTML : '';
                 }
             });
         });
@@ -907,7 +888,7 @@
                     icono = '☁';
                     estado = 'Nublado';
                 } else if ((codigoClima >= 51 && codigoClima <= 67) || (codigoClima >= 80 && codigoClima <= 99)) {
-                    icono = '🌧️';
+                    icono = '🌧️️';
                     estado = 'Lloviendo';
                 }
 
