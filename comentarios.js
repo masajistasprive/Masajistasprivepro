@@ -51,7 +51,7 @@
         return localStorage.getItem('idiomaPrive') || 'es';
     }
 
-    // 1. Blindaje contra click derecho y atajos
+    // 1. Blindaje contra click derecho y atajos (excepto inputs)
     document.addEventListener('contextmenu', (e) => {
         if (e.target.tagName === 'IMG') {
             e.preventDefault();
@@ -72,8 +72,10 @@
             (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
             (e.ctrlKey && (e.key === 'U' || e.key === 'S' || e.key === 'P'))
         ) {
-            e.preventDefault();
-            return false;
+            if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+                return false;
+            }
         }
     });
 
@@ -219,7 +221,7 @@
     const langInit = obtenerLangActual();
     const tInit = dictComentarios[langInit];
 
-    // Inyectar estructura de la casilla de comentarios
+    // Inyectar estructura de la casilla de comentarios con accesibilidad total en inputs
     contenedorDestino.innerHTML = `
         <div style="width: 100%; box-sizing: border-box; margin: 20px auto 10px auto; padding: 22px 15px; background: #141414; border: 1px solid rgba(223, 194, 133, 0.25); border-radius: 10px; font-family: 'Montserrat', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
             <h3 data-i18n="comentariosTitulo" style="color: #dfc285; text-align: center; font-size: 20px; margin-bottom: 20px; font-family: 'Cormorant Garamond', serif; letter-spacing: 1.5px;">${tInit.tituloSeccion}</h3>
@@ -236,9 +238,9 @@
                     </div>
                 </div>
 
-                <input type="text" id="pAuthor" placeholder="${tInit.placeholderNombre}" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a; color: #fff; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
+                <input type="text" id="pAuthor" placeholder="${tInit.placeholderNombre}" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a !important; color: #fff !important; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px; pointer-events: auto !important; user-select: text !important; -webkit-user-select: text !important;">
                 
-                <textarea id="pText" rows="3" placeholder="${tInit.placeholderTexto}" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a; color: #fff; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px; resize: vertical;"></textarea>
+                <textarea id="pText" rows="3" placeholder="${tInit.placeholderTexto}" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a !important; color: #fff !important; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px; resize: vertical; pointer-events: auto !important; user-select: text !important; -webkit-user-select: text !important;"></textarea>
                 
                 <div style="display: flex; gap: 8px; align-items: center; background: #1a1a1a; padding: 10px 12px; border-radius: 6px; border: 1px solid rgba(223, 194, 133, 0.3); flex-wrap: wrap; width: 100%; box-sizing: border-box;">
                     <button type="button" onclick="window.agregarEmojiPerfil('😊')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Sonrisa">😊</button>
