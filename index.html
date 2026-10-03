@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="main-title">Masajistas Privé | Portal Exclusivo</title>
-    <!-- VERSIÓN FINAL CORREGIDA CON PLANTILLA DINÁMICA DE PERFIL -->
+    <!-- VERSIÓN FINAL CORREGIDA Y ORDENADA DEL INDEX -->
     <link rel="stylesheet" href="css/style.css?v=3.8">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -891,16 +891,20 @@
                 const esDeNoche = horaActual < 6 || horaActual >= 20;
 
                 let icono = '☁️';
-                let estado = traducciones[idiomaActual]?.[codigoClima === 0 ? (esDeNoche ? 'nocheDespejada' : 'despejado') : 'nublado'] || 'Nublado';
+                let estado = 'Nublado';
                 
                 if (codigoClima === 0) {
                     icono = esDeNoche ? '🌙' : '☀';
+                    estado = esDeNoche ? 'Noche despejada' : 'Despejado';
                 } else if (codigoClima >= 1 && codigoClima <= 2) {
                     icono = esDeNoche ? '☁' : '⛅';
+                    estado = 'Parcialmente nublado';
                 } else if (codigoClima === 3) {
                     icono = '☁';
+                    estado = 'Nublado';
                 } else if ((codigoClima >= 51 && codigoClima <= 67) || (codigoClima >= 80 && codigoClima <= 99)) {
                     icono = '🌧';
+                    estado = 'Lloviendo';
                 }
 
                 document.getElementById('clima-info').innerHTML = `
