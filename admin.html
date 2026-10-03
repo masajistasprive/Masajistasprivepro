@@ -130,6 +130,28 @@
         }
         const db = firebase.firestore();
 
+        // Lista base para asegurar que aparezcan todos al ingresar
+        const perfilesBaseDefault = [
+            { id: "jennyfer", nombre: "Jennyfer", categoria: "terapeuticas", img: "img/jennyfer1.jpg" },
+            { id: "prada", nombre: "Prada", categoria: "terapeuticas", img: "img/prada1.jpg" },
+            { id: "mariela", nombre: "Mariela", categoria: "terapeuticas", img: "img/mariela5.jpg" },
+            { id: "daniela", nombre: "Daniela", categoria: "terapeuticas", img: "img/daniela1.jpg" },
+            { id: "zaira", nombre: "Zaira", categoria: "terapeuticas", img: "img/zaira1.jpg" },
+            { id: "luly", nombre: "Luly", categoria: "terapeuticas", img: "img/luly1.jpg" },
+            { id: "mora", nombre: "Mora", categoria: "terapeuticas", img: "img/mora1.jpg" },
+            { id: "lupita", nombre: "Lupita", categoria: "terapeuticas", img: "img/lupita1.jpg" },
+            { id: "renata", nombre: "Renata", categoria: "sensuales", img: "img/renata1.jpg" },
+            { id: "deby", nombre: "Deby", categoria: "sensuales", img: "img/deby1.jpg" },
+            { id: "donatella", nombre: "Donatella", categoria: "sensuales", img: "img/donatella1.jpg" },
+            { id: "celeste", nombre: "Celeste", categoria: "sensuales", img: "img/celeste1.jpg" },
+            { id: "mia", nombre: "Mía", categoria: "sensuales", img: "img/mia1.jpg" },
+            { id: "sol", nombre: "Sol", categoria: "sensuales", img: "img/sol1.jpg" },
+            { id: "pamela", nombre: "Pamela", categoria: "sensuales", img: "img/pamela3.jpg" },
+            { id: "luly-sensual", nombre: "Luly (Sensual)", categoria: "sensuales", img: "img/luly5.jpg" },
+            { id: "mora-sensual", nombre: "Mora (Sensual)", categoria: "sensuales", img: "img/mora5.jpg" },
+            { id: "matias", nombre: "Matias", categoria: "masculinos", img: "img/matias1.jpg" }
+        ];
+
         function verificarAdmin() {
             const pass = document.getElementById('adminPass').value;
             if (pass === "prive2026") {
@@ -145,28 +167,39 @@
             const contenedor = document.getElementById('listaPerfilesAdmin');
 
             try {
+                // Registrar por defecto en Firebase los perfiles base si no existen
+                for (let p of perfilesBaseDefault) {
+                    let docRef = db.collection("config_perfiles").doc(p.id);
+                    let docSnap = await docRef.get();
+                    if (!docSnap.exists) {
+                        await docRef.set({
+                            id: p.id,
+                            nombre: p.nombre,
+                            categoria: p.categoria,
+                            img: p.img,
+                            estado: "activo"
+                        });
+                    }
+                }
+
                 const snapVisitas = await db.collection("estadisticas_visitas").get();
                 let visitasMap = {};
                 snapVisitas.forEach(doc => {
                     visitasMap[doc.id] = doc.data().visitas || 0;
                 });
 
-                // Escuchar perfiles guardados en Firebase
+                // Escuchar perfiles guardados en Firebase en tiempo real
                 db.collection("config_perfiles").onSnapshot((snapshot) => {
-                    let perfilesData = {};
-                    snapshot.forEach(doc => {
-                        perfilesData[doc.id] = doc.data();
-                    });
-
                     contenedor.innerHTML = "";
 
-                    if (Object.keys(perfilesData).length === 0) {
-                        contenedor.innerHTML = "<p style='color: #888;'>No hay perfiles cargados todavía. Usa el formulario superior para crear uno.</p>";
+                    if (snapshot.empty) {
+                        contenedor.innerHTML = "<p style='color: #888;'>No hay perfiles cargados todavía.</p>";
                         return;
                     }
 
-                    for (let idPerfil in perfilesData) {
-                        let data = perfilesData[idPerfil];
+                    snapshot.forEach(doc => {
+                        let idPerfil = doc.id;
+                        let data = doc.data();
                         let estado = data.estado || "activo";
                         let totalVisitas = visitasMap[idPerfil] || 0;
                         let imgPerfil = data.img || 'img/logo.png';
@@ -190,7 +223,7 @@
                             </div>
                         `;
                         contenedor.appendChild(div);
-                    }
+                    });
                 });
 
             } catch (e) {
@@ -240,7 +273,6 @@
                 creado: new Date().toISOString()
             }).then(() => {
                 alert(`¡Éxito! El perfil de ${nombre} fue creado y ya aparecerá automáticamente en el portal.`);
-                // Limpiar campos
                 document.getElementById('nuevoId').value = '';
                 document.getElementById('nuevoNombre').value = '';
                 document.getElementById('nuevaZona').value = '';
