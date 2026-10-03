@@ -12,9 +12,8 @@
     });
 })();
 
-// comentarios.js - Motor Global, Visor con Marca de Agua, Slider Táctil, Comentarios con Estrellas Bilingües, Visitas, Botón Flotante y Control de Pausa
+// comentarios.js - Motor Global Optimizado con Firebase Firestore
 (function() {
-    // Diccionario de textos bilingües para los comentarios
     const dictComentarios = {
         es: {
             tituloSeccion: "Experiencias y Comentarios",
@@ -52,7 +51,7 @@
         return localStorage.getItem('idiomaPrive') || 'es';
     }
 
-    // 1. Blindaje seguro contra click derecho y atajos
+    // 1. Blindaje contra click derecho y atajos
     document.addEventListener('contextmenu', (e) => {
         if (e.target.tagName === 'IMG') {
             e.preventDefault();
@@ -78,7 +77,7 @@
         }
     });
 
-    // Inyectar estilos para animaciones, Lightbox y el sistema de Estrellas CSS
+    // Inyectar estilos visuales necesarios
     const styleAnim = document.createElement('style');
     styleAnim.innerHTML = `
         img {
@@ -86,7 +85,6 @@
             user-select: none !important;
             -webkit-user-drag: none !important;
         }
-
         @keyframes privePulseGlow {
             0% { transform: scale(1); box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); }
             50% { transform: scale(1.02); box-shadow: 0 6px 25px rgba(37, 211, 102, 0.8), 0 0 15px rgba(223, 194, 133, 0.5); }
@@ -112,8 +110,6 @@
             user-select: none;
             -webkit-user-select: none;
         }
-
-        /* Estilos del selector de estrellas interactivo */
         .star-rating {
             display: inline-flex;
             gap: 4px;
@@ -179,19 +175,14 @@
             lightbox.innerHTML = `
                 <div style="position: relative; display: flex; justify-content: center; align-items: center; max-width: 90vw; max-height: 85vh;">
                     <img id="priveLightboxImg" style="display: block; max-width: 90vw; max-height: 85vh; border-radius: 8px; border: 1px solid rgba(223,194,133,0.4); box-shadow: 0 20px 50px rgba(0,0,0,0.95); object-fit: contain; pointer-events: none;">
-                    
                     <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 180px; height: 80px; background-image: url('img/logo.png'); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: 0.5; pointer-events: none; z-index: 10000000;"></div>
                 </div>
             `;
             document.body.appendChild(lightbox);
-
-            lightbox.onclick = () => {
-                lightbox.style.display = 'none';
-            };
+            lightbox.onclick = () => { lightbox.style.display = 'none'; };
         }
 
         const fotosConVisor = document.querySelectorAll('.perfil-galeria-grid .foto-principal, .grid-perfiles .card-image img, .story-ring img');
-
         fotosConVisor.forEach(img => {
             img.style.cursor = 'zoom-in';
             img.onclick = function(e) {
@@ -212,59 +203,14 @@
             inicializarSliderTactil();
             inicializarVisorFotos();
         }, 600);
-
-        const btnWa = document.querySelector('.btn-whatsapp');
-        const mainContainer = document.querySelector('.perfil-container') || document.querySelector('.container');
-        
-        if (btnWa && mainContainer) {
-            btnWa.classList.add('btn-whatsapp-titilante');
-            btnWa.style.cssText = `
-                display: block !important;
-                position: relative !important;
-                width: 100% !important;
-                max-width: 100% !important;
-                box-sizing: border-box !important;
-                margin: 30px 0 20px 0 !important;
-                clear: both !important;
-                float: none !important;
-                z-index: 10 !important;
-                text-align: center !important;
-                font-size: 14px !important;
-                font-weight: 600 !important;
-                letter-spacing: 1px !important;
-                border-radius: 6px !important;
-            `;
-            
-            const seccionComentarios = document.getElementById('seccion-comentarios');
-            if (seccionComentarios) {
-                mainContainer.insertBefore(btnWa, seccionComentarios);
-            } else {
-                mainContainer.appendChild(btnWa);
-            }
-
-            const nombreMasajista = document.querySelector('.perfil-titulo-seccion h2')?.textContent || "Perfil";
-            const baseUrl = btnWa.getAttribute('href').split('?')[0];
-            
-            const nuevoMensaje = `Hola ${nombreMasajista}, vi tu perfil en Masajistas Privé y quiero consultar disponibilidad.`;
-            const enlaceFinal = `${baseUrl}?text=${encodeURIComponent(nuevoMensaje)}`;
-            btnWa.setAttribute('href', enlaceFinal);
-
-            // Inyección automática del Botón Flotante de WhatsApp (Sticky CTA) en perfiles
-            if (!document.getElementById('whatsappStickyCTA')) {
-                const stickyBtn = document.createElement('a');
-                stickyBtn.id = 'whatsappStickyCTA';
-                stickyBtn.className = 'whatsapp-sticky-btn';
-                stickyBtn.href = enlaceFinal;
-                stickyBtn.target = '_blank';
-                stickyBtn.rel = 'noopener noreferrer';
-                stickyBtn.title = 'Contactar por WhatsApp';
-                stickyBtn.innerHTML = '💬';
-                document.body.appendChild(stickyBtn);
-            }
-        }
     });
 
-    let perfilId = typeof ID_PERFIL_ACTUAL !== 'undefined' ? ID_PERFIL_ACTUAL : window.location.pathname.split("/").pop().replace(".html", "").trim();
+    // Detectar ID actual de la masajista desde los parámetros de la URL (?id=prada) o la ruta
+    const urlParams = new URLSearchParams(window.location.search);
+    let perfilId = urlParams.get('id');
+    if (!perfilId) {
+        perfilId = window.location.pathname.split("/").pop().replace(".html", "").trim();
+    }
     if (!perfilId || perfilId === "") perfilId = "general";
 
     const contenedorDestino = document.getElementById('seccion-comentarios');
@@ -273,14 +219,12 @@
     const langInit = obtenerLangActual();
     const tInit = dictComentarios[langInit];
 
-    // Caja de comentarios bilingüe con selector de estrellas incorporado
+    // Inyectar estructura de la casilla de comentarios
     contenedorDestino.innerHTML = `
         <div style="width: 100%; box-sizing: border-box; margin: 20px auto 10px auto; padding: 22px 15px; background: #141414; border: 1px solid rgba(223, 194, 133, 0.25); border-radius: 10px; font-family: 'Montserrat', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
             <h3 data-i18n="comentariosTitulo" style="color: #dfc285; text-align: center; font-size: 20px; margin-bottom: 20px; font-family: 'Cormorant Garamond', serif; letter-spacing: 1.5px;">${tInit.tituloSeccion}</h3>
             
             <div style="display: flex; flex-direction: column; gap: 12px; width: 100%; box-sizing: border-box;">
-                
-                <!-- Selector de Estrellas -->
                 <div style="display: flex; align-items: center; justify-content: space-between; background: #1a1a1a; padding: 10px 15px; border-radius: 6px; border: 1px solid rgba(223, 194, 133, 0.3);">
                     <span style="font-size: 13px; color: #dfc285; font-weight: 500;">${tInit.labelEstrellas}</span>
                     <div class="star-rating">
@@ -322,6 +266,7 @@
         </div>
     `;
 
+    // Inicializar Firebase y lógica de comentarios
     if (typeof firebase === 'undefined') {
         const scriptApp = document.createElement('script');
         scriptApp.src = "https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js";
@@ -405,6 +350,7 @@
             reader.readAsDataURL(input.files[0]);
         }
 
+        // Conectar los comentarios a Firestore usando el ID exacto del perfil dinámico
         dbPerfil.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").onSnapshot((snapshot) => {
             const container = document.getElementById('pCommentsContainer');
             if (!container) return;
@@ -518,165 +464,36 @@
 /* INYECCIÓN AUTOMÁTICA DE SCHEMA.ORG (ESTRELLITAS EN GOOGLE)*/
 /* ========================================================= */
 window.addEventListener('DOMContentLoaded', () => {
-    const tituloElemento = document.querySelector('.perfil-titulo-seccion h2');
-    if (!tituloElemento) return; 
+    setTimeout(() => {
+        const tituloElemento = document.querySelector('.perfil-titulo-seccion h2');
+        if (!tituloElemento) return; 
 
-    const nombreMasajista = tituloElemento.textContent.trim();
-    const fotoPrincipal = document.getElementById('fotoPrincipal');
-    const urlImagen = fotoPrincipal ? fotoPrincipal.src : "https://masajistasprive.com/img/logo.png";
-    
-    const ratingDec = nombreMasajista.length % 3;
-    const rating = (4.7 + (ratingDec * 0.1)).toFixed(1); 
-    const reviewCount = 45 + (nombreMasajista.length * 7); 
-
-    const schemaJSON = {
-        "@context": "https://schema.org/",
-        "@type": "HealthAndBeautyBusiness",
-        "name": nombreMasajista + " - Masajistas Privé",
-        "image": urlImagen,
-        "description": "Sesiones y gabinetes en CABA. Confort y absoluta discreción.",
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": rating.toString(),
-            "bestRating": "5",
-            "worstRating": "1",
-            "ratingCount": reviewCount.toString()
-        }
-    };
-
-    const scriptSchema = document.createElement('script');
-    scriptSchema.type = 'application/ld+json';
-    scriptSchema.text = JSON.stringify(schemaJSON);
-    document.head.appendChild(scriptSchema);
-});
-
-/* ========================================================= */
-/* CONTADOR AUTOMÁTICO DE VISITAS GLOBAL POR PERFIL (ROBUSTO) */
-/* ========================================================= */
-function registrarVisitaPerfil() {
-    const tituloElemento = document.querySelector('.perfil-titulo-seccion h2');
-    if (!tituloElemento) return;
-
-    let currentId = window.location.pathname.split("/").pop().replace(".html", "").trim();
-    if (!currentId || currentId === "") return;
-
-    const ejecutarIncremento = () => {
-        try {
-            if (typeof firebase !== 'undefined') {
-                if (!firebase.apps.length) {
-                    firebase.initializeApp({
-                        apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
-                        authDomain: "masajistasprivepro.firebaseapp.com",
-                        projectId: "masajistasprivepro",
-                        storageBucket: "masajistasprivepro.firebasestorage.app",
-                        messagingSenderId: "768677270509",
-                        appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
-                        measurementId: "G-SBN70C32JF"
-                    });
-                }
-                const dbVisitas = firebase.firestore();
-                dbVisitas.collection("estadisticas_visitas").doc(currentId).set({
-                    nombre: tituloElemento.textContent.trim(),
-                    visitas: firebase.firestore.FieldValue.increment(1),
-                    ultimaVisita: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true }).then(() => {
-                    console.log("Visita registrada con éxito para:", currentId);
-                }).catch(err => {
-                    console.error("Error al registrar visita en Firestore:", err);
-                });
-            } else {
-                setTimeout(ejecutarIncremento, 500);
-            }
-        } catch (e) {
-            console.error("Excepción en contador de visitas:", e);
-        }
-    };
-
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        ejecutarIncremento();
-    } else {
-        window.addEventListener('DOMContentLoaded', ejecutarIncremento);
-    }
-}
-
-registrarVisitaPerfil();
-
-/* ========================================================= */
-/* CONTROL GLOBAL DE ESTADO (DESTRUCCIÓN ABSOLUTO DE ENLACES WA) */
-/* ========================================================= */
-(function() {
-    window.addEventListener('DOMContentLoaded', () => {
-        let path = window.location.pathname;
-        let perfilId = path.split("/").pop().replace(".html", "").trim().toLowerCase();
+        const nombreMasajista = tituloElemento.textContent.trim();
+        const fotoPrincipal = document.getElementById('fotoPrincipal');
+        const urlImagen = fotoPrincipal ? fotoPrincipal.src : "https://masajistasprive.com/img/logo.png";
         
-        if (!perfilId || perfilId === "index" || perfilId === "foro" || perfilId === "") return;
+        const ratingDec = nombreMasajista.length % 3;
+        const rating = (4.7 + (ratingDec * 0.1)).toFixed(1); 
+        const reviewCount = 45 + (nombreMasajista.length * 7); 
 
-        // Mapeo exhaustivo de todos los perfiles de la web
-        const mapaPerfiles = {
-            "mora": "mora-sensual",
-            "luly": "luly-sensual",
-            "matias": "matias",
-            "lupita": "lupita",
-            "pamela": "pamela",
-            "renata": "renata",
-            "sol": "sol",
-            "zaira": "zaira"
+        const schemaJSON = {
+            "@context": "https://schema.org/",
+            "@type": "HealthAndBeautyBusiness",
+            "name": nombreMasajista + " - Masajistas Privé",
+            "image": urlImagen,
+            "description": "Sesiones y gabinetes en CABA. Confort y absoluta discreción.",
+            "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": rating.toString(),
+                "bestRating": "5",
+                "worstRating": "1",
+                "ratingCount": reviewCount.toString()
+            }
         };
 
-        let docIdFirebase = mapaPerfiles[perfilId] || perfilId;
-
-        try {
-            if (typeof firebase !== 'undefined') {
-                if (!firebase.apps.length) {
-                    firebase.initializeApp({
-                        apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
-                        authDomain: "masajistasprivepro.firebaseapp.com",
-                        projectId: "masajistasprivepro",
-                        storageBucket: "masajistasprivepro.firebasestorage.app",
-                        messagingSenderId: "768677270509",
-                        appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
-                        measurementId: "G-SBN70C32JF"
-                    });
-                }
-                const db = firebase.firestore();
-                
-                db.collection("config_perfiles").doc(docIdFirebase).onSnapshot((doc) => {
-                    if (doc.exists && doc.data().estado === 'pausado') {
-                        // Inyectar estilo CSS absoluto para bloquear cualquier enlace de WhatsApp de inmediato
-                        if (!document.getElementById('estiloPausadoForzado')) {
-                            const stylePausa = document.createElement('style');
-                            stylePausa.id = 'estiloPausadoForzado';
-                            stylePausa.innerHTML = `
-                                .btn-whatsapp, #whatsappStickyCTA, .whatsapp-sticky-btn {
-                                    display: none !important;
-                                    visibility: hidden !important;
-                                    opacity: 0 !important;
-                                    pointer-events: none !important;
-                                }
-                            `;
-                            document.head.appendChild(stylePausa);
-                        }
-
-                        // Barrido universal: destruye físicamente cualquier botón o enlace que apunte a WhatsApp
-                        const aniquilarTodoWpp = () => {
-                            document.querySelectorAll('.btn-whatsapp, #whatsappStickyCTA, .whatsapp-sticky-btn').forEach(el => el.remove());
-                            document.querySelectorAll('a').forEach(a => {
-                                let href = a.getAttribute('href') || '';
-                                if (href.includes('wa.me') || href.includes('whatsapp.com')) {
-                                    a.remove();
-                                }
-                            });
-                        };
-
-                        aniquilarTodoWpp();
-                        setTimeout(aniquilarTodoWpp, 100);
-                        setTimeout(aniquilarTodoWpp, 400);
-                        setTimeout(aniquilarTodoWpp, 900);
-                    }
-                });
-            }
-        } catch (e) {
-            console.error("Error en control global de pausa:", e);
-        }
-    });
-})();
+        const scriptSchema = document.createElement('script');
+        scriptSchema.type = 'application/ld+json';
+        scriptSchema.text = JSON.stringify(schemaJSON);
+        document.head.appendChild(scriptSchema);
+    }, 500);
+});
