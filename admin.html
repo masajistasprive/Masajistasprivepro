@@ -89,9 +89,9 @@
                     </div>
                     
                     <div class="form-group" style="grid-column: 1 / -1;">
-                        <label style="color: #dfc285; font-weight: bold; margin-bottom: 5px;">Galería de Fotos (Hasta 10 fotos — La Foto 1 es la principal)</label>
+                        <label style="color: #dfc285; font-weight: bold; margin-bottom: 5px;">Galería de Fotos (Dejá vacíos los casilleros que no uses)</label>
                         <div class="fotos-grid" id="contenedorFotosAdmin">
-                            <input type="text" class="input-foto" placeholder="Foto 1 (Principal)">
+                            <input type="text" class="input-foto" placeholder="Foto 1 (Principal) - ej: img/prada1.jpg">
                             <input type="text" class="input-foto" placeholder="Foto 2">
                             <input type="text" class="input-foto" placeholder="Foto 3">
                             <input type="text" class="input-foto" placeholder="Foto 4">
@@ -239,8 +239,9 @@
             let fotosArray = [];
             document.querySelectorAll('.input-foto').forEach(inp => {
                 let val = inp.value.trim();
-                // Solo agrega si tiene texto real y no es un placeholder viejo
-                if (val !== "" && !val.includes("perfil5.jpg") && !val.includes("perfil6.jpg") && !val.includes("perfil7.jpg") && !val.includes("perfil8.jpg") && !val.includes("perfil9.jpg") && !val.includes("perfil10.jpg")) {
+                let valLower = val.toLowerCase();
+                // Filtro estricto: descarta casilleros vacíos y cualquier resto viejo con la palabra "perfil"
+                if (val !== "" && !valLower.includes("perfil")) {
                     fotosArray.push(val);
                 }
             });
