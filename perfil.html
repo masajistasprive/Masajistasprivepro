@@ -108,7 +108,7 @@
             }
             if (datosPerfilGlobal && datosPerfilGlobal.traducciones && datosPerfilGlobal.traducciones[idiomaActual]) {
                 document.getElementById('perfilBio').textContent = datosPerfilGlobal.traducciones[idiomaActual].bio || datosPerfilGlobal.bio;
-            } else if (datosPerfilglobal) {
+            } else if (datosPerfilGlobal) {
                 document.getElementById('perfilBio').textContent = datosPerfilGlobal.bio || '';
             }
         }
@@ -130,13 +130,11 @@
                 document.getElementById('perfilModalidad').textContent = datosPerfilGlobal.modalidad || 'Gabinete propio';
                 document.getElementById('perfilHorarios').textContent = datosPerfilGlobal.horarios || 'Lunes a Sábados de 09 a 21 hs.';
 
-                // FORMA DIRECTA Y LIMPIA: Tomamos la foto principal que esté en Firebase, o armamos por defecto img/perfilId1.jpg
+                // Foto principal
                 let fotoPrincipalUrl = datosPerfilGlobal.img || `img/${perfilId}1.jpg`;
-
                 document.getElementById('fotoPrincipal').src = fotoPrincipalUrl;
 
-                // CONSTRUCCIÓN ESTÁNDAR AUTOMÁTICA DE LAS 4 FOTOS DE LA CARPETA
-                // Si el ID es "prada", buscará img/prada1.jpg, img/prada2.jpg, img/prada3.jpg, img/prada4.jpg
+                // Galería de miniaturas automática basada en el ID
                 let listaFotos = [
                     `img/${perfilId}1.jpg`,
                     `img/${perfilId}2.jpg`,
