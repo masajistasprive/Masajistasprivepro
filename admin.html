@@ -14,22 +14,17 @@
         h1, h2 { font-family: 'Cormorant Garamond', serif; color: #dfc285; text-align: center; }
         h1 { margin-bottom: 25px; font-size: 2.2rem; }
         h2 { font-size: 1.5rem; border-bottom: 1px solid #222; padding-bottom: 10px; margin-bottom: 20px; text-align: left; }
-        
         .seccion-panel { background: #141414; border: 1px solid #222; border-radius: 10px; padding: 20px; margin-bottom: 25px; }
-        
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 15px; }
         .form-group { display: flex; flex-direction: column; gap: 5px; }
         label { font-size: 0.8rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
         input, select, textarea { padding: 10px; background: #1a1a1a; border: 1px solid #333; border-radius: 6px; color: #fff; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; }
         input:focus, select:focus, textarea:focus { outline: none; border-color: #dfc285; }
         textarea { resize: vertical; height: 70px; grid-column: 1 / -1; }
-
         .fotos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; grid-column: 1 / -1; background: #111; padding: 15px; border-radius: 8px; border: 1px dashed #333; }
-
         .perfil-row { display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; padding: 15px; margin-bottom: 12px; border-radius: 8px; border: 1px solid rgba(223,194,133,0.15); flex-wrap: wrap; gap: 10px; }
         .perfil-info-detalles { display: flex; align-items: center; gap: 15px; }
         .perfil-miniatura { width: 45px; height: 45px; object-fit: cover; border-radius: 50%; border: 1px solid #dfc285; }
-
         .acciones-grupo { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
         .btn-accion { padding: 8px 12px; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; font-size: 10px; text-transform: uppercase; transition: all 0.2s; }
         .btn-accion:hover { opacity: 0.85; }
@@ -38,7 +33,6 @@
         .btn-eliminar { background: #8B0000; color: #fff; }
         .btn-editar { background: #3498db; color: #fff; }
         .btn-crear { background: #dfc285; color: #0d0d0d; width: 100%; padding: 14px; font-weight: bold; font-size: 12px; letter-spacing: 1px; margin-top: 10px; }
-
         #loginBox { text-align: center; padding: 50px; }
         input[type="password"] { padding: 12px; border-radius: 6px; border: 1px solid #dfc285; background: #1a1a1a; color: #fff; margin-right: 10px; width: 220px; }
     </style>
@@ -56,7 +50,6 @@
 
         <div id="dashboard" style="display: none;">
             
-            <!-- FORMULARIO DE ALTA / EDICIÓN -->
             <div class="seccion-panel">
                 <h2 id="tituloFormulario">➕ Dar de Alta Nuevo Perfil</h2>
                 <input type="hidden" id="editandoId" value="">
@@ -95,7 +88,6 @@
                         <input type="text" id="nuevosHorarios" value="Lunes a sábados de 9 a 21 hs.">
                     </div>
                     
-                    <!-- SECCIÓN DE HASTA 10 FOTOS -->
                     <div class="form-group" style="grid-column: 1 / -1;">
                         <label style="color: #dfc285; font-weight: bold; margin-bottom: 5px;">Galería de Fotos (Hasta 10 fotos — La Foto 1 es la principal)</label>
                         <div class="fotos-grid" id="contenedorFotosAdmin">
@@ -113,17 +105,16 @@
                     </div>
 
                     <div class="form-group">
-                        <textarea id="nuevaBio" placeholder="Escribe aquí la biografía y servicios en Español (Se traducirá automáticamente al Inglés, Portugués y Francés)..."></textarea>
+                        <textarea id="nuevaBio" placeholder="Escribe aquí la biografía y servicios..."></textarea>
                     </div>
                 </div>
                 <button onclick="guardarPerfil()" class="btn-accion btn-crear" id="btnGuardarTexto">Publicar Perfil en la Web al Instante</button>
             </div>
 
-            <!-- GESTIÓN DE PERFILES -->
             <div class="seccion-panel">
                 <h2>📋 Perfiles Activos, Pausados y Destacadas</h2>
                 <div id="listaPerfilesAdmin">
-                    <p style='color: #dfc285;'>Cargando perfiles desde la base de datos...</p>
+                    <p style='color: #dfc285;'>Cargando perfiles...</p>
                 </div>
             </div>
 
@@ -140,40 +131,27 @@
             appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
             measurementId: "G-SBN70C32JF"
         };
-        
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
         function verificarAdmin() {
-            const pass = document.getElementById('adminPass').value;
-            if (pass === "prive2026") {
+            if (document.getElementById('adminPass').value === "prive2026") {
                 document.getElementById('loginBox').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'block';
                 cargarPanelMaestro();
-            } else {
-                alert("Contraseña incorrecta.");
-            }
+            } else { alert("Contraseña incorrecta."); }
         }
 
         async function cargarPanelMaestro() {
             const contenedor = document.getElementById('listaPerfilesAdmin');
-
             try {
                 const snapVisitas = await db.collection("estadisticas_visitas").get();
                 let visitasMap = {};
-                snapVisitas.forEach(doc => {
-                    visitasMap[doc.id] = doc.data().visitas || 0;
-                });
+                snapVisitas.forEach(doc => { visitasMap[doc.id] = doc.data().visitas || 0; });
 
                 db.collection("config_perfiles").onSnapshot((snapshot) => {
                     contenedor.innerHTML = "";
-
-                    if (snapshot.empty) {
-                        contenedor.innerHTML = "<p style='color: #888;'>No hay perfiles cargados todavía.</p>";
-                        return;
-                    }
+                    if (snapshot.empty) { contenedor.innerHTML = "<p style='color: #888;'>No hay perfiles.</p>"; return; }
 
                     snapshot.forEach(doc => {
                         let idPerfil = doc.id;
@@ -182,7 +160,6 @@
                         let esDestacada = data.destacada === true;
                         let totalVisitas = visitasMap[idPerfil] || 0;
                         let imgPerfil = (data.fotos && data.fotos.length > 0) ? data.fotos[0] : (data.img || 'img/logo.png');
-                        let nombrePerfil = data.nombre || idPerfil;
 
                         const div = document.createElement('div');
                         div.className = 'perfil-row';
@@ -190,62 +167,33 @@
                             <div class="perfil-info-detalles">
                                 <img src="${imgPerfil}" class="perfil-miniatura" onerror="this.src='img/logo.png'">
                                 <div>
-                                    <strong style="color: #dfc285; font-size: 16px; text-transform: capitalize;">${nombrePerfil}</strong> (${idPerfil}.html)
-                                    <br><small style="color: #888;">Categoría: ${data.categoria || 'N/A'} | Visitas: <b style="color:#fff;">${totalVisitas}</b> | Estado: <b style="${estado==='activo'?'color:#25d366':'color:#ff5555'}">${estado.toUpperCase()}</b></small>
+                                    <strong style="color: #dfc285; font-size: 16px;">${data.nombre || idPerfil}</strong> (${idPerfil})
+                                    <br><small style="color: #888;">Visitas: <b style="color:#fff;">${totalVisitas}</b> | Estado: <b style="${estado==='activo'?'color:#25d366':'color:#ff5555'}">${estado.toUpperCase()}</b></small>
                                 </div>
                             </div>
                             <div class="acciones-grupo">
-                                <button onclick="window.toggleDestacada('${idPerfil}', ${!esDestacada})" class="btn-accion" style="background: ${esDestacada ? '#dfc285; color: #0d0d0d;' : '#222; color: #aaa;'}">
-                                    ${esDestacada ? '⭐' : '☆'}
-                                </button>
+                                <button onclick="window.toggleDestacada('${idPerfil}', ${!esDestacada})" class="btn-accion" style="background: ${esDestacada ? '#dfc285; color: #0d0d0d;' : '#222; color: #aaa;'}">${esDestacada ? '⭐' : '☆'}</button>
                                 <button onclick="window.cargarEdicion('${idPerfil}')" class="btn-accion btn-editar">Editar</button>
-                                ${estado === 'activo' 
-                                    ? `<button onclick="window.cambiarEstado('${idPerfil}', 'pausado')" class="btn-accion btn-pausado">Pausar</button>` 
-                                    : `<button onclick="window.cambiarEstado('${idPerfil}', 'activo')" class="btn-accion btn-activo">Activar</button>`
-                                }
+                                <button onclick="window.cambiarEstado('${idPerfil}', '${estado === 'activo' ? 'pausado' : 'activo'}')" class="btn-accion ${estado === 'activo' ? 'btn-pausado' : 'btn-activo'}">${estado === 'activo' ? 'Pausar' : 'Activar'}</button>
                                 <button onclick="window.eliminarPerfil('${idPerfil}')" class="btn-accion btn-eliminar">Eliminar</button>
                             </div>
                         `;
                         contenedor.appendChild(div);
                     });
                 });
-
-            } catch (e) {
-                console.error(e);
-                contenedor.innerHTML = "<p style='color: #ff5555;'>Error al cargar los datos desde Firebase.</p>";
-            }
+            } catch (e) { contenedor.innerHTML = "<p style='color: #ff5555;'>Error al cargar.</p>"; }
         }
 
-        // Función de cambio de estado corregida y blindada
-        window.cambiarEstado = function(idPerfil, nuevoEstado) {
-            db.collection("config_perfiles").doc(idPerfil).set({ 
-                estado: nuevoEstado 
-            }, { merge: true }).then(() => {
-                console.log(`Estado de ${idPerfil} actualizado a: ${nuevoEstado}`);
-            }).catch(err => {
-                console.error("Error al actualizar estado:", err);
-                alert("No se pudo cambiar el estado.");
-            });
-        };
-
-        window.toggleDestacada = function(idPerfil, estadoDestacada) {
-            db.collection("config_perfiles").doc(idPerfil).set({ destacada: estadoDestacada }, { merge: true });
-        };
-
-        window.eliminarPerfil = function(idPerfil) {
-            if (confirm(`¿Estás seguro de eliminar definitivamente a ${idPerfil}?`)) {
-                db.collection("config_perfiles").doc(idPerfil).delete().then(() => {
-                    alert("Perfil eliminado con éxito.");
-                }).catch(err => alert("Error al eliminar."));
-            }
-        };
+        window.cambiarEstado = (id, est) => db.collection("config_perfiles").doc(id).set({ estado: est }, { merge: true });
+        window.toggleDestacada = (id, dest) => db.collection("config_perfiles").doc(id).set({ destacada: dest }, { merge: true });
+        window.eliminarPerfil = (id) => { if (confirm(`¿Eliminar a ${id}?`)) db.collection("config_perfiles").doc(id).delete(); };
 
         window.cargarEdicion = async function(idPerfil) {
             const doc = await db.collection("config_perfiles").doc(idPerfil).get();
             if (doc.exists) {
                 const d = doc.data();
-                document.getElementById('editandoId').value = d.id || idPerfil;
-                document.getElementById('nuevoId').value = d.id || idPerfil;
+                document.getElementById('editandoId').value = idPerfil;
+                document.getElementById('nuevoId').value = idPerfil;
                 document.getElementById('nuevoId').disabled = true;
                 document.getElementById('nuevoNombre').value = d.nombre || '';
                 document.getElementById('nuevaCategoria').value = d.categoria || 'terapeuticas';
@@ -255,37 +203,24 @@
                 document.getElementById('nuevosHorarios').value = d.horarios || '';
                 document.getElementById('nuevaBio').value = d.bio || '';
                 
-                // Cargar todas las fotos guardadas en sus respectivos casilleros (hasta 10)
                 const inputsFotos = document.querySelectorAll('.input-foto');
                 inputsFotos.forEach(inp => inp.value = '');
-                
-                let listaFotos = d.fotos || [];
-                if (listaFotos.length === 0 && d.img) {
-                    listaFotos = [d.img];
-                }
+                let lista = d.fotos || (d.img ? [d.img] : []);
+                lista.forEach((f, idx) => { if (inputsFotos[idx]) inputsFotos[idx].value = f; });
 
-                listaFotos.forEach((f, idx) => {
-                    if (inputsFotos[idx]) {
-                        inputsFotos[idx].value = f;
-                    }
-                });
-
-                document.getElementById('tituloFormulario').textContent = "✏️ Editando Perfil: " + (d.nombre || idPerfil);
-                document.getElementById('btnGuardarTexto').textContent = "Guardar Cambios al Instante";
+                document.getElementById('tituloFormulario').textContent = "✏️ Editando: " + (d.nombre || idPerfil);
+                document.getElementById('btnGuardarTexto').textContent = "Guardar Cambios";
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         };
 
-        // Función inteligente para traducir biografía a los 4 idiomas mediante API pública de traducción
-        async function traducirTexto(texto, idiomaDestino) {
+        async function traducirTexto(texto, lang) {
             if (!texto) return "";
             try {
-                const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=es&tl=${idiomaDestino}&dt=t&q=` + encodeURIComponent(texto));
+                const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=es&tl=${lang}&dt=t&q=` + encodeURIComponent(texto));
                 const data = await res.json();
                 return data[0].map(item => item[0]).join('');
-            } catch(e) {
-                return texto;
-            }
+            } catch(e) { return texto; }
         }
 
         window.guardarPerfil = async function() {
@@ -299,34 +234,19 @@
             const horarios = document.getElementById('nuevosHorarios').value.trim();
             const bioEs = document.getElementById('nuevaBio').value.trim();
 
-            if (!id || !nombre) {
-                alert("Completa el ID y el Nombre.");
-                return;
-            }
+            if (!id || !nombre) { alert("Completa ID y Nombre."); return; }
 
-            // Recopilar galerías de fotos (hasta 10)
             let fotosArray = [];
             document.querySelectorAll('.input-foto').forEach(inp => {
-                if (inp.value.trim() !== "") {
-                    fotosArray.push(inp.value.trim());
-                }
+                if (inp.value.trim() !== "") fotosArray.push(inp.value.trim());
             });
+            if (fotosArray.length === 0) fotosArray.push("img/logo.png");
 
-            if (fotosArray.length === 0) {
-                fotosArray.push("img/logo.png");
-            }
-
-            // Traducir automáticamente biografía a EN, PT y FR
             const btn = document.getElementById('btnGuardarTexto');
-            btn.textContent = "Traduciendo y guardando en Firebase...";
+            btn.textContent = "Guardando...";
             btn.disabled = true;
 
-            const bioEn = await traducirTexto(bioEs, 'en');
-            const bioPt = await traducirTexto(bioEs, 'pt');
-            const bioFr = await traducirTexto(bioEs, 'fr');
-
             const perfilData = {
-                id: id,
                 nombre: nombre,
                 categoria: categoria,
                 zona: zona,
@@ -337,37 +257,35 @@
                 horarios: horarios,
                 bio: bioEs,
                 traducciones: {
-                    en: { bio: bioEn },
-                    pt: { bio: bioPt },
-                    fr: { bio: bioFr }
+                    en: { bio: await traducirTexto(bioEs, 'en') },
+                    pt: { bio: await traducirTexto(bioEs, 'pt') },
+                    fr: { bio: await traducirTexto(bioEs, 'fr') }
                 }
             };
 
             if (!editId) {
+                perfilData.id = id;
                 perfilData.estado = "activo";
                 perfilData.destacada = false;
-                perfilData.creado = new Date().toISOString();
             }
 
             db.collection("config_perfiles").doc(id).set(perfilData, { merge: true }).then(() => {
-                alert(editId ? "¡Perfil actualizado y traducido con éxito!" : "¡Perfil creado y traducido con éxito!");
-                
+                alert("¡Guardado con éxito!");
                 document.getElementById('editandoId').value = '';
                 document.getElementById('nuevoId').value = '';
                 document.getElementById('nuevoId').disabled = false;
                 document.getElementById('nuevoNombre').value = '';
                 document.getElementById('nuevaZona').value = '';
+                document.getElementById('nuevaWpp').value = '';
                 document.getElementById('nuevaBio').value = '';
                 document.querySelectorAll('.input-foto').forEach(inp => inp.value = '');
-                
                 document.getElementById('tituloFormulario').textContent = "➕ Dar de Alta Nuevo Perfil";
                 btn.textContent = "Publicar Perfil en la Web al Instante";
                 btn.disabled = false;
             }).catch(err => {
-                console.error(err);
                 btn.textContent = "Publicar Perfil en la Web al Instante";
                 btn.disabled = false;
-                alert("Error al guardar en Firebase.");
+                alert("Error al guardar.");
             });
         };
     </script>
