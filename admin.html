@@ -264,7 +264,7 @@
         </div>
     </div>
 
-    <!-- MODAL DE EDICIÓN CORREGIDO -->
+    <!-- MODAL DE EDICIÓN -->
     <div id="modalEditar">
         <div class="modal-content">
             <h3>Editar Perfil, Fotos y Traducciones</h3>
@@ -291,7 +291,6 @@
                 <input type="text" id="editWhatsappLink">
             </div>
 
-            <!-- SECCIÓN DE FOTOS EN EL MODAL DE EDICIÓN -->
             <div class="form-grid" style="background: #1a1a1a; padding: 15px; border-radius: 8px; border: 1px solid #333; margin-bottom: 15px;">
                 <div class="form-row" style="margin-bottom: 0;">
                     <label style="color: #dfc285;">📸 Cambiar Foto Principal:</label>
@@ -306,13 +305,11 @@
                 </div>
             </div>
 
-            <!-- Botón de Traducción Automática -->
             <div style="margin-top: 15px; border-top: 1px solid rgba(223,194,133,0.2); padding-top: 15px;">
                 <button type="button" class="btn-traducir" onclick="traducirAutomaticamenteES()">✨ Traducir automáticamente a Inglés, Portugués y Francés</button>
                 <div id="tradStatus" style="font-size: 12px; color: #dfc285; margin-top: 5px;"></div>
             </div>
 
-            <!-- Selector de Idiomas para las traducciones -->
             <div style="margin-top: 15px;">
                 <label style="margin-bottom: 8px;">Traducciones de Zona y Descripción:</label>
                 <div class="lang-tabs">
@@ -322,28 +319,24 @@
                     <div class="lang-tab" onclick="cambiarTabModalLang('fr')">🇫🇷 Francés</div>
                 </div>
 
-                <!-- Español -->
                 <div id="modal-lang-es" class="lang-section active">
                     <div class="form-row"><label>Zona (ES):</label><input type="text" id="editZona_es"></div>
                     <div class="form-row"><label>Modalidad (ES):</label><input type="text" id="editModalidad_es"></div>
                     <div class="form-row"><label>Descripción 1 (ES):</label><textarea id="editDesc_es" class="html-input" style="height: 80px;"></textarea></div>
                     <div class="form-row"><label>Descripción 2 (ES):</label><textarea id="editDesc2_es" class="html-input" style="height: 80px;"></textarea></div>
                 </div>
-                <!-- Inglés -->
                 <div id="modal-lang-en" class="lang-section">
                     <div class="form-row"><label>Area (EN):</label><input type="text" id="editZona_en"></div>
                     <div class="form-row"><label>Modality (EN):</label><input type="text" id="editModalidad_en"></div>
                     <div class="form-row"><label>Description 1 (EN):</label><textarea id="editDesc_en" class="html-input" style="height: 80px;"></textarea></div>
                     <div class="form-row"><label>Description 2 (EN):</label><textarea id="editDesc2_en" class="html-input" style="height: 80px;"></textarea></div>
                 </div>
-                <!-- Portugués -->
                 <div id="modal-lang-pt" class="lang-section">
                     <div class="form-row"><label>Zona (PT):</label><input type="text" id="editZona_pt"></div>
                     <div class="form-row"><label>Modalidade (PT):</label><input type="text" id="editModalidad_pt"></div>
                     <div class="form-row"><label>Descrição 1 (PT):</label><textarea id="editDesc_pt" class="html-input" style="height: 80px;"></textarea></div>
                     <div class="form-row"><label>Descrição 2 (PT):</label><textarea id="editDesc2_pt" class="html-input" style="height: 80px;"></textarea></div>
                 </div>
-                <!-- Francés -->
                 <div id="modal-lang-fr" class="lang-section">
                     <div class="form-row"><label>Zone (FR):</label><input type="text" id="editZona_fr"></div>
                     <div class="form-row"><label>Modalité (FR):</label><input type="text" id="editModalidad_fr"></div>
@@ -573,6 +566,7 @@
                 estado: 'activa',
                 destacada: false,
                 visitas: 0,
+                seccionComentariosHTML: '<div id="seccion-comentarios"></div><script src="comentarios.js"><\/script>',
                 fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
             };
 
@@ -648,6 +642,7 @@
                     estado: 'activa',
                     destacada: false,
                     visitas: 0,
+                    seccionComentariosHTML: '<div id="seccion-comentarios"></div><script src="comentarios.js"><\/script>',
                     fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
@@ -790,7 +785,6 @@
                     mData.traducciones[l].descPerfil2 = document.getElementById(`editDesc2_${l}`).value.trim();
                 });
 
-                // Captura correcta de la foto principal editada
                 const nuevaFotoPrin = document.getElementById('editFotoPrincipal').value.trim();
                 if (nuevaFotoPrin) {
                     mData.fotoPrincipal = nuevaFotoPrin;
@@ -810,6 +804,7 @@
                     fotosGaleria: mData.fotosGaleria,
                     descripcion: mData.traducciones.es.descPerfil1,
                     traducciones: mData.traducciones,
+                    seccionComentariosHTML: '<div id="seccion-comentarios"></div><script src="comentarios.js"><\/script>',
                     fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
