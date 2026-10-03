@@ -57,6 +57,7 @@
             </a>
         </div>
 
+        <!-- SECCIÓN DE COMENTARIOS Y MENSAJES RESTAURADA -->
         <div id="seccion-comentarios" style="grid-column: 1 / -1; width: 100%;"></div>
 
     </main>
@@ -88,7 +89,6 @@
         let datosPerfilGlobal = null;
         let idiomaActual = localStorage.getItem('idiomaPrive') || 'es';
 
-        // Diccionario completo de traducciones para los textos fijos de la interfaz
         const dicPerfil = {
             es: {
                 enBtn: "🇺🇸 EN",
@@ -177,11 +177,9 @@
         function actualizarTextosInterfaz() {
             const t = dicPerfil[idiomaActual] || dicPerfil.es;
 
-            // Botón de idioma
             const btn = document.getElementById('btn-idioma');
             if(btn) btn.innerHTML = t.enBtn;
 
-            // Textos fijos y etiquetas
             document.getElementById('txt-volver').textContent = t.volver;
             document.getElementById('txt-verificado').textContent = t.verificado;
             document.getElementById('txt-zona').textContent = t.zona;
@@ -198,7 +196,6 @@
             document.getElementById('txt-footer-1').textContent = t.footer1;
             document.getElementById('txt-footer-2').textContent = t.footer2;
 
-            // Biografía (traducción de Firebase o fallback)
             if (datosPerfilGlobal) {
                 if (datosPerfilGlobal.traducciones && datosPerfilGlobal.traducciones[idiomaActual] && datosPerfilGlobal.traducciones[idiomaActual].bio) {
                     document.getElementById('perfilBio').textContent = datosPerfilGlobal.traducciones[idiomaActual].bio;
@@ -225,7 +222,6 @@
                 document.getElementById('perfilModalidad').textContent = datosPerfilGlobal.modalidad || 'Gabinete propio';
                 document.getElementById('perfilHorarios').textContent = datosPerfilGlobal.horarios || 'Lunes a Sábados de 09 a 21 hs.';
 
-                // Fotos y miniaturas funcionando
                 let fotoPrincipalUrl = datosPerfilGlobal.img || `img/${perfilId}1.jpg`;
                 document.getElementById('fotoPrincipal').src = fotoPrincipalUrl;
 
@@ -263,6 +259,7 @@
 
         window.addEventListener('DOMContentLoaded', cargarPerfilDinamico);
     </script>
+    <!-- SCRIPT DE COMENTARIOS RESTAURADO -->
     <script src="comentarios.js"></script>
 </body>
 </html>
