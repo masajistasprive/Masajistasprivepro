@@ -238,9 +238,13 @@
                 });
                 document.getElementById('galeriaMiniaturas').innerHTML = miniaturasHTML;
 
+                // Enlace de WhatsApp corregido y funcional
                 if (datosPerfilGlobal.whatsapp) {
                     const btnWpp = document.getElementById('btnWhatsappPerfil');
-                    btnWpp.href = `https://wa.me/${datosPerfilGlobal.whatsapp}?text=Hola%20${encodeURIComponent(datosPerfilGlobal.nombre)},%20vi%20tu%20perfil%20en%20Masajistas%20Privé`;
+                    let numeroWpp = datosPerfilGlobal.whatsapp.toString().trim();
+                    let nombrePerfil = datosPerfilGlobal.nombre || 'Perfil';
+                    
+                    btnWpp.href = `https://wa.me/${numeroWpp}?text=Hola%20${encodeURIComponent(nombrePerfil)},%20vi%20tu%20perfil%20en%20Masajistas%20Privé`;
                     btnWpp.style.display = 'inline-flex';
                 }
 
