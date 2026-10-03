@@ -3,12 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Administración | Masajistas Privé</title>
+    <title>Panel de Administración Protegido | Masajistas Privé</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         body.admin-body { background-color: #0d0d0d; color: #e5e5e5; font-family: 'Montserrat', sans-serif; margin: 0; padding: 20px; }
-        .admin-container { max-width: 1100px; margin: 0 auto; }
+        .admin-container { max-width: 1100px; margin: 0 auto; display: none; } /* Oculto hasta poner contraseña */
+        
+        /* Pantalla de Login */
+        #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0d0d0d; display: flex; justify-content: center; align-items: center; z-index: 999999; }
+        .login-card { background: #141414; border: 1px solid #dfc285; border-radius: 12px; padding: 40px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.9); }
+        .login-card h2 { color: #dfc285; font-family: 'Cormorant Garamond', serif; font-size: 26px; margin-top: 0; margin-bottom: 20px; }
+        .login-card input { width: 100%; background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 6px; font-size: 14px; margin-bottom: 20px; box-sizing: border-box; text-align: center; }
+        .login-card input:focus { border-color: #dfc285; outline: none; }
+
         .admin-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(223, 194, 133, 0.3); padding-bottom: 20px; margin-bottom: 30px; }
         .admin-header h1 { color: #dfc285; font-family: 'Cormorant Garamond', serif; font-size: 28px; margin: 0; }
         .card-admin { background: #141414; border: 1px solid rgba(223, 194, 133, 0.2); border-radius: 10px; padding: 25px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
@@ -57,10 +65,25 @@
 </head>
 <body class="admin-body">
 
-    <div class="admin-container">
+    <!-- PANTALLA DE ACCESO CON CONTRASEÑA -->
+    <div id="loginOverlay">
+        <div class="login-card">
+            <h2>Masajistas Privé</h2>
+            <p style="font-size: 12px; color: #aaa; margin-bottom: 20px;">Panel de Administración Protegido</p>
+            <input type="password" id="inputPassword" placeholder="Ingresá la contraseña" onkeypress="if(event.key === 'Enter') verificarPassword()">
+            <button type="button" class="btn-prive" style="width: 100%;" onclick="verificarPassword()">Ingresar al Panel</button>
+            <div id="loginError" style="color: #e74c3c; font-size: 12px; margin-top: 12px;"></div>
+        </div>
+    </div>
+
+    <!-- CONTENEDOR PRINCIPAL DEL PANEL -->
+    <div class="admin-container" id="adminMainContent">
         <header class="admin-header">
             <h1>Panel de Administración — Masajistas Privé</h1>
-            <a href="index.html" style="color: #dfc285; text-decoration: none; font-size: 13px;">← Volver al Portal</a>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <a href="index.html" style="color: #dfc285; text-decoration: none; font-size: 13px;">← Volver al Portal</a>
+                <button type="button" class="btn-accion" onclick="cerrarSesionAdmin()" style="border-color: #e74c3c; color: #e74c3c;">Cerrar Sesión</button>
+            </div>
         </header>
 
         <!-- SECCIÓN DE CREACIÓN / ELECCIÓN DE MÉTODO -->
@@ -324,6 +347,34 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 
     <script>
+        // CONTRASEÑA DE ACCESO AL PANEL (Cámbiala por la que prefieras)
+        const PASSWORD_ADMIN = "prive2026";
+
+        function verificarPassword() {
+            const pass = document.getElementById('inputPassword').value;
+            if (pass === PASSWORD_ADMIN) {
+                localStorage.setItem('priveAdminAuth', 'true');
+                document.getElementById('loginOverlay').style.display = 'none';
+                document.getElementById('adminMainContent').style.display = 'block';
+                cargarModelosAdmin();
+            } else {
+                document.getElementById('loginError').textContent = "❌ Contraseña incorrecta";
+            }
+        }
+
+        function cerrarSesionAdmin() {
+            localStorage.removeItem('priveAdminAuth');
+            location.reload();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('priveAdminAuth') === 'true') {
+                document.getElementById('loginOverlay').style.display = 'none';
+                document.getElementById('adminMainContent').style.display = 'block';
+                cargarModelosAdmin();
+            }
+        });
+
         const firebaseConfig = {
             apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
             authDomain: "masajistasprivepro.firebaseapp.com",
@@ -471,7 +522,7 @@
                     labelAtencion: l === 'es' ? 'Atención:' : (l === 'en' ? 'Care:' : (l === 'pt' ? 'Atendimento:' : 'Attention :')),
                     valorAtencion: document.getElementById(`atencion_${l}`).value.trim(),
                     btnWpp: l === 'es' ? 'Contactar por WhatsApp' : (l === 'en' ? 'Contact via WhatsApp' : (l === 'pt' ? 'Contatar por WhatsApp' : 'Contacter par WhatsApp')),
-                    footerLegal: "Este é um site para adultos (+18)...",
+                    footerLegal: "Este es un sitio exclusivo para adultos (+18)...",
                     footerCopy: "© 2026 Masajistas Privé. Todos os direitos reservados."
                 };
             });
@@ -735,8 +786,6 @@
         function eliminarPerfil(docId, nombre) {
             if (confirm(`¿Eliminar a ${nombre}?`)) db.collection("modelos_prive").doc(docId).delete();
         }
-
-        window.addEventListener('DOMContentLoaded', () => { cargarModelosAdmin(); });
     </script>
 </body>
 </html>
