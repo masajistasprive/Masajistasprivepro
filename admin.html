@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         body.admin-body { background-color: #0d0d0d; color: #e5e5e5; font-family: 'Montserrat', sans-serif; margin: 0; padding: 20px; }
-        .admin-container { max-width: 1100px; margin: 0 auto; display: none; } /* Oculto hasta poner contraseña */
+        .admin-container { max-width: 1100px; margin: 0 auto; display: none; }
         
         /* Pantalla de Login */
         #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0d0d0d; display: flex; justify-content: center; align-items: center; z-index: 999999; }
@@ -58,8 +58,9 @@
         .metodo-panel { display: none; }
         .metodo-panel.active { display: block; }
 
+        /* Estilos del Modal de Edición */
         #modalEditar { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 99999; padding: 20px; box-sizing: border-box; }
-        .modal-content { background: #141414; border: 1px solid #dfc285; border-radius: 10px; width: 100%; max-width: 700px; padding: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); max-height: 90vh; overflow-y: auto; }
+        .modal-content { background: #141414; border: 1px solid #dfc285; border-radius: 10px; width: 100%; max-width: 750px; padding: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); max-height: 90vh; overflow-y: auto; }
         .modal-content h3 { color: #dfc285; font-family: 'Cormorant Garamond', serif; font-size: 24px; margin-top: 0; border-bottom: 1px solid rgba(223,194,133,0.2); padding-bottom: 10px; }
     </style>
 </head>
@@ -121,7 +122,7 @@
                     </div>
                 </div>
 
-                <!-- SECCIÓN DE SELECCIÓN DE FOTOS DIRECTO DE LA GALERÍA -->
+                <!-- SECCIÓN DE SELECCIÓN DE FOTOS -->
                 <div class="form-grid" style="background: #1a1a1a; padding: 15px; border-radius: 8px; border: 1px solid #333; margin-bottom: 15px;">
                     <div class="form-row" style="margin-bottom: 0;">
                         <label style="color: #dfc285;">📸 Subir Foto Principal de la Galería:</label>
@@ -203,7 +204,7 @@
                         <div class="form-row"><label>Paragraphe 1 (FR):</label><textarea id="desc1_fr" class="html-input"></textarea></div>
                         <div class="form-row"><label>Paragraphe 2 (FR):</label><textarea id="desc2_fr" class="html-input"></textarea></div>
                         <div class="form-grid">
-                            <div class="form-row"><label>Horaires (FR):</label><input type="text" id="horaires_fr"></div>
+                            <div class="form-row"><label>Horaires (FR):</label><input type="text" id="horarios_fr"></div>
                             <div class="form-row"><label>Attention (FR):</label><input type="text" id="atencion_fr"></div>
                         </div>
                     </div>
@@ -264,36 +265,50 @@
         </div>
     </div>
 
-    <!-- MODAL DE EDICIÓN MULTILINGÜE -->
+    <!-- MODAL DE EDICIÓN MEJORADO CON SUBIDA DE FOTOS -->
     <div id="modalEditar">
         <div class="modal-content">
-            <h3>Editar Perfil y Traducciones</h3>
+            <h3>Editar Perfil, Fotos y Traducciones</h3>
             <input type="hidden" id="editDocId">
             
-            <div class="form-row">
-                <label>Nombre General:</label>
-                <input type="text" id="editNombre">
+            <div class="form-grid">
+                <div class="form-row">
+                    <label>Nombre General:</label>
+                    <input type="text" id="editNombre">
+                </div>
+                <div class="form-row">
+                    <label>Categoría:</label>
+                    <select id="editCategoria" style="width: 100%; background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px 12px; border-radius: 6px; font-size: 13px;">
+                        <option value="terapeuticas">Terapéuticas</option>
+                        <option value="sensuales">Sensuales</option>
+                        <option value="masculinos">Masculinos</option>
+                        <option value="fantasias">Fantasías</option>
+                    </select>
+                </div>
             </div>
-            <div class="form-row">
-                <label>Categoría:</label>
-                <select id="editCategoria" style="width: 100%; background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px 12px; border-radius: 6px; font-size: 13px;">
-                    <option value="terapeuticas">Terapéuticas</option>
-                    <option value="sensuales">Sensuales</option>
-                    <option value="masculinos">Masculinos</option>
-                    <option value="fantasias">Fantasías</option>
-                </select>
-            </div>
+
             <div class="form-row">
                 <label>Enlace de WhatsApp (wa.me/...):</label>
                 <input type="text" id="editWhatsappLink">
             </div>
-            <div class="form-row">
-                <label>URL Foto Principal:</label>
-                <input type="text" id="editFotoPrincipal">
+
+            <!-- SECCIÓN DE FOTOS EN EL MODAL DE EDICIÓN -->
+            <div class="form-grid" style="background: #1a1a1a; padding: 15px; border-radius: 8px; border: 1px solid #333; margin-bottom: 15px;">
+                <div class="form-row" style="margin-bottom: 0;">
+                    <label style="color: #dfc285;">📸 Cambiar Foto Principal:</label>
+                    <input type="file" id="editFileFotoPrin" accept="image/*" onchange="subirFotoDirecta(this, 'editFotoPrincipal')">
+                    <input type="text" id="editFotoPrincipal" placeholder="URL de la foto principal" style="margin-top: 6px; font-size: 11px;">
+                    <div id="statusEditFotoPrin" style="font-size: 11px; color: #888; margin-top: 4px;"></div>
+                </div>
+                <div class="form-row" style="margin-bottom: 0;">
+                    <label style="color: #dfc285;">📸 Actualizar Galería de Fotos:</label>
+                    <input type="file" id="editFileGaleria" accept="image/*" multiple onchange="subirGaleriaEdicion(this)">
+                    <div id="statusEditGaleria" style="font-size: 11px; color: #888; margin-top: 4px;"></div>
+                </div>
             </div>
 
-            <!-- Botón de Traducción Automática Inteligente -->
-            <div style="margin-top: 20px; border-top: 1px solid rgba(223,194,133,0.2); padding-top: 15px;">
+            <!-- Botón de Traducción Automática -->
+            <div style="margin-top: 15px; border-top: 1px solid rgba(223,194,133,0.2); padding-top: 15px;">
                 <button type="button" class="btn-traducir" onclick="traducirAutomaticamenteES()">✨ Traducir automáticamente a Inglés, Portugués y Francés</button>
                 <div id="tradStatus" style="font-size: 12px; color: #dfc285; margin-top: 5px;"></div>
             </div>
@@ -312,25 +327,29 @@
                 <div id="modal-lang-es" class="lang-section active">
                     <div class="form-row"><label>Zona (ES):</label><input type="text" id="editZona_es"></div>
                     <div class="form-row"><label>Modalidad (ES):</label><input type="text" id="editModalidad_es"></div>
-                    <div class="form-row"><label>Descripción (ES):</label><textarea id="editDesc_es" class="html-input" style="height: 100px;"></textarea></div>
+                    <div class="form-row"><label>Descripción 1 (ES):</label><textarea id="editDesc_es" class="html-input" style="height: 80px;"></textarea></div>
+                    <div class="form-row"><label>Descripción 2 (ES):</label><textarea id="editDesc2_es" class="html-input" style="height: 80px;"></textarea></div>
                 </div>
                 <!-- Inglés -->
                 <div id="modal-lang-en" class="lang-section">
                     <div class="form-row"><label>Area (EN):</label><input type="text" id="editZona_en"></div>
                     <div class="form-row"><label>Modality (EN):</label><input type="text" id="editModalidad_en"></div>
-                    <div class="form-row"><label>Description (EN):</label><textarea id="editDesc_en" class="html-input" style="height: 100px;"></textarea></div>
+                    <div class="form-row"><label>Description 1 (EN):</label><textarea id="editDesc_en" class="html-input" style="height: 80px;"></textarea></div>
+                    <div class="form-row"><label>Description 2 (EN):</label><textarea id="editDesc2_en" class="html-input" style="height: 80px;"></textarea></div>
                 </div>
                 <!-- Portugués -->
                 <div id="modal-lang-pt" class="lang-section">
                     <div class="form-row"><label>Zona (PT):</label><input type="text" id="editZona_pt"></div>
                     <div class="form-row"><label>Modalidade (PT):</label><input type="text" id="editModalidad_pt"></div>
-                    <div class="form-row"><label>Descrição (PT):</label><textarea id="editDesc_pt" class="html-input" style="height: 100px;"></textarea></div>
+                    <div class="form-row"><label>Descrição 1 (PT):</label><textarea id="editDesc_pt" class="html-input" style="height: 80px;"></textarea></div>
+                    <div class="form-row"><label>Descrição 2 (PT):</label><textarea id="editDesc2_pt" class="html-input" style="height: 80px;"></textarea></div>
                 </div>
                 <!-- Francés -->
                 <div id="modal-lang-fr" class="lang-section">
                     <div class="form-row"><label>Zone (FR):</label><input type="text" id="editZona_fr"></div>
                     <div class="form-row"><label>Modalité (FR):</label><input type="text" id="editModalidad_fr"></div>
-                    <div class="form-row"><label>Description (FR):</label><textarea id="editDesc_fr" class="html-input" style="height: 100px;"></textarea></div>
+                    <div class="form-row"><label>Description 1 (FR):</label><textarea id="editDesc_fr" class="html-input" style="height: 80px;"></textarea></div>
+                    <div class="form-row"><label>Description 2 (FR):</label><textarea id="editDesc2_fr" class="html-input" style="height: 80px;"></textarea></div>
                 </div>
             </div>
 
@@ -347,7 +366,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 
     <script>
-        // CONTRASEÑA DE ACCESO AL PANEL (Cámbiala por la que prefieras)
         const PASSWORD_ADMIN = "prive2026";
 
         function verificarPassword() {
@@ -391,11 +409,12 @@
         const storage = firebase.storage();
 
         let fotosGaleriaSubidas = [];
+        let fotosGaleriaEdicion = [];
 
         function subirFotoDirecta(input, targetId) {
             const file = input.files[0];
             if (!file) return;
-            const status = document.getElementById('statusFotoPrin');
+            const status = document.getElementById(targetId === 'urlFotoPrincipal' ? 'statusFotoPrin' : 'statusEditFotoPrin');
             status.textContent = "⏳ Subiendo foto principal...";
 
             const storageRef = storage.ref(`modelos/${Date.now()}_${file.name}`);
@@ -424,6 +443,26 @@
                         fotosGaleriaSubidas.push(downloadURL);
                         subidas++;
                         status.textContent = `✅ Subidas ${subidas} de ${files.length} fotos.`;
+                    });
+                });
+            });
+        }
+
+        function subirGaleriaEdicion(input) {
+            const files = input.files;
+            if (!files.length) return;
+            const status = document.getElementById('statusEditGaleria');
+            status.textContent = `⏳ Subiendo ${files.length} fotos a la galería...`;
+            fotosGaleriaEdicion = [];
+
+            let subidas = 0;
+            Array.from(files).forEach((file, index) => {
+                const storageRef = storage.ref(`modelos/galeria_edit_${Date.now()}_${index}_${file.name}`);
+                storageRef.put(file).then(snapshot => {
+                    snapshot.ref.getDownloadURL().then(downloadURL => {
+                        fotosGaleriaEdicion.push(downloadURL);
+                        subidas++;
+                        status.textContent = `✅ Subidas ${subidas} de ${files.length} fotos nuevas.`;
                     });
                 });
             });
@@ -687,6 +726,9 @@
                     document.getElementById('editWhatsappLink').value = m.whatsappLink || '';
                     document.getElementById('editFotoPrincipal').value = m.fotoPrincipal || '';
                     document.getElementById('tradStatus').textContent = '';
+                    document.getElementById('statusEditFotoPrin').textContent = '';
+                    document.getElementById('statusEditGaleria').textContent = '';
+                    fotosGaleriaEdicion = [];
 
                     const trad = m.traducciones || {};
                     ['es', 'en', 'pt', 'fr'].forEach(l => {
@@ -694,6 +736,7 @@
                         document.getElementById(`editZona_${l}`).value = tLang.valorZona || m.zona || '';
                         document.getElementById(`editModalidad_${l}`).value = tLang.valorModalidad || m.modalidad || '';
                         document.getElementById(`editDesc_${l}`).value = tLang.descPerfil1 || m.descripcion || '';
+                        document.getElementById(`editDesc2_${l}`).value = tLang.descPerfil2 || '';
                     });
 
                     document.getElementById('modalEditar').style.display = 'flex';
@@ -707,6 +750,7 @@
             const zonaEs = document.getElementById('editZona_es').value;
             const modalidadEs = document.getElementById('editModalidad_es').value;
             const descEs = document.getElementById('editDesc_es').value;
+            const desc2Es = document.getElementById('editDesc2_es').value;
             const idiomasDestino = [{ code: 'en', suf: 'en' }, { code: 'pt', suf: 'pt' }, { code: 'fr', suf: 'fr' }];
 
             try {
@@ -726,6 +770,11 @@
                         let data = await res.json();
                         if (data?.responseData) document.getElementById(`editDesc_${dest.suf}`).value = data.responseData.translatedText;
                     }
+                    if (desc2Es) {
+                        let res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(desc2Es)}&langpair=es|${dest.code}`);
+                        let data = await res.json();
+                        if (data?.responseData) document.getElementById(`editDesc2_${dest.suf}`).value = data.responseData.translatedText;
+                    }
                 }
                 status.textContent = "✅ ¡Listo!";
             } catch (e) { status.textContent = "❌ Error."; }
@@ -744,7 +793,15 @@
                     mData.traducciones[l].valorZona = document.getElementById(`editZona_${l}`).value.trim();
                     mData.traducciones[l].valorModalidad = document.getElementById(`editModalidad_${l}`).value.trim();
                     mData.traducciones[l].descPerfil1 = document.getElementById(`editDesc_${l}`).value.trim();
+                    mData.traducciones[l].descPerfil2 = document.getElementById(`editDesc2_${l}`).value.trim();
                 });
+
+                const nuevaFotoPrin = document.getElementById('editFotoPrincipal').value.trim();
+                if (nuevaFotoPrin) mData.fotoPrincipal = nuevaFotoPrin;
+
+                if (fotosGaleriaEdicion.length > 0) {
+                    mData.fotosGaleria = fotosGaleriaEdicion;
+                }
 
                 const datosActualizados = {
                     nombre: document.getElementById('editNombre').value.trim(),
@@ -752,14 +809,15 @@
                     modalidad: mData.traducciones.es.valorModalidad,
                     categoria: document.getElementById('editCategoria').value,
                     whatsappLink: document.getElementById('editWhatsappLink').value.trim(),
-                    fotoPrincipal: document.getElementById('editFotoPrincipal').value.trim(),
+                    fotoPrincipal: mData.fotoPrincipal,
+                    fotosGaleria: mData.fotosGaleria,
                     descripcion: mData.traducciones.es.descPerfil1,
                     traducciones: mData.traducciones,
                     fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
                 db.collection("modelos_prive").doc(docId).update(datosActualizados).then(() => {
-                    alert("¡Actualizado con éxito!");
+                    alert("¡Perfil y fotos actualizadas con éxito!");
                     cerrarModalEditar();
                 });
             });
