@@ -22,12 +22,12 @@
         .btn-traducir { background: rgba(223, 194, 133, 0.15); border: 1px solid #dfc285; color: #dfc285; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; margin-bottom: 15px; display: inline-flex; align-items: center; gap: 6px; }
         .btn-traducir:hover { background: #dfc285; color: #0d0d0d; }
         table.admin-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
-        table.admin-table th, table.admin-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #222; }
+        table.admin-table th, table.admin-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #222; vertical-align: middle; }
         table.admin-table th { color: #dfc285; font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; }
         .badge-estado { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; text-transform: uppercase; }
         .badge-activo { background: rgba(46, 204, 113, 0.15); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.3); }
         .badge-pausado { background: rgba(231, 76, 60, 0.15); color: #e74c3c; border: 1px solid rgba(231, 76, 60, 0.3); }
-        .btn-accion { background: transparent; border: 1px solid #444; color: #ccc; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; margin-right: 5px; transition: all 0.2s; }
+        .btn-accion { background: transparent; border: 1px solid #444; color: #ccc; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; margin-right: 4px; transition: all 0.2s; white-space: nowrap; }
         .btn-accion:hover { border-color: #dfc285; color: #dfc285; }
         .btn-danger:hover { border-color: #e74c3c; color: #e74c3c; }
         .switch-destacada { cursor: pointer; color: #777; font-size: 18px; }
@@ -159,7 +159,7 @@
                     <div class="form-row"><label>Paragraphe 1 (FR):</label><textarea id="desc1_fr" class="html-input"></textarea></div>
                     <div class="form-row"><label>Paragraphe 2 (FR):</label><textarea id="desc2_fr" class="html-input"></textarea></div>
                     <div class="form-grid">
-                        <div class="form-row"><label>Horaires (FR):</label><input type="text" id="horarios_fr"></div>
+                        <div class="form-row"><label>Horaires (FR):</label><input type="text" id="horaires_fr"></div>
                         <div class="form-row"><label>Attention (FR):</label><input type="text" id="atencion_fr"></div>
                     </div>
                 </div>
@@ -179,18 +179,17 @@
                 <table class="admin-table">
                     <thead>
                         <tr>
-                            <th>Nombre</th>
+                            <th>Nombre y Acciones</th>
                             <th>ID (Slug)</th>
                             <th>Zona</th>
                             <th>Categoría</th>
                             <th>Visitas</th>
                             <th>Estado</th>
                             <th>Destacada</th>
-                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="tablaModelosBody">
-                        <tr><td colspan="8" style="text-align: center; color: #777;">Cargando nómina...</td></tr>
+                        <tr><td colspan="7" style="text-align: center; color: #777;">Cargando nómina...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -292,7 +291,7 @@
                     labelAtencion: l === 'es' ? 'Atención:' : (l === 'en' ? 'Care:' : (l === 'pt' ? 'Atendimento:' : 'Attention :')),
                     valorAtencion: document.getElementById(`atencion_${l}`).value.trim(),
                     btnWpp: l === 'es' ? 'Contactar por WhatsApp' : (l === 'en' ? 'Contact via WhatsApp' : (l === 'pt' ? 'Contatar por WhatsApp' : 'Contacter par WhatsApp')),
-                    footerLegal: "Este é um site para adultos (+18)...",
+                    footerLegal: "Este es un sitio exclusivo para adultos (+18)...",
                     footerCopy: "© 2026 Masajistas Privé. Todos os direitos reservados."
                 };
             });
@@ -332,7 +331,7 @@
             const tbody = document.getElementById('tablaModelosBody');
             db.collection("modelos_prive").onSnapshot((snapshot) => {
                 if (snapshot.empty) {
-                    tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #777;">No hay perfiles publicados todavía.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #777;">No hay perfiles publicados todavía.</td></tr>`;
                     return;
                 }
 
@@ -345,7 +344,14 @@
 
                     htmlContent += `
                         <tr>
-                            <td><strong>${m.nombre}</strong></td>
+                            <td>
+                                <strong style="font-size: 15px; display: block; margin-bottom: 6px;">${m.nombre}</strong>
+                                <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+                                    <button class="btn-accion" onclick="editarModeloAdmin('${docId}')">Editar</button>
+                                    <button class="btn-accion" onclick="toggleEstadoAdmin('${docId}', '${m.estado}')">${esActiva ? 'Pausar' : 'Activar'}</button>
+                                    <button class="btn-accion btn-danger" onclick="eliminarModeloAdmin('${docId}', '${m.nombre}')">Eliminar</button>
+                                </div>
+                            </td>
                             <td><code style="color:#dfc285; background:#1e1e1e; padding:2px 6px; border-radius:4px;">${docId}</code></td>
                             <td>${m.zona || '-'}</td>
                             <td style="text-transform: capitalize;">${m.categoria || '-'}</td>
@@ -357,11 +363,6 @@
                             </td>
                             <td style="text-align: center;">
                                 <span class="switch-destacada ${esDestacada ? 'active' : ''}" onclick="toggleDestacadaAdmin('${docId}', ${!esDestacada})">★</span>
-                            </td>
-                            <td>
-                                <button class="btn-accion" onclick="editarModeloAdmin('${docId}')">Editar</button>
-                                <button class="btn-accion" onclick="toggleEstadoAdmin('${docId}', '${m.estado}')">${esActiva ? 'Pausar' : 'Activar'}</button>
-                                <button class="btn-accion btn-danger" onclick="eliminarModeloAdmin('${docId}', '${m.nombre}')">Eliminar</button>
                             </td>
                         </tr>
                     `;
