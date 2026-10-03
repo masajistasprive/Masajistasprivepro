@@ -216,8 +216,16 @@
             }
         }
 
+        // Función de cambio de estado corregida y blindada
         window.cambiarEstado = function(idPerfil, nuevoEstado) {
-            db.collection("config_perfiles").doc(idPerfil).set({ estado: nuevoEstado }, { merge: true });
+            db.collection("config_perfiles").doc(idPerfil).set({ 
+                estado: nuevoEstado 
+            }, { merge: true }).then(() => {
+                console.log(`Estado de ${idPerfil} actualizado a: ${nuevoEstado}`);
+            }).catch(err => {
+                console.error("Error al actualizar estado:", err);
+                alert("No se pudo cambiar el estado.");
+            });
         };
 
         window.toggleDestacada = function(idPerfil, estadoDestacada) {
@@ -269,7 +277,7 @@
                 const data = await res.json();
                 return data[0].map(item => item[0]).join('');
             } catch(e) {
-                return texto; // Si falla por red, devuelve el texto original en español
+                return texto;
             }
         }
 
@@ -317,8 +325,8 @@
                 zona: zona,
                 modalidad: modalidad,
                 whatsapp: whatsapp,
-                img: fotosArray[0], // Foto principal para las tarjetas del index
-                fotos: fotosArray,   // Array con hasta 10 fotos para la galería
+                img: fotosArray[0],
+                fotos: fotosArray,
                 horarios: horarios,
                 bio: bioEs,
                 traducciones: {
