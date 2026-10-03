@@ -63,23 +63,9 @@
 
     <div class="destacadas-container-wrapper">
         <h3 class="destacadas-titulo" data-i18n="destacadasTitulo">Destacadas</h3>
-        <div class="stories-container">
-            <a href="prada.html" class="story-item">
-                <div class="story-ring"><img src="img/prada1.jpg" alt="Prada"></div>
-                <span>Prada</span>
-            </a>
-            <a href="mariela.html" class="story-item">
-                <div class="story-ring"><img src="img/mariela5.jpg" alt="Mariela"></div>
-                <span>Mariela</span>
-            </a>
-            <a href="lupita.html" class="story-item">
-                <div class="story-ring"><img src="img/lupita1.jpg" alt="Lupita"></div>
-                <span>Lupita</span>
-            </a>
-            <a href="sol.html" class="story-item">
-                <div class="story-ring"><img src="img/sol1.jpg" alt="Sol"></div>
-                <span>Sol</span>
-            </a>
+        <!-- Stories dinámicas desde Firebase -->
+        <div class="stories-container" id="stories-destacadas-container">
+            <!-- Se llena dinámicamente -->
         </div>
     </div>
 
@@ -96,255 +82,28 @@
 
     <main class="container">
 
-        <!-- Sección Terapéuticas (Sin Jennyfer) -->
+        <!-- Sección Terapéuticas -->
         <h2 class="section-heading" data-section="terapeuticas" data-i18n="seccionTerapeuticas">Masajistas Terapéuticas</h2>
         <div class="grid-perfiles" id="grid-terapeuticas">
-            <a href="prada.html" class="card-link" data-categoria="terapeuticas">
-                <article class="card">
-                    <div class="card-image">
-                        <img src="img/prada1.jpg" alt="Prada" loading="lazy">
-                        <span class="badge-verificado" data-i18n="badgeVerificado">✓ Verificado</span>
-                        <div class="card-gradient-overlay">
-                            <h3>Prada</h3>
-                            <span class="zona">📍 TRIBUNALES</span>
-                            <span class="modalidad-tag" data-i18n="modGabinete">Gabinete propio</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-            <a href="mariela.html" class="card-link" data-categoria="terapeuticas">
-                <article class="card">
-                    <div class="card-image">
-                        <img src="img/mariela5.jpg" alt="Mariela" loading="lazy">
-                        <span class="badge-verificado" data-i18n="badgeVerificado">✓ Verificado</span>
-                        <div class="card-gradient-overlay">
-                            <h3>Mariela</h3>
-                            <span class="zona">📍 CONGRESO</span>
-                            <span class="modalidad-tag" data-i18n="modDepto">Departamento propio</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-            <a href="daniela.html" class="card-link" data-categoria="terapeuticas">
-                <article class="card">
-                    <div class="card-image">
-                        <img src="img/daniela1.jpg" alt="Daniela" loading="lazy">
-                        <span class="badge-verificado" data-i18n="badgeVerificado">✓ Verificado</span>
-                        <div class="card-gradient-overlay">
-                            <h3>Daniela</h3>
-                            <span class="zona">📍 MICROCENTRO</span>
-                            <span class="modalidad-tag" data-i18n="modDepto">Departamento propio</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-            <a href="zaira.html" class="card-link" data-categoria="terapeuticas">
-                <article class="card">
-                    <div class="card-image">
-                        <img src="img/zaira1.jpg" alt="Zaira" loading="lazy">
-                        <span class="badge-verificado" data-i18n="badgeVerificado">✓ Verificado</span>
-                        <div class="card-gradient-overlay">
-                            <h3>Zaira</h3>
-                            <span class="zona">📍 CABALLITO</span>
-                            <span class="modalidad-tag" data-i18n="modGabinete">Gabinete propio</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-            <a href="luly.html" class="card-link" data-categoria="terapeuticas">
-                <article class="card">
-                    <div class="card-image">
-                        <img src="img/luly1.jpg" alt="Luly" loading="lazy">
-                        <span class="badge-verificado" data-i18n="badgeVerificado">✓ Verificado</span>
-                        <div class="card-gradient-overlay">
-                            <h3>Luly</h3>
-                            <span class="zona">📍 CABA</span>
-                            <span class="modalidad-tag" data-i18n="modGabinete">Gabinete propio</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-            <a href="mora.html" class="card-link" data-categoria="terapeuticas">
-                <article class="card">
-                    <div class="card-image">
-                        <img src="img/mora1.jpg" alt="Mora" loading="lazy">
-                        <span class="badge-verificado" data-i18n="badgeVerificado">✓ Verificado</span>
-                        <div class="card-gradient-overlay">
-                            <h3>Mora</h3>
-                            <span class="zona">📍 TRIBUNALES</span>
-                            <span class="modalidad-tag" data-i18n="modConsultorioHotel">Consultorio / Hotel</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-            <a href="lupita.html" class="card-link" data-categoria="terapeuticas">
-                <article class="card">
-                    <div class="card-image">
-                        <img src="img/lupita1.jpg" alt="Lupita" loading="lazy">
-                        <span class="badge-verificado" data-i18n="badgeVerificado">✓ Verificado</span>
-                        <div class="card-gradient-overlay">
-                            <h3>Lupita</h3>
-                            <span class="zona">📍 TRIBUNALES</span>
-                            <span class="modalidad-tag" data-i18n="modGabineteDomicilio">Gabinete / Domicilio</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-            <a href="https://wa.me/5491131774848?text=Hola,%20quiero%20publicar%20mi%20anuncio%20en%20Masajistas%20Prive" target="_blank" class="card-ad-link" data-categoria="terapeuticas">
-                <article class="card-ad">
-                    <div class="ad-content">
-                        <h3 data-i18n="espacioDisponible">Espacio Disponible</h3>
-                        <p data-i18n="publicaPerfil">Publicá tu perfil aquí</p>
-                        <span class="btn-ad" data-i18n="contactanos">Contáctanos</span>
-                    </div>
-                </article>
-            </a>
+            <!-- Se llena dinámicamente -->
         </div>
 
-        <!-- Sección Sensuales (Sin Deby) -->
+        <!-- Sección Sensuales -->
         <h2 class="section-heading" data-section="sensuales" style="margin-top: 2rem;" data-i18n="seccionSensuales">Masajistas Sensuales</h2>
         <div class="grid-perfiles" id="grid-sensuales">
-            <a href="renata.html" class="card-link" data-categoria="sensuales">
-                <article class="card">
-                    <div class="card-image">
-                        <img src="img/renata1.jpg" alt="Renata" loading="lazy">
-                        <span class="badge-verificado" data-i18n="badgeVerificado">✓ Verificado</span>
-                        <div class="card-gradient-overlay">
-                            <h3>Renata</h3>
-                            <span class="zona">📍 MICROCENTRO</span>
-                            <span class="modalidad-tag" data-i18n="modDeptoPropio">Depto propio</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-            <a href="donatella.html" class="card-link" data-categoria="sensuales">
-                <article class="card">
-                    <div class="card-image">
-                        <img src="img/donatella1.jpg" alt="Donatella" loading="lazy">
-                        <span class="badge-verificado" data-i18n="badgeVerificado">✓ Verificado</span>
-                        <div class="card-gradient-overlay">
-                            <h3>Donatella</h3>
-                            <span class="zona">📍 CABALLITO</span>
-                            <span class="modalidad-tag" data-i18n="modGabinete">Gabinete propio</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-            <a href="celeste.html" class="card-link" data-categoria="sensuales">
-                <article class="card">
-                    <div class="card-image">
-                        <img src="img/celeste1.jpg" alt="Celeste" loading="lazy">
-                        <span class="badge-verificado" data-i18n="badgeVerificado">✓ Verificado</span>
-                        <div class="card-gradient-overlay">
-                            <h3>Celeste</h3>
-                            <span class="zona">📍 CONGRESO</span>
-                            <span class="modalidad-tag" data-i18n="modGabineteDomicilio">Gabinete / Domicilio</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-            <a href="mia.html" class="card-link" data-categoria="sensuales">
-                <article class="card">
-                    <div class="card-image">
-                        <img src="img/mia1.jpg" alt="Mía" loading="lazy">
-                        <span class="badge-verificado" data-i18n="badgeVerificado">✓ Verificado</span>
-                        <div class="card-gradient-overlay">
-                            <h3>Mía</h3>
-                            <span class="zona">📍 CONGRESO</span>
-                            <span class="modalidad-tag" data-i18n="modGabineteDomicilio">Gabinete / Domicilio</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-            <a href="sol.html" class="card-link" data-categoria="sensuales">
-                <article class="card">
-                    <div class="card-image">
-                        <img src="img/sol1.jpg" alt="Sol" loading="lazy">
-                        <span class="badge-verificado" data-i18n="badgeVerificado">✓ Verificado</span>
-                        <div class="card-gradient-overlay">
-                            <h3>Sol</h3>
-                            <span class="zona">📍 TRIBUNALES</span>
-                            <span class="modalidad-tag" data-i18n="modDepto">Departamento propio</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-            <a href="pamela.html" class="card-link" data-categoria="sensuales">
-                <article class="card">
-                    <div class="card-image">
-                        <img src="img/pamela3.jpg" alt="Pamela" loading="lazy">
-                        <span class="badge-verificado" data-i18n="badgeVerificado">✓ Verificado</span>
-                        <div class="card-gradient-overlay">
-                            <h3>Pamela</h3>
-                            <span class="zona">📍 TRIBUNALES</span>
-                            <span class="modalidad-tag" data-i18n="modDepto">Departamento propio</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-            <a href="luly-sensual.html" class="card-link" data-categoria="sensuales">
-                <article class="card">
-                    <div class="card-image">
-                        <img src="img/luly5.jpg" alt="Luly" loading="lazy">
-                        <span class="badge-verificado" data-i18n="badgeVerificado">✓ Verificado</span>
-                        <div class="card-gradient-overlay">
-                            <h3>Luly</h3>
-                            <span class="zona">📍 CABA</span>
-                            <span class="modalidad-tag" data-i18n="modGabinete">Gabinete próprio</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-            <a href="mora-sensual.html" class="card-link" data-categoria="sensuales">
-                <article class="card">
-                    <div class="card-image">
-                        <img src="img/mora5.jpg" alt="Mora" loading="lazy">
-                        <span class="badge-verificado" data-i18n="badgeVerificado">✓ Verificado</span>
-                        <div class="card-gradient-overlay">
-                            <h3>Mora</h3>
-                            <span class="zona">📍 TRIBUNALES</span>
-                            <span class="modalidad-tag" data-i18n="modConsultorioDomicilio">Consultorio / Domicilio</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-            <a href="https://wa.me/5491131774848?text=Hola,%20quiero%20consultar%20sobre%20la%20seccion%20de%20Sensuales" target="_blank" class="card-ad-link" data-categoria="sensuales">
-                <article class="card-ad">
-                    <div class="ad-content">
-                        <h3 data-i18n="espacioDisponible">Espacio Disponible</h3>
-                        <p data-i18n="publicaPerfil">Publicá tu perfil aquí</p>
-                        <span class="btn-ad" data-i18n="contactanos">Contáctanos</span>
-                    </div>
-                </article>
-            </a>
+            <!-- Se llena dinámicamente -->
         </div>
 
-        <!-- Sección Masculinos (Sin Matias) -->
+        <!-- Sección Masculinos -->
         <h2 class="section-heading" data-section="masculinos" style="margin-top: 2rem;" data-i18n="seccionMasculinos">Masajistas Masculinos</h2>
         <div class="grid-perfiles" id="grid-masculinos">
-            <a href="https://wa.me/5491131774848?text=Hola,%20quiero%20publicar%20mi%20anuncio%20en%20Masajistas%20Prive" target="_blank" class="card-ad-link" data-categoria="masculinos">
-                <article class="card-ad">
-                    <div class="ad-content">
-                        <h3 data-i18n="espacioDisponible">Espacio Disponible</h3>
-                        <p data-i18n="publicaPerfil">Publicá tu perfil aquí</p>
-                        <span class="btn-ad" data-i18n="contactanos">Contáctanos</span>
-                    </div>
-                </article>
-            </a>
+            <!-- Se llena dinámicamente -->
         </div>
 
         <!-- Sección Fantasías -->
         <h2 class="section-heading" data-section="fantasias" style="margin-top: 2rem;" data-i18n="seccionFantasias">Fantasías</h2>
         <div class="grid-perfiles" id="grid-fantasias">
-            <a href="https://wa.me/5491131774848?text=Hola,%20quiero%20consultar%20sobre%20la%20seccion%20de%20Fantasias" target="_blank" class="card-ad-link" data-categoria="fantasias">
-                <article class="card-ad">
-                    <div class="ad-content">
-                        <h3 data-i18n="espacioDisponible">Espacio Disponible</h3>
-                        <p data-i18n="publicaPerfil">Publicá tu perfil aquí</p>
-                        <span class="btn-ad" data-i18n="contactanos">Contáctanos</span>
-                    </div>
-                </article>
-            </a>
+            <!-- Se llena dinámicamente -->
         </div>
 
     </main>
@@ -453,23 +212,81 @@
             } catch (e) {}
         }
 
-        // Función para barajar (hacer aleatorias) las tarjetas de los perfiles en cada sección
-        function mezclarPerfilesAleatorios() {
-            const grids = document.querySelectorAll('.grid-perfiles');
-            grids.forEach(grid => {
-                const cards = Array.from(grid.querySelectorAll('.card-link'));
-                const adLink = grid.querySelector('.card-ad-link');
+        // Cargar perfiles y destacadas en tiempo real desde Firebase
+        function cargarPerfilesDesdeFirebase() {
+            db.collection("modelos_prive").onSnapshot((snapshot) => {
+                const gridTerapeuticas = document.getElementById('grid-terapeuticas');
+                const gridSensuales = document.getElementById('grid-sensuales');
+                const gridMasculinos = document.getElementById('grid-masculinos');
+                const gridFantasias = document.getElementById('grid-fantasias');
+                const storiesContainer = document.getElementById('stories-destacadas-container');
 
-                if (cards.length > 0) {
-                    for (let i = cards.length - 1; i > 0; i--) {
-                        const j = Math.floor(Math.random() * (i + 1));
-                        [cards[i], cards[j]] = [cards[j], cards[i]];
+                if(!gridTerapeuticas) return;
+
+                // Limpiar grillas antes de pintar
+                gridTerapeuticas.innerHTML = '';
+                gridSensuales.innerHTML = '';
+                gridMasculinos.innerHTML = '';
+                gridFantasias.innerHTML = '';
+                storiesContainer.innerHTML = '';
+
+                let htmlTerapeuticas = '';
+                let htmlSensuales = '';
+                let htmlMasculinos = '';
+                let htmlFantasias = '';
+                let htmlStories = '';
+
+                snapshot.forEach((docSnap) => {
+                    const m = docSnap.data();
+                    const docId = docSnap.id;
+
+                    // Si el perfil está pausado (por falta de pago), no se muestra en el index
+                    if (m.estado === 'pausado') return;
+
+                    const cardHTML = `
+                        <a href="perfil.html?id=${docId}" class="card-link" data-categoria="${m.categoria}">
+                            <article class="card">
+                                <div class="card-image">
+                                    <img src="${m.fotoPrincipal}" alt="${m.nombre}" loading="lazy">
+                                    <span class="badge-verificado">✓ Verificado</span>
+                                    <div class="card-gradient-overlay">
+                                        <h3>${m.nombre}</h3>
+                                        <span class="zona">📍 ${m.zona.toUpperCase()}</span>
+                                        <span class="modalidad-tag">${m.modalidad}</span>
+                                    </div>
+                                </div>
+                            </article>
+                        </a>
+                    `;
+
+                    // Clasificar por categoría
+                    if (m.categoria === 'terapeuticas') htmlTerapeuticas += cardHTML;
+                    else if (m.categoria === 'sensuales') htmlSensuales += cardHTML;
+                    else if (m.categoria === 'masculinos') htmlMasculinos += cardHTML;
+                    else if (m.categoria === 'fantasias') htmlFantasias += cardHTML;
+
+                    // Si está marcada como destacada, agregar a las stories
+                    if (m.destacada === true) {
+                        htmlStories += `
+                            <a href="perfil.html?id=${docId}" class="story-item">
+                                <div class="story-ring"><img src="${m.fotoPrincipal}" alt="${m.nombre}"></div>
+                                <span>${m.nombre}</span>
+                            </a>
+                        `;
                     }
-                    cards.forEach(card => grid.appendChild(card));
-                    if (adLink) {
-                        grid.appendChild(adLink);
-                    }
-                }
+                });
+
+                // Agregar los botones de "Espacio Disponible" al final de cada grilla
+                const adTerapeuticas = `<a href="https://wa.me/5491131774848?text=Hola,%20quiero%20publicar%20mi%20anuncio%20en%20Masajistas%20Prive" target="_blank" class="card-ad-link" data-categoria="terapeuticas"><article class="card-ad"><div class="ad-content"><h3 data-i18n="espacioDisponible">Espacio Disponible</h3><p data-i18n="publicaPerfil">Publicá tu perfil aquí</p><span class="btn-ad" data-i18n="contactanos">Contáctanos</span></div></article></a>`;
+                const adSensuales = `<a href="https://wa.me/5491131774848?text=Hola,%20quiero%20consultar%20sobre%20la%20seccion%20de%20Sensuales" target="_blank" class="card-ad-link" data-categoria="sensuales"><article class="card-ad"><div class="ad-content"><h3 data-i18n="espacioDisponible">Espacio Disponible</h3><p data-i18n="publicaPerfil">Publicá tu perfil aquí</p><span class="btn-ad" data-i18n="contactanos">Contáctanos</span></div></article></a>`;
+                const adMasculinos = `<a href="https://wa.me/5491131774848?text=Hola,%20quiero%20publicar%20mi%20anuncio%20en%20Masajistas%20Prive" target="_blank" class="card-ad-link" data-categoria="masculinos"><article class="card-ad"><div class="ad-content"><h3 data-i18n="espacioDisponible">Espacio Disponible</h3><p data-i18n="publicaPerfil">Publicá tu perfil aquí</p><span class="btn-ad" data-i18n="contactanos">Contáctanos</span></div></article></a>`;
+                const adFantasias = `<a href="https://wa.me/5491131774848?text=Hola,%20quiero%20consultar%20sobre%20la%20seccion%20de%20Fantasias" target="_blank" class="card-ad-link" data-categoria="fantasias"><article class="card-ad"><div class="ad-content"><h3 data-i18n="espacioDisponible">Espacio Disponible</h3><p data-i18n="publicaPerfil">Publicá tu perfil aquí</p><span class="btn-ad" data-i18n="contactanos">Contáctanos</span></div></article></a>`;
+
+                gridTerapeuticas.innerHTML = htmlTerapeuticas + adTerapeuticas;
+                gridSensuales.innerHTML = htmlSensuales + adSensuales;
+                gridMasculinos.innerHTML = htmlMasculinos + adMasculinos;
+                gridFantasias.innerHTML = htmlFantasias + adFantasias;
+                storiesContainer.innerHTML = htmlStories;
             });
         }
 
@@ -493,13 +310,6 @@
                 seccionMasculinos: "Masajistas Masculinos",
                 seccionFantasias: "Fantasías",
                 badgeVerificado: "✓ Verificado",
-                modConsultorio: "Consultorio propio",
-                modGabinete: "Gabinete propio",
-                modDepto: "Departamento propio",
-                modConsultorioHotel: "Consultorio / Hotel",
-                modDeptoPropio: "Depto propio",
-                modGabineteDomicilio: "Gabinete / Domicilio",
-                modConsultorioDomicilio: "Consultorio / Domicilio",
                 espacioDisponible: "Espacio Disponible",
                 publicaPerfil: "Publicá tu perfil aquí",
                 contactanos: "Contáctanos",
@@ -508,11 +318,10 @@
                 cargandoCotizacion: "Cargando cotización actual...",
                 editorialSub: "Editorial & Bienestar",
                 cuadernoTitulo: "Cuaderno Privé",
-                cuadernoDesc: "Crónicas urbanas, secretos de gabinete y el arte del relax absoluto em CABA.",
-                leerCompleto: "Leer artículo completo &rarr;",
+                cuadernoDesc: "Crónicas urbanas, secretos de gabinete y el arte del relax absoluto en CABA.",
                 btnCerrar: "Cerrar",
                 siguenos: "Síguenos",
-                footerLegal: "Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas são independientes y no tienen vínculo laboral, societario ni de dependencia com este portal.",
+                footerLegal: "Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.",
                 footerMarcas: "Todo el contenido, marcas y logotipos pertenecen a sus respectivos dueños.",
                 visitasTotales: "Visitas totales al portal",
                 footerCopy: "© 2026 Masajistas Privé. Todos los derechos reservados."
@@ -536,13 +345,6 @@
                 seccionMasculinos: "Male Masseurs",
                 seccionFantasias: "Fantasies",
                 badgeVerificado: "✓ Verified",
-                modConsultorio: "Private office",
-                modGabinete: "Private studio",
-                modDepto: "Private apartment",
-                modConsultorioHotel: "Office / Hotel",
-                modDeptoPropio: "Private apt",
-                modGabineteDomicilio: "Studio / Outcall",
-                modConsultorioDomicilio: "Office / Outcall",
                 espacioDisponible: "Available Space",
                 publicaPerfil: "Publish your profile here",
                 contactanos: "Contact Us",
@@ -552,7 +354,6 @@
                 editorialSub: "Editorial & Wellness",
                 cuadernoTitulo: "Privé Notebook",
                 cuadernoDesc: "Urban chronicles, cabinet secrets, and the art of absolute relaxation in Buenos Aires.",
-                leerCompleto: "Read full article &rarr;",
                 btnCerrar: "Close",
                 siguenos: "Follow Us",
                 footerLegal: "This is an exclusive site for adults (+18). The published advertisers are independent and have no employment, corporate, or dependency relationship with this portal.",
@@ -579,13 +380,6 @@
                 seccionMasculinos: "Massagistas Masculinos",
                 seccionFantasias: "Fantasias",
                 badgeVerificado: "✓ Verificado",
-                modConsultorio: "Consultório próprio",
-                modGabinete: "Estúdio próprio",
-                modDepto: "Apartamento próprio",
-                modConsultorioHotel: "Consultório / Hotel",
-                modDeptoPropio: "Apt próprio",
-                modGabineteDomicilio: "Estúdio / Domicílio",
-                modConsultorioDomicilio: "Consultório / Domicílio",
                 espacioDisponible: "Espaço Disponível",
                 publicaPerfil: "Publique seu perfil aqui",
                 contactanos: "Contate-nos",
@@ -595,7 +389,6 @@
                 editorialSub: "Editorial & Bem-estar",
                 cuadernoTitulo: "Caderno Privé",
                 cuadernoDesc: "Crônicas urbanas, segredos de estúdio e a arte do relax absoluto em Buenos Aires.",
-                leerCompleto: "Ler artigo completo &rarr;",
                 btnCerrar: "Fechar",
                 siguenos: "Siga-nos",
                 footerLegal: "Este é um site exclusivo para adultos (+18). Os anunciantes publicados são independentes e não possuem vínculo empregatício, societário ou de dependência com este portal.",
@@ -622,13 +415,6 @@
                 seccionMasculinos: "Masseurs Hommes",
                 seccionFantasias: "Fantasies",
                 badgeVerificado: "✓ Vérifié",
-                modConsultorio: "Cabinet privé",
-                modGabinete: "Studio privé",
-                modDepto: "Appartement privé",
-                modConsultorioHotel: "Cabinet / Hôtel",
-                modDeptoPropio: "Appart privé",
-                modGabineteDomicilio: "Studio / À domicile",
-                modConsultorioDomicilio: "Cabinet / À domicile",
                 espacioDisponible: "Espace Disponible",
                 publicaPerfil: "Publiez votre profil ici",
                 contactanos: "Contactez-nous",
@@ -638,10 +424,9 @@
                 editorialSub: "Éditorial & Bien-être",
                 cuadernoTitulo: "Carnet Privé",
                 cuadernoDesc: "Chroniques urbaines, secrets de studio et l'art de la relaxation absolue à Buenos Aires.",
-                leerCompleto: "Lire l'article complet &rarr;",
                 btnCerrar: "Fermer",
                 siguenos: "Suivez-nous",
-                footerLegal: "Ceci est un site exclusif pour adultes (+18). Les annonceurs publiés sont indépendants et n'ont aucun lien d'emploi, d'entreprise ou de dépendance avec ce portail.",
+                footerLegal: "Ceci est un site exclusif pour adultes (+18). Les annonceurs publiés sont indépendants et n'aucun lien d'emploi, d'entreprise ou de dépendance avec ce portail.",
                 footerMarcas: "Tout le contenu, les marques et les logos appartiennent à leurs propriétaires respectifs.",
                 visitasTotales: "Total des visites du portail",
                 footerCopy: "© 2026 Masajistas Privé. Tous droits réservés."
@@ -768,7 +553,7 @@
             obtenerClimaCABA();
             obtenerDolar();
             registrarYMostrarVisitasGlobales();
-            mezclarPerfilesAleatorios();
+            cargarPerfilesDesdeFirebase();
         });
 
         const modalEdad = document.getElementById('modal-edad');
@@ -783,17 +568,15 @@
             });
         }
 
-        const pills = document.querySelectorAll('.pill-btn');
-        const cards = document.querySelectorAll('.card-link');
-        const headings = document.querySelectorAll('.section-heading');
-        
-        pills.forEach(pill => {
-            pill.addEventListener('click', () => {
+        // Event listener para los filtros (pills)
+        document.addEventListener('click', (e) => {
+            if (e.target && e.target.classList.contains('pill-btn')) {
+                const pill = e.target;
                 const filter = pill.getAttribute('data-filter');
-                pills.forEach(p => p.classList.remove('active'));
+                document.querySelectorAll('.pill-btn').forEach(p => p.classList.remove('active'));
                 pill.classList.add('active');
 
-                cards.forEach(card => {
+                document.querySelectorAll('.card-link').forEach(card => {
                     if (filter === 'todas' || card.getAttribute('data-categoria') === filter) {
                         card.style.display = 'block';
                     } else {
@@ -801,14 +584,14 @@
                     }
                 });
 
-                headings.forEach(heading => {
+                document.querySelectorAll('.section-heading').forEach(heading => {
                     if (filter === 'todas' || heading.getAttribute('data-section') === filter) {
                         heading.style.display = 'block';
                     } else {
                         heading.style.display = 'none';
                     }
                 });
-            });
+            }
         });
     </script>
 </body>
