@@ -226,14 +226,14 @@
                     visitas: firebase.firestore.FieldValue.increment(1)
                 }, { merge: true }).catch(err => {});
 
-                // Rellenar datos
+                // Rellenar datos de texto
                 document.getElementById('page-title').textContent = `${datosPerfilGlobal.nombre || 'Perfil'} | Masajistas Privé`;
                 document.getElementById('perfilNombre').textContent = datosPerfilGlobal.nombre || 'Perfil';
                 document.getElementById('perfilZona').textContent = datosPerfilGlobal.zona || 'CABA';
                 document.getElementById('perfilModalidad').textContent = datosPerfilGlobal.modalidad || 'Gabinete propio';
                 document.getElementById('perfilHorarios').textContent = datosPerfilGlobal.horarios || 'Lunes a Sábados de 09 a 21 hs.';
 
-                // GESTIÓN DE FOTOS LIMPIA DESDE FIREBASE
+                // GESTIÓN DE FOTOS: Lee el array de Firebase completo para mostrar todas las miniaturas
                 let listaFotos = [];
                 if (datosPerfilGlobal.fotos && Array.isArray(datosPerfilGlobal.fotos)) {
                     listaFotos = datosPerfilGlobal.fotos.filter(f => f && typeof f === 'string' && f.trim() !== "");
@@ -245,7 +245,7 @@
                     listaFotos = ['img/logo.png'];
                 }
 
-                // Foto principal arriba y miniaturas sincronizadas abajo
+                // Asignar foto principal arriba y construir miniaturas abajo
                 document.getElementById('fotoPrincipal').src = listaFotos[0];
                 
                 const contenedorMini = document.getElementById('galeriaMiniaturas');
@@ -255,12 +255,17 @@
                 });
                 contenedorMini.innerHTML = miniaturasHTML;
 
-                // WHATSAPP BLINDADO
-                const rawWpp = datosPerfilGlobal.whatsapp ? datosPerfilGlobal.whatsapp.toString().replace(/\D/g, '') : "";
-                const numeroWpp = (rawWpp.length >= 8) ? rawWpp : "5491131774848";
+                // WHATSAPP: Toma estrictamente el número del perfil en Firebase sin alteraciones
                 const btnWpp = document.getElementById('btnWhatsappPerfil');
-                btnWpp.href = `https://wa.me/${numeroWpp}?text=Hola%20${encodeURIComponent(datosPerfilGlobal.nombre || 'Perfil')},%20vi%20tu%20perfil%20en%20Masajistas%20Privé`;
-                btnWpp.style.display = 'inline-flex';
+                if (datosPerfilGlobal.whatsapp && datosPerfilGlobal.whatsapp.toString().trim() !== "") {
+                    let numeroWpp = datosPerfilGlobal.whatsapp.toString().trim();
+                    let nombrePerfil = datosPerfilGlobal.nombre || 'Perfil';
+                    
+                    btnWpp.href = `https://wa.me/${numeroWpp}?text=Hola%20${encodeURIComponent(nombrePerfil)},%20vi%20tu%20perfil%20en%20Masajistas%20Privé`;
+                    btnWpp.style.display = 'inline-flex';
+                } else {
+                    btnWpp.style.display = 'none';
+                }
 
                 actualizarTextosInterfaz();
 
