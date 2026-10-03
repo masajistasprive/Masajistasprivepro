@@ -91,16 +91,16 @@
                     <div class="form-group" style="grid-column: 1 / -1;">
                         <label style="color: #dfc285; font-weight: bold; margin-bottom: 5px;">Galería de Fotos (Hasta 10 fotos — La Foto 1 es la principal)</label>
                         <div class="fotos-grid" id="contenedorFotosAdmin">
-                            <input type="text" class="input-foto" placeholder="img/perfil1.jpg">
-                            <input type="text" class="input-foto" placeholder="img/perfil2.jpg">
-                            <input type="text" class="input-foto" placeholder="img/perfil3.jpg">
-                            <input type="text" class="input-foto" placeholder="img/perfil4.jpg">
-                            <input type="text" class="input-foto" placeholder="img/perfil5.jpg">
-                            <input type="text" class="input-foto" placeholder="img/perfil6.jpg">
-                            <input type="text" class="input-foto" placeholder="img/perfil7.jpg">
-                            <input type="text" class="input-foto" placeholder="img/perfil8.jpg">
-                            <input type="text" class="input-foto" placeholder="img/perfil9.jpg">
-                            <input type="text" class="input-foto" placeholder="img/perfil10.jpg">
+                            <input type="text" class="input-foto" placeholder="Foto 1 (Principal)">
+                            <input type="text" class="input-foto" placeholder="Foto 2">
+                            <input type="text" class="input-foto" placeholder="Foto 3">
+                            <input type="text" class="input-foto" placeholder="Foto 4">
+                            <input type="text" class="input-foto" placeholder="Foto 5">
+                            <input type="text" class="input-foto" placeholder="Foto 6">
+                            <input type="text" class="input-foto" placeholder="Foto 7">
+                            <input type="text" class="input-foto" placeholder="Foto 8">
+                            <input type="text" class="input-foto" placeholder="Foto 9">
+                            <input type="text" class="input-foto" placeholder="Foto 10">
                         </div>
                     </div>
 
@@ -238,7 +238,11 @@
 
             let fotosArray = [];
             document.querySelectorAll('.input-foto').forEach(inp => {
-                if (inp.value.trim() !== "") fotosArray.push(inp.value.trim());
+                let val = inp.value.trim();
+                // Solo agrega si tiene texto real y no es un placeholder viejo
+                if (val !== "" && !val.includes("perfil5.jpg") && !val.includes("perfil6.jpg") && !val.includes("perfil7.jpg") && !val.includes("perfil8.jpg") && !val.includes("perfil9.jpg") && !val.includes("perfil10.jpg")) {
+                    fotosArray.push(val);
+                }
             });
             if (fotosArray.length === 0) fotosArray.push("img/logo.png");
 
