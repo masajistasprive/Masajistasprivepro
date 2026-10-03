@@ -212,7 +212,7 @@
             } catch (e) {}
         }
 
-        // Cargar perfiles y destacadas en tiempo real desde Firebase
+        // Cargar perfiles y destacadas en tiempo real desde Firebase (Conector de Fotos Inteligente)
         function cargarPerfilesDesdeFirebase() {
             db.collection("modelos_prive").onSnapshot((snapshot) => {
                 const gridTerapeuticas = document.getElementById('grid-terapeuticas');
@@ -223,7 +223,6 @@
 
                 if(!gridTerapeuticas) return;
 
-                // Limpiar grillas antes de pintar
                 gridTerapeuticas.innerHTML = '';
                 gridSensuales.innerHTML = '';
                 gridMasculinos.innerHTML = '';
@@ -240,43 +239,44 @@
                     const m = docSnap.data();
                     const docId = docSnap.id;
 
-                    // Si el perfil está pausado (por falta de pago), no se muestra en el index
                     if (m.estado === 'pausado') return;
+
+                    // Selector inteligente de foto para asegurar que siempre levante una imagen válida
+                    const fotoModelo = m.fotoPrincipal || m.foto || (m.fotosGaleria && m.fotosGaleria[0]) || 'img/monograma.png';
+                    const zonaModelo = m.zona || (m.traducciones && m.traducciones.es && m.traducciones.es.valorZona) || 'CABA';
+                    const modalidadModelo = m.modalidad || (m.traducciones && m.traducciones.es && m.traducciones.es.valorModalidad) || 'Gabinete propio';
 
                     const cardHTML = `
                         <a href="perfil.html?id=${docId}" class="card-link" data-categoria="${m.categoria}">
                             <article class="card">
                                 <div class="card-image">
-                                    <img src="${m.fotoPrincipal}" alt="${m.nombre}" loading="lazy">
+                                    <img src="${fotoModelo}" alt="${m.nombre}" loading="lazy">
                                     <span class="badge-verificado">✓ Verificado</span>
                                     <div class="card-gradient-overlay">
                                         <h3>${m.nombre}</h3>
-                                        <span class="zona">📍 ${m.zona.toUpperCase()}</span>
-                                        <span class="modalidad-tag">${m.modalidad}</span>
+                                        <span class="zona">📍 ${zonaModelo.toUpperCase()}</span>
+                                        <span class="modalidad-tag">${modalidadModelo}</span>
                                     </div>
                                 </div>
                             </article>
                         </a>
                     `;
 
-                    // Clasificar por categoría
                     if (m.categoria === 'terapeuticas') htmlTerapeuticas += cardHTML;
                     else if (m.categoria === 'sensuales') htmlSensuales += cardHTML;
                     else if (m.categoria === 'masculinos') htmlMasculinos += cardHTML;
                     else if (m.categoria === 'fantasias') htmlFantasias += cardHTML;
 
-                    // Si está marcada como destacada, agregar a las stories
                     if (m.destacada === true) {
                         htmlStories += `
                             <a href="perfil.html?id=${docId}" class="story-item">
-                                <div class="story-ring"><img src="${m.fotoPrincipal}" alt="${m.nombre}"></div>
+                                <div class="story-ring"><img src="${fotoModelo}" alt="${m.nombre}"></div>
                                 <span>${m.nombre}</span>
                             </a>
                         `;
                     }
                 });
 
-                // Agregar los botones de "Espacio Disponible" al final de cada grilla
                 const adTerapeuticas = `<a href="https://wa.me/5491131774848?text=Hola,%20quiero%20publicar%20mi%20anuncio%20en%20Masajistas%20Prive" target="_blank" class="card-ad-link" data-categoria="terapeuticas"><article class="card-ad"><div class="ad-content"><h3 data-i18n="espacioDisponible">Espacio Disponible</h3><p data-i18n="publicaPerfil">Publicá tu perfil aquí</p><span class="btn-ad" data-i18n="contactanos">Contáctanos</span></div></article></a>`;
                 const adSensuales = `<a href="https://wa.me/5491131774848?text=Hola,%20quiero%20consultar%20sobre%20la%20seccion%20de%20Sensuales" target="_blank" class="card-ad-link" data-categoria="sensuales"><article class="card-ad"><div class="ad-content"><h3 data-i18n="espacioDisponible">Espacio Disponible</h3><p data-i18n="publicaPerfil">Publicá tu perfil aquí</p><span class="btn-ad" data-i18n="contactanos">Contáctanos</span></div></article></a>`;
                 const adMasculinos = `<a href="https://wa.me/5491131774848?text=Hola,%20quiero%20publicar%20mi%20anuncio%20en%20Masajistas%20Prive" target="_blank" class="card-ad-link" data-categoria="masculinos"><article class="card-ad"><div class="ad-content"><h3 data-i18n="espacioDisponible">Espacio Disponible</h3><p data-i18n="publicaPerfil">Publicá tu perfil aquí</p><span class="btn-ad" data-i18n="contactanos">Contáctanos</span></div></article></a>`;
@@ -378,7 +378,7 @@
                 seccionTerapeuticas: "Massagistas Terapéuticas",
                 seccionSensuales: "Massagistas Sensuais",
                 seccionMasculinos: "Massagistas Masculinos",
-                seccionFantasias: "Fantasias",
+                seccionFantasias: "Massagistas Fantasias",
                 badgeVerificado: "✓ Verificado",
                 espacioDisponible: "Espaço Disponível",
                 publicaPerfil: "Publique seu perfil aqui",
@@ -568,7 +568,6 @@
             });
         }
 
-        // Event listener para los filtros (pills)
         document.addEventListener('click', (e) => {
             if (e.target && e.target.classList.contains('pill-btn')) {
                 const pill = e.target;
