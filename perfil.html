@@ -130,7 +130,7 @@
                 document.getElementById('perfilModalidad').textContent = datosPerfilGlobal.modalidad || 'Gabinete propio';
                 document.getElementById('perfilHorarios').textContent = datosPerfilGlobal.horarios || 'Lunes a Sábados de 09 a 21 hs.';
 
-                // Filtro anti-basura definitivo: descarta cualquier texto con la palabra "perfil"
+                // EXTRACCIÓN Y FILTRADO RIGUROSO DE FOTOS REALES
                 let listaFotos = [];
                 let fuenteDatos = datosPerfilGlobal.fotos || (datosPerfilGlobal.img ? [datosPerfilGlobal.img] : []);
 
@@ -138,26 +138,34 @@
                     listaFotos = fuenteDatos.filter(f => {
                         if (!f || typeof f !== 'string') return false;
                         let limpio = f.trim().toLowerCase();
-                        if (limpio === "" || limpio.includes("logo.png") || limpio.includes("monograma.png")) return false;
-                        if (limpio.includes("perfil")) return false; // Borra automáticamente cualquier resto viejo
+                        // Descarta por completo cualquier ruta vacía o que contenga placeholders / referencias al logo
+                        if (limpio === "" || limpio.includes("logo") || limpio.includes("monograma") || limpio.includes("perfil")) {
+                            return false;
+                        }
                         return true;
                     });
                 }
 
+                // Respaldo de seguridad absoluta si no quedó ninguna foto válida
                 if (listaFotos.length === 0) {
-                    listaFotos = [datosPerfilGlobal.img || 'img/logo.png'];
+                    listaFotos = [datosPerfilGlobal.img && !datosPerfilGlobal.img.includes('logo') ? datosPerfilGlobal.img : 'img/logo.png'];
                 }
 
-                // Asignar foto principal inicial
+                // Definir la foto principal inicial arriba
                 const imgPrincipal = document.getElementById('fotoPrincipal');
                 imgPrincipal.src = listaFotos[0];
 
-                // Generar miniaturas limpias
+                // Generar exclusivamente las miniaturas de las fotos reales que sobrevivieron al filtro
+                const contenedorMini = document.getElementById('galeriaMiniaturas');
                 let miniaturasHTML = "";
+                
                 listaFotos.forEach(foto => {
-                    miniaturasHTML += `<img src="${foto}" alt="Foto" onclick="seleccionarFotoMiniatura('${foto}')" onerror="this.src='img/logo.png'">`;
+                    if (foto && !foto.includes('logo')) {
+                        miniaturasHTML += `<img src="${foto}" alt="Foto" onclick="seleccionarFotoMiniatura('${foto}')" onerror="this.style.display='none'">`;
+                    }
                 });
-                document.getElementById('galeriaMiniaturas').innerHTML = miniaturasHTML;
+                
+                contenedorMini.innerHTML = miniaturasHTML;
 
                 if (datosPerfilGlobal.whatsapp) {
                     const btnWpp = document.getElementById('btnWhatsappPerfil');
@@ -171,9 +179,10 @@
             }
         }
 
+        // Función segura para alternar la foto principal al hacer clic en las miniaturas
         window.seleccionarFotoMiniatura = function(urlFoto) {
             const imgPrincipal = document.getElementById('fotoPrincipal');
-            if (imgPrincipal) {
+            if (imgPrincipal && urlFoto) {
                 imgPrincipal.src = urlFoto;
             }
         };
