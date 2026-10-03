@@ -63,12 +63,11 @@
         let idiomaPerfil = localStorage.getItem('idiomaPrive') || 'es';
         let datosModeloActual = null;
 
-        // Estructura base de etiquetas fijas por idioma
         const etiquetasIdiomas = {
-            es: { btnVolver: "← Volver", badgeVerificado: "✓ Privé Verificado", labelZona: "Zona:", labelModalidad: "Modalidad:", tituloDesc: "Descripción", btnWpp: "Contactar por WhatsApp" },
-            en: { btnVolver: "← Back", badgeVerificado: "✓ Privé Verified", labelZona: "Area:", labelModalidad: "Modality:", tituloDesc: "Description", btnWpp: "Contact via WhatsApp" },
-            pt: { btnVolver: "← Voltar", badgeVerificado: "✓ Privé Verificado", labelZona: "Zona:", labelModalidade: "Modalidade:", tituloDesc: "Descrição", btnWpp: "Contatar por WhatsApp" },
-            fr: { btnVolver: "← Retour", badgeVerificado: "✓ Privé Vérifié", labelZona: "Zone :", labelModalidad: "Modalité :", tituloDesc: "Description", btnWpp: "Contacter par WhatsApp" }
+            es: { btnVolver: "← Volver", badgeVerificado: "✓ Privé Verificado", labelZona: "Zona:", labelModalidad: "Modalidad:", tituloDesc: "Descripción", btnWpp: "Contactar por WhatsApp", footerLegal: "Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.", footerCopy: "© 2026 Masajistas Privé. Todos los derechos reservados." },
+            en: { btnVolver: "← Back", badgeVerificado: "✓ Privé Verified", labelZona: "Area:", labelModalidad: "Modality:", tituloDesc: "Description", btnWpp: "Contact via WhatsApp", footerLegal: "This is an adult site (+18). Advertisers have no employment relationship with the portal.", footerCopy: "© 2026 Masajistas Privé. All rights reserved." },
+            pt: { btnVolver: "← Voltar", badgeVerificado: "✓ Privé Verificado", labelZona: "Zona:", labelModalidade: "Modalidade:", tituloDesc: "Descrição", btnWpp: "Contatar por WhatsApp", footerLegal: "Este é um site para adultos (+18). Os anunciantes não têm vínculo empregatício com o portal.", footerCopy: "© 2026 Masajistas Privé. Todos os direitos reservados." },
+            fr: { btnVolver: "← Retour", badgeVerificado: "✓ Privé Vérifié", labelZona: "Zone :", labelModalidad: "Modalité :", tituloDesc: "Description", btnWpp: "Contacter par WhatsApp", footerLegal: "Ceci est un site pour adultes (+18). Les annonceurs n'ont aucun lien d'emploi avec le portail.", footerCopy: "© 2026 Masajistas Privé. Tous droits réservés." }
         };
 
         function aplicarIdiomaPerfil(lang) {
@@ -82,6 +81,13 @@
                 else if (lang === 'pt') btn.innerHTML = '🇫🇷 FR';
                 else btn.innerHTML = '🇦🇷 ES';
             }
+
+            // Traducir textos fijos del footer y header
+            const labels = etiquetasIdiomas[lang] || etiquetasIdiomas['es'];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const clave = el.getAttribute('data-i18n');
+                if (labels[clave]) el.textContent = labels[clave];
+            });
 
             if (datosModeloActual) {
                 renderizarPerfil(datosModeloActual);
@@ -131,14 +137,13 @@
             const lang = idiomaPerfil;
             const labels = etiquetasIdiomas[lang] || etiquetasIdiomas['es'];
 
-            // Extraer traducciones específicas de la modelo si están guardadas, o usar el español por defecto
+            // Buscar traducciones específicas guardadas, o recurrir a la descripción general en español
             const traduccionesModelo = m.traducciones || {};
             const langData = traduccionesModelo[lang] || traduccionesModelo['es'] || {};
 
             const zonaTexto = langData.valorZona || m.zona || '';
             const modalidadTexto = langData.valorModalidad || m.modalidad || '';
-            const descripcionTexto = langData.descPerfil || m.descripcion || '';
-            const tecnicasTexto = langData.valorTecnicas ? `<div style="margin-top: 0.5rem; color: #94a3b8; font-size: 0.9rem;"><strong>${lang === 'en' ? 'Techniques:' : lang === 'pt' ? 'Técnicas:' : lang === 'fr' ? 'Techniques :' : 'Técnicas de masaje:'}</strong> ${langData.valorTecnicas}</div>` : '';
+            const descripcionTexto = langData.descPerfil || m.descripcion || 'Atención personalizada en ambiente climatizado y privado.';
 
             const ocultarWpp = m.estado === 'pausado' ? 'display: none;' : '';
 
@@ -173,7 +178,6 @@
                     <div class="perfil-descripcion">
                         <h3>${labels.tituloDesc}</h3>
                         <p>${descripcionTexto}</p>
-                        ${tecnicasTexto}
                     </div>
 
                     <a href="${m.whatsappLink || 'https://wa.me/' + m.whatsapp}" target="_blank" rel="noopener noreferrer" class="btn-whatsapp" style="${ocultarWpp}">
@@ -182,7 +186,7 @@
                 </div>
 
                 <!-- Casilla de Comentarios / Experiencias -->
-                <div id="seccion-comentarios"></div>
+                <div id="seccion-comentarios" style="grid-column: 1 / -1; margin-top: 30px;"></div>
             `;
 
             document.getElementById('perfil-title').textContent = `${m.nombre} | Masajistas Privé`;
