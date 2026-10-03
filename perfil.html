@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="perfil-title">Perfil | Masajistas Privé</title>
     <link rel="stylesheet" href="css/style.css">
@@ -15,7 +16,9 @@
             <img src="img/monograma.png" alt="Monograma" class="header-monograma">
         </div>
         <div class="header-center">
-            <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">
+            <a href="index.html">
+                <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">
+            </a>
         </div>
         <div class="header-right" style="display: flex; align-items: center; gap: 10px;">
             <button id="btn-idioma" onclick="cambiarIdiomaPerfil()" style="background: rgba(223, 194, 133, 0.12); border: 1px solid #dfc285; color: #dfc285; padding: 7px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; font-family: 'Montserrat', sans-serif; letter-spacing: 1.5px; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.4);">
@@ -64,10 +67,10 @@
         let datosModeloActual = null;
 
         const etiquetasIdiomas = {
-            es: { btnVolver: "← Volver", badgeVerificado: "✓ Privé Verificado", labelZona: "Zona:", labelModalidad: "Modalidad:", tituloDesc: "Descripción", btnWpp: "Contactar por WhatsApp", footerLegal: "Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.", footerCopy: "© 2026 Masajistas Privé. Todos los derechos reservados." },
-            en: { btnVolver: "← Back", badgeVerificado: "✓ Privé Verified", labelZona: "Area:", labelModalidad: "Modality:", tituloDesc: "Description", btnWpp: "Contact via WhatsApp", footerLegal: "This is an adult site (+18). Advertisers have no employment relationship with the portal.", footerCopy: "© 2026 Masajistas Privé. All rights reserved." },
-            pt: { btnVolver: "← Voltar", badgeVerificado: "✓ Privé Verificado", labelZona: "Zona:", labelModalidade: "Modalidade:", tituloDesc: "Descrição", btnWpp: "Contatar por WhatsApp", footerLegal: "Este é um site para adultos (+18). Os anunciantes não têm vínculo empregatício com o portal.", footerCopy: "© 2026 Masajistas Privé. Todos os direitos reservados." },
-            fr: { btnVolver: "← Retour", badgeVerificado: "✓ Privé Vérifié", labelZona: "Zone :", labelModalidad: "Modalité :", tituloDesc: "Description", btnWpp: "Contacter par WhatsApp", footerLegal: "Ceci est un site pour adultes (+18). Les annonceurs n'ont aucun lien d'emploi avec le portail.", footerCopy: "© 2026 Masajistas Privé. Tous droits réservés." }
+            es: { btnVolver: "← Volver", badgeVerificado: "✓ Privé Verificado", labelZona: "Zona:", labelModalidad: "Modalidad:", tituloDesc: "Sobre mí y Servicios", btnWpp: "Contactar por WhatsApp", footerLegal: "Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.", footerCopy: "© 2026 Masajistas Privé. Todos los derechos reservados." },
+            en: { btnVolver: "← Back", badgeVerificado: "✓ Privé Verified", labelZona: "Area:", labelModalidad: "Modality:", tituloDesc: "About Me and Services", btnWpp: "Contact via WhatsApp", footerLegal: "This is an adult site (+18). Advertisers have no employment relationship with the portal.", footerCopy: "© 2026 Masajistas Privé. All rights reserved." },
+            pt: { btnVolver: "← Voltar", badgeVerificado: "✓ Privé Verificado", labelZona: "Zona:", labelModalidade: "Modalidade:", tituloDesc: "Sobre mim e Serviços", btnWpp: "Contatar por WhatsApp", footerLegal: "Este é um site para adultos (+18). Os anunciantes não têm vínculo empregatício com o portal.", footerCopy: "© 2026 Masajistas Privé. Todos os direitos reservados." },
+            fr: { btnVolver: "← Retour", badgeVerificado: "✓ Privé Vérifié", labelZona: "Zone :", labelModalidad: "Modalité :", tituloDesc: "À propos de moi et Services", btnWpp: "Contacter par WhatsApp", footerLegal: "Ceci est un site pour adultes (+18). Les annonceurs n'ont aucun lien d'emploi avec le portail.", footerCopy: "© 2026 Masajistas Privé. Tous droits réservés." }
         };
 
         function aplicarIdiomaPerfil(lang) {
@@ -82,7 +85,6 @@
                 else btn.innerHTML = '🇦🇷 ES';
             }
 
-            // Traducir textos fijos del footer y header
             const labels = etiquetasIdiomas[lang] || etiquetasIdiomas['es'];
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const clave = el.getAttribute('data-i18n');
@@ -111,6 +113,7 @@
 
             const docRef = db.collection("modelos_prive").doc(perfilId);
 
+            // Registrar visita interna de forma invisible
             const visitaKey = `visitaRegistrada_${perfilId}`;
             if (!sessionStorage.getItem(visitaKey)) {
                 sessionStorage.setItem(visitaKey, "true");
@@ -137,7 +140,7 @@
             const lang = idiomaPerfil;
             const labels = etiquetasIdiomas[lang] || etiquetasIdiomas['es'];
 
-            // Buscar traducciones específicas guardadas, o recurrir a la descripción general en español
+            // Extraer traducciones completas desde Firebase (si existen) o usar la descripción general
             const traduccionesModelo = m.traducciones || {};
             const langData = traduccionesModelo[lang] || traduccionesModelo['es'] || {};
 
@@ -177,7 +180,7 @@
 
                     <div class="perfil-descripcion">
                         <h3>${labels.tituloDesc}</h3>
-                        <p>${descripcionTexto}</p>
+                        <p style="white-space: pre-line;">${descripcionTexto}</p>
                     </div>
 
                     <a href="${m.whatsappLink || 'https://wa.me/' + m.whatsapp}" target="_blank" rel="noopener noreferrer" class="btn-whatsapp" style="${ocultarWpp}">
