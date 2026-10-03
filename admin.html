@@ -121,7 +121,7 @@
                     </div>
                 </div>
 
-                <!-- SECCIÓN DE SELECCIÓN DE FOTOS DIRECTO DE LA GALERÍA -->
+                <!-- SECCIÓN DE SELECCIÓN DE FOTOS -->
                 <div class="form-grid" style="background: #1a1a1a; padding: 15px; border-radius: 8px; border: 1px solid #333; margin-bottom: 15px;">
                     <div class="form-row" style="margin-bottom: 0;">
                         <label style="color: #dfc285;">📸 Elegir Foto Principal de la Galería:</label>
@@ -264,7 +264,7 @@
         </div>
     </div>
 
-    <!-- MODAL DE EDICIÓN MEJORADO -->
+    <!-- MODAL DE EDICIÓN CORREGIDO -->
     <div id="modalEditar">
         <div class="modal-content">
             <h3>Editar Perfil, Fotos y Traducciones</h3>
@@ -720,6 +720,8 @@
                     document.getElementById('tradStatus').textContent = '';
                     document.getElementById('statusEditFotoPrin').textContent = '';
                     document.getElementById('statusEditGaleria').textContent = '';
+                    document.getElementById('editFileFotoPrin').value = '';
+                    document.getElementById('editFileGaleria').value = '';
                     fotosGaleriaEdicion = [];
 
                     const trad = m.traducciones || {};
@@ -788,8 +790,11 @@
                     mData.traducciones[l].descPerfil2 = document.getElementById(`editDesc2_${l}`).value.trim();
                 });
 
+                // Captura correcta de la foto principal editada
                 const nuevaFotoPrin = document.getElementById('editFotoPrincipal').value.trim();
-                if (nuevaFotoPrin) mData.fotoPrincipal = nuevaFotoPrin;
+                if (nuevaFotoPrin) {
+                    mData.fotoPrincipal = nuevaFotoPrin;
+                }
 
                 if (fotosGaleriaEdicion.length > 0) {
                     mData.fotosGaleria = fotosGaleriaEdicion;
