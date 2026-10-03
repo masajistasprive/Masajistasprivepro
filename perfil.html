@@ -222,23 +222,22 @@
                 document.getElementById('perfilModalidad').textContent = datosPerfilGlobal.modalidad || 'Gabinete propio';
                 document.getElementById('perfilHorarios').textContent = datosPerfilGlobal.horarios || 'Lunes a Sábados de 09 a 21 hs.';
 
-                // SISTEMA UNIFICADO DE FOTOS SIN ERRORES (Garantiza que la foto 1 sea siempre la principal)
-                let listaFotos = [
-                    `img/${perfilId}1.jpg`,
-                    `img/${perfilId}2.jpg`,
-                    `img/${perfilId}3.jpg`,
-                    `img/${perfilId}4.jpg`
-                ];
+                // LECTURA ROBUSTA DE FOTOS: Toma primero el array de Firebase y si no, busca las de la carpeta en orden
+                let listaFotos = [];
 
-                // Si Firebase tiene fotos válidas guardadas, las usamos prioritariamente
                 if (datosPerfilGlobal.fotos && Array.isArray(datosPerfilGlobal.fotos)) {
-                    let fotosValidas = datosPerfilGlobal.fotos.filter(f => f && typeof f === 'string' && f.trim() !== "" && !f.includes("logo") && !f.includes("monograma"));
-                    if (fotosValidas.length > 0) {
-                        listaFotos = fotosValidas;
+                    listaFotos = datosPerfilGlobal.fotos.filter(f => f && typeof f === 'string' && f.trim() !== "" && !f.toLowerCase().includes("logo") && !f.toLowerCase().includes("monograma"));
+                }
+
+                if (listaFotos.length === 0) {
+                    if (datosPerfilGlobal.img && !datosPerfilGlobal.img.toLowerCase().includes("logo")) {
+                        listaFotos = [datosPerfilGlobal.img, `img/${perfilId}2.jpg`, `img/${perfilId}3.jpg`, `img/${perfilId}4.jpg`];
+                    } else {
+                        listaFotos = [`img/${perfilId}1.jpg`, `img/${perfilId}2.jpg`, `img/${perfilId}3.jpg`, `img/${perfilId}4.jpg`];
                     }
                 }
 
-                // Asignar la foto principal arriba exactamente igual a la primera miniatura
+                // Asignar la foto principal de arriba estrictamente igual a la primera de la lista
                 document.getElementById('fotoPrincipal').src = listaFotos[0];
 
                 // Generar miniaturas sincronizadas
@@ -248,7 +247,7 @@
                 });
                 document.getElementById('galeriaMiniaturas').innerHTML = miniaturasHTML;
 
-                // WHATSAPP BLINDADO: Limpia caracteres raros y usa el número real o el respaldo general
+                // WHATSAPP: Si la modelo tiene número cargado lo usa, sino usa el respaldo general de consultas
                 const btnWpp = document.getElementById('btnWhatsappPerfil');
                 let rawWpp = datosPerfilGlobal.whatsapp ? datosPerfilGlobal.whatsapp.toString().replace(/\D/g, '') : "";
                 let numeroWpp = (rawWpp.length >= 8) ? rawWpp : "5491131774848";
