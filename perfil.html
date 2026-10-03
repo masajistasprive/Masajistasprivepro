@@ -130,14 +130,23 @@
                 document.getElementById('perfilModalidad').textContent = datosPerfilGlobal.modalidad || 'Gabinete propio';
                 document.getElementById('perfilHorarios').textContent = datosPerfilGlobal.horarios || 'Lunes a Sábados de 09 a 21 hs.';
 
-                // Carga ultrarrápida de fotos válidas
+                // Filtro ultra estricto para ignorar casilleros vacíos o textos falsos de logo
                 let listaFotos = [];
                 if (datosPerfilGlobal.fotos && Array.isArray(datosPerfilGlobal.fotos)) {
-                    listaFotos = datosPerfilGlobal.fotos.filter(f => f && typeof f === 'string' && f.trim() !== "");
+                    listaFotos = datosPerfilGlobal.fotos.filter(f => {
+                        if (!f || typeof f !== 'string') return false;
+                        let limpio = f.trim().toLowerCase();
+                        return limpio !== "" && !limpio.includes("logo.png") && !limpio.includes("monograma.png");
+                    });
                 }
+                
                 if (listaFotos.length === 0 && datosPerfilGlobal.img) {
-                    listaFotos = [datosPerfilGlobal.img];
+                    let imgLimpia = datosPerfilGlobal.img.trim().toLowerCase();
+                    if (imgLimpia !== "" && !imgLimpia.includes("logo.png")) {
+                        listaFotos = [datosPerfilGlobal.img];
+                    }
                 }
+
                 if (listaFotos.length === 0) {
                     listaFotos = ['img/logo.png'];
                 }
