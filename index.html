@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="main-title">Masajistas Privé | Portal Exclusivo</title>
-    <!-- VERSIÓN DINÁMICA CONECTADA A FIREBASE -->
+    <!-- VERSIÓN OPTIMIZADA Y ULTRA RÁPIDA -->
     <link rel="stylesheet" href="css/style.css?v=3.9">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -174,9 +174,11 @@
         }
         const db = firebase.firestore();
 
-        // Cargar perfiles dinámicamente desde Firebase en tiempo real con orden aleatorio
-        function cargarPerfilesDinamicos() {
-            db.collection("config_perfiles").onSnapshot((snapshot) => {
+        // Carga rápida y optimizada de perfiles desde Firebase con orden aleatorio
+        async function cargarPerfilesDinamicos() {
+            try {
+                const snapshot = await db.collection("config_perfiles").get();
+                
                 document.getElementById('grid-terapeuticas').innerHTML = '';
                 document.getElementById('grid-sensuales').innerHTML = '';
                 document.getElementById('grid-masculinos').innerHTML = '';
@@ -197,7 +199,7 @@
 
                     let categoria = p.categoria || 'terapeuticas';
                     let perfilId = p.id || doc.id;
-                    let archivoHtml = perfilId + '.html'; 
+                    let archivoHtml = 'perfil.html?id=' + perfilId; 
                     let nombre = p.nombre || 'Perfil';
                     let zona = p.zona || 'CABA';
                     let modalidad = p.modalidad || 'Gabinete propio';
@@ -255,7 +257,10 @@
                 agregarBotonesAnuncio();
                 document.getElementById('stories-container').innerHTML = destacadasHTML;
                 aplicarIdioma(idiomaActual);
-            });
+
+            } catch (e) {
+                console.error("Error al cargar perfiles:", e);
+            }
         }
 
         function agregarBotonesAnuncio() {
