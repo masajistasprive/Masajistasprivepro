@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="main-title">Masajistas Privé | Portal Exclusivo</title>
+    
+    <!-- CÓDIGO DE GOOGLE ANALYTICS INTEGRADO -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DXX740HP41"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-DXX740HP41');
+    </script>
+
     <link rel="stylesheet" href="css/style.css?v=3.8">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -86,7 +96,7 @@
 
     <main class="container">
 
-        <!-- Sección Terapéuticas -->
+        <!-- Sección Terapéuticas (Sin Jennyfer) -->
         <h2 class="section-heading" data-section="terapeuticas" data-i18n="seccionTerapeuticas">Masajistas Terapéuticas</h2>
         <div class="grid-perfiles" id="grid-terapeuticas">
             <a href="prada.html" class="card-link" data-categoria="terapeuticas">
@@ -191,7 +201,7 @@
             </a>
         </div>
 
-        <!-- Sección Sensuales -->
+        <!-- Sección Sensuales (Sin Deby) -->
         <h2 class="section-heading" data-section="sensuales" style="margin-top: 2rem;" data-i18n="seccionSensuales">Masajistas Sensuales</h2>
         <div class="grid-perfiles" id="grid-sensuales">
             <a href="renata.html" class="card-link" data-categoria="sensuales">
@@ -309,7 +319,7 @@
             </a>
         </div>
 
-        <!-- Sección Masculinos -->
+        <!-- Sección Masculinos (Sin Matias) -->
         <h2 class="section-heading" data-section="masculinos" style="margin-top: 2rem;" data-i18n="seccionMasculinos">Masajistas Masculinos</h2>
         <div class="grid-perfiles" id="grid-masculinos">
             <a href="https://wa.me/5491131774848?text=Hola,%20quiero%20publicar%20mi%20anuncio%20en%20Masajistas%20Prive" target="_blank" class="card-ad-link" data-categoria="masculinos">
@@ -443,6 +453,26 @@
             } catch (e) {}
         }
 
+        // Función para barajar (hacer aleatorias) las tarjetas de los perfiles en cada sección
+        function mezclarPerfilesAleatorios() {
+            const grids = document.querySelectorAll('.grid-perfiles');
+            grids.forEach(grid => {
+                const cards = Array.from(grid.querySelectorAll('.card-link'));
+                const adLink = grid.querySelector('.card-ad-link');
+
+                if (cards.length > 0) {
+                    for (let i = cards.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [cards[i], cards[j]] = [cards[j], cards[i]];
+                    }
+                    cards.forEach(card => grid.appendChild(card));
+                    if (adLink) {
+                        grid.appendChild(adLink);
+                    }
+                }
+            });
+        }
+
         const traducciones = {
             es: {
                 pageTitle: "Masajistas Privé | Portal Exclusivo",
@@ -482,7 +512,7 @@
                 leerCompleto: "Leer artículo completo &rarr;",
                 btnCerrar: "Cerrar",
                 siguenos: "Síguenos",
-                footerLegal: "Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas são independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.",
+                footerLegal: "Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas são independientes y no tienen vínculo laboral, societario ni de dependencia com este portal.",
                 footerMarcas: "Todo el contenido, marcas y logotipos pertenecen a sus respectivos dueños.",
                 visitasTotales: "Visitas totales al portal",
                 footerCopy: "© 2026 Masajistas Privé. Todos los derechos reservados."
@@ -738,6 +768,7 @@
             obtenerClimaCABA();
             obtenerDolar();
             registrarYMostrarVisitasGlobales();
+            mezclarPerfilesAleatorios();
         });
 
         const modalEdad = document.getElementById('modal-edad');
