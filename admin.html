@@ -216,12 +216,12 @@
             }
         }
 
-        // Función de cambio de estado blindada
+        // Función de cambio de estado corregida y blindada
         window.cambiarEstado = function(idPerfil, nuevoEstado) {
-            db.collection("config_perfiles").doc(idPerfil).update({ 
+            db.collection("config_perfiles").doc(idPerfil).set({ 
                 estado: nuevoEstado 
-            }).then(() => {
-                console.log(`Estado de ${idPerfil} cambiado a ${nuevoEstado}`);
+            }, { merge: true }).then(() => {
+                console.log(`Estado de ${idPerfil} actualizado a: ${nuevoEstado}`);
             }).catch(err => {
                 console.error("Error al actualizar estado:", err);
                 alert("No se pudo cambiar el estado.");
@@ -229,7 +229,7 @@
         };
 
         window.toggleDestacada = function(idPerfil, estadoDestacada) {
-            db.collection("config_perfiles").doc(idPerfil).update({ destacada: estadoDestacada });
+            db.collection("config_perfiles").doc(idPerfil).set({ destacada: estadoDestacada }, { merge: true });
         };
 
         window.eliminarPerfil = function(idPerfil) {
@@ -255,6 +255,7 @@
                 document.getElementById('nuevosHorarios').value = d.horarios || '';
                 document.getElementById('nuevaBio').value = d.bio || '';
                 
+                // Cargar hasta 10 fotos
                 const inputsFotos = document.querySelectorAll('.input-foto');
                 inputsFotos.forEach(inp => inp.value = '');
                 let listaFotos = d.fotos || [d.img];
@@ -268,6 +269,7 @@
             }
         };
 
+        // Función inteligente para traducir biografía a los 4 idiomas mediante API pública de traducción
         async function traducirTexto(texto, idiomaDestino) {
             if (!texto) return "";
             try {
@@ -295,6 +297,7 @@
                 return;
             }
 
+            // Recopilar galerías de fotos (hasta 10)
             let fotosArray = [];
             document.querySelectorAll('.input-foto').forEach(inp => {
                 if (inp.value.trim() !== "") {
@@ -306,6 +309,7 @@
                 fotosArray.push("img/logo.png");
             }
 
+            // Traducir automáticamente biografía a EN, PT y FR
             const btn = document.getElementById('btnGuardarTexto');
             btn.textContent = "Traduciendo y guardando en Firebase...";
             btn.disabled = true;
