@@ -6,6 +6,7 @@
     <title>Panel de Control Maestro - Masajistas Privé</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <style>
@@ -23,6 +24,7 @@
         .form-group { display: flex; flex-direction: column; gap: 5px; }
         label { font-size: 0.8rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
         input, select, textarea { padding: 10px; background: #1a1a1a; border: 1px solid #333; border-radius: 6px; color: #fff; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; }
+        input[type="file"] { padding: 8px; background: #1a1a1a; cursor: pointer; color: #dfc285; }
         input:focus, select:focus, textarea:focus { outline: none; border-color: #dfc285; }
         textarea { resize: vertical; height: 70px; grid-column: 1 / -1; }
 
@@ -40,6 +42,7 @@
 
         #loginBox { text-align: center; padding: 50px; }
         input[type="password"] { padding: 12px; border-radius: 6px; border: 1px solid #dfc285; background: #1a1a1a; color: #fff; margin-right: 10px; width: 220px; }
+        #estadoSubida { color: #dfc285; font-size: 12px; margin-top: 5px; text-align: center; }
     </style>
 </head>
 <body>
@@ -57,7 +60,7 @@
             
             <!-- SECCIÓN 1: CREAR / DAR DE ALTA NUEVO PERFIL -->
             <div class="seccion-panel">
-                <h2>➕ Dar de Alta Nuevo Perfil Automático</h2>
+                <h2>➕ Dar de Alta Nuevo Perfil con Foto</h2>
                 <div class="form-grid">
                     <div class="form-group">
                         <label>ID / Nombre de archivo (ej: catalina)</label>
@@ -89,8 +92,8 @@
                         <input type="text" id="nuevoWpp" placeholder="54911...">
                     </div>
                     <div class="form-group">
-                        <label>Foto Principal (Ruta o archivo)</label>
-                        <input type="text" id="nuevaFoto" placeholder="img/catalina1.jpg" value="img/">
+                        <label>Seleccionar Foto de la Galería</label>
+                        <input type="file" id="nuevaFotoFile" accept="image/*">
                     </div>
                     <div class="form-group">
                         <label>Horarios</label>
@@ -100,7 +103,8 @@
                         <textarea id="nuevaBio" placeholder="Escribe aquí la biografía y servicios de la profesional..."></textarea>
                     </div>
                 </div>
-                <button onclick="crearNuevoPerfil()" class="btn-accion btn-crear">Publicar Perfil en la Web al Instante</button>
+                <div id="estadoSubida"></div>
+                <button onclick="crearNuevoPerfilConFoto()" class="btn-accion btn-crear">Publicar Perfil en la Web al Instante</button>
             </div>
 
             <!-- SECCIÓN 2: GESTIÓN DE PERFILES EXISTENTES -->
@@ -129,6 +133,7 @@
             firebase.initializeApp(firebaseConfig);
         }
         const db = firebase.firestore();
+        const storage = firebase.storage();
 
         // Lista base para asegurar que aparezcan todos al ingresar
         const perfilesBaseDefault = [
@@ -167,7 +172,6 @@
             const contenedor = document.getElementById('listaPerfilesAdmin');
 
             try {
-                // Registrar por defecto en Firebase los perfiles base si no existen
                 for (let p of perfilesBaseDefault) {
                     let docRef = db.collection("config_perfiles").doc(p.id);
                     let docSnap = await docRef.get();
@@ -189,7 +193,6 @@
                     visitasMap[doc.id] = doc.data().visitas || 0;
                 });
 
-                // Escuchar perfiles guardados en Firebase en tiempo real
                 db.collection("config_perfiles").onSnapshot((snapshot) => {
                     contenedor.innerHTML = "";
 
@@ -240,39 +243,52 @@
         window.cambiarEstado = function(idPerfil, nuevoEstado) {
             db.collection("config_perfiles").doc(idPerfil).set({
                 estado: nuevoEstado
-            }, { merge: true }).then(() => {
-                // Actualizado con éxito
-            }).catch(err => {
+            }, { merge: true }).catch(err => {
                 console.error("Error al actualizar:", err);
-                alert("No se pudo actualizar el estado.");
             });
         };
 
         window.toggleDestacada = function(idPerfil, estadoDestacada) {
             db.collection("config_perfiles").doc(idPerfil).set({
                 destacada: estadoDestacada
-            }, { merge: true }).then(() => {
-                // Actualizado con éxito en tiempo real
-            }).catch(err => {
+            }, { merge: true }).catch(err => {
                 console.error("Error al actualizar destacada:", err);
-                alert("No se pudo cambiar el estado de destacada.");
             });
         };
 
-        window.crearNuevoPerfil = function() {
+        window.crearNuevoPerfilConFoto = async function() {
             const id = document.getElementById('nuevoId').value.trim().toLowerCase().replace(/\s+/g, '');
             const nombre = document.getElementById('nuevoNombre').value.trim();
             const categoria = document.getElementById('nuevaCategoria').value;
             const zona = document.getElementById('nuevaZona').value.trim().toUpperCase();
             const modalidad = document.getElementById('nuevaModalidad').value.trim();
             const whatsapp = document.getElementById('nuevoWpp').value.trim();
-            const img = document.getElementById('nuevaFoto').value.trim();
             const horarios = document.getElementById('nuevosHorarios').value.trim();
             const bio = document.getElementById('nuevaBio').value.trim();
+            const fileInput = document.getElementById('nuevaFotoFile');
+            const estadoSubida = document.getElementById('estadoSubida');
 
             if (!id || !nombre) {
                 alert("Por lo menos completa el ID y el Nombre de la profesional.");
                 return;
+            }
+
+            let imageUrl = 'img/logo.png';
+
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                const storageRef = storage.ref().child('perfiles/' + id + '_' + file.name);
+                
+                estadoSubida.textContent = "Subiendo imagen a la nube...";
+
+                try {
+                    const snapshot = await storageRef.put(file);
+                    imageUrl = await snapshot.ref.getDownloadURL();
+                    estadoSubida.textContent = "¡Imagen subida con éxito!";
+                } catch (error) {
+                    console.error("Error al subir foto:", error);
+                    alert("Hubo un error al subir la foto, pero se creará el perfil con imagen predeterminada.");
+                }
             }
 
             db.collection("config_perfiles").doc(id).set({
@@ -282,18 +298,20 @@
                 zona: zona,
                 modalidad: modalidad,
                 whatsapp: whatsapp,
-                img: img,
+                img: imageUrl,
                 horarios: horarios,
                 bio: bio,
                 estado: "activo",
                 destacada: false,
                 creado: new Date().toISOString()
             }).then(() => {
-                alert(`¡Éxito! El perfil de ${nombre} fue creado y ya aparecerá automáticamente en el portal.`);
+                alert(`¡Éxito! El perfil de ${nombre} fue creado correctamente.`);
                 document.getElementById('nuevoId').value = '';
                 document.getElementById('nuevoNombre').value = '';
                 document.getElementById('nuevaZona').value = '';
                 document.getElementById('nuevaBio').value = '';
+                document.getElementById('nuevaFotoFile').value = '';
+                estadoSubida.textContent = "";
             }).catch(err => {
                 console.error(err);
                 alert("Error al guardar el perfil en Firebase.");
