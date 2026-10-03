@@ -443,7 +443,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <script>
-        // Inicializar Firebase y Sincronizar Destacadas, Pausas y Nuevos Perfiles con Plantilla Dinámica
         const firebaseConfig = {
             apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
             authDomain: "masajistasprivepro.firebaseapp.com",
@@ -458,7 +457,6 @@
         }
         const db = firebase.firestore();
 
-        // Control del Modal de Edad
         const modalEdad = document.getElementById('modal-edad');
         const btnMayor = document.getElementById('btn-mayor');
 
@@ -474,6 +472,8 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
+            aplicarIdioma(localStorage.getItem('idiomaPrive') || 'es');
+
             db.collection("config_perfiles").onSnapshot((snapshot) => {
                 let destacadasHTML = "";
 
@@ -489,17 +489,14 @@
                     let modalidad = data.modalidad || 'Gabinete propio';
                     let archivoHtml = 'perfil.html?id=' + perfilId;
 
-                    // 1. Control estricto de Estados (Pausado / Activo) en las tarjetas estáticas
                     document.querySelectorAll(`[data-perfilid="${perfilId}"]`).forEach(el => {
                         el.style.display = (estado === 'pausado') ? 'none' : '';
-                        // Actualizar href para que apunte a la plantilla dinámica de perfil
                         const linkEl = el.tagName === 'A' ? el : el.closest('a');
                         if (linkEl && !linkEl.classList.contains('card-ad-link')) {
                             linkEl.href = archivoHtml;
                         }
                     });
 
-                    // 2. Construir únicamente las destacadas que estén activas y marcadas en el admin
                     if (esDestacada && estado !== 'pausado') {
                         destacadasHTML += `
                             <a href="${archivoHtml}" class="story-item" data-destacadaid="${perfilId}">
@@ -509,7 +506,6 @@
                         `;
                     }
 
-                    // 3. Inyección automática si es un perfil NUEVO creado desde el admin
                     const gridContainer = document.getElementById(`grid-${categoria}`);
                     if (gridContainer && estado !== 'pausado') {
                         let tarjetaExistente = gridContainer.querySelector(`[data-perfilid="${perfilId}"]`);
@@ -539,7 +535,6 @@
                     }
                 });
 
-                // Actualizar las historias destacadas limpiando cualquier rezago anterior por completo
                 const storiesContainer = document.getElementById('stories-container-dinamico');
                 if (storiesContainer) {
                     storiesContainer.innerHTML = destacadasHTML !== "" ? destacadasHTML : '';
@@ -549,7 +544,6 @@
     </script>
 
     <script>
-        // --- DICCIONARIO CUATRILINGÜE (ES / EN / PT / FR) ---
         const traducciones = {
             es: {
                 pageTitle: "Masajistas Privé | Portal Exclusivo",
@@ -565,6 +559,10 @@
                 filtroSensuales: "Sensuales",
                 filtroMasculinos: "Masculinos",
                 filtroFantasias: "Fantasías",
+                seccionTerapeuticas: "Masajistas Terapéuticas",
+                seccionSensuales: "Masajistas Sensuales",
+                seccionMasculinos: "Masajistas Masculinos",
+                seccionFantasias: "Fantasías",
                 badgeVerificado: "✓ Verificado",
                 modConsultorio: "Consultorio propio",
                 modGabinete: "Gabinete propio",
@@ -586,7 +584,7 @@
                 btnCerrar: "Cerrar",
                 siguenos: "Síguenos",
                 footerLegal: "Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.",
-                footerMarcas: "Todo el contenido, marcas y logotipos pertenecen a seus respectivos dueños.",
+                footerMarcas: "Todo el contenido, marcas y logotipos pertenecen a sus respectivos dueños.",
                 visitasTotales: "Visitas totales al portal",
                 footerCopy: "© 2026 Masajistas Privé. Todos los derechos reservados."
             },
@@ -604,6 +602,10 @@
                 filtroSensuales: "Sensual",
                 filtroMasculinos: "Male",
                 filtroFantasias: "Fantasies",
+                seccionTerapeuticas: "Therapeutic Masseuses",
+                seccionSensuales: "Sensual Masseuses",
+                seccionMasculinos: "Male Masseurs",
+                seccionFantasias: "Fantasies",
                 badgeVerificado: "✓ Verified",
                 modConsultorio: "Private office",
                 modGabinete: "Private studio",
@@ -639,10 +641,14 @@
                 cargando: "Carregando clima...",
                 destacadasTitulo: "Destaques",
                 filtroTodas: "Todas",
-                filtroTerapeuticas: "Terapéuticas",
+                filtroTerapeuticas: "Terapêuticas",
                 filtroSensuales: "Sensuais",
                 filtroMasculinos: "Masculinos",
                 filtroFantasias: "Fantasias",
+                seccionTerapeuticas: "Massagistas Terapêuticas",
+                seccionSensuales: "Massagistas Sensuais",
+                seccionMasculinos: "Massagistas Masculinos",
+                seccionFantasias: "Fantasias",
                 badgeVerificado: "✓ Verificado",
                 modConsultorio: "Consultório próprio",
                 modGabinete: "Estúdio próprio",
@@ -682,6 +688,10 @@
                 filtroSensuales: "Sensuelles",
                 filtroMasculinos: "Hommes",
                 filtroFantasias: "Fantasies",
+                seccionTerapeuticas: "Masseuses Thérapeutiques",
+                seccionSensuales: "Masseuses Sensuelles",
+                seccionMasculinos: "Masseurs Hommes",
+                seccionFantasias: "Fantasies",
                 badgeVerificado: "✓ Vérifié",
                 modConsultorio: "Cabinet privé",
                 modGabinete: "Studio privé",
@@ -743,7 +753,7 @@
                     categoria: "Bem-estar & BA",
                     titulo: "O ritual pós-escritório: Como se desconectar do centro em dez minutos",
                     extracto: "O barulho da City portenha, o metrô lotado e as telas carregam a cervical de tensão invisível. Chaves para entender por que uma pausa programada muda completamente a noite.",
-                    cuerpo: "O ritmo de Buenos Aires tem uma exigência particular. Sair de um escritório no Microcentro ou Tribunales às 18h significa submeter o corpo a um nível de cortisol cronicamente elevado.\n\nA desconexão não acontece sozinha ao chegar em casa; o cérebro continua processando pendências. Entrar em um espaço climatizado, com iluminação suave, aromas de sândalo e música ambiente permite um reset físico imediato."
+                    cuerpo: "O ritmo de Buenos Aires tem uma exigência particular. Sair de um escritório no Microcentro ou Tribunales às 18h significa submeter o corpo a um nível de cortisol cronicamente elevado.\n\nA desconexão não acontece sozinha ao chegar em casa; o cérebro continua processando pendências. Entrar em um espaço climatizado, com iluminação suave, aromas de sándalo e música ambiente permite um reset físico imediato."
                 },
                 {
                     categoria: "Técnicas & Conexão",
@@ -881,27 +891,23 @@
                 const esDeNoche = horaActual < 6 || horaActual >= 20;
 
                 let icono = '☁️';
-                let estado = 'Nublado';
+                let estado = traducciones[idiomaActual]?.[codigoClima === 0 ? (esDeNoche ? 'nocheDespejada' : 'despejado') : 'nublado'] || 'Nublado';
                 
                 if (codigoClima === 0) {
                     icono = esDeNoche ? '🌙' : '☀';
-                    estado = esDeNoche ? 'Noche despejada' : 'Despejado';
                 } else if (codigoClima >= 1 && codigoClima <= 2) {
                     icono = esDeNoche ? '☁' : '⛅';
-                    estado = 'Parcialmente nublado';
                 } else if (codigoClima === 3) {
                     icono = '☁';
-                    estado = 'Nublado';
                 } else if ((codigoClima >= 51 && codigoClima <= 67) || (codigoClima >= 80 && codigoClima <= 99)) {
                     icono = '🌧';
-                    estado = 'Lloviendo';
                 }
 
                 document.getElementById('clima-info').innerHTML = `
                     <span style="font-size: 20px; vertical-align: middle; margin-right: 4px;">${icono}</span>
                     <span style="color: #dfc285; font-size: 20px; font-weight: 600; font-family: 'Cormorant Garamond', serif;">${temp} °C</span> 
                     <span style="margin: 0 6px; color: #555;">|</span> 
-                    <span>${estado}</span>
+                    <span>Buenos Aires (CABA)</span>
                     <span style="margin: 0 6px; color: #555;">|</span> 
                     Humedad: ${humedad}%
                 `;
