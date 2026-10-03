@@ -187,10 +187,24 @@
                 document.getElementById('perfilModalidad').textContent = datosPerfilGlobal.modalidad || 'Gabinete propio';
                 document.getElementById('perfilHorarios').textContent = datosPerfilGlobal.horarios || 'Lunes a Sábados de 09 a 21 hs.';
 
-                // Cargar galería de fotos (soporta hasta 10 fotos del panel)
-                let listaFotos = datosPerfilGlobal.fotos || [datosPerfilGlobal.img || 'img/logo.png'];
+                // Cargar galería de fotos de forma robusta (soporta múltiples fotos y limpia vacíos)
+                let listaFotos = [];
+                if (datosPerfilGlobal.fotos && Array.isArray(datosPerfilGlobal.fotos) && datosPerfilGlobal.fotos.length > 0) {
+                    listaFotos = datosPerfilGlobal.fotos.filter(f => f && f.trim() !== "");
+                }
+                
+                if (listaFotos.length === 0) {
+                    if (datosPerfilGlobal.img) {
+                        listaFotos = [datosPerfilGlobal.img];
+                    } else {
+                        listaFotos = ['img/logo.png'];
+                    }
+                }
+
+                // Asignar foto principal
                 document.getElementById('fotoPrincipal').src = listaFotos[0];
 
+                // Generar todas las miniaturas en la galería
                 const contenedorMini = document.getElementById('galeriaMiniaturas');
                 let miniaturasHTML = "";
                 listaFotos.forEach(foto => {
