@@ -12,7 +12,7 @@
     });
 })();
 
-// comentarios.js - Motor Global Optimizado con Firebase Firestore
+// comentarios.js - Motor Global Optimizado con Firebase Firestore y Visor de Fotos
 (function() {
     const dictComentarios = {
         es: {
@@ -44,6 +44,36 @@
             alertaIncompleto: "Please fill in your name, select a rating, and write your experience.",
             confirmEliminar: "Are you sure you want to delete this comment?",
             adjuntoTexto: "✓ Attached file: "
+        },
+        pt: {
+            tituloSeccion: "Experiências e Comentários",
+            labelEstrellas: "Avaliação:",
+            placeholderNombre: "Seu nome ou apelido",
+            placeholderTexto: "Escreva sua experiência...",
+            btnPublicar: "Publicar Experiência",
+            cargando: "Carregando experiências...",
+            sinExperiencias: "Nenhuma experiência ainda. Seja o primeiro a deixar uma!",
+            meGusta: "Curtir",
+            destacado: "★ Destaque",
+            eliminar: "🗑 Excluir",
+            alertaIncompleto: "Por favor, preencha seu nome, selecione uma avaliação e escreva sua experiência.",
+            confirmEliminar: "Tem certeza de que deseja excluir este comentário?",
+            adjuntoTexto: "✓ Arquivo anexo: "
+        },
+        fr: {
+            tituloSeccion: "Expériences et Avis",
+            labelEstrellas: "Évaluation :",
+            placeholderNombre: "Votre nom ou pseudo",
+            placeholderTexto: "Écrivez votre expérience...",
+            btnPublicar: "Publier l'expérience",
+            cargando: "Chargement des avis...",
+            sinExperiencias: "Aucun avis pour le moment. Soyez le premier à en laisser un !",
+            meGusta: "J'aime",
+            destacado: "★ En vedette",
+            eliminar: "🗑 Supprimer",
+            alertaIncompleto: "Veuillez remplir votre nom, sélectionner une note et écrire votre avis.",
+            confirmEliminar: "Êtes-vous sûr de vouloir supprimer ce commentaire ?",
+            adjuntoTexto: "✓ Fichier joint : "
         }
     };
 
@@ -51,7 +81,7 @@
         return localStorage.getItem('idiomaPrive') || 'es';
     }
 
-    // 1. Blindaje contra click derecho y atajos (excepto inputs)
+    // 1. Blindaje contra click derecho en imágenes
     document.addEventListener('contextmenu', (e) => {
         if (e.target.tagName === 'IMG') {
             e.preventDefault();
@@ -66,38 +96,13 @@
         }
     });
 
-    document.addEventListener('keydown', (e) => {
-        if (
-            e.key === 'F12' ||
-            (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
-            (e.ctrlKey && (e.key === 'U' || e.key === 'S' || e.key === 'P'))
-        ) {
-            if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
-                e.preventDefault();
-                return false;
-            }
-        }
-    });
-
-    // Inyectar estilos visuales necesarios
+    // Inyectar estilos visuales necesarios (Lightbox y Estrellas)
     const styleAnim = document.createElement('style');
     styleAnim.innerHTML = `
         img {
             -webkit-user-select: none !important;
             user-select: none !important;
             -webkit-user-drag: none !important;
-        }
-        @keyframes privePulseGlow {
-            0% { transform: scale(1); box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); }
-            50% { transform: scale(1.02); box-shadow: 0 6px 25px rgba(37, 211, 102, 0.8), 0 0 15px rgba(223, 194, 133, 0.5); }
-            100% { transform: scale(1); box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); }
-        }
-        .btn-whatsapp-titilante {
-            animation: privePulseGlow 2.2s infinite ease-in-out !important;
-            transition: all 0.3s ease !important;
-        }
-        .btn-whatsapp-titilante:hover {
-            transform: scale(1.04) !important;
         }
         #priveLightbox {
             display: none;
@@ -128,86 +133,48 @@
     `;
     document.head.appendChild(styleAnim);
 
-    // 2. Slider Táctil Seguro
-    function inicializarSliderTactil() {
-        const fotoPrincipal = document.getElementById('fotoPrincipal');
-        if (!fotoPrincipal) return;
-
-        const miniaturasImgs = document.querySelectorAll('.galeria-miniaturas img');
-        if (miniaturasImgs.length === 0) return;
-
-        let galeriaImgs = [];
-        miniaturasImgs.forEach(img => galeriaImgs.push(img.src));
-
-        let indiceActual = galeriaImgs.indexOf(fotoPrincipal.getAttribute('src'));
-        if (indiceActual === -1) indiceActual = 0;
-
-        function cambiarFoto(dir) {
-            indiceActual += dir;
-            if (indiceActual < 0) indiceActual = galeriaImgs.length - 1;
-            if (indiceActual >= galeriaImgs.length) indiceActual = 0;
-            
-            fotoPrincipal.style.opacity = '0.3';
-            setTimeout(() => {
-                fotoPrincipal.src = galeriaImgs[indiceActual];
-                fotoPrincipal.style.opacity = '1';
-            }, 120);
-        }
-
-        let touchStartX = 0;
-        fotoPrincipal.addEventListener('touchstart', e => {
-            touchStartX = e.changedTouches[0].screenX;
-        }, { passive: true });
-
-        fotoPrincipal.addEventListener('touchend', e => {
-            let touchEndX = e.changedTouches[0].screenX;
-            if (touchEndX < touchStartX - 45) {
-                cambiarFoto(1);
-            } else if (touchEndX > touchStartX + 45) {
-                cambiarFoto(-1);
-            }
-        }, { passive: true });
-    }
-
-    // 3. Visor de Pantalla Completa (Lightbox)
+    // 2. Visor de Pantalla Completa (Lightbox Dinámico Global)
     function inicializarVisorFotos() {
-        if (!document.getElementById('priveLightbox')) {
-            const lightbox = document.createElement('div');
+        let lightbox = document.getElementById('priveLightbox');
+        if (!lightbox) {
+            lightbox = document.createElement('div');
             lightbox.id = 'priveLightbox';
             lightbox.innerHTML = `
                 <div style="position: relative; display: flex; justify-content: center; align-items: center; max-width: 90vw; max-height: 85vh;">
                     <img id="priveLightboxImg" style="display: block; max-width: 90vw; max-height: 85vh; border-radius: 8px; border: 1px solid rgba(223,194,133,0.4); box-shadow: 0 20px 50px rgba(0,0,0,0.95); object-fit: contain; pointer-events: none;">
-                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 180px; height: 80px; background-image: url('img/logo.png'); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: 0.5; pointer-events: none; z-index: 10000000;"></div>
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 180px; height: 80px; background-image: url('img/logo.png'); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: 0.4; pointer-events: none; z-index: 10000000;"></div>
                 </div>
             `;
             document.body.appendChild(lightbox);
             lightbox.onclick = () => { lightbox.style.display = 'none'; };
         }
 
-        const fotosConVisor = document.querySelectorAll('.perfil-galeria-grid .foto-principal, .grid-perfiles .card-image img, .story-ring img');
+        // Buscar tanto la foto principal estática como la dinámica generada por Firebase
+        const fotosConVisor = document.querySelectorAll('.perfil-galeria-grid .foto-principal, img#fotoPrincipal, .grid-perfiles .card-image img, .story-ring img');
         fotosConVisor.forEach(img => {
             img.style.cursor = 'zoom-in';
-            img.onclick = function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                const lb = document.getElementById('priveLightbox');
-                const lbImg = document.getElementById('priveLightboxImg');
-                lbImg.src = this.src;
-                lb.style.display = 'flex';
-            };
+            // Evitar duplicar eventos
+            if (!img.getAttribute('data-visor-activo')) {
+                img.setAttribute('data-visor-activo', 'true');
+                img.onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const lb = document.getElementById('priveLightbox');
+                    const lbImg = document.getElementById('priveLightboxImg');
+                    lbImg.src = this.src;
+                    lb.style.display = 'flex';
+                };
+            }
         });
     }
 
+    // Ejecutar de forma continua y segura para asegurar que detecte la foto principal cargada dinámicamente
     window.addEventListener('DOMContentLoaded', () => {
-        inicializarSliderTactil();
-        inicializarVisorFotos();
-        setTimeout(() => {
-            inicializarSliderTactil();
-            inicializarVisorFotos();
-        }, 600);
+        setTimeout(inicializarVisorFotos, 400);
+        setTimeout(inicializarVisorFotos, 1200);
     });
 
-    // Detectar ID actual de la masajista desde los parámetros de la URL (?id=prada) o la ruta
+    // Detectar ID actual de la masajista
     const urlParams = new URLSearchParams(window.location.search);
     let perfilId = urlParams.get('id');
     if (!perfilId) {
@@ -219,12 +186,12 @@
     if (!contenedorDestino) return;
 
     const langInit = obtenerLangActual();
-    const tInit = dictComentarios[langInit];
+    const tInit = dictComentarios[langInit] || dictComentarios['es'];
 
-    // Inyectar estructura de la casilla de comentarios con accesibilidad total en inputs
+    // Inyectar estructura de la casilla de comentarios
     contenedorDestino.innerHTML = `
         <div style="width: 100%; box-sizing: border-box; margin: 20px auto 10px auto; padding: 22px 15px; background: #141414; border: 1px solid rgba(223, 194, 133, 0.25); border-radius: 10px; font-family: 'Montserrat', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-            <h3 data-i18n="comentariosTitulo" style="color: #dfc285; text-align: center; font-size: 20px; margin-bottom: 20px; font-family: 'Cormorant Garamond', serif; letter-spacing: 1.5px;">${tInit.tituloSeccion}</h3>
+            <h3 style="color: #dfc285; text-align: center; font-size: 20px; margin-bottom: 20px; font-family: 'Cormorant Garamond', serif; letter-spacing: 1.5px;">${tInit.tituloSeccion}</h3>
             
             <div style="display: flex; flex-direction: column; gap: 12px; width: 100%; box-sizing: border-box;">
                 <div style="display: flex; align-items: center; justify-content: space-between; background: #1a1a1a; padding: 10px 15px; border-radius: 6px; border: 1px solid rgba(223, 194, 133, 0.3);">
@@ -238,9 +205,9 @@
                     </div>
                 </div>
 
-                <input type="text" id="pAuthor" placeholder="${tInit.placeholderNombre}" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a !important; color: #fff !important; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px; pointer-events: auto !important; user-select: text !important; -webkit-user-select: text !important;">
+                <input type="text" id="pAuthor" placeholder="${tInit.placeholderNombre}" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a !important; color: #fff !important; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
                 
-                <textarea id="pText" rows="3" placeholder="${tInit.placeholderTexto}" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a !important; color: #fff !important; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px; resize: vertical; pointer-events: auto !important; user-select: text !important; -webkit-user-select: text !important;"></textarea>
+                <textarea id="pText" rows="3" placeholder="${tInit.placeholderTexto}" style="width: 100% !important; padding: 12px 15px; box-sizing: border-box !important; border: 1px solid rgba(223, 194, 133, 0.3); background: #1a1a1a !important; color: #fff !important; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px; resize: vertical;"></textarea>
                 
                 <div style="display: flex; gap: 8px; align-items: center; background: #1a1a1a; padding: 10px 12px; border-radius: 6px; border: 1px solid rgba(223, 194, 133, 0.3); flex-wrap: wrap; width: 100%; box-sizing: border-box;">
                     <button type="button" onclick="window.agregarEmojiPerfil('😊')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;" title="Sonrisa">😊</button>
@@ -319,7 +286,7 @@
             const input = document.getElementById('pImageFile');
             const span = document.getElementById('pFileName');
             const currentLang = obtenerLangActual();
-            const t = dictComentarios[currentLang];
+            const t = dictComentarios[currentLang] || dictComentarios['es'];
             if (input && input.files && input.files[0]) {
                 span.textContent = t.adjuntoTexto + input.files[0].name;
             } else if(span) {
@@ -352,14 +319,13 @@
             reader.readAsDataURL(input.files[0]);
         }
 
-        // Conectar los comentarios a Firestore usando el ID exacto del perfil dinámico
         dbPerfil.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").onSnapshot((snapshot) => {
             const container = document.getElementById('pCommentsContainer');
             if (!container) return;
             container.innerHTML = "";
 
             const currentLang = obtenerLangActual();
-            const t = dictComentarios[currentLang];
+            const t = dictComentarios[currentLang] || dictComentarios['es'];
 
             if (snapshot.empty) {
                 container.innerHTML = `<p style='color: #777; font-size: 13px; text-align: center; font-style: italic;'>${t.sinExperiencias}</p>`;
@@ -416,7 +382,7 @@
             const contenido = document.getElementById('pText').value.trim();
             const ratingSeleccionado = document.querySelector('input[name="rating"]:checked');
             const currentLang = obtenerLangActual();
-            const t = dictComentarios[currentLang];
+            const t = dictComentarios[currentLang] || dictComentarios['es'];
 
             if (!autor || !contenido || !ratingSeleccionado) {
                 alert(t.alertaIncompleto);
@@ -449,7 +415,7 @@
 
         window.borrarComentarioPerfil = function(msgId, pId) {
             const currentLang = obtenerLangActual();
-            const t = dictComentarios[currentLang];
+            const t = dictComentarios[currentLang] || dictComentarios['es'];
             if (confirm(t.confirmEliminar)) {
                 dbPerfil.collection("perfiles_comentarios").doc(pId).collection("mensajes").doc(msgId).delete();
             }
@@ -461,41 +427,3 @@
         }
     }
 })();
-
-/* ========================================================= */
-/* INYECCIÓN AUTOMÁTICA DE SCHEMA.ORG (ESTRELLITAS EN GOOGLE)*/
-/* ========================================================= */
-window.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-        const tituloElemento = document.querySelector('.perfil-titulo-seccion h2');
-        if (!tituloElemento) return; 
-
-        const nombreMasajista = tituloElemento.textContent.trim();
-        const fotoPrincipal = document.getElementById('fotoPrincipal');
-        const urlImagen = fotoPrincipal ? fotoPrincipal.src : "https://masajistasprive.com/img/logo.png";
-        
-        const ratingDec = nombreMasajista.length % 3;
-        const rating = (4.7 + (ratingDec * 0.1)).toFixed(1); 
-        const reviewCount = 45 + (nombreMasajista.length * 7); 
-
-        const schemaJSON = {
-            "@context": "https://schema.org/",
-            "@type": "HealthAndBeautyBusiness",
-            "name": nombreMasajista + " - Masajistas Privé",
-            "image": urlImagen,
-            "description": "Sesiones y gabinetes en CABA. Confort y absoluta discreción.",
-            "aggregateRating": {
-                "@type": "AggregateRating",
-                "ratingValue": rating.toString(),
-                "bestRating": "5",
-                "worstRating": "1",
-                "ratingCount": reviewCount.toString()
-            }
-        };
-
-        const scriptSchema = document.createElement('script');
-        scriptSchema.type = 'application/ld+json';
-        scriptSchema.text = JSON.stringify(schemaJSON);
-        document.head.appendChild(scriptSchema);
-    }, 500);
-});
