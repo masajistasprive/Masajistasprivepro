@@ -139,7 +139,6 @@
                         if (!f || typeof f !== 'string') return false;
                         let limpio = f.trim().toLowerCase();
                         if (limpio === "" || limpio.includes("logo.png") || limpio.includes("monograma.png")) return false;
-                        // Descarta los textos de ejemplo viejos del panel si quedaron guardados
                         if (limpio.includes("perfil1.jpg") || limpio.includes("perfil2.jpg") || limpio.includes("perfil3.jpg") || limpio.includes("perfil4.jpg") || limpio.includes("perfil5.jpg") || limpio.includes("perfil6.jpg") || limpio.includes("perfil7.jpg") || limpio.includes("perfil8.jpg") || limpio.includes("perfil9.jpg") || limpio.includes("perfil10.jpg")) return false;
                         return true;
                     });
@@ -149,11 +148,14 @@
                     listaFotos = [datosPerfilGlobal.img || 'img/logo.png'];
                 }
 
-                document.getElementById('fotoPrincipal').src = listaFotos[0];
+                // Asignar foto principal inicial
+                const imgPrincipal = document.getElementById('fotoPrincipal');
+                imgPrincipal.src = listaFotos[0];
 
+                // Generar miniaturas con función segura de cambio
                 let miniaturasHTML = "";
                 listaFotos.forEach(foto => {
-                    miniaturasHTML += `<img src="${foto}" alt="Foto" onclick="document.getElementById('fotoPrincipal').src='${foto}'" onerror="this.src='img/logo.png'">`;
+                    miniaturasHTML += `<img src="${foto}" alt="Foto" onclick="seleccionarFotoMiniatura('${foto}')" onerror="this.src='img/logo.png'">`;
                 });
                 document.getElementById('galeriaMiniaturas').innerHTML = miniaturasHTML;
 
@@ -168,6 +170,14 @@
                 console.error(e);
             }
         }
+
+        // Función segura para cambiar la foto principal al hacer clic en las miniaturas
+        window.seleccionarFotoMiniatura = function(urlFoto) {
+            const imgPrincipal = document.getElementById('fotoPrincipal');
+            if (imgPrincipal) {
+                imgPrincipal.src = urlFoto;
+            }
+        };
 
         window.addEventListener('DOMContentLoaded', cargarPerfilDinamico);
     </script>
