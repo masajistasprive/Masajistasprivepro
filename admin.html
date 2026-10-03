@@ -33,10 +33,15 @@
 
         /* Estilos del Modal de Edición */
         #modalEditar { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 99999; padding: 20px; box-sizing: border-box; }
-        .modal-content { background: #141414; border: 1px solid #dfc285; border-radius: 10px; width: 100%; max-width: 600px; padding: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); max-height: 90vh; overflow-y: auto; }
+        .modal-content { background: #141414; border: 1px solid #dfc285; border-radius: 10px; width: 100%; max-width: 700px; padding: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); max-height: 90vh; overflow-y: auto; }
         .modal-content h3 { color: #dfc285; font-family: 'Cormorant Garamond', serif; font-size: 24px; margin-top: 0; border-bottom: 1px solid rgba(223,194,133,0.2); padding-bottom: 10px; }
         .form-row { margin-bottom: 15px; }
-        .form-row label { display: block; font-size: 12px; color: #aaa; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .form-row label { display: block; font-size: 12px; color: #dfc285; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .lang-tabs { display: flex; gap: 5px; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .lang-tab { background: #1a1a1a; border: 1px solid #444; color: #aaa; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+        .lang-tab.active { background: #dfc285; color: #0d0d0d; border-color: #dfc285; }
+        .lang-section { display: none; }
+        .lang-section.active { display: block; }
     </style>
 </head>
 <body class="admin-body">
@@ -50,10 +55,10 @@
         <!-- SECCIÓN: IMPORTADOR DE HTML -->
         <div class="card-admin">
             <h2>📥 Importar / Escanear Ficha HTML</h2>
-            <p style="font-size: 13px; color: #aaa; margin-bottom: 15px;">Pegá aquí el código HTML completo de la masajista. Si es un perfil con sufijo (ej. <em>luly-sensual</em>), escribilo manualmente en la casilla de ID para evitar conflictos.</p>
+            <p style="font-size: 13px; color: #aaa; margin-bottom: 15px;">Pegá aquí el código HTML completo de la masajista. Si es un perfil con sufijo (ej. <em>luly-sensual</em>), escribilo manualmente en la casilla de ID.</p>
             
             <div style="margin-bottom: 15px;">
-                <label style="display: block; font-size: 11px; color: #dfc285; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">ID Único / Slug para Firebase (ej. prada, luly-sensual, mora-sensual):</label>
+                <label style="display: block; font-size: 11px; color: #dfc285; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">ID Único / Slug para Firebase:</label>
                 <input type="text" id="customIdInput" placeholder="Ej: luly-sensual (si se deja vacío, se genera solo)">
             </div>
 
@@ -96,22 +101,15 @@
         </div>
     </div>
 
-    <!-- MODAL DE EDICIÓN -->
+    <!-- MODAL DE EDICIÓN MULTILINGÜE -->
     <div id="modalEditar">
         <div class="modal-content">
-            <h3>Editar Perfil de Modelo</h3>
+            <h3>Editar Perfil y Traducciones</h3>
             <input type="hidden" id="editDocId">
+            
             <div class="form-row">
-                <label>Nombre:</label>
+                <label>Nombre General:</label>
                 <input type="text" id="editNombre">
-            </div>
-            <div class="form-row">
-                <label>Zona (ES):</label>
-                <input type="text" id="editZona">
-            </div>
-            <div class="form-row">
-                <label>Modalidad (ES):</label>
-                <input type="text" id="editModalidad">
             </div>
             <div class="form-row">
                 <label>Categoría:</label>
@@ -130,13 +128,46 @@
                 <label>URL Foto Principal:</label>
                 <input type="text" id="editFotoPrincipal">
             </div>
-            <div class="form-row">
-                <label>Descripción (ES):</label>
-                <textarea id="editDescripcion" class="html-input" style="height: 90px;"></textarea>
+
+            <!-- Selector de Idiomas para las traducciones -->
+            <div style="margin-top: 20px;">
+                <label style="margin-bottom: 8px;">Traducciones de Zona y Descripción:</label>
+                <div class="lang-tabs">
+                    <div class="lang-tab active" onclick="cambiarTabLang('es')">🇪🇸 Español</div>
+                    <div class="lang-tab" onclick="cambiarTabLang('en')">🇺🇸 Inglés</div>
+                    <div class="lang-tab" onclick="cambiarTabLang('pt')">🇧🇷 Portugués</div>
+                    <div class="lang-tab" onclick="cambiarTabLang('fr')">🇫🇷 Francés</div>
+                </div>
+
+                <!-- Español -->
+                <div id="lang-es" class="lang-section active">
+                    <div class="form-row"><label>Zona (ES):</label><input type="text" id="editZona_es"></div>
+                    <div class="form-row"><label>Modalidad (ES):</label><input type="text" id="editModalidad_es"></div>
+                    <div class="form-row"><label>Descripción (ES):</label><textarea id="editDesc_es" class="html-input" style="height: 100px;"></textarea></div>
+                </div>
+                <!-- Inglés -->
+                <div id="lang-en" class="lang-section">
+                    <div class="form-row"><label>Area (EN):</label><input type="text" id="editZona_en"></div>
+                    <div class="form-row"><label>Modality (EN):</label><input type="text" id="editModalidad_en"></div>
+                    <div class="form-row"><label>Description (EN):</label><textarea id="editDesc_en" class="html-input" style="height: 100px;"></textarea></div>
+                </div>
+                <!-- Portugués -->
+                <div id="lang-pt" class="lang-section">
+                    <div class="form-row"><label>Zona (PT):</label><input type="text" id="editZona_pt"></div>
+                    <div class="form-row"><label>Modalidade (PT):</label><input type="text" id="editModalidad_pt"></div>
+                    <div class="form-row"><label>Descrição (PT):</label><textarea id="editDesc_pt" class="html-input" style="height: 100px;"></textarea></div>
+                </div>
+                <!-- Francés -->
+                <div id="lang-fr" class="lang-section">
+                    <div class="form-row"><label>Zone (FR):</label><input type="text" id="editZona_fr"></div>
+                    <div class="form-row"><label>Modalité (FR):</label><input type="text" id="editModalidad_fr"></div>
+                    <div class="form-row"><label>Description (FR):</label><textarea id="editDesc_fr" class="html-input" style="height: 100px;"></textarea></div>
+                </div>
             </div>
+
             <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
                 <button type="button" class="btn-accion" onclick="cerrarModalEditar()" style="padding: 10px 20px;">Cancelar</button>
-                <button type="button" class="btn-prive" onclick="guardarEdicionPerfil()">Guardar Cambios</button>
+                <button type="button" class="btn-prive" onclick="guardarEdicionPerfil()">Guardar Todos los Cambios</button>
             </div>
         </div>
     </div>
@@ -160,7 +191,6 @@
         }
         const db = firebase.firestore();
 
-        // Escanear e importar HTML absorbiendo todo el objeto de traducciones original
         function procesarEscanerHTML() {
             const rawHtml = document.getElementById('htmlSourceInput').value;
             const customId = document.getElementById('customIdInput').value.trim();
@@ -202,16 +232,23 @@
                 const fotoPrincipal = doc.getElementById('fotoPrincipal')?.getAttribute('src') || 'img/monograma.png';
                 const miniaturas = Array.from(doc.querySelectorAll('.galeria-miniaturas img')).map(img => img.getAttribute('src'));
 
-                // Extraer de forma inteligente el bloque completo de traducciones del HTML original
-                const traduccionesMatch = rawHtml.match(/const traduccionesPerfil\s*=\s*({[\s\S]*?});/);
-                let traduccionesObj = {};
-                if (traduccionesMatch) {
+                // Extractor avanzado del objeto traduccionesPerfil del archivo HTML original
+                let traduccionesObj = { es: {}, en: {}, pt: {}, fr: {} };
+                const regexTrad = /const\s+traduccionesPerfil\s*=\s*({[\s\S]*?});/m;
+                const matchTrad = rawHtml.match(regexTrad);
+                if (matchTrad) {
                     try {
-                        traduccionesObj = eval(`(${traduccionesMatch[1]})`);
+                        traduccionesObj = Function('"use strict"; return (' + matchTrad[1] + ')')();
                     } catch (e) {
-                        console.error("Aviso: No se pudo evaluar el objeto de traducciones", e);
+                        console.error("Error al parsear traducciones:", e);
                     }
                 }
+
+                // Asegurar respaldos mínimos en español
+                if (!traduccionesObj.es) traduccionesObj.es = {};
+                traduccionesObj.es.valorZona = traduccionesObj.es.valorZona || zona;
+                traduccionesObj.es.valorModalidad = traduccionesObj.es.valorModalidad || modalidad;
+                traduccionesObj.es.descPerfil = traduccionesObj.es.descPerfil || descripcion;
 
                 const perfilData = {
                     nombre: nombre,
@@ -224,7 +261,7 @@
                     whatsappLink: whatsappLink,
                     fotoPrincipal: fotoPrincipal,
                     fotosGaleria: miniaturas.length > 0 ? miniaturas : [fotoPrincipal],
-                    traducciones: traduccionesObj, // <--- Conserva las descripciones largas en ES, EN, PT y FR
+                    traducciones: traduccionesObj,
                     estado: 'activa',
                     destacada: false,
                     visitas: 0,
@@ -234,14 +271,14 @@
                 db.collection("modelos_prive").doc(idSlug).set(perfilData, { merge: true })
                     .then(() => {
                         statusDiv.style.color = '#2ecc71';
-                        statusDiv.textContent = `✅ ¡Perfil de ${nombre} (ID: ${idSlug}) guardado con todas sus traducciones!`;
+                        statusDiv.textContent = `✅ ¡Perfil de ${nombre} guardado con todas sus traducciones multilingües!`;
                         document.getElementById('htmlSourceInput').value = '';
                         document.getElementById('customIdInput').value = '';
                         cargarModelosAdmin();
                     })
                     .catch(err => {
                         statusDiv.style.color = '#e74c3c';
-                        statusDiv.textContent = `❌ Error al guardar: ` + err.message;
+                        statusDiv.textContent = `❌ Error al guardar en Firebase: ` + err.message;
                     });
 
             } catch (error) {
@@ -296,18 +333,31 @@
             });
         }
 
+        function cambiarTabLang(lang) {
+            document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.lang-section').forEach(s => s.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            document.getElementById(`lang-${lang}`).classList.add('active');
+        }
+
         function abrirModalEditar(docId) {
             db.collection("modelos_prive").doc(docId).get().then((doc) => {
                 if (doc.exists) {
                     const m = doc.data();
                     document.getElementById('editDocId').value = docId;
                     document.getElementById('editNombre').value = m.nombre || '';
-                    document.getElementById('editZona').value = m.zona || '';
-                    document.getElementById('editModalidad').value = m.modalidad || '';
                     document.getElementById('editCategoria').value = m.categoria || 'terapeuticas';
                     document.getElementById('editWhatsappLink').value = m.whatsappLink || '';
                     document.getElementById('editFotoPrincipal').value = m.fotoPrincipal || '';
-                    document.getElementById('editDescripcion').value = m.descripcion || '';
+
+                    const trad = m.traducciones || {};
+                    ['es', 'en', 'pt', 'fr'].forEach(l => {
+                        const tLang = trad[l] || {};
+                        document.getElementById(`editZona_${l}`).value = tLang.valorZona || m.zona || '';
+                        document.getElementById(`editModalidad_${l}`).value = tLang.valorModalidad || m.modalidad || '';
+                        document.getElementById(`editDesc_${l}`).value = tLang.descPerfil || m.descripcion || '';
+                    });
+
                     document.getElementById('modalEditar').style.display = 'flex';
                 }
             });
@@ -319,34 +369,32 @@
 
         function guardarEdicionPerfil() {
             const docId = document.getElementById('editDocId').value;
-            const nuevaDesc = document.getElementById('editDescripcion').value.trim();
-            const nuevaZona = document.getElementById('editZona').value.trim();
-            const nuevaModalidad = document.getElementById('editModalidad').value.trim();
-
+            
             db.collection("modelos_prive").doc(docId).get().then((doc) => {
                 let mData = doc.data();
-                // Actualizar también dentro del objeto de traducciones si existe el campo en español
                 if (!mData.traducciones) mData.traducciones = {};
-                if (!mData.traducciones.es) mData.traducciones.es = {};
-                
-                mData.traducciones.es.descPerfil = nuevaDesc;
-                mData.traducciones.es.valorZona = nuevaZona;
-                mData.traducciones.es.valorModalidad = nuevaModalidad;
+
+                ['es', 'en', 'pt', 'fr'].forEach(l => {
+                    if (!mData.traducciones[l]) mData.traducciones[l] = {};
+                    mData.traducciones[l].valorZona = document.getElementById(`editZona_${l}`).value.trim();
+                    mData.traducciones[l].valorModalidad = document.getElementById(`editModalidad_${l}`).value.trim();
+                    mData.traducciones[l].descPerfil = document.getElementById(`editDesc_${l}`).value.trim();
+                });
 
                 const datosActualizados = {
                     nombre: document.getElementById('editNombre').value.trim(),
-                    zona: nuevaZona,
-                    modalidad: nuevaModalidad,
+                    zona: mData.traducciones.es.valorZona,
+                    modalidad: mData.traducciones.es.valorModalidad,
                     categoria: document.getElementById('editCategoria').value,
                     whatsappLink: document.getElementById('editWhatsappLink').value.trim(),
                     fotoPrincipal: document.getElementById('editFotoPrincipal').value.trim(),
-                    descripcion: nuevaDesc,
+                    descripcion: mData.traducciones.es.descPerfil,
                     traducciones: mData.traducciones,
                     fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
                 db.collection("modelos_prive").doc(docId).update(datosActualizados).then(() => {
-                    alert("¡Perfil actualizado con éxito!");
+                    alert("¡Perfil y traducciones actualizadas con éxito!");
                     cerrarModalEditar();
                 });
             });
