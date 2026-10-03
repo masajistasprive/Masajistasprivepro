@@ -222,45 +222,36 @@
                 document.getElementById('perfilModalidad').textContent = datosPerfilGlobal.modalidad || 'Gabinete propio';
                 document.getElementById('perfilHorarios').textContent = datosPerfilGlobal.horarios || 'Lunes a Sábados de 09 a 21 hs.';
 
-                // EXTRACCIÓN REAL DE FOTOS DESDE FIREBASE (Sin mezclar nombres ajenos)
-                let listaFotos = [];
-                if (datosPerfilGlobal.fotos && Array.isArray(datosPerfilGlobal.fotos)) {
-                    listaFotos = datosPerfilGlobal.fotos.filter(f => {
-                        if (!f || typeof f !== 'string') return false;
-                        let limpio = f.trim();
-                        if (limpio === "" || limpio.toLowerCase().includes("logo.png") || limpio.toLowerCase().includes("monograma.png")) {
-                            return false;
-                        }
-                        return true;
-                    });
-                }
+                // SISTEMA UNIFICADO DE FOTOS SIN ERRORES (Garantiza que la foto 1 sea siempre la principal)
+                let listaFotos = [
+                    `img/${perfilId}1.jpg`,
+                    `img/${perfilId}2.jpg`,
+                    `img/${perfilId}3.jpg`,
+                    `img/${perfilId}4.jpg`
+                ];
 
-                if (listaFotos.length === 0) {
-                    if (datosPerfilGlobal.img && !datosPerfilGlobal.img.toLowerCase().includes("logo")) {
-                        listaFotos = [datosPerfilGlobal.img];
-                    } else {
-                        listaFotos = [`img/${perfilId}1.jpg`];
+                // Si Firebase tiene fotos válidas guardadas, las usamos prioritariamente
+                if (datosPerfilGlobal.fotos && Array.isArray(datosPerfilGlobal.fotos)) {
+                    let fotosValidas = datosPerfilGlobal.fotos.filter(f => f && typeof f === 'string' && f.trim() !== "" && !f.includes("logo") && !f.includes("monograma"));
+                    if (fotosValidas.length > 0) {
+                        listaFotos = fotosValidas;
                     }
                 }
 
-                // La foto principal es estrictamente la primera de la lista real de Firebase
+                // Asignar la foto principal arriba exactamente igual a la primera miniatura
                 document.getElementById('fotoPrincipal').src = listaFotos[0];
 
-                // Generar miniaturas con las fotos reales correspondientes a este perfil
+                // Generar miniaturas sincronizadas
                 let miniaturasHTML = "";
                 listaFotos.forEach(foto => {
-                    if (foto) {
-                        miniaturasHTML += `<img src="${foto}" alt="Foto" onclick="seleccionarFotoMiniatura('${foto}')" onerror="this.style.display='none'">`;
-                    }
+                    miniaturasHTML += `<img src="${foto}" alt="Foto" onclick="seleccionarFotoMiniatura('${foto}')" onerror="this.style.display='none'">`;
                 });
                 document.getElementById('galeriaMiniaturas').innerHTML = miniaturasHTML;
 
-                // Enlace de WhatsApp blindado con respaldo automático
+                // WHATSAPP BLINDADO: Limpia caracteres raros y usa el número real o el respaldo general
                 const btnWpp = document.getElementById('btnWhatsappPerfil');
-                let numeroWpp = (datosPerfilGlobal.whatsapp && datosPerfilGlobal.whatsapp.toString().trim() !== "") 
-                    ? datosPerfilGlobal.whatsapp.toString().trim() 
-                    : "5491131774848";
-                
+                let rawWpp = datosPerfilGlobal.whatsapp ? datosPerfilGlobal.whatsapp.toString().replace(/\D/g, '') : "";
+                let numeroWpp = (rawWpp.length >= 8) ? rawWpp : "5491131774848";
                 let nombrePerfil = datosPerfilGlobal.nombre || 'Perfil';
                 
                 btnWpp.href = `https://wa.me/${numeroWpp}?text=Hola%20${encodeURIComponent(nombrePerfil)},%20vi%20tu%20perfil%20en%20Masajistas%20Privé`;
