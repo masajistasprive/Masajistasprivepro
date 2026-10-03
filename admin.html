@@ -105,7 +105,7 @@
 
             <!-- SECCIÓN 2: GESTIÓN DE PERFILES EXISTENTES -->
             <div class="seccion-panel">
-                <h2>📋 Perfiles Activos y Pausados en la Web</h2>
+                <h2>📋 Perfiles Activos, Pausados y Destacadas</h2>
                 <div id="listaPerfilesAdmin">
                     <p style='color: #dfc285;'>Cargando perfiles desde la base de datos...</p>
                 </div>
@@ -177,7 +177,8 @@
                             nombre: p.nombre,
                             categoria: p.categoria,
                             img: p.img,
-                            estado: "activo"
+                            estado: "activo",
+                            destacada: false
                         });
                     }
                 }
@@ -201,6 +202,7 @@
                         let idPerfil = doc.id;
                         let data = doc.data();
                         let estado = data.estado || "activo";
+                        let esDestacada = data.destacada === true;
                         let totalVisitas = visitasMap[idPerfil] || 0;
                         let imgPerfil = data.img || 'img/logo.png';
                         let nombrePerfil = data.nombre || idPerfil;
@@ -215,7 +217,10 @@
                                     <br><small style="color: #888;">Categoría: ${data.categoria || 'N/A'} | Visitas: <b style="color:#fff;">${totalVisitas}</b> | Estado: <b style="${estado==='activo'?'color:#25d366':'color:#ff5555'}">${estado.toUpperCase()}</b></small>
                                 </div>
                             </div>
-                            <div>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <button onclick="window.toggleDestacada('${idPerfil}', ${!esDestacada})" class="btn-accion" style="background: ${esDestacada ? '#dfc285; color: #0d0d0d;' : '#222; color: #aaa;'}">
+                                    ${esDestacada ? '⭐ Destacada' : '☆ Hacer Destacada'}
+                                </button>
                                 ${estado === 'activo' 
                                     ? `<button onclick="window.cambiarEstado('${idPerfil}', 'pausado')" class="btn-accion btn-pausado">Pausar</button>` 
                                     : `<button onclick="window.cambiarEstado('${idPerfil}', 'activo')" class="btn-accion btn-activo">Activar</button>`
@@ -236,10 +241,21 @@
             db.collection("config_perfiles").doc(idPerfil).set({
                 estado: nuevoEstado
             }, { merge: true }).then(() => {
-                alert(`El perfil de ${idPerfil} ahora está ${nuevoEstado}.`);
+                // Actualizado con éxito
             }).catch(err => {
                 console.error("Error al actualizar:", err);
                 alert("No se pudo actualizar el estado.");
+            });
+        };
+
+        window.toggleDestacada = function(idPerfil, estadoDestacada) {
+            db.collection("config_perfiles").doc(idPerfil).set({
+                destacada: estadoDestacada
+            }, { merge: true }).then(() => {
+                // Actualizado con éxito en tiempo real
+            }).catch(err => {
+                console.error("Error al actualizar destacada:", err);
+                alert("No se pudo cambiar el estado de destacada.");
             });
         };
 
@@ -270,6 +286,7 @@
                 horarios: horarios,
                 bio: bio,
                 estado: "activo",
+                destacada: false,
                 creado: new Date().toISOString()
             }).then(() => {
                 alert(`¡Éxito! El perfil de ${nombre} fue creado y ya aparecerá automáticamente en el portal.`);
