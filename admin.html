@@ -16,6 +16,7 @@
         .btn-accion { padding: 8px 14px; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; font-size: 11px; text-transform: uppercase; }
         .btn-activo { background: #25d366; color: #0d0d0d; }
         .btn-pausado { background: #ff5555; color: #fff; }
+        .btn-eliminar { background: #8B0000; color: #fff; }
         #loginBox { text-align: center; padding: 50px; }
         input[type="password"] { padding: 12px; border-radius: 6px; border: 1px solid #dfc285; background: #1a1a1a; color: #fff; margin-right: 10px; }
     </style>
@@ -52,6 +53,7 @@
             firebase.initializeApp(firebaseConfig);
         }
         const db = firebase.firestore();
+        let htmlOriginalIndex = "";
 
         function verificarAdmin() {
             const pass = document.getElementById('adminPass').value;
@@ -70,15 +72,14 @@
 
             try {
                 const response = await fetch('index.html?' + new Date().getTime());
-                const htmlText = await response.text();
+                htmlOriginalIndex = await response.text();
                 
                 const parser = new DOMParser();
-                const docHtml = parser.parseFromString(htmlText, 'text/html');
+                const docHtml = parser.parseFromString(htmlOriginalIndex, 'text/html');
                 
                 const links = docHtml.querySelectorAll('.card-link');
                 let perfilesDetectados = new Set();
 
-                // Mapa de correspondencia para los IDs exactos de Firebase
                 const mapaPerfiles = {
                     "mora": "mora-sensual",
                     "luly": "luly-sensual"
@@ -123,11 +124,12 @@
                             <strong style="color: #dfc285; font-size: 16px; text-transform: capitalize;">${idPerfil}</strong>
                             <br><small style="color: #888;">Visitas totales: <b style="color:#fff;">${totalVisitas}</b> | Estado: <b style="${estado==='activo'?'color:#25d366':'color:#ff5555'}">${estado.toUpperCase()}</b></small>
                         </div>
-                        <div>
+                        <div style="display: flex; gap: 8px;">
                             ${estado === 'activo' 
-                                ? `<button onclick="window.cambiarEstado('${idPerfil}', 'pausado')" class="btn-accion btn-pausado">Pausar / Ocultar</button>` 
-                                : `<button onclick="window.cambiarEstado('${idPerfil}', 'activo')" class="btn-accion btn-activo">Activar Perfil</button>`
+                                ? `<button onclick="window.cambiarEstado('${idPerfil}', 'pausado')" class="btn-accion btn-pausado">Pausar</button>` 
+                                : `<button onclick="window.cambiarEstado('${idPerfil}', 'activo')" class="btn-accion btn-activo">Activar</button>`
                             }
+                            <button onclick="window.removerDelIndex('${idPerfil}')" class="btn-accion btn-eliminar">Borrar del Index</button>
                         </div>
                     `;
                     contenedor.appendChild(div);
@@ -148,6 +150,53 @@
             }).catch(err => {
                 console.error("Error al actualizar:", err);
                 alert("No se pudo actualizar el estado en Firebase.");
+            });
+        };
+
+        window.removerDelIndex = function(idPerfil) {
+            if (!confirm(`¿Estás seguro de quitar a ${idPerfil} del index y pausarlo?`)) return;
+
+            // Primero pausamos en Firebase
+            db.collection("config_perfiles").doc(idPerfil).set({
+                estado: "pausado"
+            }, { merge: true }).then(() => {
+                // Generamos el archivo index actualizado sin la tarjeta de este perfil
+                const parser = new DOMParser();
+                const docHtml = parser.parseFromString(htmlOriginalIndex, 'text/html');
+                
+                const links = docHtml.querySelectorAll('.card-link');
+                let tarjetaEliminada = false;
+
+                links.forEach(link => {
+                    let href = link.getAttribute('href');
+                    if (href && href.includes(idPerfil)) {
+                        link.remove();
+                        tarjetaEliminada = true;
+                    }
+                });
+
+                if (tarjetaEliminada) {
+                    const nuevoHtml = '<!DOCTYPE html>\n' + docHtml.documentElement.outerHTML;
+                    
+                    // Creamos un archivo descargable temporal para que lo reemplaces fácilmente en tu hosting
+                    const blob = new Blob([nuevoHtml], { type: 'text/html;charset=utf-8' });
+                    const url = URL.createObjectURL(blob);
+                    
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'index.html';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+
+                    alert(`¡Perfil ${idPerfil} removido del index! Se descargó tu nuevo 'index.html' limpio para que lo subas al servidor.`);
+                    escanearIndexYConstruirPanel();
+                } else {
+                    alert("No se encontró la tarjeta exacta en el HTML para eliminar.");
+                }
+            }).catch(err => {
+                console.error(err);
+                alert("Error al procesar la baja.");
             });
         };
     </script>
