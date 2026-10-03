@@ -79,7 +79,7 @@
                 labelPagos: "Medios de pago:",
                 labelTurnos: "Modalidad de turnos:",
                 btnWpp: "Contactar por WhatsApp", 
-                footerLegal: "Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral com el portal.", 
+                footerLegal: "Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.", 
                 footerCopy: "© 2026 Masajistas Privé. Todos los derechos reservados." 
             },
             en: { 
@@ -194,7 +194,12 @@
 
             const zonaTexto = langData.valorZona || m.zona || '';
             const modalidadTexto = langData.valorModalidad || m.modalidad || '';
-            const descripcionTexto = langData.descPerfil || m.descripcion || '';
+            
+            // Lectura correcta de los párrafos 1 y 2
+            const desc1 = langData.descPerfil1 || m.descripcion || '';
+            const desc2 = langData.descPerfil2 || '';
+            const descripcionTexto = desc2 ? `${desc1}\n\n${desc2}` : desc1;
+
             const tecnicasTexto = langData.valorTecnicas || '';
             const horariosTexto = langData.valorHorarios || '';
             const equipamientoTexto = langData.valorEquipamiento || '';
