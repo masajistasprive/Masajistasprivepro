@@ -561,11 +561,10 @@
             localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
         }
 
+        // Historial correcto: Septiembre (Mora, Mora S, Renata) y Octubre (Lupita, Prada)
         let historialPagos = JSON.parse(localStorage.getItem('prive_historial_pagos'));
         if (!historialPagos || historialPagos.length === 0) {
             historialPagos = [
-                { fecha: "2026-09-01", nombre: "PRADA", monto: 50000 },
-                { fecha: "2026-09-01", nombre: "LUPITA", monto: 50000 },
                 { fecha: "2026-09-01", nombre: "MORA", monto: 50000 },
                 { fecha: "2026-09-01", nombre: "MORA S", monto: 50000 },
                 { fecha: "2026-09-01", nombre: "RENATA", monto: 50000 },
