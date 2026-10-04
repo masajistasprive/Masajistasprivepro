@@ -1,0 +1,20 @@
+{
+  "name": "Masajistas Privé",
+  "short_name": "Privé",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d0d0d",
+  "theme_color": "#dfc285",
+  "icons": [
+    {
+      "src": "img/monograma.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "img/monograma.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
