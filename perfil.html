@@ -6,11 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="perfil-title">Perfil | Masajistas Privé</title>
     
-    <!-- Etiquetas Dinámicas de Open Graph para WhatsApp -->
-    <meta id="metaOgTitle" property="og:title" content="Masajistas Privé | Portal Exclusivo">
-    <meta id="metaOgDesc" property="og:description" content="Perfil verificado y servicios de relax independientes en CABA.">
-    <meta id="metaOgImage" property="og:image" content="https://masajistasprive.com/img/monograma.png">
-    <meta id="metaOgUrl" property="og:url" content="">
+    <!-- Etiquetas Open Graph Fijas con el Logo Oficial para WhatsApp -->
+    <meta property="og:title" content="Masajistas Privé | Portal Exclusivo">
+    <meta property="og:description" content="Perfil verificado y servicios de relax independientes en CABA.">
+    <meta property="og:image" content="https://masajistasprive.com/img/logo.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="https://masajistasprive.com">
 
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -279,13 +281,6 @@
             const pagosTexto = langData.valorPagos || '';
             const turnosTexto = langData.valorTurnos || '';
             const ocultarWpp = m.estado === 'pausado' ? 'display: none;' : '';
-
-            // Inyectar datos reales de la modelo en las etiquetas Open Graph para WhatsApp
-            const fotoPortadaReal = m.fotoPrincipal || 'https://masajistasprive.com/img/monograma.png';
-            document.getElementById('metaOgTitle').setAttribute('content', `${m.nombre} | Masajistas Privé`);
-            document.getElementById('metaOgDesc').setAttribute('content', `Zona: ${zonaTexto} — ${desc1.substring(0, 100)}...`);
-            document.getElementById('metaOgImage').setAttribute('content', fotoPortadaReal);
-            document.getElementById('metaOgUrl').setAttribute('content', window.location.href);
 
             // Dibujar el botón flotante de WhatsApp con mensaje completo y link de la modelo
             const contenedorWpp = document.getElementById('contenedorWppFlotante');
