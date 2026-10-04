@@ -273,7 +273,16 @@
             const turnosTexto = langData.valorTurnos || '';
             const ocultarWpp = m.estado === 'pausado' ? 'display: none;' : '';
 
-            // Dibujar el botón flotante de WhatsApp si la modelo está activa
+            // Actualizar imagen Open Graph en tiempo real para la vista previa de WhatsApp
+            let metaOgImg = document.querySelector('meta[property="og:image"]');
+            if (!metaOgImg) {
+                metaOgImg = document.createElement('meta');
+                metaOgImg.setAttribute('property', 'og:image');
+                document.head.appendChild(metaOgImg);
+            }
+            metaOgImg.setAttribute('content', m.fotoPrincipal || 'img/monograma.png');
+
+            // Dibujar el botón flotante de WhatsApp con enlace de la modelo si está activa
             const contenedorWpp = document.getElementById('contenedorWppFlotante');
             if (m.estado !== 'pausado') {
                 const wppLinkFinal = m.whatsappLink || 'https://wa.me/' + m.whatsapp;
@@ -601,7 +610,7 @@
                         likes: 0,
                         fecha: firebase.firestore.FieldValue.serverTimestamp()
                     }).then(() => {
-                        document.getElementById('pAuthor').value = ' ';
+                        document.getElementById('pAuthor').value = '';
                         document.getElementById('pText').value = '';
                         document.getElementById('pImageFile').value = '';
                         document.getElementById('pFileName').textContent = '';
