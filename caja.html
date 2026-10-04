@@ -96,19 +96,31 @@
             color: var(--gold);
         }
 
-        /* Tarjeta de Resumen */
+        /* Tarjetas de Resumen Grid */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
         .card-summary {
             background: linear-gradient(135deg, #1a1a1a, #111);
             border: 1px solid var(--gold);
             border-radius: 10px;
-            padding: 15px;
+            padding: 12px;
             text-align: center;
-            margin-bottom: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.6);
         }
 
+        .card-summary.total-historico {
+            grid-column: 1 / -1;
+            border-color: var(--success);
+            background: linear-gradient(135deg, #112217, #0d1a11);
+        }
+
         .summary-title {
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -116,10 +128,15 @@
         }
 
         .summary-amount {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             color: var(--gold-light);
             font-weight: bold;
             font-family: 'Cormorant Garamond', serif;
+        }
+
+        .card-summary.total-historico .summary-amount {
+            color: var(--success);
+            font-size: 1.8rem;
         }
 
         /* Acordeón de Historial Anual */
@@ -418,16 +435,26 @@
             <a href="admin.html" class="back-link">&larr; Panel</a>
         </header>
 
-        <!-- Resumen de Ingresos del Mes -->
-        <div class="card-summary">
-            <div class="summary-title" id="tituloResumenMes">Total Recaudado (Mes Actual)</div>
-            <div class="summary-amount" id="totalIngresos">$0</div>
+        <!-- Resúmenes Financieros (Mes Actual, Mes Anterior e Importe Total Histórico) -->
+        <div class="summary-grid">
+            <div class="card-summary">
+                <div class="summary-title" id="tituloMesActual">Mes Actual</div>
+                <div class="summary-amount" id="totalMesActual">$0</div>
+            </div>
+            <div class="card-summary">
+                <div class="summary-title" id="tituloMesAnterior">Mes Anterior</div>
+                <div class="summary-amount" id="totalMesAnterior">$0</div>
+            </div>
+            <div class="card-summary total-historico">
+                <div class="summary-title">Importe Total Ingresado (Histórico)</div>
+                <div class="summary-amount" id="totalHistorico">$0</div>
+            </div>
         </div>
 
         <!-- Historial Acordeón por Meses -->
         <div class="historial-box">
             <button class="historial-toggle" onclick="toggleHistorial()">
-                <span>📊 Ver Desglose Anual (Historial)</span>
+                <span>📊 Ver Desglose Anual por Meses</span>
                 <span id="flechaHistorial">▼</span>
             </button>
             <div class="historial-content" id="historialContent">
@@ -548,12 +575,16 @@
 
         const form = document.getElementById('cajaForm');
         const tarjetasContainer = document.getElementById('tarjetasContainer');
-        const totalIngresos = document.getElementById('totalIngresos');
+        const totalMesActual = document.getElementById('totalMesActual');
+        const totalMesAnterior = document.getElementById('totalMesAnterior');
+        const totalHistorico = document.getElementById('totalHistorico');
+        const tituloMesActual = document.getElementById('tituloMesActual');
+        const tituloMesAnterior = document.getElementById('tituloMesAnterior');
         const historialContent = document.getElementById('historialContent');
 
         function registrarMovimientoHistorial(nombre, monto) {
             if (monto <= 0) return;
-            const hoyStr = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
+            const hoyStr = new Date().toISOString().split('T')[0];
             historialPagos.push({ fecha: hoyStr, nombre, monto });
             localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
         }
@@ -563,18 +594,45 @@
             const hoy = new Date();
             hoy.setHours(0,0,0,0);
 
-            // Calcular ingresos del mes actual (YYYY-MM)
-            const mesActualStr = hoy.toISOString().slice(0, 7);
+            const nombresMeses = {
+                "01": "Enero", "02": "Febrero", "03": "Marzo", "04": "Abril",
+                "05": "Mayo", "06": "Junio", "07": "Julio", "08": "Agosto",
+                "09": "Septiembre", "10": "Octubre", "11": "Noviembre", "12": "Diciembre"
+            };
+
+            // Cálculo Mes Actual y Mes Anterior
+            const anioActual = hoy.getFullYear();
+            const mesNumActual = String(hoy.getMonth() + 1).padStart(2, '0');
+            const mesActualKey = `${anioActual}-${mesNumActual}`;
+
+            let fechaAnterior = new Date(hoy.getFullYear(), hoy.getMonth() - 1, 1);
+            const anioAnt = fechaAnterior.getFullYear();
+            const mesNumAnt = String(fechaAnterior.getMonth() + 1).padStart(2, '0');
+            const mesAnteriorKey = `${anioAnt}-${mesNumAnt}`;
+
+            tituloMesActual.textContent = `${nombresMeses[mesNumActual]} ${anioActual}`;
+            tituloMesAnterior.textContent = `${nombresMeses[mesNumAnt]} ${anioAnt}`;
+
             let sumaMesActual = 0;
+            let sumaMesAnterior = 0;
+            let sumaHistorico = 0;
 
             historialPagos.forEach(p => {
-                if (p.fecha && p.fecha.startsWith(mesActualStr)) {
-                    sumaMesActual += Number(p.monto || 0);
+                if (!p.fecha) return;
+                const montoNum = Number(p.monto || 0);
+                sumaHistorico += montoNum;
+
+                if (p.fecha.startsWith(mesActualKey)) {
+                    sumaMesActual += montoNum;
+                } else if (p.fecha.startsWith(mesAnteriorKey)) {
+                    sumaMesAnterior += montoNum;
                 }
             });
-            totalIngresos.textContent = `$${sumaMesActual.toLocaleString('es-AR')}`;
 
-            // Renderizar desglose anual por mes en el acordeón
+            totalMesActual.textContent = `$${sumaMesActual.toLocaleString('es-AR')}`;
+            totalMesAnterior.textContent = `$${sumaMesAnterior.toLocaleString('es-AR')}`;
+            totalHistorico.textContent = `$${sumaHistorico.toLocaleString('es-AR')}`;
+
             renderizarHistorialAnual();
 
             if (registros.length === 0) {
@@ -586,9 +644,9 @@
             
             registrosOrdenados.sort((a, b) => {
                 if (a.pagado !== b.pagado) {
-                    return a.pagado ? 1 : -1; // Los pagados al fondo
+                    return a.pagado ? 1 : -1;
                 }
-                return new Date(a.vencimiento) - new Date(b.vencimiento); // Próximos vencimientos arriba
+                return new Date(a.vencimiento) - new Date(b.vencimiento);
             });
 
             registrosOrdenados.forEach((reg) => {
@@ -650,7 +708,7 @@
 
             historialPagos.forEach(p => {
                 if (!p.fecha) return;
-                const mesAnio = p.fecha.slice(0, 7); // "YYYY-MM"
+                const mesAnio = p.fecha.slice(0, 7);
                 if (!agrupadoMeses[mesAnio]) agrupadoMeses[mesAnio] = 0;
                 agrupadoMeses[mesAnio] += Number(p.monto || 0);
             });
@@ -722,10 +780,8 @@
             registros[index].pagado = !registros[index].pagado;
             
             if (registros[index].pagado) {
-                // Registrar en el historial anual
                 registrarMovimientoHistorial(registros[index].nombre, registros[index].monto);
 
-                // Sumar 30 días automáticamente al vencimiento actual
                 let fechaVen = new Date(registros[index].vencimiento + 'T00:00:00');
                 fechaVen.setDate(fechaVen.getDate() + 30);
                 registros[index].vencimiento = fechaVen.toISOString().split('T')[0];
