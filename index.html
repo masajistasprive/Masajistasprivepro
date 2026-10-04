@@ -3,8 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="main-title">Masajistas Privé | Portal Exclusivo</title>
+    <title id="main-title">Masajistas Privé | Portal Exclusivo de Relax y Masajes en CABA</title>
     
+    <!-- Meta Tags de SEO Avanzado para Google -->
+    <meta name="description" content="Portal exclusivo de masajistas independientes y servicios de relax en CABA. Encontrá profesionales verificados, gabinetes y atención a domicilio.">
+    <meta name="keywords" content="masajistas caba, masajes descontracturantes, masajistas independientes, relax buenos aires, masajes terapéuticos">
+    
+    <!-- Etiquetas Open Graph para Redes Sociales y WhatsApp -->
+    <meta property="og:title" content="Masajistas Privé | Portal Exclusivo de Relax en CABA">
+    <meta property="og:description" content="Portal exclusivo de masajistas independientes y servicios de relax en CABA. Perfiles verificados.">
+    <meta property="og:image" content="https://masajistasprive.com/img/logo.png">
+    <meta property="og:url" content="https://masajistasprive.com">
+    <meta property="og:type" content="website">
+
     <!-- CÓDIGO DE GOOGLE ANALYTICS INTEGRADO -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-DXX740HP41"></script>
     <script>
@@ -56,7 +67,7 @@
     <!-- Pantalla de Transición / Carga con Logo Tenue -->
     <div id="priveTransitionScreen">
         <div class="prive-transition-logo">
-            <img src="img/logo.png" alt="Masajistas Privé" style="max-width: 220px; width: 60vw; display: block; margin: 0 auto;">
+            <img src="img/logo.png" alt="Masajistas Privé - Portal Exclusivo" style="max-width: 220px; width: 60vw; display: block; margin: 0 auto;">
             <span style="display: block; color: #dfc285; font-family: 'Cormorant Garamond', serif; font-size: 14px; letter-spacing: 4px; margin-top: 10px; text-transform: uppercase;">Masajistas Privé</span>
         </div>
     </div>
@@ -75,7 +86,7 @@
     <header class="header-prive">
         <div class="header-left" style="display: none !important;"></div>
         <div class="header-center">
-            <img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande">
+            <img src="img/logo.png" alt="Logo Masajistas Privé" class="header-logo-grande">
         </div>
         <div class="header-right" style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
             <button id="btn-idioma" onclick="cambiarIdioma()" style="background: rgba(223, 194, 133, 0.12); border: 1px solid #dfc285; color: #dfc285; padding: 7px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; font-family: 'Montserrat', sans-serif; letter-spacing: 1.5px; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.4);">
@@ -294,7 +305,7 @@
                         <a href="perfil.html?id=${docId}" class="card-link" data-categoria="${m.categoria}">
                             <article class="card">
                                 <div class="card-image">
-                                    <img src="${fotoModelo}" alt="${m.nombre}" loading="lazy">
+                                    <img src="${fotoModelo}" alt="Masajista ${m.nombre} en ${zonaModelo} - Masajistas Privé" loading="lazy">
                                     <span class="badge-verificado">✓ Verificado</span>
                                     <div class="card-gradient-overlay">
                                         <h3>${m.nombre}</h3>
@@ -314,7 +325,7 @@
                     if (m.destacada === true) {
                         htmlStories += `
                             <a href="perfil.html?id=${docId}" class="story-item">
-                                <div class="story-ring"><img src="${fotoModelo}" alt="${m.nombre}"></div>
+                                <div class="story-ring"><img src="${fotoModelo}" alt="Perfil destacado de ${m.nombre}"></div>
                                 <span>${m.nombre}</span>
                             </a>
                         `;
