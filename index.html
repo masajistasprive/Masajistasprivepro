@@ -33,7 +33,6 @@
     
     <link rel="icon" type="image/png" href="img/monograma.png">
     <link rel="apple-touch-icon" href="img/monograma.png">
-    <!-- Enlace al Manifiesto para el ícono de la App Web en dispositivos móviles -->
     <link rel="manifest" href="manifest.json">
 
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -107,10 +106,7 @@
 
     <div class="destacadas-container-wrapper">
         <h3 class="destacadas-titulo" data-i18n="destacadasTitulo">Destacadas</h3>
-        <!-- Stories dinámicas desde Firebase -->
-        <div class="stories-container" id="stories-destacadas-container">
-            <!-- Se llena dinámicamente -->
-        </div>
+        <div class="stories-container" id="stories-destacadas-container"></div>
     </div>
 
     <!-- Categorías normales (Pills) -->
@@ -133,33 +129,33 @@
     <main class="container">
 
         <!-- Sección Terapéuticas -->
-        <h2 class="section-heading" data-section="terapeuticas" data-i18n="seccionTerapeuticas">Masajistas Terapéuticas</h2>
-        <div class="grid-perfiles" id="grid-terapeuticas">
-            <!-- Se llena dinámicamente -->
+        <div class="categoria-seccion-wrapper" data-sec="terapeuticas">
+            <h2 class="section-heading" data-i18n="seccionTerapeuticas">Masajistas Terapéuticas</h2>
+            <div class="grid-perfiles" id="grid-terapeuticas"></div>
         </div>
 
         <!-- Sección Sensuales -->
-        <h2 class="section-heading" data-section="sensuales" style="margin-top: 2rem;" data-i18n="seccionSensuales">Masajistas Sensuales</h2>
-        <div class="grid-perfiles" id="grid-sensuales">
-            <!-- Se llena dinámicamente -->
+        <div class="categoria-seccion-wrapper" data-sec="sensuales" style="margin-top: 2rem;">
+            <h2 class="section-heading" data-i18n="seccionSensuales">Masajistas Sensuales</h2>
+            <div class="grid-perfiles" id="grid-sensuales"></div>
         </div>
 
         <!-- Sección Masculinos -->
-        <h2 class="section-heading" data-section="masculinos" style="margin-top: 2rem;" data-i18n="seccionMasculinos">Masajistas Masculinos</h2>
-        <div class="grid-perfiles" id="grid-masculinos">
-            <!-- Se llena dinámicamente -->
+        <div class="categoria-seccion-wrapper" data-sec="masculinos" style="margin-top: 2rem;">
+            <h2 class="section-heading" data-i18n="seccionMasculinos">Masajistas Masculinos</h2>
+            <div class="grid-perfiles" id="grid-masculinos"></div>
         </div>
 
         <!-- Sección Fantasías -->
-        <h2 class="section-heading" data-section="fantasias" style="margin-top: 2rem;" data-i18n="seccionFantasias">Fantasías</h2>
-        <div class="grid-perfiles" id="grid-fantasias">
-            <!-- Se llena dinámicamente -->
+        <div class="categoria-seccion-wrapper" data-sec="fantasias" style="margin-top: 2rem;">
+            <h2 class="section-heading" data-i18n="seccionFantasias">Fantasías</h2>
+            <div class="grid-perfiles" id="grid-fantasias"></div>
         </div>
 
         <!-- Sección Favoritas (Oculta por defecto) -->
-        <h2 class="section-heading" data-section="favoritos" style="margin-top: 2rem; display: none;">⭐ Mis Favoritas</h2>
-        <div class="grid-perfiles" id="grid-favoritos" style="display: none;">
-            <!-- Se llena dinámicamente con los favoritos del usuario -->
+        <div class="categoria-seccion-wrapper" data-sec="favoritos" style="margin-top: 2rem; display: none;">
+            <h2 class="section-heading">⭐ Mis Favoritas</h2>
+            <div class="grid-perfiles" id="grid-favoritos"></div>
         </div>
 
     </main>
@@ -278,7 +274,7 @@
             } catch (e) {}
         }
 
-        // Cargar perfiles y gestionar categorías y favoritos con precisión absoluta
+        // Carga rigurosa y limpia de perfiles desde Firebase con normalización de categorías
         function cargarPerfilesDesdeFirebase() {
             db.collection("modelos_prive").onSnapshot((snapshot) => {
                 const gridTerapeuticas = document.getElementById('grid-terapeuticas');
@@ -328,8 +324,15 @@
                     const zonaModelo = m.zona || (m.traducciones && m.traducciones.es && m.traducciones.es.valorZona) || 'CABA';
                     const modalidadModelo = m.modalidad || (m.traducciones && m.traducciones.es && m.traducciones.es.valorModalidad) || 'Gabinete propio';
 
+                    // Normalizar la categoría a minúsculas y sin acentos para evitar errores de coincidencia
+                    const catRaw = (m.categoria || '').toLowerCase().trim();
+                    let catLimpia = 'terapeuticas';
+                    if (catRaw.includes('sensual')) catLimpia = 'sensuales';
+                    else if (catRaw.includes('masculino')) catLimpia = 'masculinos';
+                    else if (catRaw.includes('fantasia')) catLimpia = 'fantasias';
+
                     const cardHTML = `
-                        <a href="perfil.html?id=${docId}" class="card-link" data-categoria="${m.categoria}">
+                        <a href="perfil.html?id=${docId}" class="card-link" data-categoria="${catLimpia}">
                             <article class="card">
                                 <div class="card-image">
                                     <img src="${fotoModelo}" alt="Masajista ${m.nombre} en ${zonaModelo} - Masajistas Privé" loading="lazy">
@@ -344,18 +347,16 @@
                         </a>
                     `;
 
-                    // Asignación estricta y limpia a su respectiva categoría
-                    if (m.categoria === 'terapeuticas') {
+                    if (catLimpia === 'terapeuticas') {
                         htmlTerapeuticas += cardHTML;
-                    } else if (m.categoria === 'sensuales') {
+                    } else if (catLimpia === 'sensuales') {
                         htmlSensuales += cardHTML;
-                    } else if (m.categoria === 'masculinos') {
+                    } else if (catLimpia === 'masculinos') {
                         htmlMasculinos += cardHTML;
-                    } else if (m.categoria === 'fantasias') {
+                    } else if (catLimpia === 'fantasias') {
                         htmlFantasias += cardHTML;
                     }
 
-                    // Si está en favoritos, se añade de manera independiente
                     if (favoritosIds.includes(docId)) {
                         htmlFavoritos += cardHTML;
                     }
@@ -370,7 +371,6 @@
                     }
                 });
 
-                // Añadir el bloque publicitario únicamente si hay perfiles en la categoría
                 if (htmlTerapeuticas) htmlTerapeuticas += adCardHTML;
                 if (htmlSensuales) htmlSensuales += adCardHTML;
                 if (htmlMasculinos) htmlMasculinos += adCardHTML;
@@ -669,7 +669,7 @@
             });
         }
 
-        // Lógica rigurosa y limpia de filtrado por pestañas
+        // Lógica de filtrado de pestañas robusta y precisa
         document.addEventListener('click', (e) => {
             const pill = e.target.closest('.pill-btn');
             if (pill) {
@@ -677,37 +677,27 @@
                 document.querySelectorAll('.pill-btn').forEach(p => p.classList.remove('active'));
                 pill.classList.add('active');
 
-                const secciones = ['terapeuticas', 'sensuales', 'masculinos', 'fantasias', 'favoritos'];
+                const wrappers = document.querySelectorAll('.categoria-seccion-wrapper');
 
-                secciones.forEach(sec => {
-                    const heading = document.querySelector(`.section-heading[data-section="${sec}"]`);
-                    const grid = document.getElementById(`grid-${sec}`);
-
-                    if (!heading || !grid) return;
-
+                wrappers.forEach(wrap => {
+                    const secName = wrap.getAttribute('data-sec');
                     if (filter === 'todas') {
-                        if (sec === 'favoritos') {
-                            heading.style.display = 'none';
-                            grid.style.display = 'none';
+                        if (secName === 'favoritos') {
+                            wrap.style.display = 'none';
                         } else {
-                            heading.style.display = 'block';
-                            grid.style.display = 'grid';
+                            wrap.style.display = 'block';
                         }
                     } else if (filter === 'favoritos') {
-                        if (sec === 'favoritos') {
-                            heading.style.display = 'block';
-                            grid.style.display = 'grid';
+                        if (secName === 'favoritos') {
+                            wrap.style.display = 'block';
                         } else {
-                            heading.style.display = 'none';
-                            grid.style.display = 'none';
+                            wrap.style.display = 'none';
                         }
                     } else {
-                        if (sec === filter) {
-                            heading.style.display = 'block';
-                            grid.style.display = 'grid';
+                        if (secName === filter) {
+                            wrap.style.display = 'block';
                         } else {
-                            heading.style.display = 'none';
-                            grid.style.display = 'none';
+                            wrap.style.display = 'none';
                         }
                     }
                 });
