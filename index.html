@@ -113,14 +113,19 @@
         </div>
     </div>
 
+    <!-- Categorías normales (Pills) -->
     <nav class="pills-container">
         <button class="pill-btn active" data-filter="todas" data-i18n="filtroTodas">Todas</button>
         <button class="pill-btn" data-filter="terapeuticas" data-i18n="filtroTerapeuticas">Terapéuticas</button>
         <button class="pill-btn" data-filter="sensuales" data-i18n="filtroSensuales">Sensuales</button>
         <button class="pill-btn" data-filter="masculinos" data-i18n="filtroMasculinos">Masculinos</button>
         <button class="pill-btn" data-filter="fantasias" data-i18n="filtroFantasias">Fantasías</button>
-        <button class="pill-btn" data-filter="favoritos" style="border-color: #dfc285; color: #dfc285;">⭐ Favoritas</button>
     </nav>
+
+    <!-- Botón de Favoritas Exclusivo por Fuera de las Categorías -->
+    <div style="max-width: 900px; margin: 15px auto 0 auto; padding: 0 4%; text-align: center;">
+        <button class="pill-btn" data-filter="favoritos" style="background: rgba(223, 194, 133, 0.12); border: 1px solid #dfc285; color: #dfc285; width: 100%; max-width: 280px; font-weight: 600; box-shadow: 0 4px 15px rgba(223, 194, 133, 0.15);">⭐ Mis Favoritas</button>
+    </div>
 
     <!-- Divisor Art Déco -->
     <div class="art-deco-divider"><span>♦</span></div>
@@ -151,8 +156,8 @@
             <!-- Se llena dinámicamente -->
         </div>
 
-        <!-- Sección Favoritas (Oculta por defecto, se muestra al filtrar) -->
-        <h2 class="section-heading" data-section="favoritos" style="margin-top: 2rem; display: none;">Mis Favoritas</h2>
+        <!-- Sección Favoritas (Oculta por defecto) -->
+        <h2 class="section-heading" data-section="favoritos" style="margin-top: 2rem; display: none;">⭐ Mis Favoritas</h2>
         <div class="grid-perfiles" id="grid-favoritos" style="display: none;">
             <!-- Se llena dinámicamente con los favoritos del usuario -->
         </div>
@@ -300,7 +305,7 @@
                 let htmlFavoritos = '';
                 let htmlStories = '';
 
-                // Obtener favoritos guardados en el navegador
+                // Obtener favoritos guardados en el navegador de forma actualizada
                 const favoritosIds = JSON.parse(localStorage.getItem('priveFavoritos') || '[]');
 
                 snapshot.forEach((docSnap) => {
@@ -650,8 +655,8 @@
         }
 
         document.addEventListener('click', (e) => {
-            if (e.target && e.target.classList.contains('pill-btn')) {
-                const pill = e.target;
+            const pill = e.target.closest('.pill-btn');
+            if (pill) {
                 const filter = pill.getAttribute('data-filter');
                 document.querySelectorAll('.pill-btn').forEach(p => p.classList.remove('active'));
                 pill.classList.add('active');
