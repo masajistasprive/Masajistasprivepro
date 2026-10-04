@@ -333,12 +333,17 @@
                         </a>
                     `;
 
-                    if (m.categoria === 'terapeuticas') htmlTerapeuticas += cardHTML;
-                    else if (m.categoria === 'sensuales') htmlSensuales += cardHTML;
-                    else if (m.categoria === 'masculinos') htmlMasculinos += cardHTML;
-                    else if (m.categoria === 'fantasias') htmlFantasias += cardHTML;
+                    if (m.categoria === 'terapeuticas') {
+                        htmlTerapeuticas += cardHTML;
+                    } else if (m.categoria === 'sensuales') {
+                        htmlSensuales += cardHTML;
+                    } else if (m.categoria === 'masculinos') {
+                        htmlMasculinos += cardHTML;
+                    } else if (m.categoria === 'fantasias') {
+                        htmlFantasias += cardHTML;
+                    }
 
-                    // Si está en favoritos, agregarlo a la grilla de favoritos de forma limpia
+                    // Si está en favoritos, agregarlo exclusivamente a la sección de favoritos
                     if (favoritosIds.includes(docId)) {
                         htmlFavoritos += cardHTML;
                     }
@@ -358,12 +363,15 @@
                 }
 
                 // UN SOLO cartel de publicidad exactamente al final de cada categoría
-                const adCard = `<a href="https://wa.me/5491131774848?text=Hola,%20quiero%20publicar%20mi%20anuncio%20en%20Masajistas%20Prive" target="_blank" class="card-ad-link"><article class="card-ad"><div class="ad-content"><h3 data-i18n="espacioDisponible">Espacio Disponible</h3><p data-i18n="publicaPerfil">Publicá tu perfil aquí</p><span class="btn-ad" data-i18n="contactanos">Contáctanos</span></div></article></a>`;
+                const adCardTerapeuticas = `<a href="https://wa.me/5491131774848?text=Hola,%20quiero%20publicar%20mi%20anuncio%20en%20Masajistas%20Prive" target="_blank" class="card-ad-link" data-categoria="terapeuticas"><article class="card-ad"><div class="ad-content"><h3 data-i18n="espacioDisponible">Espacio Disponible</h3><p data-i18n="publicaPerfil">Publicá tu perfil aquí</p><span class="btn-ad" data-i18n="contactanos">Contáctanos</span></div></article></a>`;
+                const adCardSensuales = `<a href="https://wa.me/5491131774848?text=Hola,%20quiero%20consultar%20sobre%20la%20seccion%20de%20Sensuales" target="_blank" class="card-ad-link" data-categoria="sensuales"><article class="card-ad"><div class="ad-content"><h3 data-i18n="espacioDisponible">Espacio Disponible</h3><p data-i18n="publicaPerfil">Publicá tu perfil aquí</p><span class="btn-ad" data-i18n="contactanos">Contáctanos</span></div></article></a>`;
+                const adCardMasculinos = `<a href="https://wa.me/5491131774848?text=Hola,%20quiero%20publicar%20mi%20anuncio%20en%20Masajistas%20Prive" target="_blank" class="card-ad-link" data-categoria="masculinos"><article class="card-ad"><div class="ad-content"><h3 data-i18n="espacioDisponible">Espacio Disponible</h3><p data-i18n="publicaPerfil">Publicá tu perfil aquí</p><span class="btn-ad" data-i18n="contactanos">Contáctanos</span></div></article></a>`;
+                const adCardFantasias = `<a href="https://wa.me/5491131774848?text=Hola,%20quiero%20consultar%20sobre%20la%20seccion%20de%20Fantasias" target="_blank" class="card-ad-link" data-categoria="fantasias"><article class="card-ad"><div class="ad-content"><h3 data-i18n="espacioDisponible">Espacio Disponible</h3><p data-i18n="publicaPerfil">Publicá tu perfil aquí</p><span class="btn-ad" data-i18n="contactanos">Contáctanos</span></div></article></a>`;
 
-                gridTerapeuticas.innerHTML = htmlTerapeuticas + (htmlTerapeuticas ? adCard : '');
-                gridSensuales.innerHTML = htmlSensuales + (htmlSensuales ? adCard : '');
-                gridMasculinos.innerHTML = htmlMasculinos + (htmlMasculinos ? adCard : '');
-                gridFantasias.innerHTML = htmlFantasias + (htmlFantasias ? adCard : '');
+                gridTerapeuticas.innerHTML = htmlTerapeuticas + (htmlTerapeuticas ? adCardTerapeuticas : '');
+                gridSensuales.innerHTML = htmlSensuales + (htmlSensuales ? adCardSensuales : '');
+                gridMasculinos.innerHTML = htmlMasculinos + (htmlMasculinos ? adCardMasculinos : '');
+                gridFantasias.innerHTML = htmlFantasias + (htmlFantasias ? adCardFantasias : '');
                 gridFavoritos.innerHTML = htmlFavoritos;
                 storiesContainer.innerHTML = htmlStories;
 
