@@ -435,7 +435,7 @@
             <a href="admin.html" class="back-link">&larr; Panel</a>
         </header>
 
-        <!-- Resúmenes Financieros (Mes Actual, Mes Anterior e Importe Total Histórico) -->
+        <!-- Resúmenes Financieros -->
         <div class="summary-grid">
             <div class="card-summary">
                 <div class="summary-title" id="tituloMesActual">Mes Actual</div>
@@ -535,11 +535,11 @@
         });
 
         const datosInicialesExcel = [
+            { vencimiento: "2026-11-01", monto: 50000, nombre: "PRADA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true },
+            { vencimiento: "2026-11-01", monto: 50000, nombre: "LUPITA", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: true },
             { vencimiento: "2026-10-01", monto: 0, nombre: "JENNYFER", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: false },
             { vencimiento: "2026-10-01", monto: 0, nombre: "DEBY", zona: "CABALLITO", categoria: "SENSUALES", pagado: false },
-            { vencimiento: "2026-11-01", monto: 50000, nombre: "PRADA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true },
             { vencimiento: "2026-10-15", monto: 0, nombre: "PAMELA", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: false },
-            { vencimiento: "2026-10-01", monto: 50000, nombre: "LUPITA", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: true },
             { vencimiento: "2026-10-02", monto: 0, nombre: "SOL", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: false },
             { vencimiento: "2026-10-01", monto: 0, nombre: "MATIAS", zona: "RECOLETA", categoria: "MASCULINOS", pagado: false },
             { vencimiento: "2026-10-02", monto: 0, nombre: "DANIELA", zona: "MICROCENTRO", categoria: "TERAPEUTICAS", pagado: false },
@@ -561,7 +561,19 @@
             localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
         }
 
-        let historialPagos = JSON.parse(localStorage.getItem('prive_historial_pagos')) || [];
+        let historialPagos = JSON.parse(localStorage.getItem('prive_historial_pagos'));
+        if (!historialPagos || historialPagos.length === 0) {
+            historialPagos = [
+                { fecha: "2026-09-01", nombre: "PRADA", monto: 50000 },
+                { fecha: "2026-09-01", nombre: "LUPITA", monto: 50000 },
+                { fecha: "2026-09-01", nombre: "MORA", monto: 50000 },
+                { fecha: "2026-09-01", nombre: "MORA S", monto: 50000 },
+                { fecha: "2026-09-01", nombre: "RENATA", monto: 50000 },
+                { fecha: "2026-10-02", nombre: "PRADA", monto: 50000 },
+                { fecha: "2026-10-02", nombre: "LUPITA", monto: 50000 }
+            ];
+            localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
+        }
 
         const selectCat = document.getElementById('categoria');
         const inputMonto = document.getElementById('monto');
@@ -600,7 +612,6 @@
                 "09": "Septiembre", "10": "Octubre", "11": "Noviembre", "12": "Diciembre"
             };
 
-            // Cálculo Mes Actual y Mes Anterior
             const anioActual = hoy.getFullYear();
             const mesNumActual = String(hoy.getMonth() + 1).padStart(2, '0');
             const mesActualKey = `${anioActual}-${mesNumActual}`;
@@ -801,9 +812,9 @@
 
         window.restaurarDatosExcel = function() {
             if (confirm('¿Restaurar los datos originales de la planilla? Se perderán los cambios recientes.')) {
-                registros = datosInicialesExcel;
-                localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
-                renderizarTarjetas();
+                localStorage.removeItem('prive_control_modelos');
+                localStorage.removeItem('prive_historial_pagos');
+                location.reload();
             }
         };
 
