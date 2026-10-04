@@ -256,7 +256,7 @@
         const etiquetasIdiomas = {
             es: { 
                 btnVolver: "← Volver", badgeVerificado: "✓ Privé Verificado", labelZona: "Zona:", labelModalidad: "Modalidad:", tituloDesc: "Descripción", labelTecnicas: "Técnicas de masaje:", labelHorarios: "Días y horarios:", labelEquipamiento: "Equipamiento y servicios:", labelPagos: "Medios de pago:", labelTurnos: "Modalidad de turnos:", tituloVideo: "Video de Presentación",
-                btnWppFlotante: "Contactame",
+                btnWppFlotante: "Mandame un WhatsApp",
                 btnWppPie: "💬 Enviar WhatsApp",
                 btnFav: "❤️ Favorito",
                 btnFavQuitado: "🤍 Quitar de Favoritos",
@@ -266,7 +266,7 @@
             },
             en: { 
                 btnVolver: "← Back", badgeVerificado: "✓ Privé Verified", labelZona: "Area:", labelModalidad: "Modality:", tituloDesc: "Description", labelTecnicas: "Massage techniques:", labelHorarios: "Days and hours:", labelEquipamiento: "Equipment and services:", labelPagos: "Payment methods:", labelTurnos: "Appointment modality:", tituloVideo: "Presentation Video",
-                btnWppFlotante: "Contact Me",
+                btnWppFlotante: "Send me a WhatsApp",
                 btnWppPie: "💬 Send WhatsApp",
                 btnFav: "❤️ Favorite",
                 btnFavQuitado: "🤍 Remove Favorite",
@@ -276,7 +276,7 @@
             },
             pt: { 
                 btnVolver: "← Voltar", badgeVerificado: "✓ Privé Verificado", labelZona: "Zona:", labelModalidade: "Modalidade:", tituloDesc: "Descrição", labelTecnicas: "Técnicas de massagem:", labelHorarios: "Dias e horários:", labelEquipamiento: "Equipamentos e serviços:", labelPagos: "Meios de pagamento:", labelTurnos: "Modalidade de agendamento:", tituloVideo: "Vídeo de Apresentação",
-                btnWppFlotante: "Contate-me",
+                btnWppFlotante: "Mande-me um WhatsApp",
                 btnWppPie: "💬 Enviar WhatsApp",
                 btnFav: "❤️ Favorito",
                 btnFavQuitado: "🤍 Remover dos Favoritos",
@@ -286,7 +286,7 @@
             },
             fr: { 
                 btnVolver: "← Retour", badgeVerificado: "✓ Privé Vérifié", labelZona: "Zone :", labelModalidad: "Modalité :", tituloDesc: "Description", labelTecnicas: "Techniques de massage :", labelHorarios: "Jours et horaires :", labelEquipamiento: "Équipements et services :", labelPagos: "Modes de paiement :", labelTurnos: "Modalité de réservation :", tituloVideo: "Vidéo de Présentation",
-                btnWppFlotante: "Contactez-moi",
+                btnWppFlotante: "Envoyez-moi un WhatsApp",
                 btnWppPie: "💬 Envoyer WhatsApp",
                 btnFav: "❤️ Favori",
                 btnFavQuitado: "🤍 Retirer des Favoris",
@@ -372,7 +372,7 @@
             localStorage.setItem('priveFavoritos', JSON.stringify(favoritos));
         };
 
-        // Lógica de Compartir Perfil
+        // Lógica de Compartir Perfil Corregida
         window.compartirPerfilActual = function(nombreModelo) {
             const lang = idiomaPerfil;
             const labels = etiquetasIdiomas[lang] || etiquetasIdiomas['es'];
@@ -381,12 +381,14 @@
             if (navigator.share) {
                 navigator.share({
                     title: `${nombreModelo} | Masajistas Privé`,
-                    text: `Mirá el perfil exclusivo de ${nombreModel} en Masajistas Privé:`,
+                    text: `Mirá el perfil exclusivo de ${nombreModelo} en Masajistas Privé:`,
                     url: urlActual,
                 }).catch(() => {});
             } else {
                 navigator.clipboard.writeText(urlActual).then(() => {
                     alert(labels.copiadoAlPortapapeles);
+                }).catch(() => {
+                    prompt("Copiá este enlace:", urlActual);
                 });
             }
         };
@@ -418,7 +420,7 @@
             const telefonoLimpio = m.whatsapp || '';
             const wppLinkFinal = `https://wa.me/${telefonoLimpio}?text=${encodeURIComponent(textoMensaje)}`;
 
-            // Botón flotante
+            // Botón flotante actualizado
             const contenedorWpp = document.getElementById('contenedorWppFlotante');
             if (m.estado !== 'pausado') {
                 contenedorWpp.innerHTML = `
@@ -435,7 +437,7 @@
             const favoritosGuardados = JSON.parse(localStorage.getItem('priveFavoritos') || '[]');
             const esFavorito = favoritosGuardados.includes(perfilId);
             const claseFavActivo = esFavorito ? 'activo' : '';
-            const textoFavFinal = esFavorito ? "❤️ Favorito Guardado" : labels.btnFav;
+            const textoFavFinal = esFavorito ? "❤️️ Favorito Guardado" : labels.btnFav;
 
             let miniaturasHTML = '';
             if (m.fotosGaleria && m.fotosGaleria.length > 0) {
@@ -536,7 +538,7 @@
                             <button type="button" onclick="window.agregarEmojiPerfil('😊')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">😊</button>
                             <button type="button" onclick="window.agregarEmojiPerfil('👍')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">👍</button>
                             <button type="button" onclick="window.agregarEmojiPerfil('🔥')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">🔥</button>
-                            <button type="button" onclick="window.agregarEmojiPerfil('❤️')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">❤️</button>
+                            <button type="button" onclick="window.agregarEmojiPerfil('❤️')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">❤️️</button>
                             <button type="button" onclick="window.agregarEmojiPerfil('⭐')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">⭐</button>
                             
                             <label title="Adjuntar foto" style="color: #dfc285; cursor: pointer; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; background: rgba(223,194,133,0.1); width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(223, 194, 133, 0.4); margin-left: auto;">
