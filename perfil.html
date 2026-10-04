@@ -38,6 +38,31 @@
             100% { opacity: 0.5; transform: scale(1.02); }
         }
 
+        /* Botón de Retorno Elegante Estilo App */
+        .btn-volver-perfil {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(223, 194, 133, 0.08);
+            border: 1px solid rgba(223, 194, 133, 0.35);
+            color: #dfc285;
+            padding: 9px 16px;
+            border-radius: 6px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 12px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        .btn-volver-perfil:hover {
+            background: rgba(223, 194, 133, 0.2);
+            border-color: #dfc285;
+            transform: translateX(-3px);
+        }
+
         /* Botón de WhatsApp Flotante con Texto y Estilo de Lujo */
         .btn-whatsapp-flotante {
             position: fixed;
@@ -206,9 +231,6 @@
             <button id="btn-idioma" onclick="cambiarIdiomaPerfil()" style="background: rgba(223, 194, 133, 0.12); border: 1px solid #dfc285; color: #dfc285; padding: 7px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; font-family: 'Montserrat', sans-serif; letter-spacing: 1.5px; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.4);">
                 🇺🇸 EN
             </button>
-            <a href="index.html" class="btn-buscar">
-                <span data-i18n="btnVolver">← Volver</span>
-            </a>
         </div>
     </header>
 
@@ -261,7 +283,7 @@
 
         const etiquetasIdiomas = {
             es: { 
-                btnVolver: "← Volver", badgeVerificado: "✓ Privé Verificado", labelZona: "Zona:", labelModalidad: "Modalidad:", tituloDesc: "Descripción", labelTecnicas: "Técnicas de masaje:", labelHorarios: "Días y horarios:", labelEquipamiento: "Equipamiento y servicios:", labelPagos: "Medios de pago:", labelTurnos: "Modalidad de turnos:", tituloVideo: "Video de Presentación",
+                btnVolver: "← Volver al Portal", badgeVerificado: "✓ Privé Verificado", labelZona: "Zona:", labelModalidad: "Modalidad:", tituloDesc: "Descripción", labelTecnicas: "Técnicas de masaje:", labelHorarios: "Días y horarios:", labelEquipamiento: "Equipamiento y servicios:", labelPagos: "Medios de pago:", labelTurnos: "Modalidad de turnos:", tituloVideo: "Video de Presentación",
                 btnWppFlotante: "Mandame un WhatsApp",
                 btnWppPie: "Enviar WhatsApp",
                 btnFav: "Favorito",
@@ -270,7 +292,7 @@
                 tituloSeccionComentarios: "Experiencias y Comentarios", labelEstrellas: "Calificación:", placeholderNombre: "Tu nombre o apodo", placeholderTexto: "Escribe tu experiencia...", btnPublicar: "Publicar Experiencia", cargandoComentarios: "Cargando experiencias...", sinExperiencias: "No hay experiencias aún. ¡Sé el primero en dejar una!", meGusta: "Me gusta", destacado: "★ Destacado", eliminar: "🗑️ Eliminar", alertaIncompleto: "Por favor completá tu nombre, elegí una calificación y escribí tu experiencia."
             },
             en: { 
-                btnVolver: "← Back", badgeVerificado: "✓ Privé Verified", labelZona: "Area:", labelModalidad: "Modality:", tituloDesc: "Description", labelTecnicas: "Massage techniques:", labelHorarios: "Days and hours:", labelEquipamiento: "Equipment and services:", labelPagos: "Payment methods:", labelTurnos: "Appointment modality:", tituloVideo: "Presentation Video",
+                btnVolver: "← Back to Portal", badgeVerificado: "✓ Privé Verified", labelZona: "Area:", labelModalidad: "Modality:", tituloDesc: "Description", labelTecnicas: "Massage techniques:", labelHorarios: "Days and hours:", labelEquipamiento: "Equipment and services:", labelPagos: "Payment methods:", labelTurnos: "Appointment modality:", tituloVideo: "Presentation Video",
                 btnWppFlotante: "Send me a WhatsApp",
                 btnWppPie: "Send WhatsApp",
                 btnFav: "Favorite",
@@ -279,7 +301,7 @@
                 tituloSeccionComentarios: "Experiences and Reviews", labelEstrellas: "Rating:", placeholderNombre: "Your name or nickname", placeholderTexto: "Write about your experience...", btnPublicar: "Publish Experience", cargandoComentarios: "Loading experiences...", sinExperiencias: "No experiences yet. Be the first to leave one!", meGusta: "Like", destacado: "★ Featured", eliminar: "🗑 Delete", alertaIncompleto: "Please fill in your name, select a rating, and write your experience."
             },
             pt: { 
-                btnVolver: "← Voltar", badgeVerificado: "✓ Privé Verificado", labelZona: "Zona:", labelModalidade: "Modalidade:", tituloDesc: "Descrição", labelTecnicas: "Técnicas de massagem:", labelHorarios: "Dias e horários:", labelEquipamiento: "Equipamentos e serviços:", labelPagos: "Meios de pagamento:", labelTurnos: "Modalidade de agendamento:", tituloVideo: "Vídeo de Apresentação",
+                btnVolver: "← Voltar ao Portal", badgeVerificado: "✓ Privé Verificado", labelZona: "Zona:", labelModalidade: "Modalidade:", tituloDesc: "Descrição", labelTecnicas: "Técnicas de massagem:", labelHorarios: "Dias e horários:", labelEquipamiento: "Equipamentos e serviços:", labelPagos: "Meios de pagamento:", labelTurnos: "Modalidade de agendamento:", tituloVideo: "Vídeo de Apresentação",
                 btnWppFlotante: "Mande-me um WhatsApp",
                 btnWppPie: "Enviar WhatsApp",
                 btnFav: "Favorito",
@@ -288,7 +310,7 @@
                 tituloSeccionComentarios: "Experiências e Comentários", labelEstrellas: "Avaliação:", placeholderNombre: "Seu nome ou apelido", placeholderTexto: "Escreva sua experiência...", btnPublicar: "Publicar Experiência", cargandoComentarios: "Carregando experiências...", sinExperiencias: "Nenhuma experiência ainda. Seja o primeiro a deixar uma!", meGusta: "Curtir", destacado: "★ Destaque", eliminar: "🗑 Excluir", alertaIncompleto: "Por favor, preencha seu nome, selecione uma avaliação e escreva sua experiência."
             },
             fr: { 
-                btnVolver: "← Retour", badgeVerificado: "✓ Privé Vérifié", labelZona: "Zone :", labelModalidad: "Modalité :", tituloDesc: "Description", labelTecnicas: "Techniques de massage :", labelHorarios: "Jours et horaires :", labelEquipamiento: "Équipements et services :", labelPagos: "Modes de paiement :", labelTurnos: "Modalité de réservation :", tituloVideo: "Vidéo de Présentation",
+                btnVolver: "← Retour au Portail", badgeVerificado: "✓ Privé Vérifié", labelZona: "Zone :", labelModalidad: "Modalité :", tituloDesc: "Description", labelTecnicas: "Techniques de massage :", labelHorarios: "Jours et horaires :", labelEquipamiento: "Équipements et services :", labelPagos: "Modes de paiement :", labelTurnos: "Modalité de réservation :", tituloVideo: "Vidéo de Présentation",
                 btnWppFlotante: "Envoyez-moi un WhatsApp",
                 btnWppPie: "Envoyer WhatsApp",
                 btnFav: "Favori",
@@ -478,6 +500,13 @@
             let tecnicasHtml = tecnicasTexto ? `<div style="margin-top: 0.5rem; color: #94a3b8; font-size: 0.9rem;"><strong>${labels.labelTecnicas}</strong> <span>${tecnicasTexto}</span></div>` : '';
 
             container.innerHTML = `
+                <!-- Botón de Retorno Elegante -->
+                <div style="grid-column: 1 / -1; width: 100%;">
+                    <a href="index.html" class="btn-volver-perfil">
+                        ${labels.btnVolver}
+                    </a>
+                </div>
+
                 <!-- Galería de Fotos -->
                 <div class="perfil-galeria-grid">
                     <img src="${m.fotoPrincipal}" alt="${m.nombre}" class="foto-principal" id="fotoPrincipal">
