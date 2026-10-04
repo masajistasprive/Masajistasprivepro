@@ -320,7 +320,7 @@
                     const modalidadModelo = m.modalidad || (m.traducciones && m.traducciones.es && m.traducciones.es.valorModalidad) || 'Gabinete propio';
 
                     const cardHTML = `
-                        <a href="perfil.html?id=${docId}" class="card-link" data-categoria="${m.categoria}">
+                        <a href="perfil.html?id=${docId}" class="card-link" data-categoria="${m.categoria}" data-id="${docId}">
                             <article class="card">
                                 <div class="card-image">
                                     <img src="${fotoModelo}" alt="Masajista ${m.nombre} en ${zonaModelo} - Masajistas Privé" loading="lazy">
@@ -340,7 +340,7 @@
                     else if (m.categoria === 'masculinos') htmlMasculinos += cardHTML;
                     else if (m.categoria === 'fantasias') htmlFantasias += cardHTML;
 
-                    // Si está en la lista de favoritos guardados, agregarlo a la sección de favoritos
+                    // Si está en la lista de favoritos guardados, agregarlo explícitamente a favoritos
                     if (favoritosIds.includes(docId)) {
                         htmlFavoritos += cardHTML;
                     }
@@ -407,7 +407,7 @@
                 cuadernoDesc: "Crónicas urbanas, secretos de gabinete y el arte del relax absoluto en CABA.",
                 btnCerrar: "Cerrar",
                 siguenos: "Síguenos",
-                footerLegal: "Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.",
+                footerLegal: "Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia com este portal.",
                 footerMarcas: "Todo el contenido, marcas y logotipos pertenecen a sus respectivos dueños.",
                 visitasTotales: "Visitas totales al portal",
                 footerCopy: "© 2026 Masajistas Privé. Todos los derechos reservados."
@@ -478,7 +478,7 @@
                 btnCerrar: "Fechar",
                 siguenos: "Siga-nos",
                 footerLegal: "Este é um site exclusivo para adultos (+18). Os anunciantes publicados são independentes e não possuem vínculo empregatício, societário ou de dependência com este portal.",
-                footerMarcas: "Todo o conteúdo, marcas e logotipos pertencem aos seus respectivos donos.",
+                footerMarcas: "Todo o conteúdo, marcas e logotipos pertencem aos respectivos donos.",
                 visitasTotales: "Visitas totais ao portal",
                 footerCopy: "© 2026 Masajistas Privé. Todos os direitos reservados."
             },
