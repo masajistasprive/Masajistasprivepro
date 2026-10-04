@@ -555,24 +555,23 @@
             { vencimiento: "2026-10-26", monto: 50000, nombre: "RENATA", zona: "PTO MADERO", categoria: "SENSUALES", pagado: true }
         ];
 
-        let registros = JSON.parse(localStorage.getItem('prive_control_modelos'));
-        if (!registros || registros.length === 0) {
-            registros = datosInicialesExcel;
-            localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
-        }
+        // Forzar actualización de registros y historial exactos
+        localStorage.setItem('prive_control_modelos', JSON.stringify(datosInicialesExcel));
 
-        // Historial correcto: Septiembre (Mora, Mora S, Renata) y Octubre (Lupita, Prada)
+        let historialPrecargado = [
+            { fecha: "2026-09-01", nombre: "MORA", monto: 50000 },
+            { fecha: "2026-09-01", nombre: "MORA S", monto: 50000 },
+            { fecha: "2026-09-01", nombre: "RENATA", monto: 50000 },
+            { fecha: "2026-10-02", nombre: "PRADA", monto: 50000 },
+            { fecha: "2026-10-02", nombre: "LUPITA", monto: 50000 }
+        ];
+        localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPrecargado));
+
+        let registros = JSON.parse(localStorage.getItem('prive_control_modelos'));
         let historialPagos = JSON.parse(localStorage.getItem('prive_historial_pagos'));
-        if (!historialPagos || historialPagos.length === 0) {
-            historialPagos = [
-                { fecha: "2026-09-01", nombre: "MORA", monto: 50000 },
-                { fecha: "2026-09-01", nombre: "MORA S", monto: 50000 },
-                { fecha: "2026-09-01", nombre: "RENATA", monto: 50000 },
-                { fecha: "2026-10-02", nombre: "PRADA", monto: 50000 },
-                { fecha: "2026-10-02", nombre: "LUPITA", monto: 50000 }
-            ];
-            localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
-        }
+
+        // Poner fecha de hoy por defecto en el formulario
+        document.getElementById('vencimiento').valueAsDate = new Date();
 
         const selectCat = document.getElementById('categoria');
         const inputMonto = document.getElementById('monto');
@@ -783,6 +782,7 @@
 
             form.reset();
             selectCat.dispatchEvent(new Event('change'));
+            document.getElementById('vencimiento').valueAsDate = new Date();
             renderizarTarjetas();
         });
 
