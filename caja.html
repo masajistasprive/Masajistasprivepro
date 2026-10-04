@@ -28,11 +28,11 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            padding: 15px;
+            padding: 12px;
         }
 
         .container {
-            max-width: 950px;
+            max-width: 600px;
             margin: 0 auto;
         }
 
@@ -49,8 +49,8 @@
             background-color: var(--card-bg);
             border: 1px solid var(--gold);
             border-radius: 12px;
-            padding: 30px;
-            width: 100%;
+            padding: 25px;
+            width: 90%;
             max-width: 360px;
             text-align: center;
             box-shadow: 0 4px 25px rgba(223, 194, 133, 0.15);
@@ -73,24 +73,23 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             border-bottom: 1px solid rgba(223, 194, 133, 0.2);
-            padding-bottom: 15px;
+            padding-bottom: 12px;
         }
 
         h1 {
             color: var(--gold);
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 1px;
             font-family: 'Cormorant Garamond', serif;
         }
 
         .back-link {
             color: var(--text-muted);
             text-decoration: none;
-            font-size: 0.85rem;
-            transition: color 0.3s;
+            font-size: 0.8rem;
         }
 
         .back-link:hover {
@@ -102,22 +101,22 @@
             background: linear-gradient(135deg, #1a1a1a, #111);
             border: 1px solid var(--gold);
             border-radius: 10px;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
-            margin-bottom: 20px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
         }
 
         .summary-title {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 5px;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
         }
 
         .summary-amount {
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: var(--gold-light);
             font-weight: bold;
             font-family: 'Cormorant Garamond', serif;
@@ -128,34 +127,33 @@
             background-color: var(--card-bg);
             border: 1px solid rgba(223, 194, 133, 0.25);
             border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            padding: 15px;
+            margin-bottom: 20px;
         }
 
         .form-card h2 {
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: var(--gold);
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
+            grid-template-columns: 1fr;
+            gap: 10px;
         }
 
         .form-group {
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
 
         label {
             display: block;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-muted);
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
@@ -184,99 +182,95 @@
             font-weight: bold;
             border-radius: 6px;
             cursor: pointer;
-            transition: opacity 0.3s;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-top: 5px;
-        }
-
-        .btn-submit:hover {
-            opacity: 0.9;
+            margin-top: 10px;
         }
 
         .btn-reset {
             background: transparent;
             color: var(--text-muted);
             border: 1px solid #444;
-            padding: 8px 15px;
-            font-size: 0.75rem;
+            padding: 8px 12px;
+            font-size: 0.7rem;
             border-radius: 6px;
             cursor: pointer;
             text-transform: uppercase;
             letter-spacing: 1px;
-            transition: all 0.3s;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
-        .btn-reset:hover {
-            border-color: var(--danger);
-            color: var(--danger);
-        }
-
-        .error-msg {
-            color: var(--danger);
-            font-size: 0.8rem;
-            margin-top: 8px;
-            display: none;
-        }
-
-        /* Listado */
+        /* Listado en Tarjetas (Mobile Friendly) */
         .transactions-section {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .transactions-section h2 {
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: var(--gold);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        .table-responsive {
-            overflow-x: auto;
-            border-radius: 10px;
-            border: 1px solid #222;
+        .cards-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .modelo-card {
             background-color: var(--card-bg);
-            white-space: nowrap;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 12px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
         }
 
-        th, td {
-            padding: 12px 14px;
-            text-align: left;
+        .modelo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #1f1f1f;
+            padding-bottom: 8px;
+        }
+
+        .modelo-nombre-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modelo-nombre {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--text-main);
+        }
+
+        .modelo-zona-cat {
+            font-size: 0.75rem;
+            color: var(--gold);
+        }
+
+        .modelo-body {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             font-size: 0.85rem;
         }
 
-        th {
-            background-color: #1a1a1a;
-            color: var(--gold);
-            border-bottom: 1px solid #333;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.5px;
-        }
-
-        tr:not(:last-child) td {
-            border-bottom: 1px solid #1f1f1f;
-        }
-
         .status-badge {
-            padding: 5px 10px;
+            padding: 4px 8px;
             border-radius: 4px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: inline-block;
-            text-align: center;
         }
 
         .status-activo {
@@ -289,13 +283,6 @@
             background-color: var(--danger-bg);
             color: var(--danger);
             border: 1px solid rgba(231, 76, 60, 0.3);
-            animation: pulseVencido 2s infinite;
-        }
-
-        @keyframes pulseVencido {
-            0% { opacity: 1; }
-            50% { opacity: 0.6; }
-            100% { opacity: 1; }
         }
 
         .amount-col {
@@ -305,20 +292,42 @@
 
         .btn-check {
             background: none;
-            border: 1px solid #333;
+            border: 1px solid #444;
             color: var(--text-muted);
-            padding: 2px 8px;
-            border-radius: 4px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
             cursor: pointer;
-            margin-left: 8px;
-            font-size: 0.8rem;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: all 0.2s;
         }
 
         .btn-check.pagado {
             background-color: var(--success-bg);
             color: var(--success);
-            border-color: rgba(46, 204, 113, 0.4);
+            border-color: var(--success);
+        }
+
+        .modelo-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            border-top: 1px solid #1f1f1f;
+            padding-top: 6px;
+        }
+
+        .fecha-input {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 4px 6px;
+            border-radius: 4px;
+            font-size: 0.8rem;
         }
 
         .btn-delete {
@@ -326,17 +335,12 @@
             border: none;
             color: var(--danger);
             cursor: pointer;
-            font-size: 0.8rem;
-            transition: opacity 0.2s;
-        }
-
-        .btn-delete:hover {
-            opacity: 0.7;
+            font-size: 0.75rem;
         }
 
         .empty-state {
             text-align: center;
-            padding: 30px;
+            padding: 20px;
             color: var(--text-muted);
             font-style: italic;
         }
@@ -344,7 +348,7 @@
 </head>
 <body>
 
-    <!-- Pantalla de Ingreso por Contraseña -->
+    <!-- Pantalla de Login -->
     <div id="loginOverlay">
         <div class="login-card">
             <h2>Acceso Restringido</h2>
@@ -354,7 +358,7 @@
                     <input type="password" id="passwordInput" placeholder="Ingresá tu clave" required>
                 </div>
                 <button type="submit" class="btn-submit">Ingresar</button>
-                <div class="error-msg" id="errorMsg">Contraseña incorrecta</div>
+                <div class="error-msg" id="errorMsg" style="color:var(--danger); font-size:0.75rem; margin-top:8px; display:none;">Contraseña incorrecta</div>
             </form>
         </div>
     </div>
@@ -362,8 +366,8 @@
     <!-- Contenido Principal -->
     <div class="container main-content" id="mainContent">
         <header>
-            <h1>Control de Caja y Vencimientos</h1>
-            <a href="admin.html" class="back-link">&larr; Volver al Panel</a>
+            <h1>Caja y Vencimientos</h1>
+            <a href="admin.html" class="back-link">&larr; Panel</a>
         </header>
 
         <!-- Resumen de Ingresos -->
@@ -374,17 +378,9 @@
 
         <!-- Formulario de Carga -->
         <div class="form-card">
-            <h2>Registrar Nuevo Perfil / Pago</h2>
+            <h2>Registrar Perfil</h2>
             <form id="cajaForm">
                 <div class="form-grid">
-                    <div class="form-group">
-                        <label for="vencimiento">Fecha de Vencimiento</label>
-                        <input type="date" id="vencimiento" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="monto">Monto Pagado ($)</label>
-                        <input type="number" id="monto" placeholder="Ej: 50000" required>
-                    </div>
                     <div class="form-group">
                         <label for="nombre">Nombre de la Modelo</label>
                         <input type="text" id="nombre" placeholder="Ej: Jennyfer" required>
@@ -402,33 +398,27 @@
                             <option value="MASCULINOS">Masculinos ($50k)</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label for="monto">Monto Pagado ($)</label>
+                        <input type="number" id="monto" placeholder="Ej: 50000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="vencimiento">Fecha de Vencimiento</label>
+                        <input type="date" id="vencimiento" required>
+                    </div>
                 </div>
-                <button type="submit" class="btn-submit" style="margin-top: 15px;">Guardar Registro</button>
+                <button type="submit" class="btn-submit">Guardar Registro</button>
             </form>
         </div>
 
         <div class="transactions-section">
-            <h2>Estado de Anunciantes</h2>
-            <button class="btn-reset" onclick="restaurarDatosExcel()">Restaurar Planilla Original</button>
+            <h2>Anunciantes</h2>
+            <button class="btn-reset" onclick="restaurarDatosExcel()">Restaurar Originales</button>
         </div>
 
-        <div class="table-responsive">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Vencimiento</th>
-                        <th>Estado</th>
-                        <th>Monto</th>
-                        <th>Nombre</th>
-                        <th>Zona</th>
-                        <th>Categoría</th>
-                        <th>Acción</th>
-                    </tr>
-                </thead>
-                <tbody id="tablaMovimientos">
-                    <!-- Se llena con JavaScript -->
-                </tbody>
-            </table>
+        <!-- Contenedor Estilo Tarjetas para Celular -->
+        <div class="cards-container" id="tarjetasContainer">
+            <!-- Se llena con JavaScript -->
         </div>
     </div>
 
@@ -496,17 +486,17 @@
         selectCat.dispatchEvent(new Event('change'));
 
         const form = document.getElementById('cajaForm');
-        const tablaMovimientos = document.getElementById('tablaMovimientos');
+        const tarjetasContainer = document.getElementById('tarjetasContainer');
         const totalIngresos = document.getElementById('totalIngresos');
 
         function actualizarTabla() {
-            tablaMovimientos.innerHTML = '';
+            tarjetasContainer.innerHTML = '';
             let sumaTotal = 0;
             const hoy = new Date();
             hoy.setHours(0,0,0,0);
 
             if (registros.length === 0) {
-                tablaMovimientos.innerHTML = `<tr><td colspan="7" class="empty-state">No hay perfiles registrados todavía.</td></tr>`;
+                tarjetasContainer.innerHTML = `<div class="empty-state">No hay perfiles registrados todavía.</div>`;
                 totalIngresos.textContent = '$0';
                 return;
             }
@@ -515,31 +505,46 @@
                 sumaTotal += Number(reg.monto || 0);
 
                 const fechaVen = new Date(reg.vencimiento + 'T00:00:00');
-                const estaVencido = fechaVen < hoy;
+                const estaVencidoPorFecha = fechaVen < hoy;
 
-                const badgeHtml = estaVencido 
-                    ? `<span class="status-badge status-vencido">⚠️ Vencido</span>` 
-                    : `<span class="status-badge status-activo">✓ Al Día</span>`;
+                // Si está marcado como pagado, pasa a estar al día automáticamente
+                const estaAlDia = reg.pagado || !estaVencidoPorFecha;
+
+                const badgeHtml = estaAlDia 
+                    ? `<span class="status-badge status-activo">✓ Al Día</span>` 
+                    : `<span class="status-badge status-vencido">⚠️ Vencido</span>`;
 
                 const btnCheckClass = reg.pagado ? 'btn-check pagado' : 'btn-check';
-                const btnCheckText = reg.pagado ? '✓ Pagado' : '○ Pendiente';
 
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>
-                        <input type="date" value="${reg.vencimiento}" onchange="cambiarFecha(${index}, this.value)" style="background:#1a1a1a; border:1px solid #333; color:#fff; padding:4px 6px; border-radius:4px; font-size:0.85rem;">
-                    </td>
-                    <td>${badgeHtml}</td>
-                    <td class="amount-col">+$${Number(reg.monto || 0).toLocaleString('es-AR')}</td>
-                    <td>
-                        <strong>${reg.nombre}</strong>
-                        <button class="${btnCheckClass}" onclick="togglePagado(${index})">${btnCheckText}</button>
-                    </td>
-                    <td>${reg.zona}</td>
-                    <td><small style="color:var(--gold);">${reg.categoria}</small></td>
-                    <td><button class="btn-delete" onclick="eliminarRegistro(${index})">Eliminar</button></td>
+                const card = document.createElement('div');
+                card.className = 'modelo-card';
+                card.innerHTML = `
+                    <div class="modelo-header">
+                        <div class="modelo-nombre-box">
+                            <button class="${btnCheckClass}" onclick="togglePagado(${index})" title="Marcar como pagado">✓</button>
+                            <div>
+                                <div class="modelo-nombre">${reg.nombre}</div>
+                                <div class="modelo-zona-cat">${reg.zona} • <span style="color:#dfc285;">${reg.categoria}</span></div>
+                            </div>
+                        </div>
+                        <div>${badgeHtml}</div>
+                    </div>
+                    <div class="modelo-body">
+                        <div>
+                            <span style="font-size:0.7rem; color:#888; display:block;">VENCIMIENTO</span>
+                            <input type="date" value="${reg.vencimiento}" onchange="cambiarFecha(${index}, this.value)" class="fecha-input">
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="font-size:0.7rem; color:#888; display:block;">MONTO</span>
+                            <span class="amount-col">+$${Number(reg.monto || 0).toLocaleString('es-AR')}</span>
+                        </div>
+                    </div>
+                    <div class="modelo-footer">
+                        <span>Registro #${index + 1}</span>
+                        <button class="btn-delete" onclick="eliminarRegistro(${index})">Eliminar</button>
+                    </div>
                 `;
-                tablaMovimientos.appendChild(tr);
+                tarjetasContainer.appendChild(card);
             });
 
             totalIngresos.textContent = `$${sumaTotal.toLocaleString('es-AR')}`;
