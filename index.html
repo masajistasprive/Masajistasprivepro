@@ -248,7 +248,6 @@
         }
         const db = firebase.firestore();
 
-        // Función para ocultar suavemente la pantalla de transición cuando todo carga
         function ocultarTransicionPrive() {
             const screen = document.getElementById('priveTransitionScreen');
             if (screen) {
@@ -279,7 +278,6 @@
             } catch (e) {}
         }
 
-        // Cargar perfiles y destacadas en tiempo real desde Firebase (Conector de Fotos Inteligente)
         function cargarPerfilesDesdeFirebase() {
             db.collection("modelos_prive").onSnapshot((snapshot) => {
                 const gridTerapeuticas = document.getElementById('grid-terapeuticas');
@@ -305,7 +303,6 @@
                 let htmlFavoritos = '';
                 let htmlStories = '';
 
-                // Obtener favoritos guardados en el navegador de forma actualizada
                 const favoritosIds = JSON.parse(localStorage.getItem('priveFavoritos') || '[]');
 
                 snapshot.forEach((docSnap) => {
@@ -314,13 +311,12 @@
 
                     if (m.estado === 'pausado') return;
 
-                    // Selector inteligente de foto para asegurar que siempre levante una imagen válida
                     const fotoModelo = m.fotoPrincipal || m.foto || (m.fotosGaleria && m.fotosGaleria[0]) || 'img/monograma.png';
                     const zonaModelo = m.zona || (m.traducciones && m.traducciones.es && m.traducciones.es.valorZona) || 'CABA';
                     const modalidadModelo = m.modalidad || (m.traducciones && m.traducciones.es && m.traducciones.es.valorModalidad) || 'Gabinete propio';
 
                     const cardHTML = `
-                        <a href="perfil.html?id=${docId}" class="card-link" data-categoria="${m.categoria}" data-id="${docId}">
+                        <a href="perfil.html?id=${docId}" class="card-link" data-categoria="${m.categoria}">
                             <article class="card">
                                 <div class="card-image">
                                     <img src="${fotoModelo}" alt="Masajista ${m.nombre} en ${zonaModelo} - Masajistas Privé" loading="lazy">
@@ -340,7 +336,6 @@
                     else if (m.categoria === 'masculinos') htmlMasculinos += cardHTML;
                     else if (m.categoria === 'fantasias') htmlFantasias += cardHTML;
 
-                    // Si está en la lista de favoritos guardados, agregarlo explícitamente a favoritos
                     if (favoritosIds.includes(docId)) {
                         htmlFavoritos += cardHTML;
                     }
@@ -371,7 +366,6 @@
                 gridFavoritos.innerHTML = htmlFavoritos;
                 storiesContainer.innerHTML = htmlStories;
 
-                // Ocultar la transición al terminar de renderizar
                 ocultarTransicionPrive();
             });
         }
@@ -407,7 +401,7 @@
                 cuadernoDesc: "Crónicas urbanas, secretos de gabinete y el arte del relax absoluto en CABA.",
                 btnCerrar: "Cerrar",
                 siguenos: "Síguenos",
-                footerLegal: "Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia com este portal.",
+                footerLegal: "Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.",
                 footerMarcas: "Todo el contenido, marcas y logotipos pertenecen a sus respectivos dueños.",
                 visitasTotales: "Visitas totales al portal",
                 footerCopy: "© 2026 Masajistas Privé. Todos los derechos reservados."
@@ -478,7 +472,7 @@
                 btnCerrar: "Fechar",
                 siguenos: "Siga-nos",
                 footerLegal: "Este é um site exclusivo para adultos (+18). Os anunciantes publicados são independentes e não possuem vínculo empregatício, societário ou de dependência com este portal.",
-                footerMarcas: "Todo o conteúdo, marcas e logotipos pertencem aos respectivos donos.",
+                footerMarcas: "Todo o conteúdo, marcas e logotipos pertencem aos seus respectivos donos.",
                 visitasTotales: "Visitas totais ao portal",
                 footerCopy: "© 2026 Masajistas Privé. Todos os direitos reservados."
             },
@@ -661,7 +655,6 @@
                 document.querySelectorAll('.pill-btn').forEach(p => p.classList.remove('active'));
                 pill.classList.add('active');
 
-                // Lógica de filtrado de secciones y tarjetas
                 const secciones = ['terapeuticas', 'sensuales', 'masculinos', 'fantasias', 'favoritos'];
 
                 secciones.forEach(sec => {
@@ -697,7 +690,6 @@
                     }
                 });
 
-                // Filtrar tarjetas individuales por categoría si está en "todas"
                 document.querySelectorAll('.card-link').forEach(card => {
                     if (filter === 'todas' || card.getAttribute('data-categoria') === filter) {
                         card.style.display = 'block';
