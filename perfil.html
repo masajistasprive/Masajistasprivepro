@@ -111,19 +111,19 @@
 
         const etiquetasIdiomas = {
             es: { 
-                btnVolver: "← Volver", badgeVerificado: "✓ Privé Verificado", labelZona: "Zona:", labelModalidad: "Modalidad:", tituloDesc: "Descripción", labelTecnicas: "Técnicas de masaje:", labelHorarios: "Días y horarios:", labelEquipamiento: "Equipamiento y servicios:", labelPagos: "Medios de pago:", labelTurnos: "Modalidad de turnos:", btnWpp: "Contactar por WhatsApp",
+                btnVolver: "← Volver", badgeVerificado: "✓ Privé Verificado", labelZona: "Zona:", labelModalidad: "Modalidad:", tituloDesc: "Descripción", labelTecnicas: "Técnicas de masaje:", labelHorarios: "Días y horarios:", labelEquipamiento: "Equipamiento y servicios:", labelPagos: "Medios de pago:", labelTurnos: "Modalidad de turnos:", btnWpp: "Contactar por WhatsApp", tituloVideo: "Video de Presentación",
                 tituloSeccionComentarios: "Experiencias y Comentarios", labelEstrellas: "Calificación:", placeholderNombre: "Tu nombre o apodo", placeholderTexto: "Escribe tu experiencia...", btnPublicar: "Publicar Experiencia", cargandoComentarios: "Cargando experiencias...", sinExperiencias: "No hay experiencias aún. ¡Sé el primero en dejar una!", meGusta: "Me gusta", destacado: "★ Destacado", eliminar: "🗑️ Eliminar", alertaIncompleto: "Por favor completá tu nombre, elegí una calificación y escribí tu experiencia."
             },
             en: { 
-                btnVolver: "← Back", badgeVerificado: "✓ Privé Verified", labelZona: "Area:", labelModalidad: "Modality:", tituloDesc: "Description", labelTecnicas: "Massage techniques:", labelHorarios: "Days and hours:", labelEquipamiento: "Equipment and services:", labelPagos: "Payment methods:", labelTurnos: "Appointment modality:", btnWpp: "Contact via WhatsApp",
+                btnVolver: "← Back", badgeVerificado: "✓ Privé Verified", labelZona: "Area:", labelModalidad: "Modality:", tituloDesc: "Description", labelTecnicas: "Massage techniques:", labelHorarios: "Days and hours:", labelEquipamiento: "Equipment and services:", labelPagos: "Payment methods:", labelTurnos: "Appointment modality:", btnWpp: "Contact via WhatsApp", tituloVideo: "Presentation Video",
                 tituloSeccionComentarios: "Experiences and Reviews", labelEstrellas: "Rating:", placeholderNombre: "Your name or nickname", placeholderTexto: "Write about your experience...", btnPublicar: "Publish Experience", cargandoComentarios: "Loading experiences...", sinExperiencias: "No experiences yet. Be the first to leave one!", meGusta: "Like", destacado: "★ Featured", eliminar: "🗑 Delete", alertaIncompleto: "Please fill in your name, select a rating, and write your experience."
             },
             pt: { 
-                btnVolver: "← Voltar", badgeVerificado: "✓ Privé Verificado", labelZona: "Zona:", labelModalidade: "Modalidade:", tituloDesc: "Descrição", labelTecnicas: "Técnicas de massagem:", labelHorarios: "Dias e horários:", labelEquipamiento: "Equipamentos e serviços:", labelPagos: "Meios de pagamento:", labelTurnos: "Modalidade de agendamento:", btnWpp: "Contatar por WhatsApp",
+                btnVolver: "← Voltar", badgeVerificado: "✓ Privé Verificado", labelZona: "Zona:", labelModalidade: "Modalidade:", tituloDesc: "Descrição", labelTecnicas: "Técnicas de massagem:", labelHorarios: "Dias e horários:", labelEquipamiento: "Equipamentos e serviços:", labelPagos: "Meios de pagamento:", labelTurnos: "Modalidade de agendamento:", btnWpp: "Contatar por WhatsApp", tituloVideo: "Vídeo de Apresentação",
                 tituloSeccionComentarios: "Experiências e Comentários", labelEstrellas: "Avaliação:", placeholderNombre: "Seu nome ou apelido", placeholderTexto: "Escreva sua experiência...", btnPublicar: "Publicar Experiência", cargandoComentarios: "Carregando experiências...", sinExperiencias: "Nenhuma experiência ainda. Seja o primeiro a deixar uma!", meGusta: "Curtir", destacado: "★ Destaque", eliminar: "🗑 Excluir", alertaIncompleto: "Por favor, preencha seu nome, selecione uma avaliação e escreva sua experiência."
             },
             fr: { 
-                btnVolver: "← Retour", badgeVerificado: "✓ Privé Vérifié", labelZona: "Zone :", labelModalidad: "Modalité :", tituloDesc: "Description", labelTecnicas: "Techniques de massage :", labelHorarios: "Jours et horaires :", labelEquipamiento: "Équipements et services :", labelPagos: "Modes de paiement :", labelTurnos: "Modalité de réservation :", btnWpp: "Contacter par WhatsApp",
+                btnVolver: "← Retour", badgeVerificado: "✓ Privé Vérifié", labelZona: "Zone :", labelModalidad: "Modalité :", tituloDesc: "Description", labelTecnicas: "Techniques de massage :", labelHorarios: "Jours et horaires :", labelEquipamiento: "Équipements et services :", labelPagos: "Modes de paiement :", labelTurnos: "Modalité de réservation :", btnWpp: "Contacter par WhatsApp", tituloVideo: "Vidéo de Présentation",
                 tituloSeccionComentarios: "Expériences et Avis", labelEstrellas: "Évaluation :", placeholderNombre: "Votre nom ou pseudo", placeholderTexto: "Écrivez votre expérience...", btnPublicar: "Publier l'expérience", cargandoComentarios: "Chargement des avis...", sinExperiencias: "Aucun avis pour le moment. Soyez le premier à en laisser un !", meGusta: "J'aime", destacado: "★ En vedette", eliminar: "🗑 Supprimer", alertaIncompleto: "Veuillez remplir votre nom, sélectionner une note et écrire votre avis."
             }
         };
@@ -206,6 +206,19 @@
                 miniaturasHTML = `<img src="${m.fotoPrincipal}" alt="${m.nombre}" onclick="cambiarFoto(this)">`;
             }
 
+            let videoHtml = '';
+            if (m.videoPresentacion) {
+                videoHtml = `
+                    <div class="perfil-descripcion" style="margin-top: 20px;">
+                        <h3>🎥 ${labels.tituloVideo}</h3>
+                        <video controls controlslist="nodownload" style="width: 100%; max-height: 350px; border-radius: 8px; border: 1px solid rgba(223,194,133,0.3); background: #000; object-fit: cover;">
+                            <source src="${m.videoPresentacion}" type="video/mp4">
+                            Tu navegador no soporta videos.
+                        </video>
+                    </div>
+                `;
+            }
+
             let detallesHtml = '';
             if (horariosTexto) detallesHtml += `<div class="detalle-item"><span>${labels.labelHorarios}</span> <span>${horariosTexto}</span></div>`;
             if (equipamientoTexto) detallesHtml += `<div class="detalle-item"><span>${labels.labelEquipamiento}</span> <span>${equipamientoTexto}</span></div>`;
@@ -238,6 +251,8 @@
                         <p style="white-space: pre-line;">${descripcionTexto}</p>
                         ${tecnicasHtml}
                     </div>
+
+                    ${videoHtml}
 
                     ${detallesHtml ? `<div class="perfil-detalles">${detallesHtml}</div>` : ''}
 
