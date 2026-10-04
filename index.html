@@ -161,7 +161,7 @@
         </div>
         <div id="ad-masculinos" style="margin-top: 15px;">
             <a href="https://wa.me/5491131774848?text=Hola,%20quiero%20publicar%20mi%20anuncio%20en%20Masajistas%20Prive" target="_blank" class="card-ad-link">
-                <article class="card-ad"><div class="ad-content"><h3 data-i18n="espacioDisponible">Espacio Disponible</h3><p data-i18n="publicaPerfil">Publicá tu perfil aquí</p><span class="btn-ad" data-i18n="contactanos">Contáctanos</span></div></article></a>
+                <article class="card-ad"><div class="ad-content"><h3 data-i18n="espacioDisponible">Espacio Disponible</h3><p data-i18n="publicaPerfil">Publicá tu perfil aquí</p><span class="btn-ad" data-i18n="contactanos">Contáctanos</span></div></article>
             </a>
         </div>
 
@@ -298,7 +298,7 @@
             } catch (e) {}
         }
 
-        // Cargar perfiles y destacadas en tiempo real desde Firebase de forma limpia y directa
+        // Cargar perfiles y destacadas en tiempo real desde Firebase sin cruces
         function cargarPerfilesDesdeFirebase() {
             db.collection("modelos_prive").onSnapshot((snapshot) => {
                 const gridTerapeuticas = document.getElementById('grid-terapeuticas');
@@ -352,7 +352,7 @@
                         </a>
                     `;
 
-                    // Asignación estricta por categoría
+                    // Distribución estricta por categoría
                     if (m.categoria === 'terapeuticas') {
                         htmlTerapeuticas += cardHTML;
                     } else if (m.categoria === 'sensuales') {
@@ -363,7 +363,7 @@
                         htmlFantasias += cardHTML;
                     }
 
-                    // Si está en favoritos, se añade a su grilla exclusiva
+                    // Si está guardado en favoritos, se añade de forma independiente a su grilla
                     if (favoritosIds.includes(docId)) {
                         htmlFavoritos += cardHTML;
                     }
@@ -389,11 +389,16 @@
                 gridFavoritos.innerHTML = htmlFavoritos;
                 storiesContainer.innerHTML = htmlStories;
 
-                // Controlar visibilidad de los carteles de publicidad fijos al final
-                document.getElementById('ad-terapeuticas').style.display = htmlTerapeuticas ? 'block' : 'none';
-                document.getElementById('ad-sensuales').style.display = htmlSensuales ? 'block' : 'none';
-                document.getElementById('ad-masculinos').style.display = htmlMasculinos ? 'block' : 'none';
-                document.getElementById('ad-fantasias').style.display = htmlFantasias ? 'block' : 'none';
+                // Control dinámico de los espacios publicitarios al final de cada categoría
+                const adT = document.getElementById('ad-terapeuticas');
+                const adS = document.getElementById('ad-sensuales');
+                const adM = document.getElementById('ad-masculinos');
+                const adF = document.getElementById('ad-fantasias');
+
+                if(adT) adT.style.display = htmlTerapeuticas ? 'block' : 'none';
+                if(adS) adS.style.display = htmlSensuales ? 'block' : 'none';
+                if(adM) adM.style.display = htmlMasculinos ? 'block' : 'none';
+                if(adF) adF.style.display = htmlFantasias ? 'block' : 'none';
 
                 ocultarTransicionPrive();
             });
