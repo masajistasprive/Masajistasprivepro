@@ -303,6 +303,24 @@
             font-weight: bold;
         }
 
+        .btn-check {
+            background: none;
+            border: 1px solid #333;
+            color: var(--text-muted);
+            padding: 2px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 8px;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .btn-check.pagado {
+            background-color: var(--success-bg);
+            color: var(--success);
+            border-color: rgba(46, 204, 113, 0.4);
+        }
+
         .btn-delete {
             background: none;
             border: none;
@@ -440,26 +458,25 @@
             }
         });
 
-        // Datos oficiales con la diferenciación para Luly y Mora Sensual y el orden de columnas pedido
         const datosInicialesExcel = [
-            { vencimiento: "2026-10-01", monto: 0, nombre: "JENNYFER", zona: "TRIBUNALES", categoria: "TERAPEUTICAS" },
-            { vencimiento: "2026-10-01", monto: 0, nombre: "DEBY", zona: "CABALLITO", categoria: "SENSUALES" },
-            { vencimiento: "2026-11-01", monto: 50000, nombre: "PRADA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS" },
-            { vencimiento: "2026-10-15", monto: 0, nombre: "PAMELA", zona: "TRIBUNALES", categoria: "SENSUALES" },
-            { vencimiento: "2026-10-01", monto: 50000, nombre: "LUPITA", zona: "TRIBUNALES", categoria: "SENSUALES" },
-            { vencimiento: "2026-10-02", monto: 0, nombre: "SOL", zona: "TRIBUNALES", categoria: "SENSUALES" },
-            { vencimiento: "2026-10-01", monto: 0, nombre: "MATIAS", zona: "RECOLETA", categoria: "MASCULINOS" },
-            { vencimiento: "2026-10-02", monto: 0, nombre: "DANIELA", zona: "MICROCENTRO", categoria: "TERAPEUTICAS" },
-            { vencimiento: "2026-10-02", monto: 0, nombre: "ZARIA", zona: "CABALLITO", categoria: "TERAPEUTICAS" },
-            { vencimiento: "2026-10-03", monto: 0, nombre: "DONATELLA", zona: "CABA", categoria: "SENSUALES" },
-            { vencimiento: "2026-10-04", monto: 0, nombre: "MARIELA", zona: "CONGRESO", categoria: "TERAPEUTICAS" },
-            { vencimiento: "2026-10-04", monto: 0, nombre: "MIA", zona: "CONGRESO", categoria: "SENSUALES" },
-            { vencimiento: "2026-10-08", monto: 0, nombre: "CELESTE", zona: "TRIBUNALES", categoria: "SENSUALES" },
-            { vencimiento: "2026-10-22", monto: 0, nombre: "LULY S", zona: "CABA", categoria: "SENSUALES" },
-            { vencimiento: "2026-10-22", monto: 0, nombre: "LULY", zona: "CABA", categoria: "TERAPEUTICAS" },
-            { vencimiento: "2026-10-23", monto: 50000, nombre: "MORA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS" },
-            { vencimiento: "2026-10-23", monto: 50000, nombre: "MORA S", zona: "TRIBUNALES", categoria: "SENSUALES" },
-            { vencimiento: "2026-10-26", monto: 50000, nombre: "RENATA", zona: "PTO MADERO", categoria: "SENSUALES" }
+            { vencimiento: "2026-10-01", monto: 0, nombre: "JENNYFER", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: false },
+            { vencimiento: "2026-10-01", monto: 0, nombre: "DEBY", zona: "CABALLITO", categoria: "SENSUALES", pagado: false },
+            { vencimiento: "2026-11-01", monto: 50000, nombre: "PRADA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true },
+            { vencimiento: "2026-10-15", monto: 0, nombre: "PAMELA", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: false },
+            { vencimiento: "2026-10-01", monto: 50000, nombre: "LUPITA", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: true },
+            { vencimiento: "2026-10-02", monto: 0, nombre: "SOL", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: false },
+            { vencimiento: "2026-10-01", monto: 0, nombre: "MATIAS", zona: "RECOLETA", categoria: "MASCULINOS", pagado: false },
+            { vencimiento: "2026-10-02", monto: 0, nombre: "DANIELA", zona: "MICROCENTRO", categoria: "TERAPEUTICAS", pagado: false },
+            { vencimiento: "2026-10-02", monto: 0, nombre: "ZARIA", zona: "CABALLITO", categoria: "TERAPEUTICAS", pagado: false },
+            { vencimiento: "2026-10-03", monto: 0, nombre: "DONATELLA", zona: "CABA", categoria: "SENSUALES", pagado: false },
+            { vencimiento: "2026-10-04", monto: 0, nombre: "MARIELA", zona: "CONGRESO", categoria: "TERAPEUTICAS", pagado: false },
+            { vencimiento: "2026-10-04", monto: 0, nombre: "MIA", zona: "CONGRESO", categoria: "SENSUALES", pagado: false },
+            { vencimiento: "2026-10-08", monto: 0, nombre: "CELESTE", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: false },
+            { vencimiento: "2026-10-22", monto: 0, nombre: "LULY S", zona: "CABA", categoria: "SENSUALES", pagado: false },
+            { vencimiento: "2026-10-22", monto: 0, nombre: "LULY", zona: "CABA", categoria: "TERAPEUTICAS", pagado: false },
+            { vencimiento: "2026-10-23", monto: 50000, nombre: "MORA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true },
+            { vencimiento: "2026-10-23", monto: 50000, nombre: "MORA S", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: true },
+            { vencimiento: "2026-10-26", monto: 50000, nombre: "RENATA", zona: "PTO MADERO", categoria: "SENSUALES", pagado: true }
         ];
 
         let registros = JSON.parse(localStorage.getItem('prive_control_modelos'));
@@ -504,12 +521,20 @@
                     ? `<span class="status-badge status-vencido">⚠️ Vencido</span>` 
                     : `<span class="status-badge status-activo">✓ Al Día</span>`;
 
+                const btnCheckClass = reg.pagado ? 'btn-check pagado' : 'btn-check';
+                const btnCheckText = reg.pagado ? '✓ Pagado' : '○ Pendiente';
+
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${reg.vencimiento.split('-').reverse().join('/')}</td>
+                    <td>
+                        <input type="date" value="${reg.vencimiento}" onchange="cambiarFecha(${index}, this.value)" style="background:#1a1a1a; border:1px solid #333; color:#fff; padding:4px 6px; border-radius:4px; font-size:0.85rem;">
+                    </td>
                     <td>${badgeHtml}</td>
                     <td class="amount-col">+$${Number(reg.monto || 0).toLocaleString('es-AR')}</td>
-                    <td><strong>${reg.nombre}</strong></td>
+                    <td>
+                        <strong>${reg.nombre}</strong>
+                        <button class="${btnCheckClass}" onclick="togglePagado(${index})">${btnCheckText}</button>
+                    </td>
                     <td>${reg.zona}</td>
                     <td><small style="color:var(--gold);">${reg.categoria}</small></td>
                     <td><button class="btn-delete" onclick="eliminarRegistro(${index})">Eliminar</button></td>
@@ -528,7 +553,8 @@
                 monto: parseFloat(document.getElementById('monto').value) || 0,
                 nombre: document.getElementById('nombre').value.trim().toUpperCase(),
                 zona: document.getElementById('zona').value.trim().toUpperCase(),
-                categoria: document.getElementById('categoria').value
+                categoria: document.getElementById('categoria').value,
+                pagado: true
             };
 
             registros.unshift(nuevoReg);
@@ -538,6 +564,18 @@
             selectCat.dispatchEvent(new Event('change'));
             actualizarTabla();
         });
+
+        window.cambiarFecha = function(index, nuevaFecha) {
+            registros[index].vencimiento = nuevaFecha;
+            localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
+            actualizarTabla();
+        };
+
+        window.togglePagado = function(index) {
+            registros[index].pagado = !registros[index].pagado;
+            localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
+            actualizarTabla();
+        };
 
         window.eliminarRegistro = function(index) {
             if (confirm('¿Estás seguro de eliminar este registro?')) {
