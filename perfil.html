@@ -5,6 +5,13 @@
     <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="perfil-title">Perfil | Masajistas Privé</title>
+    
+    <!-- Etiquetas Open Graph para vistas previas perfectas en WhatsApp -->
+    <meta property="og:title" content="Masajistas Privé | Portal Exclusivo">
+    <meta property="og:description" content="Perfil verificado y servicios de relax independientes en CABA.">
+    <meta property="og:image" content="https://masajistasprive.com/img/monograma.png">
+    <meta property="og:url" content="https://masajistasprive.com">
+
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -272,15 +279,6 @@
             const pagosTexto = langData.valorPagos || '';
             const turnosTexto = langData.valorTurnos || '';
             const ocultarWpp = m.estado === 'pausado' ? 'display: none;' : '';
-
-            // Actualizar imagen Open Graph en tiempo real para la vista previa de WhatsApp
-            let metaOgImg = document.querySelector('meta[property="og:image"]');
-            if (!metaOgImg) {
-                metaOgImg = document.createElement('meta');
-                metaOgImg.setAttribute('property', 'og:image');
-                document.head.appendChild(metaOgImg);
-            }
-            metaOgImg.setAttribute('content', m.fotoPrincipal || 'img/monograma.png');
 
             // Dibujar el botón flotante de WhatsApp con mensaje completo y link de la modelo
             const contenedorWpp = document.getElementById('contenedorWppFlotante');
