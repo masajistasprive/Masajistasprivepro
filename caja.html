@@ -325,9 +325,9 @@
             background: #1a1a1a;
             border: 1px solid #333;
             color: #fff;
-            padding: 4px 6px;
+            padding: 5px 8px;
             border-radius: 4px;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
         }
 
         .btn-delete {
@@ -489,7 +489,7 @@
         const tarjetasContainer = document.getElementById('tarjetasContainer');
         const totalIngresos = document.getElementById('totalIngresos');
 
-        function actualizarTabla() {
+        function renderizarTarjetas() {
             tarjetasContainer.innerHTML = '';
             let sumaTotal = 0;
             const hoy = new Date();
@@ -506,8 +506,6 @@
 
                 const fechaVen = new Date(reg.vencimiento + 'T00:00:00');
                 const estaVencidoPorFecha = fechaVen < hoy;
-
-                // Si está marcado como pagado, pasa a estar al día automáticamente
                 const estaAlDia = reg.pagado || !estaVencidoPorFecha;
 
                 const badgeHtml = estaAlDia 
@@ -531,11 +529,11 @@
                     </div>
                     <div class="modelo-body">
                         <div>
-                            <span style="font-size:0.7rem; color:#888; display:block;">VENCIMIENTO</span>
-                            <input type="date" value="${reg.vencimiento}" onchange="cambiarFecha(${index}, this.value)" class="fecha-input">
+                            <span style="font-size:0.7rem; color:#888; display:block; margin-bottom:2px;">VENCIMIENTO</span>
+                            <input type="date" value="${reg.vencimiento}" data-index="${index}" class="fecha-input fecha-editable">
                         </div>
                         <div style="text-align: right;">
-                            <span style="font-size:0.7rem; color:#888; display:block;">MONTO</span>
+                            <span style="font-size:0.7rem; color:#888; display:block; margin-bottom:2px;">MONTO</span>
                             <span class="amount-col">+$${Number(reg.monto || 0).toLocaleString('es-AR')}</span>
                         </div>
                     </div>
@@ -548,6 +546,16 @@
             });
 
             totalIngresos.textContent = `$${sumaTotal.toLocaleString('es-AR')}`;
+
+            // Vincular eventos de fecha de forma independiente para que no cierre el selector en celulares
+            document.querySelectorAll('.fecha-editable').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const idx = e.target.getAttribute('data-index');
+                    registros[idx].vencimiento = e.target.value;
+                    localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
+                    renderizarTarjetas();
+                });
+            });
         }
 
         form.addEventListener('submit', (e) => {
@@ -567,26 +575,20 @@
 
             form.reset();
             selectCat.dispatchEvent(new Event('change'));
-            actualizarTabla();
+            renderizarTarjetas();
         });
-
-        window.cambiarFecha = function(index, nuevaFecha) {
-            registros[index].vencimiento = nuevaFecha;
-            localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
-            actualizarTabla();
-        };
 
         window.togglePagado = function(index) {
             registros[index].pagado = !registros[index].pagado;
             localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
-            actualizarTabla();
+            renderizarTarjetas();
         };
 
         window.eliminarRegistro = function(index) {
             if (confirm('¿Estás seguro de eliminar este registro?')) {
                 registros.splice(index, 1);
                 localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
-                actualizarTabla();
+                renderizarTarjetas();
             }
         };
 
@@ -594,11 +596,11 @@
             if (confirm('¿Restaurar los datos originales de la planilla? Se perderán los cambios recientes.')) {
                 registros = datosInicialesExcel;
                 localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
-                actualizarTabla();
+                renderizarTarjetas();
             }
         };
 
-        actualizarTabla();
+        renderizarTarjetas();
     </script>
 </body>
 </html>
