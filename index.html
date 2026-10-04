@@ -248,6 +248,7 @@
         }
         const db = firebase.firestore();
 
+        // Función para ocultar suavemente la pantalla de transición cuando todo carga
         function ocultarTransicionPrive() {
             const screen = document.getElementById('priveTransitionScreen');
             if (screen) {
@@ -278,6 +279,7 @@
             } catch (e) {}
         }
 
+        // Cargar perfiles y destacadas en tiempo real desde Firebase (Conector de Fotos Inteligente)
         function cargarPerfilesDesdeFirebase() {
             db.collection("modelos_prive").onSnapshot((snapshot) => {
                 const gridTerapeuticas = document.getElementById('grid-terapeuticas');
@@ -303,6 +305,7 @@
                 let htmlFavoritos = '';
                 let htmlStories = '';
 
+                // Obtener favoritos guardados en el navegador
                 const favoritosIds = JSON.parse(localStorage.getItem('priveFavoritos') || '[]');
 
                 snapshot.forEach((docSnap) => {
@@ -311,6 +314,7 @@
 
                     if (m.estado === 'pausado') return;
 
+                    // Selector inteligente de foto para asegurar que siempre levante una imagen válida
                     const fotoModelo = m.fotoPrincipal || m.foto || (m.fotosGaleria && m.fotosGaleria[0]) || 'img/monograma.png';
                     const zonaModelo = m.zona || (m.traducciones && m.traducciones.es && m.traducciones.es.valorZona) || 'CABA';
                     const modalidadModelo = m.modalidad || (m.traducciones && m.traducciones.es && m.traducciones.es.valorModalidad) || 'Gabinete propio';
@@ -336,6 +340,7 @@
                     else if (m.categoria === 'masculinos') htmlMasculinos += cardHTML;
                     else if (m.categoria === 'fantasias') htmlFantasias += cardHTML;
 
+                    // Si está en favoritos, agregarlo a la sección de favoritos
                     if (favoritosIds.includes(docId)) {
                         htmlFavoritos += cardHTML;
                     }
@@ -354,18 +359,17 @@
                     htmlFavoritos = `<p style="grid-column: 1 / -1; text-align: center; color: #888; font-size: 13px; font-style: italic; padding: 20px 0;">No tenés perfiles guardados en favoritos todavía.</p>`;
                 }
 
-                const adTerapeuticas = `<a href="https://wa.me/5491131774848?text=Hola,%20quiero%20publicar%20mi%20anuncio%20en%20Masajistas%20Prive" target="_blank" class="card-ad-link" data-categoria="terapeuticas"><article class="card-ad"><div class="ad-content"><h3 data-i18n="espacioDisponible">Espacio Disponible</h3><p data-i18n="publicaPerfil">Publicá tu perfil aquí</p><span class="btn-ad" data-i18n="contactanos">Contáctanos</span></div></article></a>`;
-                const adSensuales = `<a href="https://wa.me/5491131774848?text=Hola,%20quiero%20consultar%20sobre%20la%20seccion%20de%20Sensuales" target="_blank" class="card-ad-link" data-categoria="sensuales"><article class="card-ad"><div class="ad-content"><h3 data-i18n="espacioDisponible">Espacio Disponible</h3><p data-i18n="publicaPerfil">Publicá tu perfil aquí</p><span class="btn-ad" data-i18n="contactanos">Contáctanos</span></div></article></a>`;
-                const adMasculinos = `<a href="https://wa.me/5491131774848?text=Hola,%20quiero%20publicar%20mi%20anuncio%20en%20Masajistas%20Prive" target="_blank" class="card-ad-link" data-categoria="masculinos"><article class="card-ad"><div class="ad-content"><h3 data-i18n="espacioDisponible">Espacio Disponible</h3><p data-i18n="publicaPerfil">Publicá tu perfil aquí</p><span class="btn-ad" data-i18n="contactanos">Contáctanos</span></div></article></a>`;
-                const adFantasias = `<a href="https://wa.me/5491131774848?text=Hola,%20quiero%20consultar%20sobre%20la%20seccion%20de%20Fantasias" target="_blank" class="card-ad-link" data-categoria="fantasias"><article class="card-ad"><div class="ad-content"><h3 data-i18n="espacioDisponible">Espacio Disponible</h3><p data-i18n="publicaPerfil">Publicá tu perfil aquí</p><span class="btn-ad" data-i18n="contactanos">Contáctanos</span></div></article></a>`;
+                // UN SOLO cartel de publicidad exactamente al final de cada categoría
+                const adCard = `<a href="https://wa.me/5491131774848?text=Hola,%20quiero%20publicar%20mi%20anuncio%20en%20Masajistas%20Prive" target="_blank" class="card-ad-link"><article class="card-ad"><div class="ad-content"><h3 data-i18n="espacioDisponible">Espacio Disponible</h3><p data-i18n="publicaPerfil">Publicá tu perfil aquí</p><span class="btn-ad" data-i18n="contactanos">Contáctanos</span></div></article></a>`;
 
-                gridTerapeuticas.innerHTML = htmlTerapeuticas + adTerapeuticas;
-                gridSensuales.innerHTML = htmlSensuales + adSensuales;
-                gridMasculinos.innerHTML = htmlMasculinos + adMasculinos;
-                gridFantasias.innerHTML = htmlFantasias + adFantasias;
+                gridTerapeuticas.innerHTML = htmlTerapeuticas + (htmlTerapeuticas ? adCard : '');
+                gridSensuales.innerHTML = htmlSensuales + (htmlSensuales ? adCard : '');
+                gridMasculinos.innerHTML = htmlMasculinos + (htmlMasculinos ? adCard : '');
+                gridFantasias.innerHTML = htmlFantasias + (htmlFantasias ? adCard : '');
                 gridFavoritos.innerHTML = htmlFavoritos;
                 storiesContainer.innerHTML = htmlStories;
 
+                // Ocultar la transición al terminar de renderizar
                 ocultarTransicionPrive();
             });
         }
