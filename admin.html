@@ -91,11 +91,11 @@
             <h2>➕ Crear o Importar Nueva Ficha</h2>
             
             <div class="metodo-selector">
-                <div id="btnMetodoMano" class="btn-metodo active" onclick="cambiarMetodo('mano')">✍️ Escribir a Mano + Elegir Fotos</div>
+                <div id="btnMetodoMano" class="btn-metodo active" onclick="cambiarMetodo('mano')">✍️ Escribir a Mano + Elegir Fotos/Videos</div>
                 <div id="btnMetodoHtml" class="btn-metodo" onclick="cambiarMetodo('html')">📥 Importar Código HTML</div>
             </div>
 
-            <!-- MÉTODO 1: ESCRIBIR A MANO CON CARGA LOCAL DE FOTOS -->
+            <!-- MÉTODO 1: ESCRIBIR A MANO CON CARGA LOCAL DE FOTOS Y VIDEO -->
             <div id="panelMetodoMano" class="metodo-panel active">
                 <div class="form-grid">
                     <div class="form-row">
@@ -121,7 +121,7 @@
                     </div>
                 </div>
 
-                <!-- SECCIÓN DE SELECCIÓN DE FOTOS -->
+                <!-- SECCIÓN DE SELECCIÓN DE FOTOS Y VIDEO -->
                 <div class="form-grid" style="background: #1a1a1a; padding: 15px; border-radius: 8px; border: 1px solid #333; margin-bottom: 15px;">
                     <div class="form-row" style="margin-bottom: 0;">
                         <label style="color: #dfc285;">📸 Elegir Foto Principal de la Galería:</label>
@@ -130,9 +130,15 @@
                         <div id="statusFotoPrin" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
                     </div>
                     <div class="form-row" style="margin-bottom: 0;">
-                        <label style="color: #dfc285;">📸 Elegir hasta 4 Fotos de Miniaturas:</label>
+                        <label style="color: #dfc285;">📸 Elegir Fotos de Galería (¡Sin límite!):</label>
                         <input type="file" id="fileFotosGaleria" accept="image/*" multiple onchange="convertirGaleriaLocal(this)">
                         <div id="statusGaleria" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
+                    </div>
+                    <div class="form-row" style="margin-bottom: 0; grid-column: 1 / -1; margin-top: 10px;">
+                        <label style="color: #dfc285;">🎥 Video de Presentación (Opcional - MP4):</label>
+                        <input type="file" id="fileVideoPresentacion" accept="video/mp4,video/*" onchange="convertirVideoLocal(this)">
+                        <input type="hidden" id="urlVideoPresentacion">
+                        <div id="statusVideo" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
                     </div>
                 </div>
 
@@ -267,7 +273,7 @@
     <!-- MODAL DE EDICIÓN -->
     <div id="modalEditar">
         <div class="modal-content">
-            <h3>Editar Perfil, Fotos y Traducciones</h3>
+            <h3>Editar Perfil, Fotos, Video y Traducciones</h3>
             <input type="hidden" id="editDocId">
             
             <div class="form-grid">
@@ -299,9 +305,15 @@
                     <div id="statusEditFotoPrin" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
                 </div>
                 <div class="form-row" style="margin-bottom: 0;">
-                    <label style="color: #dfc285;">📸 Actualizar Galería de Fotos:</label>
+                    <label style="color: #dfc285;">📸 Actualizar Galería de Fotos (¡Sin límite!):</label>
                     <input type="file" id="editFileGaleria" accept="image/*" multiple onchange="convertirGaleriaEdicion(this)">
                     <div id="statusEditGaleria" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
+                </div>
+                <div class="form-row" style="margin-bottom: 0; grid-column: 1 / -1; margin-top: 10px;">
+                    <label style="color: #dfc285;">🎥 Actualizar Video de Presentación (MP4):</label>
+                    <input type="file" id="editFileVideo" accept="video/mp4,video/*" onchange="convertirVideoEdicion(this)">
+                    <input type="text" id="editVideoPresentacion" placeholder="URL o código de video" style="margin-top: 6px; font-size: 11px;">
+                    <div id="statusEditVideo" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
                 </div>
             </div>
 
@@ -400,6 +412,8 @@
 
         let fotosGaleriaSubidas = [];
         let fotosGaleriaEdicion = [];
+        let videoPresentacionSubido = "";
+        let videoPresentacionEdicion = "";
 
         function convertirFotoLocal(input, targetId) {
             const file = input.files[0];
@@ -410,7 +424,7 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 document.getElementById(targetId).value = e.target.result;
-                status.textContent = "✅ ¡Foto lista para publicar!";
+                status.textContent = "✅ ¡Foto lista!";
             };
             reader.readAsDataURL(file);
         }
@@ -451,6 +465,36 @@
                 };
                 reader.readAsDataURL(file);
             });
+        }
+
+        function convertirVideoLocal(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const status = document.getElementById('statusVideo');
+            status.textContent = "⏳ Procesando video (puede demorar unos segundos)...";
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                videoPresentacionSubido = e.target.result;
+                document.getElementById('urlVideoPresentacion').value = e.target.result;
+                status.textContent = "✅ ¡Video listo para publicar!";
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function convertirVideoEdicion(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const status = document.getElementById('statusEditVideo');
+            status.textContent = "⏳ Procesando video...";
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                videoPresentacionEdicion = e.target.result;
+                document.getElementById('editVideoPresentacion').value = e.target.result;
+                status.textContent = "✅ ¡Video listo!";
+            };
+            reader.readAsDataURL(file);
         }
 
         function cambiarMetodo(metodo) {
@@ -527,6 +571,7 @@
             const whatsapp = document.getElementById('inputWhatsapp').value.trim();
             const fotoPrincipal = document.getElementById('urlFotoPrincipal').value.trim() || 'img/monograma.png';
             const fotosGaleria = fotosGaleriaSubidas.length > 0 ? fotosGaleriaSubidas : [fotoPrincipal];
+            const videoPresentacion = document.getElementById('urlVideoPresentacion').value.trim();
 
             let traducciones = { es: {}, en: {}, pt: {}, fr: {} };
             ['es', 'en', 'pt', 'fr'].forEach(l => {
@@ -559,6 +604,7 @@
                 whatsappLink: `https://wa.me/${whatsapp}?text=Hola%20${encodeURIComponent(nombre)},%20vi%20tu%20perfil%20en%20Masajistas%20Privé`,
                 fotoPrincipal: fotoPrincipal,
                 fotosGaleria: fotosGaleria,
+                videoPresentacion: videoPresentacion,
                 zona: traducciones.es.valorZona,
                 modalidad: traducciones.es.valorModalidad,
                 descripcion: traducciones.es.descPerfil1,
@@ -712,12 +758,16 @@
                     document.getElementById('editCategoria').value = m.categoria || 'terapeuticas';
                     document.getElementById('editWhatsappLink').value = m.whatsappLink || '';
                     document.getElementById('editFotoPrincipal').value = m.fotoPrincipal || '';
+                    document.getElementById('editVideoPresentacion').value = m.videoPresentacion || '';
                     document.getElementById('tradStatus').textContent = '';
                     document.getElementById('statusEditFotoPrin').textContent = '';
                     document.getElementById('statusEditGaleria').textContent = '';
+                    document.getElementById('statusEditVideo').textContent = '';
                     document.getElementById('editFileFotoPrin').value = '';
                     document.getElementById('editFileGaleria').value = '';
+                    document.getElementById('editFileVideo').value = '';
                     fotosGaleriaEdicion = [];
+                    videoPresentacionEdicion = "";
 
                     const trad = m.traducciones || {};
                     ['es', 'en', 'pt', 'fr'].forEach(l => {
@@ -790,6 +840,11 @@
                     mData.fotoPrincipal = nuevaFotoPrin;
                 }
 
+                const nuevoVideo = document.getElementById('editVideoPresentacion').value.trim();
+                if (nuevoVideo) {
+                    mData.videoPresentacion = nuevoVideo;
+                }
+
                 if (fotosGaleriaEdicion.length > 0) {
                     mData.fotosGaleria = fotosGaleriaEdicion;
                 }
@@ -802,6 +857,7 @@
                     whatsappLink: document.getElementById('editWhatsappLink').value.trim(),
                     fotoPrincipal: mData.fotoPrincipal,
                     fotosGaleria: mData.fotosGaleria,
+                    videoPresentacion: mData.videoPresentacion || "",
                     descripcion: mData.traducciones.es.descPerfil1,
                     traducciones: mData.traducciones,
                     seccionComentariosHTML: '<div id="seccion-comentarios"></div><script src="comentarios.js"><\/script>',
@@ -809,7 +865,7 @@
                 };
 
                 db.collection("modelos_prive").doc(docId).update(datosActualizados).then(() => {
-                    alert("¡Perfil y fotos actualizadas con éxito!");
+                    alert("¡Perfil, fotos y video actualizados con éxito!");
                     cerrarModalEditar();
                 });
             });
@@ -819,10 +875,13 @@
             document.getElementById('inputNombre').value = '';
             document.getElementById('inputSlug').value = '';
             document.getElementById('inputWhatsapp').value = '';
+            document.getElementById('urlVideoPresentacion').value = '';
             document.getElementById('statusAdmin').textContent = '';
             document.getElementById('statusFotoPrin').textContent = '';
             document.getElementById('statusGaleria').textContent = '';
+            document.getElementById('statusVideo').textContent = '';
             fotosGaleriaSubidas = [];
+            videoPresentacionSubido = "";
         }
 
         function toggleEstado(docId, estadoActual) {
