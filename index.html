@@ -278,7 +278,7 @@
             } catch (e) {}
         }
 
-        // Carga centralizada y limpia desde Firebase
+        // Cargar perfiles y gestionar categorías y favoritos con precisión absoluta
         function cargarPerfilesDesdeFirebase() {
             db.collection("modelos_prive").onSnapshot((snapshot) => {
                 const gridTerapeuticas = document.getElementById('grid-terapeuticas');
@@ -344,6 +344,7 @@
                         </a>
                     `;
 
+                    // Asignación estricta y limpia a su respectiva categoría
                     if (m.categoria === 'terapeuticas') {
                         htmlTerapeuticas += cardHTML;
                     } else if (m.categoria === 'sensuales') {
@@ -354,6 +355,7 @@
                         htmlFantasias += cardHTML;
                     }
 
+                    // Si está en favoritos, se añade de manera independiente
                     if (favoritosIds.includes(docId)) {
                         htmlFavoritos += cardHTML;
                     }
@@ -368,7 +370,7 @@
                     }
                 });
 
-                // Añadir el espacio publicitario único exactamente al final de cada categoría con perfiles
+                // Añadir el bloque publicitario únicamente si hay perfiles en la categoría
                 if (htmlTerapeuticas) htmlTerapeuticas += adCardHTML;
                 if (htmlSensuales) htmlSensuales += adCardHTML;
                 if (htmlMasculinos) htmlMasculinos += adCardHTML;
@@ -491,7 +493,7 @@
                 btnCerrar: "Fechar",
                 siguenos: "Siga-nos",
                 footerLegal: "Este é um site exclusivo para adultos (+18). Os anunciantes publicados são independentes e não possuem vínculo empregatício, societário ou de dependência com este portal.",
-                footerMarcas: "Todo o conteúdo, marcas e logotipos pertencem aos seus respectivos donos.",
+                footerMarcas: "Todo o conteúdo, marcas e logotipos pertencem aos respectivos donos.",
                 visitasTotales: "Visitas totais ao portal",
                 footerCopy: "© 2026 Masajistas Privé. Todos os direitos reservados."
             },
@@ -667,7 +669,7 @@
             });
         }
 
-        // Lógica de filtrado de pestañas
+        // Lógica rigurosa y limpia de filtrado por pestañas
         document.addEventListener('click', (e) => {
             const pill = e.target.closest('.pill-btn');
             if (pill) {
