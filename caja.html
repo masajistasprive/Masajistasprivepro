@@ -221,7 +221,7 @@
             display: none;
         }
 
-        /* Listado de Anunciantes */
+        /* Listado */
         .transactions-section {
             display: flex;
             justify-content: space-between;
@@ -360,6 +360,14 @@
             <form id="cajaForm">
                 <div class="form-grid">
                     <div class="form-group">
+                        <label for="vencimiento">Fecha de Vencimiento</label>
+                        <input type="date" id="vencimiento" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="monto">Monto Pagado ($)</label>
+                        <input type="number" id="monto" placeholder="Ej: 50000" required>
+                    </div>
+                    <div class="form-group">
                         <label for="nombre">Nombre de la Modelo</label>
                         <input type="text" id="nombre" placeholder="Ej: Jennyfer" required>
                     </div>
@@ -376,14 +384,6 @@
                             <option value="MASCULINOS">Masculinos ($50k)</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label for="monto">Monto Pagado ($)</label>
-                        <input type="number" id="monto" placeholder="Ej: 50000" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="vencimiento">Fecha de Vencimiento</label>
-                        <input type="date" id="vencimiento" required>
-                    </div>
                 </div>
                 <button type="submit" class="btn-submit" style="margin-top: 15px;">Guardar Registro</button>
             </form>
@@ -398,12 +398,12 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Nombre</th>
-                        <th>Zona</th>
-                        <th>Categoría</th>
                         <th>Vencimiento</th>
                         <th>Estado</th>
                         <th>Monto</th>
+                        <th>Nombre</th>
+                        <th>Zona</th>
+                        <th>Categoría</th>
                         <th>Acción</th>
                     </tr>
                 </thead>
@@ -440,26 +440,26 @@
             }
         });
 
-        // Datos originales basados en tu planilla de Excel
+        // Datos oficiales con la diferenciación para Luly y Mora Sensual y el orden de columnas pedido
         const datosInicialesExcel = [
-            { nombre: "JENNYFER", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", vencimiento: "2026-10-01", monto: 0 },
-            { nombre: "DEBY", zona: "CABALLITO", categoria: "SENSUALES", vencimiento: "2026-10-01", monto: 0 },
-            { nombre: "PRADA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", vencimiento: "2026-11-01", monto: 50000 },
-            { nombre: "PAMELA", zona: "TRIBUNALES", categoria: "SENSUALES", vencimiento: "2026-10-15", monto: 0 },
-            { nombre: "LUPITA", zona: "TRIBUNALES", categoria: "SENSUALES", vencimiento: "2026-10-01", monto: 50000 },
-            { nombre: "SOL", zona: "TRIBUNALES", categoria: "SENSUALES", vencimiento: "2026-10-02", monto: 0 },
-            { nombre: "MATIAS", zona: "RECOLETA", categoria: "MASCULINOS", vencimiento: "2026-10-01", monto: 0 },
-            { nombre: "DANIELA", zona: "MICROCENTRO", categoria: "TERAPEUTICAS", vencimiento: "2026-10-02", monto: 0 },
-            { nombre: "ZARIA", zona: "CABALLITO", categoria: "TERAPEUTICAS", vencimiento: "2026-10-02", monto: 0 },
-            { nombre: "DONATELLA", zona: "CABA", categoria: "SENSUALES", vencimiento: "2026-10-03", monto: 0 },
-            { nombre: "MARIELA", zona: "CONGRESO", categoria: "TERAPEUTICAS", vencimiento: "2026-10-04", monto: 0 },
-            { nombre: "MIA", zona: "CONGRESO", categoria: "SENSUALES", vencimiento: "2026-10-04", monto: 0 },
-            { nombre: "CELESTE", zona: "TRIBUNALES", categoria: "SENSUALES", vencimiento: "2026-10-08", monto: 0 },
-            { nombre: "LULY", zona: "CABA", categoria: "SENSUALES", vencimiento: "2026-10-22", monto: 0 },
-            { nombre: "LULY", zona: "CABA", categoria: "TERAPEUTICAS", vencimiento: "2026-10-22", monto: 0 },
-            { nombre: "MORA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", vencimiento: "2026-10-23", monto: 50000 },
-            { nombre: "MORA", zona: "TRIBUNALES", categoria: "SENSUALES", vencimiento: "2026-10-23", monto: 50000 },
-            { nombre: "RENATA", zona: "PTO MADERO", categoria: "SENSUALES", vencimiento: "2026-10-26", monto: 50000 }
+            { vencimiento: "2026-10-01", monto: 0, nombre: "JENNYFER", zona: "TRIBUNALES", categoria: "TERAPEUTICAS" },
+            { vencimiento: "2026-10-01", monto: 0, nombre: "DEBY", zona: "CABALLITO", categoria: "SENSUALES" },
+            { vencimiento: "2026-11-01", monto: 50000, nombre: "PRADA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS" },
+            { vencimiento: "2026-10-15", monto: 0, nombre: "PAMELA", zona: "TRIBUNALES", categoria: "SENSUALES" },
+            { vencimiento: "2026-10-01", monto: 50000, nombre: "LUPITA", zona: "TRIBUNALES", categoria: "SENSUALES" },
+            { vencimiento: "2026-10-02", monto: 0, nombre: "SOL", zona: "TRIBUNALES", categoria: "SENSUALES" },
+            { vencimiento: "2026-10-01", monto: 0, nombre: "MATIAS", zona: "RECOLETA", categoria: "MASCULINOS" },
+            { vencimiento: "2026-10-02", monto: 0, nombre: "DANIELA", zona: "MICROCENTRO", categoria: "TERAPEUTICAS" },
+            { vencimiento: "2026-10-02", monto: 0, nombre: "ZARIA", zona: "CABALLITO", categoria: "TERAPEUTICAS" },
+            { vencimiento: "2026-10-03", monto: 0, nombre: "DONATELLA", zona: "CABA", categoria: "SENSUALES" },
+            { vencimiento: "2026-10-04", monto: 0, nombre: "MARIELA", zona: "CONGRESO", categoria: "TERAPEUTICAS" },
+            { vencimiento: "2026-10-04", monto: 0, nombre: "MIA", zona: "CONGRESO", categoria: "SENSUALES" },
+            { vencimiento: "2026-10-08", monto: 0, nombre: "CELESTE", zona: "TRIBUNALES", categoria: "SENSUALES" },
+            { vencimiento: "2026-10-22", monto: 0, nombre: "LULY S", zona: "CABA", categoria: "SENSUALES" },
+            { vencimiento: "2026-10-22", monto: 0, nombre: "LULY", zona: "CABA", categoria: "TERAPEUTICAS" },
+            { vencimiento: "2026-10-23", monto: 50000, nombre: "MORA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS" },
+            { vencimiento: "2026-10-23", monto: 50000, nombre: "MORA S", zona: "TRIBUNALES", categoria: "SENSUALES" },
+            { vencimiento: "2026-10-26", monto: 50000, nombre: "RENATA", zona: "PTO MADERO", categoria: "SENSUALES" }
         ];
 
         let registros = JSON.parse(localStorage.getItem('prive_control_modelos'));
@@ -506,12 +506,12 @@
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td><strong>${reg.nombre}</strong></td>
-                    <td>${reg.zona}</td>
-                    <td><small style="color:var(--gold);">${reg.categoria}</small></td>
                     <td>${reg.vencimiento.split('-').reverse().join('/')}</td>
                     <td>${badgeHtml}</td>
                     <td class="amount-col">+$${Number(reg.monto || 0).toLocaleString('es-AR')}</td>
+                    <td><strong>${reg.nombre}</strong></td>
+                    <td>${reg.zona}</td>
+                    <td><small style="color:var(--gold);">${reg.categoria}</small></td>
                     <td><button class="btn-delete" onclick="eliminarRegistro(${index})">Eliminar</button></td>
                 `;
                 tablaMovimientos.appendChild(tr);
@@ -524,11 +524,11 @@
             e.preventDefault();
             
             const nuevoReg = {
+                vencimiento: document.getElementById('vencimiento').value,
+                monto: parseFloat(document.getElementById('monto').value) || 0,
                 nombre: document.getElementById('nombre').value.trim().toUpperCase(),
                 zona: document.getElementById('zona').value.trim().toUpperCase(),
-                categoria: document.getElementById('categoria').value,
-                monto: parseFloat(document.getElementById('monto').value) || 0,
-                vencimiento: document.getElementById('vencimiento').value
+                categoria: document.getElementById('categoria').value
             };
 
             registros.unshift(nuevoReg);
