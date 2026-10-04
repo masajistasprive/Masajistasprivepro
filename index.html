@@ -119,6 +119,7 @@
         <button class="pill-btn" data-filter="sensuales" data-i18n="filtroSensuales">Sensuales</button>
         <button class="pill-btn" data-filter="masculinos" data-i18n="filtroMasculinos">Masculinos</button>
         <button class="pill-btn" data-filter="fantasias" data-i18n="filtroFantasias">Fantasías</button>
+        <button class="pill-btn" data-filter="favoritos" style="border-color: #dfc285; color: #dfc285;">⭐ Favoritas</button>
     </nav>
 
     <!-- Divisor Art Déco -->
@@ -148,6 +149,12 @@
         <h2 class="section-heading" data-section="fantasias" style="margin-top: 2rem;" data-i18n="seccionFantasias">Fantasías</h2>
         <div class="grid-perfiles" id="grid-fantasias">
             <!-- Se llena dinámicamente -->
+        </div>
+
+        <!-- Sección Favoritas (Oculta por defecto, se muestra al filtrar) -->
+        <h2 class="section-heading" data-section="favoritos" style="margin-top: 2rem; display: none;">Mis Favoritas</h2>
+        <div class="grid-perfiles" id="grid-favoritos" style="display: none;">
+            <!-- Se llena dinámicamente con los favoritos del usuario -->
         </div>
 
     </main>
@@ -274,6 +281,7 @@
                 const gridSensuales = document.getElementById('grid-sensuales');
                 const gridMasculinos = document.getElementById('grid-masculinos');
                 const gridFantasias = document.getElementById('grid-fantasias');
+                const gridFavoritos = document.getElementById('grid-favoritos');
                 const storiesContainer = document.getElementById('stories-destacadas-container');
 
                 if(!gridTerapeuticas) return;
@@ -282,13 +290,18 @@
                 gridSensuales.innerHTML = '';
                 gridMasculinos.innerHTML = '';
                 gridFantasias.innerHTML = '';
+                gridFavoritos.innerHTML = '';
                 storiesContainer.innerHTML = '';
 
                 let htmlTerapeuticas = '';
                 let htmlSensuales = '';
                 let htmlMasculinos = '';
                 let htmlFantasias = '';
+                let htmlFavoritos = '';
                 let htmlStories = '';
+
+                // Obtener favoritos guardados en el navegador
+                const favoritosIds = JSON.parse(localStorage.getItem('priveFavoritos') || '[]');
 
                 snapshot.forEach((docSnap) => {
                     const m = docSnap.data();
@@ -322,6 +335,11 @@
                     else if (m.categoria === 'masculinos') htmlMasculinos += cardHTML;
                     else if (m.categoria === 'fantasias') htmlFantasias += cardHTML;
 
+                    // Si está en la lista de favoritos guardados, agregarlo a la sección de favoritos
+                    if (favoritosIds.includes(docId)) {
+                        htmlFavoritos += cardHTML;
+                    }
+
                     if (m.destacada === true) {
                         htmlStories += `
                             <a href="perfil.html?id=${docId}" class="story-item">
@@ -332,6 +350,10 @@
                     }
                 });
 
+                if (htmlFavoritos === '') {
+                    htmlFavoritos = `<p style="grid-column: 1 / -1; text-align: center; color: #888; font-size: 13px; font-style: italic; padding: 20px 0;">No tenés perfiles guardados en favoritos todavía.</p>`;
+                }
+
                 const adTerapeuticas = `<a href="https://wa.me/5491131774848?text=Hola,%20quiero%20publicar%20mi%20anuncio%20en%20Masajistas%20Prive" target="_blank" class="card-ad-link" data-categoria="terapeuticas"><article class="card-ad"><div class="ad-content"><h3 data-i18n="espacioDisponible">Espacio Disponible</h3><p data-i18n="publicaPerfil">Publicá tu perfil aquí</p><span class="btn-ad" data-i18n="contactanos">Contáctanos</span></div></article></a>`;
                 const adSensuales = `<a href="https://wa.me/5491131774848?text=Hola,%20quiero%20consultar%20sobre%20la%20seccion%20de%20Sensuales" target="_blank" class="card-ad-link" data-categoria="sensuales"><article class="card-ad"><div class="ad-content"><h3 data-i18n="espacioDisponible">Espacio Disponible</h3><p data-i18n="publicaPerfil">Publicá tu perfil aquí</p><span class="btn-ad" data-i18n="contactanos">Contáctanos</span></div></article></a>`;
                 const adMasculinos = `<a href="https://wa.me/5491131774848?text=Hola,%20quiero%20publicar%20mi%20anuncio%20en%20Masajistas%20Prive" target="_blank" class="card-ad-link" data-categoria="masculinos"><article class="card-ad"><div class="ad-content"><h3 data-i18n="espacioDisponible">Espacio Disponible</h3><p data-i18n="publicaPerfil">Publicá tu perfil aquí</p><span class="btn-ad" data-i18n="contactanos">Contáctanos</span></div></article></a>`;
@@ -341,6 +363,7 @@
                 gridSensuales.innerHTML = htmlSensuales + adSensuales;
                 gridMasculinos.innerHTML = htmlMasculinos + adMasculinos;
                 gridFantasias.innerHTML = htmlFantasias + adFantasias;
+                gridFavoritos.innerHTML = htmlFavoritos;
                 storiesContainer.innerHTML = htmlStories;
 
                 // Ocultar la transición al terminar de renderizar
@@ -633,19 +656,48 @@
                 document.querySelectorAll('.pill-btn').forEach(p => p.classList.remove('active'));
                 pill.classList.add('active');
 
+                // Lógica de filtrado de secciones y tarjetas
+                const secciones = ['terapeuticas', 'sensuales', 'masculinos', 'fantasias', 'favoritos'];
+
+                secciones.forEach(sec => {
+                    const heading = document.querySelector(`.section-heading[data-section="${sec}"]`);
+                    const grid = document.getElementById(`grid-${sec}`);
+
+                    if (!heading || !grid) return;
+
+                    if (filter === 'todas') {
+                        if (sec === 'favoritos') {
+                            heading.style.display = 'none';
+                            grid.style.display = 'none';
+                        } else {
+                            heading.style.display = 'block';
+                            grid.style.display = 'grid';
+                        }
+                    } else if (filter === 'favoritos') {
+                        if (sec === 'favoritos') {
+                            heading.style.display = 'block';
+                            grid.style.display = 'grid';
+                        } else {
+                            heading.style.display = 'none';
+                            grid.style.display = 'none';
+                        }
+                    } else {
+                        if (sec === filter) {
+                            heading.style.display = 'block';
+                            grid.style.display = 'grid';
+                        } else {
+                            heading.style.display = 'none';
+                            grid.style.display = 'none';
+                        }
+                    }
+                });
+
+                // Filtrar tarjetas individuales por categoría si está en "todas"
                 document.querySelectorAll('.card-link').forEach(card => {
                     if (filter === 'todas' || card.getAttribute('data-categoria') === filter) {
                         card.style.display = 'block';
                     } else {
                         card.style.display = 'none';
-                    }
-                });
-
-                document.querySelectorAll('.section-heading').forEach(heading => {
-                    if (filter === 'todas' || heading.getAttribute('data-section') === filter) {
-                        heading.style.display = 'block';
-                    } else {
-                        heading.style.display = 'none';
                     }
                 });
             }
