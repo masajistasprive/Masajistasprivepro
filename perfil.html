@@ -72,6 +72,64 @@
             flex-shrink: 0;
         }
 
+        /* Contenedor de Botones al Pie de la Descripción */
+        .perfil-acciones-inferior {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 25px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .btn-accion-prive {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .btn-accion-wpp {
+            background: linear-gradient(135deg, #25d366, #128c7e);
+            color: #ffffff;
+            border: none;
+        }
+        .btn-accion-wpp:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        .btn-accion-secundarios {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .btn-accion-fav {
+            background: rgba(223, 194, 133, 0.1);
+            border: 1px solid #dfc285;
+            color: #dfc285;
+        }
+        .btn-accion-fav.activo {
+            background: #dfc285;
+            color: #0d0d0d;
+        }
+        .btn-accion-fav:hover {
+            background: rgba(223, 194, 133, 0.25);
+        }
+        .btn-accion-compartir {
+            background: #1a1a1a;
+            border: 1px solid rgba(223, 194, 133, 0.4);
+            color: #fff;
+        }
+        .btn-accion-compartir:hover {
+            background: #252525;
+            border-color: #dfc285;
+        }
+
         img {
             -webkit-user-select: none !important;
             user-select: none !important;
@@ -199,21 +257,41 @@
             es: { 
                 btnVolver: "← Volver", badgeVerificado: "✓ Privé Verificado", labelZona: "Zona:", labelModalidad: "Modalidad:", tituloDesc: "Descripción", labelTecnicas: "Técnicas de masaje:", labelHorarios: "Días y horarios:", labelEquipamiento: "Equipamiento y servicios:", labelPagos: "Medios de pago:", labelTurnos: "Modalidad de turnos:", tituloVideo: "Video de Presentación",
                 btnWppFlotante: "Contactame",
+                btnWppPie: "💬 Enviar WhatsApp",
+                btnFav: "❤️ Favorito",
+                btnFavQuitado: "🤍 Quitar de Favoritos",
+                btnCompartir: "📤 Compartir",
+                copiadoAlPortapapeles: "¡Enlace copiado al portapapeles!",
                 tituloSeccionComentarios: "Experiencias y Comentarios", labelEstrellas: "Calificación:", placeholderNombre: "Tu nombre o apodo", placeholderTexto: "Escribe tu experiencia...", btnPublicar: "Publicar Experiencia", cargandoComentarios: "Cargando experiencias...", sinExperiencias: "No hay experiencias aún. ¡Sé el primero en dejar una!", meGusta: "Me gusta", destacado: "★ Destacado", eliminar: "🗑️ Eliminar", alertaIncompleto: "Por favor completá tu nombre, elegí una calificación y escribí tu experiencia."
             },
             en: { 
                 btnVolver: "← Back", badgeVerificado: "✓ Privé Verified", labelZona: "Area:", labelModalidad: "Modality:", tituloDesc: "Description", labelTecnicas: "Massage techniques:", labelHorarios: "Days and hours:", labelEquipamiento: "Equipment and services:", labelPagos: "Payment methods:", labelTurnos: "Appointment modality:", tituloVideo: "Presentation Video",
                 btnWppFlotante: "Contact Me",
+                btnWppPie: "💬 Send WhatsApp",
+                btnFav: "❤️ Favorite",
+                btnFavQuitado: "🤍 Remove Favorite",
+                btnCompartir: "📤 Share",
+                copiadoAlPortapapeles: "Link copied to clipboard!",
                 tituloSeccionComentarios: "Experiences and Reviews", labelEstrellas: "Rating:", placeholderNombre: "Your name or nickname", placeholderTexto: "Write about your experience...", btnPublicar: "Publish Experience", cargandoComentarios: "Loading experiences...", sinExperiencias: "No experiences yet. Be the first to leave one!", meGusta: "Like", destacado: "★ Featured", eliminar: "🗑 Delete", alertaIncompleto: "Please fill in your name, select a rating, and write your experience."
             },
             pt: { 
                 btnVolver: "← Voltar", badgeVerificado: "✓ Privé Verificado", labelZona: "Zona:", labelModalidade: "Modalidade:", tituloDesc: "Descrição", labelTecnicas: "Técnicas de massagem:", labelHorarios: "Dias e horários:", labelEquipamiento: "Equipamentos e serviços:", labelPagos: "Meios de pagamento:", labelTurnos: "Modalidade de agendamento:", tituloVideo: "Vídeo de Apresentação",
                 btnWppFlotante: "Contate-me",
+                btnWppPie: "💬 Enviar WhatsApp",
+                btnFav: "❤️ Favorito",
+                btnFavQuitado: "🤍 Remover dos Favoritos",
+                btnCompartir: "📤 Compartilhar",
+                copiadoAlPortapapeles: "Link copiado para a área de transferência!",
                 tituloSeccionComentarios: "Experiências e Comentários", labelEstrellas: "Avaliação:", placeholderNombre: "Seu nome ou apelido", placeholderTexto: "Escreva sua experiência...", btnPublicar: "Publicar Experiência", cargandoComentarios: "Carregando experiências...", sinExperiencias: "Nenhuma experiência ainda. Seja o primeiro a deixar uma!", meGusta: "Curtir", destacado: "★ Destaque", eliminar: "🗑 Excluir", alertaIncompleto: "Por favor, preencha seu nome, selecione uma avaliação e escreva sua experiência."
             },
             fr: { 
                 btnVolver: "← Retour", badgeVerificado: "✓ Privé Vérifié", labelZona: "Zone :", labelModalidad: "Modalité :", tituloDesc: "Description", labelTecnicas: "Techniques de massage :", labelHorarios: "Jours et horaires :", labelEquipamiento: "Équipements et services :", labelPagos: "Modes de paiement :", labelTurnos: "Modalité de réservation :", tituloVideo: "Vidéo de Présentation",
                 btnWppFlotante: "Contactez-moi",
+                btnWppPie: "💬 Envoyer WhatsApp",
+                btnFav: "❤️ Favori",
+                btnFavQuitado: "🤍 Retirer des Favoris",
+                btnCompartir: "📤 Partager",
+                copiadoAlPortapapeles: "Lien copié dans le presse-papier !",
                 tituloSeccionComentarios: "Expériences et Avis", labelEstrellas: "Évaluation :", placeholderNombre: "Votre nom ou pseudo", placeholderTexto: "Écrivez votre expérience...", btnPublicar: "Publier l'expérience", cargandoComentarios: "Chargement des avis...", sinExperiencias: "Aucun avis pour le moment. Soyez le premier à en laisser un !", meGusta: "J'aime", destacado: "★ En vedette", eliminar: "🗑 Supprimer", alertaIncompleto: "Veuillez remplir votre nom, sélectionner une note et écrire votre avis."
             }
         };
@@ -270,6 +348,49 @@
             });
         }
 
+        // Lógica de Favoritos en LocalStorage
+        window.toggleFavoritoPerfil = function(idModelo) {
+            let favoritos = JSON.parse(localStorage.getItem('priveFavoritos') || '[]');
+            const index = favoritos.indexOf(idModelo);
+            const btnFav = document.getElementById('btnFavElement');
+            const lang = idiomaPerfil;
+            const labels = etiquetasIdiomas[lang] || etiquetasIdiomas['es'];
+
+            if (index > -1) {
+                favoritos.splice(index, 1);
+                if(btnFav) {
+                    btnFav.classList.remove('activo');
+                    btnFav.innerHTML = labels.btnFav;
+                }
+            } else {
+                favoritos.push(idModelo);
+                if(btnFav) {
+                    btnFav.classList.add('activo');
+                    btnFav.innerHTML = "❤️ Favorito Guardado";
+                }
+            }
+            localStorage.setItem('priveFavoritos', JSON.stringify(favoritos));
+        };
+
+        // Lógica de Compartir Perfil
+        window.compartirPerfilActual = function(nombreModelo) {
+            const lang = idiomaPerfil;
+            const labels = etiquetasIdiomas[lang] || etiquetasIdiomas['es'];
+            const urlActual = window.location.href;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: `${nombreModelo} | Masajistas Privé`,
+                    text: `Mirá el perfil exclusivo de ${nombreModel} en Masajistas Privé:`,
+                    url: urlActual,
+                }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(urlActual).then(() => {
+                    alert(labels.copiadoAlPortapapeles);
+                });
+            }
+        };
+
         function renderizarPerfil(m) {
             const container = document.getElementById('perfil-content-box');
             const lang = idiomaPerfil;
@@ -291,14 +412,15 @@
             const turnosTexto = langData.valorTurnos || '';
             const ocultarWpp = m.estado === 'pausado' ? 'display: none;' : '';
 
-            // Dibujar el botón flotante de WhatsApp con texto y el ícono oficial
+            // Enlaces y datos de WhatsApp
+            const urlPerfilActual = window.location.href;
+            const textoMensaje = `Hola ${m.nombre}, vi tu perfil en Masajistas Privé: ${urlPerfilActual}`;
+            const telefonoLimpio = m.whatsapp || '';
+            const wppLinkFinal = `https://wa.me/${telefonoLimpio}?text=${encodeURIComponent(textoMensaje)}`;
+
+            // Botón flotante
             const contenedorWpp = document.getElementById('contenedorWppFlotante');
             if (m.estado !== 'pausado') {
-                const urlPerfilActual = window.location.href;
-                const textoMensaje = `Hola ${m.nombre}, vi tu perfil en Masajistas Privé: ${urlPerfilActual}`;
-                const telefonoLimpio = m.whatsapp || '';
-                const wppLinkFinal = `https://wa.me/${telefonoLimpio}?text=${encodeURIComponent(textoMensaje)}`;
-
                 contenedorWpp.innerHTML = `
                     <a href="${wppLinkFinal}" target="_blank" rel="noopener noreferrer" class="btn-whatsapp-flotante" title="Contactar por WhatsApp">
                         <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
@@ -308,6 +430,12 @@
             } else {
                 contenedorWpp.innerHTML = "";
             }
+
+            // Verificar si ya es favorito para pintar el botón
+            const favoritosGuardados = JSON.parse(localStorage.getItem('priveFavoritos') || '[]');
+            const esFavorito = favoritosGuardados.includes(perfilId);
+            const claseFavActivo = esFavorito ? 'activo' : '';
+            const textoFavFinal = esFavorito ? "❤️ Favorito Guardado" : labels.btnFav;
 
             let miniaturasHTML = '';
             if (m.fotosGaleria && m.fotosGaleria.length > 0) {
@@ -367,6 +495,21 @@
                     ${videoHtml}
 
                     ${detallesHtml ? `<div class="perfil-detalles">${detallesHtml}</div>` : ''}
+
+                    <!-- BOTONES DE ACCIÓN AL PIE DE LA DESCRIPCIÓN -->
+                    <div class="perfil-acciones-inferior" style="${ocultarWpp}">
+                        <a href="${wppLinkFinal}" target="_blank" rel="noopener noreferrer" class="btn-accion-prive btn-accion-wpp">
+                            ${labels.btnWppPie}
+                        </a>
+                        <div class="btn-accion-secundarios">
+                            <button onclick="window.toggleFavoritoPerfil('${perfilId}')" id="btnFavElement" class="btn-accion-prive btn-accion-fav ${claseFavActivo}">
+                                ${textoFavFinal}
+                            </button>
+                            <button onclick="window.compartirPerfilActual('${m.nombre}')" class="btn-accion-prive btn-accion-compartir">
+                                ${labels.btnCompartir}
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- SECCIÓN DE COMENTARIOS INTEGRADA AL PIE -->
