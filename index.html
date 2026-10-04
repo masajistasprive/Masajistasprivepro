@@ -215,7 +215,7 @@
             </div>
 
             <div class="footer-legal">
-                <p data-i18n="footerLegal">Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.</p>
+                <p data-i18n="footerLegal">Este es un sitio exclusivo pour adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.</p>
                 <p style="margin-top: 6px;" data-i18n="footerMarcas">Todo el contenido, marcas y logotipos pertenecen a sus respectivos dueños.</p>
                 <div id="contador-visitas-global" style="margin-top: 12px; color: #dfc285; font-size: 13px; font-weight: 500;">
                     👁 <span data-i18n="visitasTotales">Visitas totales al portal</span>: <span id="visitas-total-num">Cargando...</span>
@@ -274,7 +274,6 @@
             } catch (e) {}
         }
 
-        // Carga rigurosa y limpia de perfiles desde Firebase con normalización de categorías
         function cargarPerfilesDesdeFirebase() {
             db.collection("modelos_prive").onSnapshot((snapshot) => {
                 const gridTerapeuticas = document.getElementById('grid-terapeuticas');
@@ -324,7 +323,6 @@
                     const zonaModelo = m.zona || (m.traducciones && m.traducciones.es && m.traducciones.es.valorZona) || 'CABA';
                     const modalidadModelo = m.modalidad || (m.traducciones && m.traducciones.es && m.traducciones.es.valorModalidad) || 'Gabinete propio';
 
-                    // Normalizar la categoría a minúsculas y sin acentos para evitar errores de coincidencia
                     const catRaw = (m.categoria || '').toLowerCase().trim();
                     let catLimpia = 'terapeuticas';
                     if (catRaw.includes('sensual')) catLimpia = 'sensuales';
@@ -371,6 +369,7 @@
                     }
                 });
 
+                // Asegurar que el banner publicitario se agregue en todas las categorías
                 if (htmlTerapeuticas) htmlTerapeuticas += adCardHTML;
                 if (htmlSensuales) htmlSensuales += adCardHTML;
                 if (htmlMasculinos) htmlMasculinos += adCardHTML;
@@ -669,7 +668,6 @@
             });
         }
 
-        // Lógica de filtrado de pestañas robusta y precisa
         document.addEventListener('click', (e) => {
             const pill = e.target.closest('.pill-btn');
             if (pill) {
