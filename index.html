@@ -137,21 +137,11 @@
         <div class="grid-perfiles" id="grid-terapeuticas">
             <!-- Se llena dinámicamente -->
         </div>
-        <div id="ad-terapeuticas" style="margin-top: 15px;">
-            <a href="https://wa.me/5491131774848?text=Hola,%20quiero%20publicar%20mi%20anuncio%20en%20Masajistas%20Prive" target="_blank" class="card-ad-link">
-                <article class="card-ad"><div class="ad-content"><h3 data-i18n="espacioDisponible">Espacio Disponible</h3><p data-i18n="publicaPerfil">Publicá tu perfil aquí</p><span class="btn-ad" data-i18n="contactanos">Contáctanos</span></div></article>
-            </a>
-        </div>
 
         <!-- Sección Sensuales -->
         <h2 class="section-heading" data-section="sensuales" style="margin-top: 2rem;" data-i18n="seccionSensuales">Masajistas Sensuales</h2>
         <div class="grid-perfiles" id="grid-sensuales">
             <!-- Se llena dinámicamente -->
-        </div>
-        <div id="ad-sensuales" style="margin-top: 15px;">
-            <a href="https://wa.me/5491131774848?text=Hola,%20quiero%20consultar%20sobre%20la%20seccion%20de%20Sensuales" target="_blank" class="card-ad-link">
-                <article class="card-ad"><div class="ad-content"><h3 data-i18n="espacioDisponible">Espacio Disponible</h3><p data-i18n="publicaPerfil">Publicá tu perfil aquí</p><span class="btn-ad" data-i18n="contactanos">Contáctanos</span></div></article>
-            </a>
         </div>
 
         <!-- Sección Masculinos -->
@@ -159,21 +149,11 @@
         <div class="grid-perfiles" id="grid-masculinos">
             <!-- Se llena dinámicamente -->
         </div>
-        <div id="ad-masculinos" style="margin-top: 15px;">
-            <a href="https://wa.me/5491131774848?text=Hola,%20quiero%20publicar%20mi%20anuncio%20en%20Masajistas%20Prive" target="_blank" class="card-ad-link">
-                <article class="card-ad"><div class="ad-content"><h3 data-i18n="espacioDisponible">Espacio Disponible</h3><p data-i18n="publicaPerfil">Publicá tu perfil aquí</p><span class="btn-ad" data-i18n="contactanos">Contáctanos</span></div></article>
-            </a>
-        </div>
 
         <!-- Sección Fantasías -->
         <h2 class="section-heading" data-section="fantasias" style="margin-top: 2rem;" data-i18n="seccionFantasias">Fantasías</h2>
         <div class="grid-perfiles" id="grid-fantasias">
             <!-- Se llena dinámicamente -->
-        </div>
-        <div id="ad-fantasias" style="margin-top: 15px;">
-            <a href="https://wa.me/5491131774848?text=Hola,%20quiero%20consultar%20sobre%20la%20seccion%20de%20Fantasias" target="_blank" class="card-ad-link">
-                <article class="card-ad"><div class="ad-content"><h3 data-i18n="espacioDisponible">Espacio Disponible</h3><p data-i18n="publicaPerfil">Publicá tu perfil aquí</p><span class="btn-ad" data-i18n="contactanos">Contáctanos</span></div></article>
-            </a>
         </div>
 
         <!-- Sección Favoritas (Oculta por defecto) -->
@@ -298,7 +278,7 @@
             } catch (e) {}
         }
 
-        // Cargar perfiles y destacadas en tiempo real desde Firebase sin cruces
+        // Carga centralizada y limpia desde Firebase
         function cargarPerfilesDesdeFirebase() {
             db.collection("modelos_prive").onSnapshot((snapshot) => {
                 const gridTerapeuticas = document.getElementById('grid-terapeuticas');
@@ -326,6 +306,18 @@
 
                 const favoritosIds = JSON.parse(localStorage.getItem('priveFavoritos') || '[]');
 
+                const adCardHTML = `
+                    <a href="https://wa.me/5491131774848?text=Hola,%20quiero%20publicar%20mi%20anuncio%20en%20Masajistas%20Prive" target="_blank" class="card-ad-link">
+                        <article class="card-ad">
+                            <div class="ad-content">
+                                <h3 data-i18n="espacioDisponible">Espacio Disponible</h3>
+                                <p data-i18n="publicaPerfil">Publicá tu perfil aquí</p>
+                                <span class="btn-ad" data-i18n="contactanos">Contáctanos</span>
+                            </div>
+                        </article>
+                    </a>
+                `;
+
                 snapshot.forEach((docSnap) => {
                     const m = docSnap.data();
                     const docId = docSnap.id;
@@ -352,7 +344,6 @@
                         </a>
                     `;
 
-                    // Distribución estricta por categoría
                     if (m.categoria === 'terapeuticas') {
                         htmlTerapeuticas += cardHTML;
                     } else if (m.categoria === 'sensuales') {
@@ -363,7 +354,6 @@
                         htmlFantasias += cardHTML;
                     }
 
-                    // Si está guardado en favoritos, se añade de forma independiente a su grilla
                     if (favoritosIds.includes(docId)) {
                         htmlFavoritos += cardHTML;
                     }
@@ -378,6 +368,12 @@
                     }
                 });
 
+                // Añadir el espacio publicitario único exactamente al final de cada categoría con perfiles
+                if (htmlTerapeuticas) htmlTerapeuticas += adCardHTML;
+                if (htmlSensuales) htmlSensuales += adCardHTML;
+                if (htmlMasculinos) htmlMasculinos += adCardHTML;
+                if (htmlFantasias) htmlFantasias += adCardHTML;
+
                 if (htmlFavoritos === '') {
                     htmlFavoritos = `<p style="grid-column: 1 / -1; text-align: center; color: #888; font-size: 13px; font-style: italic; padding: 20px 0;">No tenés perfiles guardados en favoritos todavía.</p>`;
                 }
@@ -388,17 +384,6 @@
                 gridFantasias.innerHTML = htmlFantasias;
                 gridFavoritos.innerHTML = htmlFavoritos;
                 storiesContainer.innerHTML = htmlStories;
-
-                // Control dinámico de los espacios publicitarios al final de cada categoría
-                const adT = document.getElementById('ad-terapeuticas');
-                const adS = document.getElementById('ad-sensuales');
-                const adM = document.getElementById('ad-masculinos');
-                const adF = document.getElementById('ad-fantasias');
-
-                if(adT) adT.style.display = htmlTerapeuticas ? 'block' : 'none';
-                if(adS) adS.style.display = htmlSensuales ? 'block' : 'none';
-                if(adM) adM.style.display = htmlMasculinos ? 'block' : 'none';
-                if(adF) adF.style.display = htmlFantasias ? 'block' : 'none';
 
                 ocultarTransicionPrive();
             });
@@ -682,6 +667,7 @@
             });
         }
 
+        // Lógica de filtrado de pestañas
         document.addEventListener('click', (e) => {
             const pill = e.target.closest('.pill-btn');
             if (pill) {
@@ -694,7 +680,6 @@
                 secciones.forEach(sec => {
                     const heading = document.querySelector(`.section-heading[data-section="${sec}"]`);
                     const grid = document.getElementById(`grid-${sec}`);
-                    const adBox = document.getElementById(`ad-${sec}`);
 
                     if (!heading || !grid) return;
 
@@ -705,7 +690,6 @@
                         } else {
                             heading.style.display = 'block';
                             grid.style.display = 'grid';
-                            if (adBox) adBox.style.display = 'block';
                         }
                     } else if (filter === 'favoritos') {
                         if (sec === 'favoritos') {
@@ -714,26 +698,15 @@
                         } else {
                             heading.style.display = 'none';
                             grid.style.display = 'none';
-                            if (adBox) adBox.style.display = 'none';
                         }
                     } else {
                         if (sec === filter) {
                             heading.style.display = 'block';
                             grid.style.display = 'grid';
-                            if (adBox) adBox.style.display = 'block';
                         } else {
                             heading.style.display = 'none';
                             grid.style.display = 'none';
-                            if (adBox) adBox.style.display = 'none';
                         }
-                    }
-                });
-
-                document.querySelectorAll('.card-link').forEach(card => {
-                    if (filter === 'todas' || card.getAttribute('data-categoria') === filter) {
-                        card.style.display = 'block';
-                    } else {
-                        card.style.display = 'none';
                     }
                 });
             }
