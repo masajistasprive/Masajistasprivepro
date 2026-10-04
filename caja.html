@@ -122,6 +122,48 @@
             font-family: 'Cormorant Garamond', serif;
         }
 
+        /* Acordeón de Historial Anual */
+        .historial-box {
+            background-color: var(--card-bg);
+            border: 1px solid #222;
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+        }
+
+        .historial-toggle {
+            background: none;
+            border: none;
+            color: var(--gold);
+            width: 100%;
+            text-align: left;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .historial-content {
+            display: none;
+            margin-top: 10px;
+            border-top: 1px solid #1f1f1f;
+            padding-top: 10px;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+
+        .mes-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            padding: 5px 0;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
         /* Formulario de Carga */
         .form-card {
             background-color: var(--card-bg);
@@ -231,6 +273,12 @@
             flex-direction: column;
             gap: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            transition: opacity 0.3s;
+        }
+
+        .modelo-card.pagado-card {
+            opacity: 0.65;
+            border-color: #1a2e22;
         }
 
         .modelo-header {
@@ -370,10 +418,21 @@
             <a href="admin.html" class="back-link">&larr; Panel</a>
         </header>
 
-        <!-- Resumen de Ingresos -->
+        <!-- Resumen de Ingresos del Mes -->
         <div class="card-summary">
-            <div class="summary-title">Total Recaudado (Registrado)</div>
+            <div class="summary-title" id="tituloResumenMes">Total Recaudado (Mes Actual)</div>
             <div class="summary-amount" id="totalIngresos">$0</div>
+        </div>
+
+        <!-- Historial Acordeón por Meses -->
+        <div class="historial-box">
+            <button class="historial-toggle" onclick="toggleHistorial()">
+                <span>📊 Ver Desglose Anual (Historial)</span>
+                <span id="flechaHistorial">▼</span>
+            </button>
+            <div class="historial-content" id="historialContent">
+                <!-- Se llena con JS -->
+            </div>
         </div>
 
         <!-- Formulario de Carga -->
@@ -475,6 +534,8 @@
             localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
         }
 
+        let historialPagos = JSON.parse(localStorage.getItem('prive_historial_pagos')) || [];
+
         const selectCat = document.getElementById('categoria');
         const inputMonto = document.getElementById('monto');
         
@@ -488,22 +549,49 @@
         const form = document.getElementById('cajaForm');
         const tarjetasContainer = document.getElementById('tarjetasContainer');
         const totalIngresos = document.getElementById('totalIngresos');
+        const historialContent = document.getElementById('historialContent');
+
+        function registrarMovimientoHistorial(nombre, monto) {
+            if (monto <= 0) return;
+            const hoyStr = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
+            historialPagos.push({ fecha: hoyStr, nombre, monto });
+            localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
+        }
 
         function renderizarTarjetas() {
             tarjetasContainer.innerHTML = '';
-            let sumaTotal = 0;
             const hoy = new Date();
             hoy.setHours(0,0,0,0);
 
+            // Calcular ingresos del mes actual (YYYY-MM)
+            const mesActualStr = hoy.toISOString().slice(0, 7);
+            let sumaMesActual = 0;
+
+            historialPagos.forEach(p => {
+                if (p.fecha && p.fecha.startsWith(mesActualStr)) {
+                    sumaMesActual += Number(p.monto || 0);
+                }
+            });
+            totalIngresos.textContent = `$${sumaMesActual.toLocaleString('es-AR')}`;
+
+            // Renderizar desglose anual por mes en el acordeón
+            renderizarHistorialAnual();
+
             if (registros.length === 0) {
                 tarjetasContainer.innerHTML = `<div class="empty-state">No hay perfiles registrados todavía.</div>`;
-                totalIngresos.textContent = '$0';
                 return;
             }
 
-            registros.forEach((reg, index) => {
-                sumaTotal += Number(reg.monto || 0);
+            let registrosOrdenados = registros.map((reg, originalIndex) => ({ ...reg, originalIndex }));
+            
+            registrosOrdenados.sort((a, b) => {
+                if (a.pagado !== b.pagado) {
+                    return a.pagado ? 1 : -1; // Los pagados al fondo
+                }
+                return new Date(a.vencimiento) - new Date(b.vencimiento); // Próximos vencimientos arriba
+            });
 
+            registrosOrdenados.forEach((reg) => {
                 const fechaVen = new Date(reg.vencimiento + 'T00:00:00');
                 const estaVencidoPorFecha = fechaVen < hoy;
                 const estaAlDia = reg.pagado || !estaVencidoPorFecha;
@@ -513,13 +601,14 @@
                     : `<span class="status-badge status-vencido">⚠️ Vencido</span>`;
 
                 const btnCheckClass = reg.pagado ? 'btn-check pagado' : 'btn-check';
+                const cardClass = reg.pagado ? 'modelo-card pagado-card' : 'modelo-card';
 
                 const card = document.createElement('div');
-                card.className = 'modelo-card';
+                card.className = cardClass;
                 card.innerHTML = `
                     <div class="modelo-header">
                         <div class="modelo-nombre-box">
-                            <button class="${btnCheckClass}" onclick="togglePagado(${index})" title="Marcar como pagado">✓</button>
+                            <button class="${btnCheckClass}" onclick="togglePagado(${reg.originalIndex})" title="Marcar como pagado">✓</button>
                             <div>
                                 <div class="modelo-nombre">${reg.nombre}</div>
                                 <div class="modelo-zona-cat">${reg.zona} • <span style="color:#dfc285;">${reg.categoria}</span></div>
@@ -530,7 +619,7 @@
                     <div class="modelo-body">
                         <div>
                             <span style="font-size:0.7rem; color:#888; display:block; margin-bottom:2px;">VENCIMIENTO</span>
-                            <input type="date" value="${reg.vencimiento}" data-index="${index}" class="fecha-input fecha-editable">
+                            <input type="date" value="${reg.vencimiento}" data-index="${reg.originalIndex}" class="fecha-input fecha-editable">
                         </div>
                         <div style="text-align: right;">
                             <span style="font-size:0.7rem; color:#888; display:block; margin-bottom:2px;">MONTO</span>
@@ -538,16 +627,13 @@
                         </div>
                     </div>
                     <div class="modelo-footer">
-                        <span>Registro #${index + 1}</span>
-                        <button class="btn-delete" onclick="eliminarRegistro(${index})">Eliminar</button>
+                        <span>Perfil</span>
+                        <button class="btn-delete" onclick="eliminarRegistro(${reg.originalIndex})">Eliminar</button>
                     </div>
                 `;
                 tarjetasContainer.appendChild(card);
             });
 
-            totalIngresos.textContent = `$${sumaTotal.toLocaleString('es-AR')}`;
-
-            // Vincular eventos de fecha de forma independiente para que no cierre el selector en celulares
             document.querySelectorAll('.fecha-editable').forEach(input => {
                 input.addEventListener('change', (e) => {
                     const idx = e.target.getAttribute('data-index');
@@ -558,13 +644,65 @@
             });
         }
 
+        function renderizarHistorialAnual() {
+            historialContent.innerHTML = '';
+            let agrupadoMeses = {};
+
+            historialPagos.forEach(p => {
+                if (!p.fecha) return;
+                const mesAnio = p.fecha.slice(0, 7); // "YYYY-MM"
+                if (!agrupadoMeses[mesAnio]) agrupadoMeses[mesAnio] = 0;
+                agrupadoMeses[mesAnio] += Number(p.monto || 0);
+            });
+
+            const mesesKeys = Object.keys(agrupadoMeses).sort().reverse();
+
+            if (mesesKeys.length === 0) {
+                historialContent.innerHTML = `<div style="font-size:0.8rem; color:#888; text-align:center; padding:5px;">Sin pagos registrados aún.</div>`;
+                return;
+            }
+
+            const nombresMeses = {
+                "01": "Enero", "02": "Febrero", "03": "Marzo", "04": "Abril",
+                "05": "Mayo", "06": "Junio", "07": "Julio", "08": "Agosto",
+                "09": "Septiembre", "10": "Octubre", "11": "Noviembre", "12": "Diciembre"
+            };
+
+            mesesKeys.forEach(m => {
+                const [anio, mesNum] = m.split('-');
+                const nombreMesFormateado = `${nombresMeses[mesNum] || mesNum} ${anio}`;
+                const row = document.createElement('div');
+                row.className = 'mes-row';
+                row.innerHTML = `
+                    <span>${nombreMesFormateado}</span>
+                    <strong style="color:var(--success);">+$${agrupadoMeses[m].toLocaleString('es-AR')}</strong>
+                `;
+                historialContent.appendChild(row);
+            });
+        }
+
+        window.toggleHistorial = function() {
+            const content = document.getElementById('historialContent');
+            const flecha = document.getElementById('flechaHistorial');
+            if (content.style.display === 'block') {
+                content.style.display = 'none';
+                flecha.textContent = '▼';
+            } else {
+                content.style.display = 'block';
+                flecha.textContent = '▲';
+            }
+        };
+
         form.addEventListener('submit', (e) => {
             e.preventDefault();
-            
+            const nombre = document.getElementById('nombre').value.trim().toUpperCase();
+            const monto = parseFloat(document.getElementById('monto').value) || 0;
+            const vencimiento = document.getElementById('vencimiento').value;
+
             const nuevoReg = {
-                vencimiento: document.getElementById('vencimiento').value,
-                monto: parseFloat(document.getElementById('monto').value) || 0,
-                nombre: document.getElementById('nombre').value.trim().toUpperCase(),
+                vencimiento,
+                monto,
+                nombre,
                 zona: document.getElementById('zona').value.trim().toUpperCase(),
                 categoria: document.getElementById('categoria').value,
                 pagado: true
@@ -573,6 +711,8 @@
             registros.unshift(nuevoReg);
             localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
 
+            registrarMovimientoHistorial(nombre, monto);
+
             form.reset();
             selectCat.dispatchEvent(new Event('change'));
             renderizarTarjetas();
@@ -580,6 +720,17 @@
 
         window.togglePagado = function(index) {
             registros[index].pagado = !registros[index].pagado;
+            
+            if (registros[index].pagado) {
+                // Registrar en el historial anual
+                registrarMovimientoHistorial(registros[index].nombre, registros[index].monto);
+
+                // Sumar 30 días automáticamente al vencimiento actual
+                let fechaVen = new Date(registros[index].vencimiento + 'T00:00:00');
+                fechaVen.setDate(fechaVen.getDate() + 30);
+                registros[index].vencimiento = fechaVen.toISOString().split('T')[0];
+            }
+
             localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
             renderizarTarjetas();
         };
