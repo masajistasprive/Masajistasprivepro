@@ -25,8 +25,38 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Masajistas Privé">
+    <style>
+        /* Pantalla de Transición Elegante */
+        #priveTransitionScreen {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #0d0d0d;
+            z-index: 9999999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.6s ease;
+        }
+        .prive-transition-logo {
+            text-align: center;
+            opacity: 0.35;
+            animation: pulsePrive 1.5s infinite alternate;
+        }
+        @keyframes pulsePrive {
+            0% { opacity: 0.2; transform: scale(0.98); }
+            100% { opacity: 0.5; transform: scale(1.02); }
+        }
+    </style>
 </head>
 <body>
+
+    <!-- Pantalla de Transición / Carga con Logo Tenue -->
+    <div id="priveTransitionScreen">
+        <div class="prive-transition-logo">
+            <img src="img/logo.png" alt="Masajistas Privé" style="max-width: 220px; width: 60vw; display: block; margin: 0 auto;">
+            <span style="display: block; color: #dfc285; font-family: 'Cormorant Garamond', serif; font-size: 14px; letter-spacing: 4px; margin-top: 10px; text-transform: uppercase;">Masajistas Privé</span>
+        </div>
+    </div>
 
     <div id="modal-edad" class="modal-edad-overlay">
         <div class="modal-edad-content">
@@ -192,6 +222,17 @@
         }
         const db = firebase.firestore();
 
+        // Función para ocultar suavemente la pantalla de transición cuando todo carga
+        function ocultarTransicionPrive() {
+            const screen = document.getElementById('priveTransitionScreen');
+            if (screen) {
+                screen.style.opacity = '0';
+                setTimeout(() => {
+                    screen.style.display = 'none';
+                }, 600);
+            }
+        }
+
         function registrarYMostrarVisitasGlobales() {
             try {
                 const docRef = db.collection("estadisticas_visitas").doc("portal_index");
@@ -287,6 +328,9 @@
                 gridMasculinos.innerHTML = htmlMasculinos + adMasculinos;
                 gridFantasias.innerHTML = htmlFantasias + adFantasias;
                 storiesContainer.innerHTML = htmlStories;
+
+                // Ocultar la transición al terminar de renderizar
+                ocultarTransicionPrive();
             });
         }
 
