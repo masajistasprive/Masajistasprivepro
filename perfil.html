@@ -38,40 +38,36 @@
             100% { opacity: 0.5; transform: scale(1.02); }
         }
 
-        /* Botón de Retorno Sofisticado Estilo Art Déco / Lujo */
+        /* Botón de Retorno Minimalista: Solo Flecha Dorada a la Derecha */
         .btn-volver-sophisticated {
             display: inline-flex;
             align-items: center;
-            gap: 12px;
-            background: #141414;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            background: rgba(22, 22, 24, 0.85);
             border: 1px solid rgba(223, 194, 133, 0.4);
             color: #dfc285;
-            padding: 10px 20px;
-            border-radius: 4px;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 500;
-            font-size: 11px;
-            letter-spacing: 2.5px;
-            text-transform: uppercase;
+            border-radius: 8px;
             text-decoration: none;
-            margin-bottom: 25px;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
         }
-        .btn-volver-sophisticated span.symbol {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 16px;
-            color: #dfc285;
+        .btn-volver-sophisticated svg {
+            width: 20px;
+            height: 20px;
+            fill: #dfc285;
             transition: transform 0.3s ease;
         }
         .btn-volver-sophisticated:hover {
-            background: rgba(223, 194, 133, 0.08);
+            background: rgba(223, 194, 133, 0.15);
             border-color: #dfc285;
-            box-shadow: 0 6px 25px rgba(223, 194, 133, 0.15);
-            transform: translateY(-2px);
+            transform: translateX(3px);
+            box-shadow: 0 4px 20px rgba(223, 194, 133, 0.25);
         }
-        .btn-volver-sophisticated:hover span.symbol {
-            transform: translateX(-4px);
+        .btn-volver-sophisticated:hover svg {
+            transform: scale(1.1);
         }
 
         /* Botón de WhatsApp Flotante con Texto y Estilo de Lujo */
@@ -511,11 +507,10 @@
             let tecnicasHtml = tecnicasTexto ? `<div style="margin-top: 0.5rem; color: #94a3b8; font-size: 0.9rem;"><strong>${labels.labelTecnicas}</strong> <span>${tecnicasTexto}</span></div>` : '';
 
             container.innerHTML = `
-                <!-- Botón de Retorno Sofisticado Art Déco -->
-                <div style="grid-column: 1 / -1; width: 100%;">
-                    <a href="index.html" class="btn-volver-sophisticated">
-                        <span class="symbol">♦</span>
-                        <span>${labels.btnVolver}</span>
+                <!-- Botón de Retorno con Flecha Dorada a la Derecha -->
+                <div style="grid-column: 1 / -1; width: 100%; text-align: right;">
+                    <a href="index.html" class="btn-volver-sophisticated" title="${labels.btnVolver}">
+                        <svg viewBox="0 0 24 24"><path d="M4 11h12.17l-5.58-5.59L12 4l8 8-8 8-1.41-1.41L16.17 13H4v-2z"/></svg>
                     </a>
                 </div>
 
