@@ -130,8 +130,8 @@
             border-color: #dfc285;
         }
         .btn-accion-compartir svg, .btn-accion-wpp svg {
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             fill: currentColor;
             flex-shrink: 0;
         }
@@ -368,7 +368,7 @@
                 favoritos.push(idModelo);
                 if(btnFav) {
                     btnFav.classList.add('activo');
-                    btnFav.innerHTML = "❤️️ Favorito Guardado";
+                    btnFav.innerHTML = "❤️ Favorito Guardado";
                 }
             }
             localStorage.setItem('priveFavoritos', JSON.stringify(favoritos));
