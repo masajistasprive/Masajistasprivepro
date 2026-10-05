@@ -793,7 +793,7 @@
                 let whatsappLink = wppEl ? wppEl.getAttribute('href') : '';
                 let telefono = '';
                 if (whatsappLink) {
-                    const matchPhone = whatsappLink.match(/phone=([0-9]+)/) || whatsappLink.match(/wa\.me\/([0-9]+)/);
+                    const matchPhone = whatsappLink.match(/phone=([0-9]+/) || whatsappLink.match(/wa\.me\/([0-9]+)/);
                     if (matchPhone) telefono = matchPhone[1];
                 }
 
@@ -1052,6 +1052,7 @@
                     videoPresentacion: mData.videoPresentacion || "",
                     descripcion: mData.traducciones.es.descPerfil1,
                     traducciones: mData.traducciones,
+                    visitas: mData.visitas || 0,
                     fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
