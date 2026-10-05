@@ -165,11 +165,16 @@
             flex-shrink: 0;
         }
 
+        /* PROTECCIÓN ANTI-DESCARGAS Y ANTI-SELECCIÓN DE FOTOS */
         img {
             -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
             user-select: none !important;
             -webkit-user-drag: none !important;
+            pointer-events: auto;
         }
+
         #priveLightbox {
             display: none;
             position: fixed;
@@ -197,7 +202,7 @@
         .star-rating label:hover ~ label { color: #dfc285; }
     </style>
 </head>
-<body class="perfil-body">
+<body class="perfil-body" oncontextmenu="return false;">
 
     <!-- Pantalla de Transición / Carga con Logo Tenue -->
     <div id="priveTransitionScreen">
@@ -214,7 +219,7 @@
     <div id="priveLightbox">
         <div style="position: relative; display: flex; justify-content: center; align-items: center; max-width: 90vw; max-height: 85vh; width: 100%;">
             <button id="priveLbPrev" style="position: absolute; left: 10px; background: rgba(0,0,0,0.6); border: 1px solid #dfc285; color: #dfc285; font-size: 24px; padding: 10px 15px; cursor: pointer; border-radius: 50%; z-index: 10000001; outline: none;">&#10094;</button>
-            <img id="priveLightboxImg" style="display: block; max-width: 80vw; max-height: 85vh; border-radius: 8px; border: 1px solid rgba(223,194,133,0.4); box-shadow: 0 20px 50px rgba(0,0,0,0.95); object-fit: contain; pointer-events: none;">
+            <img id="priveLightboxImg" style="display: block; max-width: 80vw; max-height: 85vh; border-radius: 8px; border: 1px solid rgba(223,194,133,0.4); box-shadow: 0 20px 50px rgba(0,0,0,0.95); object-fit: contain; pointer-events: none;" oncontextmenu="return false;">
             <button id="priveLbNext" style="position: absolute; right: 10px; background: rgba(0,0,0,0.6); border: 1px solid #dfc285; color: #dfc285; font-size: 24px; padding: 10px 15px; cursor: pointer; border-radius: 50%; z-index: 10000001; outline: none;">&#10095;</button>
             <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 180px; height: 80px; background-image: url('img/logo.png'); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: 0.3; pointer-events: none; z-index: 10000000;"></div>
         </div>
@@ -384,7 +389,7 @@
 
                 const datosActuales = doc.data();
                 
-                // Incremento atómico ultra seguro con Firebase FieldValue
+                // Incremento atómico ultra seguro
                 docRef.update({
                     visitas: firebase.firestore.FieldValue.increment(1)
                 }).then(() => {
@@ -500,10 +505,10 @@
             let miniaturasHTML = '';
             if (m.fotosGaleria && m.fotosGaleria.length > 0) {
                 m.fotosGaleria.forEach(fotoUrl => {
-                    miniaturasHTML += `<img src="${fotoUrl}" alt="${m.nombre}" onclick="cambiarFoto(this)">`;
+                    miniaturasHTML += `<img src="${fotoUrl}" alt="${m.nombre}" onclick="cambiarFoto(this)" oncontextmenu="return false;">`;
                 });
             } else {
-                miniaturasHTML = `<img src="${m.fotoPrincipal}" alt="${m.nombre}" onclick="cambiarFoto(this)">`;
+                miniaturasHTML = `<img src="${m.fotoPrincipal}" alt="${m.nombre}" onclick="cambiarFoto(this)" oncontextmenu="return false;">`;
             }
 
             let videoHtml = '';
@@ -530,7 +535,7 @@
             container.innerHTML = `
                 <!-- Galería de Fotos -->
                 <div class="perfil-galeria-grid">
-                    <img src="${m.fotoPrincipal}" alt="${m.nombre}" class="foto-principal" id="fotoPrincipal">
+                    <img src="${m.fotoPrincipal}" alt="${m.nombre}" class="foto-principal" id="fotoPrincipal" oncontextmenu="return false;">
                     <div class="galeria-miniaturas">
                         ${miniaturasHTML}
                     </div>
@@ -598,7 +603,7 @@
                             <button type="button" onclick="window.agregarEmojiPerfil('😊')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">😊</button>
                             <button type="button" onclick="window.agregarEmojiPerfil('👍')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">👍</button>
                             <button type="button" onclick="window.agregarEmojiPerfil('🔥')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">🔥</button>
-                            <button type="button" onclick="window.agregarEmojiPerfil('❤️️')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">❤️</button>
+                            <button type="button" onclick="window.agregarEmojiPerfil('❤')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">❤️</button>
                             <button type="button" onclick="window.agregarEmojiPerfil('⭐')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">⭐</button>
                             
                             <label title="Adjuntar foto" style="color: #dfc285; cursor: pointer; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; background: rgba(223,194,133,0.1); width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(223, 194, 133, 0.4); margin-left: auto;">
@@ -784,7 +789,7 @@
                     const numEstrellas = data.rating || 5;
                     const estrellasHtml = '★'.repeat(numEstrellas) + '☆'.repeat(5 - numEstrellas);
 
-                    const imgHtml = data.image ? `<img src="${data.image}" style="max-width: 100%; max-height: 180px; border-radius: 6px; margin-top: 10px; display: block; object-fit: cover; border: 1px solid rgba(223,194,133,0.4);" alt="Adjunto">` : '';
+                    const imgHtml = data.image ? `<img src="${data.image}" style="max-width: 100%; max-height: 180px; border-radius: 6px; margin-top: 10px; display: block; object-fit: cover; border: 1px solid rgba(223,194,133,0.4);" alt="Adjunto" oncontextmenu="return false;">` : '';
                     const deleteBtn = isAdminPerfil ? `<button onclick="window.borrarComentarioPerfil('${data.id}')" style="background:none; border:none; color:#ff5555; cursor:pointer; font-size:11px; font-weight:bold; float:right; text-transform: uppercase;">Eliminar</button>` : '';
 
                     const div = document.createElement('div');
