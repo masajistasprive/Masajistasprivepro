@@ -59,98 +59,6 @@
             0% { opacity: 0.2; transform: scale(0.98); }
             100% { opacity: 0.5; transform: scale(1.02); }
         }
-
-        /* Estilos para el Modo Normal (Listado compacto tipo renglón) */
-        .grid-perfiles.modo-normal {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .grid-perfiles.modo-normal .card-link {
-            width: 100%;
-        }
-        .grid-perfiles.modo-normal .card {
-            height: auto !important;
-            min-height: 75px;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            background: #141414;
-            border: 1px solid rgba(223, 194, 133, 0.2);
-            border-radius: 8px;
-            padding: 8px 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-        }
-        .grid-perfiles.modo-normal .card-image {
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            overflow: hidden;
-            flex-shrink: 0;
-            position: relative;
-            margin-right: 12px;
-        }
-        .grid-perfiles.modo-normal .card-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .grid-perfiles.modo-normal .badge-verificado {
-            display: none;
-        }
-        .grid-perfiles.modo-normal .card-gradient-overlay {
-            position: static;
-            background: transparent;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            width: 100%;
-        }
-        .grid-perfiles.modo-normal .card-gradient-overlay h3 {
-            font-size: 15px;
-            color: #fff;
-            margin-bottom: 2px;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-        }
-        .grid-perfiles.modo-normal .card-gradient-overlay .zona {
-            font-size: 12px;
-            color: #dfc285;
-        }
-        .grid-perfiles.modo-normal .card-gradient-overlay .modalidad-tag {
-            display: none;
-        }
-
-        /* Botones de alternancia de vista */
-        .view-switch-wrapper {
-            max-width: 900px;
-            margin: 15px auto 0 auto;
-            padding: 0 4%;
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
-        .btn-vista-modo {
-            background: rgba(223, 194, 133, 0.08);
-            border: 1px solid rgba(223, 194, 133, 0.3);
-            color: #ccc;
-            padding: 6px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 11px;
-            font-weight: 600;
-            font-family: 'Montserrat', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s;
-        }
-        .btn-vista-modo.active {
-            background: rgba(223, 194, 133, 0.2);
-            border-color: #dfc285;
-            color: #dfc285;
-            box-shadow: 0 0 10px rgba(223, 194, 133, 0.2);
-        }
     </style>
 </head>
 <body>
@@ -213,12 +121,6 @@
     <!-- Botón de Favoritas Exclusivo por Fuera de las Categorías -->
     <div style="max-width: 900px; margin: 15px auto 0 auto; padding: 0 4%; text-align: center;">
         <button class="pill-btn" data-filter="favoritos" style="background: rgba(223, 194, 133, 0.12); border: 1px solid #dfc285; color: #dfc285; width: 100%; max-width: 280px; font-weight: 600; box-shadow: 0 4px 15px rgba(223, 194, 133, 0.15);">⭐ Mis Favoritas</button>
-    </div>
-
-    <!-- Selector de Modo de Navegación (Tarjeta vs Normal) -->
-    <div class="view-switch-wrapper">
-        <button id="btnModoTarjeta" class="btn-vista-modo active" onclick="cambiarModoVisualizacion('tarjeta')">📱 Modo Tarjeta</button>
-        <button id="btnModoNormal" class="btn-vista-modo" onclick="cambiarModoVisualizacion('normal')">📄 Modo Normal</button>
     </div>
 
     <!-- Divisor Art Déco -->
@@ -313,7 +215,7 @@
             </div>
 
             <div class="footer-legal">
-                <p data-i18n="footerLegal">Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.</p>
+                <p data-i18n="footerLegal">Este es un sitio exclusivo pour adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.</p>
                 <p style="margin-top: 6px;" data-i18n="footerMarcas">Todo el contenido, marcas y logotipos pertenecen a sus respectivos dueños.</p>
                 <div id="contador-visitas-global" style="margin-top: 12px; color: #dfc285; font-size: 13px; font-weight: 500;">
                     👁 <span data-i18n="visitasTotales">Visitas totales al portal</span>: <span id="visitas-total-num">Cargando...</span>
@@ -341,28 +243,6 @@
             firebase.initializeApp(firebaseConfig);
         }
         const db = firebase.firestore();
-
-        // Control de Modo de Visualización (Tarjeta o Normal)
-        let modoVisualizacionActual = localStorage.getItem('priveModoVisualizacion') || 'tarjeta';
-
-        function cambiarModoVisualizacion(modo) {
-            modoVisualizacionActual = modo;
-            localStorage.setItem('priveModoVisualizacion', modo);
-
-            const btnTarjeta = document.getElementById('btnModoTarjeta');
-            const btnNormal = document.getElementById('btnModoNormal');
-            const grillas = document.querySelectorAll('.grid-perfiles');
-
-            if (modo === 'normal') {
-                btnTarjeta.classList.remove('active');
-                btnNormal.classList.add('active');
-                grillas.forEach(g => g.classList.add('modo-normal'));
-            } else {
-                btnNormal.classList.remove('active');
-                btnTarjeta.classList.add('active');
-                grillas.forEach(g => g.classList.remove('modo-normal'));
-            }
-        }
 
         function ocultarTransicionPrive() {
             const screen = document.getElementById('priveTransitionScreen');
@@ -489,6 +369,7 @@
                     }
                 });
 
+                // Asegurar que el banner publicitario se agregue en todas las categorías
                 if (htmlTerapeuticas) htmlTerapeuticas += adCardHTML;
                 if (htmlSensuales) htmlSensuales += adCardHTML;
                 if (htmlMasculinos) htmlMasculinos += adCardHTML;
@@ -504,9 +385,6 @@
                 gridFantasias.innerHTML = htmlFantasias;
                 gridFavoritos.innerHTML = htmlFavoritos;
                 storiesContainer.innerHTML = htmlStories;
-
-                // Aplicar el modo visual guardado al terminar de renderizar
-                cambiarModoVisualizacion(modoVisualizacionActual);
 
                 ocultarTransicionPrive();
             });
@@ -825,4 +703,4 @@
         });
     </script>
 </body>
-</html>
+                                                     </html>
