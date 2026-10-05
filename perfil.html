@@ -368,20 +368,20 @@
                 }
 
                 const datosActuales = doc.data();
-                let visitasPrevias = Number(datosActuales.visitas);
-                if (isNaN(visitasPrevias)) {
-                    visitasPrevias = 0;
+                let visitasActuales = parseInt(datosActuales.visitas);
+                if (isNaN(visitasActuales)) {
+                    visitasActuales = 0;
                 }
-                const nuevasVisitas = visitasPrevias + 1;
+                const nuevaSumaVisitas = visitasActuales + 1;
 
-                docRef.update({
-                    visitas: nuevasVisitas
-                }).catch((err) => {
-                    console.log("Error al sumar visita:", err);
+                docRef.set({
+                    visitas: nuevaSumaVisitas
+                }, { merge: true }).catch((err) => {
+                    console.log("Error al guardar visita:", err);
                 });
 
                 datosModeloActual = datosActuales;
-                datosModeloActual.visitas = nuevasVisitas;
+                datosModeloActual.visitas = nuevaSumaVisitas;
 
                 renderizarPerfil(datosModeloActual);
                 inicializarLogicaComentarios();
