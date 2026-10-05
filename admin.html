@@ -863,9 +863,9 @@
 
                             <div class="modelo-acciones-right">
                                 <span class="switch-destacada ${esDestacada ? 'active' : ''}" onclick="toggleDestacada('${docId}', ${!esDestacada})" title="Destacada Gold">★</span>
-                                <button class="btn-accion" onclick="abrirModalEditar('${docId}')">✏️ Editar</button>
-                                <button class="btn-accion" onclick="toggleEstado('${docId}', '${m.estado}')">${esActiva ? '⏸️' : '▶️'}</button>
-                                <button class="btn-accion btn-danger" onclick="eliminarPerfil('${docId}', '${m.nombre}')">🗑️️</button>
+                                <button type="button" class="btn-accion" onclick="abrirModalEditar('${docId}')">✏️ Editar</button>
+                                <button type="button" class="btn-accion" onclick="toggleEstado('${docId}', '${m.estado}')">${esActiva ? '⏸️' : '▶️️'}</button>
+                                <button type="button" class="btn-accion btn-danger" onclick="eliminarPerfil('${docId}', '${m.nombre}')">🗑️</button>
                             </div>
                         </div>
                     `;
@@ -927,6 +927,8 @@
 
                     document.getElementById('modalEditar').style.display = 'flex';
                 }
+            }).catch(err => {
+                alert("❌ Error al abrir el perfil para editar: " + err.message);
             });
         }
 
