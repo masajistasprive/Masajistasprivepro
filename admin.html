@@ -309,7 +309,7 @@
     <!-- MODAL DE EDICIÓN -->
     <div id="modalEditar">
         <div class="modal-content">
-            <h3>Editar Perfil, Fotos, Video y Traducciones</h3>
+            <h3>Editar Perfil, Teléfono, Fotos, Video y Traducciones</h3>
             <input type="hidden" id="editDocId">
             
             <div class="form-grid">
@@ -328,9 +328,15 @@
                 </div>
             </div>
 
-            <div class="form-row">
-                <label>Enlace de WhatsApp (wa.me/...):</label>
-                <input type="text" id="editWhatsappLink">
+            <div class="form-grid">
+                <div class="form-row">
+                    <label>Teléfono WhatsApp (Ej: 54911...):</label>
+                    <input type="text" id="editWhatsapp" placeholder="54911...">
+                </div>
+                <div class="form-row">
+                    <label>Enlace Completo de WhatsApp:</label>
+                    <input type="text" id="editWhatsappLink" placeholder="https://wa.me/...">
+                </div>
             </div>
 
             <div class="form-grid" style="background: #1a1a1a; padding: 15px; border-radius: 8px; border: 1px solid #333; margin-bottom: 15px;">
@@ -469,7 +475,6 @@
         let videoPresentacionSubido = "";
         let videoPresentacionEdicion = "";
 
-        // COMPRESIÓN AUTOMÁTICA PARA FOTO PRINCIPAL (EVITA ERROR 1MB DE FIREBASE)
         function convertirFotoLocal(input, targetId) {
             const file = input.files[0];
             if (!file) return;
@@ -533,7 +538,6 @@
             });
         }
 
-        // COMPRESIÓN AUTOMÁTICA PARA GALERÍA EN EDICIÓN
         function convertirGaleriaEdicion(input) {
             const files = input.files;
             if (!files.length) return;
@@ -899,7 +903,8 @@
                     setVal('editDocId', docId);
                     setVal('editNombre', m.nombre);
                     setVal('editCategoria', m.categoria || 'terapeuticas');
-                    setVal('editWhatsappLink', m.whatsappLink);
+                    setVal('editWhatsapp', m.whatsapp || '');
+                    setVal('editWhatsappLink', m.whatsappLink || `https://wa.me/${m.whatsapp || ''}`);
                     setVal('editFotoPrincipal', m.fotoPrincipal);
                     setVal('editVideoPresentacion', m.videoPresentacion);
 
@@ -1031,12 +1036,17 @@
                     mData.fotosGaleria = fotosGaleriaEdicion;
                 }
 
+                const wppNum = getVal('editWhatsapp');
+                const nombreModelo = getVal('editNombre');
+                const wppLinkFinal = getVal('editWhatsappLink') || `https://wa.me/${wppNum}?text=Hola%20${encodeURIComponent(nombreModelo)},%20vi%20tu%20perfil%20en%20Masajistas%20Privé`;
+
                 const datosActualizados = {
-                    nombre: getVal('editNombre'),
+                    nombre: nombreModelo,
                     zona: mData.traducciones.es.valorZona,
                     modalidad: mData.traducciones.es.valorModalidad,
                     categoria: document.getElementById('editCategoria').value,
-                    whatsappLink: getVal('editWhatsappLink'),
+                    whatsapp: wppNum,
+                    whatsappLink: wppLinkFinal,
                     fotoPrincipal: mData.fotoPrincipal,
                     fotosGaleria: mData.fotosGaleria,
                     videoPresentacion: mData.videoPresentacion || "",
@@ -1046,7 +1056,7 @@
                 };
 
                 db.collection("modelos_prive").doc(docId).update(datosActualizados).then(() => {
-                    alert("¡Perfil, fotos y video actualizados con éxito!");
+                    alert("¡Perfil, teléfono y fotos actualizados con éxito!");
                     cerrarModalEditar();
                 }).catch(err => {
                     alert("Error al guardar en Firebase: " + err.message);
