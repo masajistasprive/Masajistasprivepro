@@ -47,6 +47,11 @@
         .btn-traducir { background: rgba(223, 194, 133, 0.15); border: 1px solid #dfc285; color: #dfc285; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; margin-bottom: 15px; display: inline-flex; align-items: center; gap: 6px; }
         .btn-traducir:hover { background: #dfc285; color: #0d0d0d; }
 
+        /* Vistas previas / Miniaturas */
+        .preview-img-box { width: 70px; height: 70px; border-radius: 6px; object-fit: cover; border: 1px solid #dfc285; margin-top: 8px; }
+        .galeria-preview-container { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+        .galeria-preview-thumb { width: 50px; height: 50px; border-radius: 4px; object-fit: cover; border: 1px solid #444; }
+
         /* Estilo Moderno para la Nómina de Modelos */
         .modelo-card-admin { display: flex; align-items: center; justify-content: space-between; background: #1a1a1a; border: 1px solid rgba(223, 194, 133, 0.15); border-radius: 8px; padding: 12px 18px; margin-bottom: 12px; transition: all 0.3s ease; gap: 15px; flex-wrap: wrap; }
         .modelo-card-admin:hover { border-color: rgba(223, 194, 133, 0.4); box-shadow: 0 4px 15px rgba(0,0,0,0.6); }
@@ -333,11 +338,15 @@
                     <label style="color: #dfc285;">📸 Cambiar Foto Principal:</label>
                     <input type="file" id="editFileFotoPrin" accept="image/*" onchange="convertirFotoLocal(this, 'editFotoPrincipal')">
                     <input type="text" id="editFotoPrincipal" placeholder="URL o código de foto" style="margin-top: 6px; font-size: 11px;">
+                    <!-- Vista previa foto principal -->
+                    <div id="previewFotoPrinBox"></div>
                     <div id="statusEditFotoPrin" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
                 </div>
                 <div class="form-row" style="margin-bottom: 0;">
                     <label style="color: #dfc285;">📸 Actualizar Galería de Fotos (¡Sin límite!):</label>
                     <input type="file" id="editFileGaleria" accept="image/*" multiple onchange="convertirGaleriaEdicion(this)">
+                    <!-- Vista previa galería actual -->
+                    <div id="previewGaleriaBox" class="galeria-preview-container"></div>
                     <div id="statusEditGaleria" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
                 </div>
                 <div class="form-row" style="margin-bottom: 0; grid-column: 1 / -1; margin-top: 10px;">
@@ -472,6 +481,12 @@
                 const targetEl = document.getElementById(targetId);
                 if(targetEl) targetEl.value = e.target.result;
                 if(status) status.textContent = "✅ ¡Foto lista!";
+                
+                // Si estamos en el modal de edición, actualizar miniatura visual al instante
+                if(targetId === 'editFotoPrincipal') {
+                    const box = document.getElementById('previewFotoPrinBox');
+                    if(box) box.innerHTML = `<img src="${e.target.result}" class="preview-img-box">`;
+                }
             };
             reader.readAsDataURL(file);
         }
@@ -503,11 +518,17 @@
             fotosGaleriaEdicion = [];
 
             let procesadas = 0;
+            const box = document.getElementById('previewGaleriaBox');
+            if(box) box.innerHTML = ''; // Limpiar anteriores vistas previas
+
             Array.from(files).forEach((file) => {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     fotosGaleriaEdicion.push(e.target.result);
                     procesadas++;
+                    if(box) {
+                        box.innerHTML += `<img src="${e.target.result}" class="galeria-preview-thumb">`;
+                    }
                     if(status) status.textContent = `✅ Listas ${procesadas} de ${files.length} fotos nuevas.`;
                 };
                 reader.readAsDataURL(file);
@@ -812,7 +833,7 @@
                                 <span class="switch-destacada ${esDestacada ? 'active' : ''}" onclick="toggleDestacada('${docId}', ${!esDestacada})" title="Destacada Gold">★</span>
                                 <button class="btn-accion" onclick="abrirModalEditar('${docId}')">✏️ Editar</button>
                                 <button class="btn-accion" onclick="toggleEstado('${docId}', '${m.estado}')">${esActiva ? '⏸️' : '▶️'}</button>
-                                <button class="btn-accion btn-danger" onclick="eliminarPerfil('${docId}', '${m.nombre}')">🗑️</button>
+                                <button class="btn-accion btn-danger" onclick="eliminarPerfil('${docId}', '${m.nombre}')">🗑️️</button>
                             </div>
                         </div>
                     `;
@@ -833,6 +854,26 @@
                     setVal('editWhatsappLink', m.whatsappLink);
                     setVal('editFotoPrincipal', m.fotoPrincipal);
                     setVal('editVideoPresentacion', m.videoPresentacion);
+
+                    // MOSTRAR MINIATURA DE FOTO PRINCIPAL ACTUAL
+                    const boxPrin = document.getElementById('previewFotoPrinBox');
+                    if (boxPrin) {
+                        boxPrin.innerHTML = m.fotoPrincipal ? `<img src="${m.fotoPrincipal}" class="preview-img-box">` : '<span style="font-size:11px; color:#777;">Sin foto principal</span>';
+                    }
+
+                    // MOSTRAR MINIATURAS DE GALERÍA ACTUAL
+                    const boxGal = document.getElementById('previewGaleriaBox');
+                    if (boxGal) {
+                        if (m.fotosGaleria && m.fotosGaleria.length > 0) {
+                            let galHtml = '';
+                            m.fotosGaleria.forEach(f => {
+                                galHtml += `<img src="${f}" class="galeria-preview-thumb">`;
+                            });
+                            boxGal.innerHTML = galHtml;
+                        } else {
+                            boxGal.innerHTML = '<span style="font-size:11px; color:#777;">Sin galería cargada</span>';
+                        }
+                    }
 
                     const tradStatus = document.getElementById('tradStatus');
                     if(tradStatus) tradStatus.textContent = '';
