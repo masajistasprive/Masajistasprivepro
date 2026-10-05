@@ -281,7 +281,7 @@
             }
         }
 
-        // Extracción de ID ultra robusta para evitar que falle
+        // Extracción de ID ultra robusta
         const urlParams = new URLSearchParams(window.location.search);
         let perfilId = urlParams.get('id');
         if (!perfilId) {
@@ -289,7 +289,7 @@
             const ultimoSegmento = pathParts[pathParts.length - 1] || "";
             perfilId = ultimoSegmento.replace(".html", "").trim();
         }
-        if (!perfilId) perfilId = "olivia"; // Fallback de seguridad
+        if (!perfilId) perfilId = "olivia";
 
         let idiomaPerfil = localStorage.getItem('idiomaPrive') || 'es';
         let datosModeloActual = null;
@@ -369,6 +369,7 @@
 
             docRef.get().then((doc) => {
                 if (!doc.exists) {
+                    alert("DEBUG: El ID buscado fue '" + perfilId + "' y NO existe en la base de datos.");
                     container.innerHTML = `<h2 style="color:#e74c3c; text-align:center;">El perfil solicitado no existe o fue removido (${perfilId}).</h2>`;
                     ocultarTransicionPrive();
                     return;
@@ -376,16 +377,17 @@
 
                 const datosActuales = doc.data();
                 
-                // Suma de visitas forzada y limpia
+                // Depuración visual temporal para confirmar lectura de visitas
                 let visitasActuales = parseInt(datosActuales.visitas) || 0;
                 const nuevaSumaVisitas = visitasActuales + 1;
 
-                // Guardado inmediato en Firebase
-                docRef.update({
+                // Escritura directa a Firebase
+                docRef.set({
                     visitas: nuevaSumaVisitas
-                }).catch(() => {
-                    // Si update falla por si no existe el campo, usa set con merge
-                    docRef.set({ visitas: nuevaSumaVisitas }, { merge: true });
+                }, { merge: true }).then(() => {
+                    console.log("Visita sumada con éxito:", nuevaSumaVisitas);
+                }).catch((err) => {
+                    alert("Error al sumar visita: " + err.message);
                 });
 
                 datosModeloActual = datosActuales;
@@ -396,6 +398,7 @@
                 inicializarVisorFotosDinamico();
                 ocultarTransicionPrive();
             }).catch(error => {
+                alert("Error de conexión a Firebase: " + error.message);
                 container.innerHTML = `<p style="color:#e74c3c; text-align:center;">Error al cargar el perfil.</p>`;
                 ocultarTransicionPrive();
             });
