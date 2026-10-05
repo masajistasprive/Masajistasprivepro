@@ -60,7 +60,7 @@
             100% { opacity: 0.5; transform: scale(1.02); }
         }
 
-        /* --- ESTILOS DEFINITIVOS PARA MODO TARJETA GRANDE CON INFORMACIÓN COMPLETA --- */
+        /* --- ESTILOS CORREGIDOS PARA MODO TARJETA GRANDE --- */
         body.modo-tarjeta-alternativo .grid-perfiles {
             display: flex !important;
             flex-direction: column !important;
@@ -81,12 +81,14 @@
         }
         body.modo-tarjeta-alternativo .grid-perfiles .card-image {
             width: 100% !important;
-            height: 380px !important;
+            height: 400px !important;
             position: relative !important;
+            display: flex !important;
+            flex-direction: column !important;
         }
         body.modo-tarjeta-alternativo .grid-perfiles .card-image img {
             width: 100% !important;
-            height: 100% !important;
+            height: 320px !important;
             object-fit: cover !important;
         }
         body.modo-tarjeta-alternativo .grid-perfiles .badge-verificado {
@@ -99,36 +101,36 @@
             border-radius: 4px;
             font-size: 11px;
             z-index: 10;
+            position: absolute !important;
         }
-        /* Forzar que el bloque de texto inferior se expanda y sea totalmente legible con los colores dorados */
+        /* Forzamos que la capa de texto salga del absolute y se ubique abajo con total visibilidad */
         body.modo-tarjeta-alternativo .grid-perfiles .card-gradient-overlay {
-            position: relative !important;
-            background: linear-gradient(180deg, rgba(13,13,13,0.95) 0%, #0d0d0d 100%) !important;
-            padding: 20px !important;
+            position: static !important;
+            background: #0d0d0d !important;
+            padding: 15px 20px !important;
             display: flex !important;
             flex-direction: column !important;
-            gap: 6px !important;
+            gap: 5px !important;
             width: 100% !important;
-            opacity: 1 !important;
-            visibility: visible !important;
+            height: auto !important;
         }
         body.modo-tarjeta-alternativo .grid-perfiles .card-gradient-overlay h3 {
-            font-size: 1.5rem !important;
+            font-size: 1.4rem !important;
             color: #fff !important;
             font-family: 'Cormorant Garamond', serif !important;
             margin: 0 !important;
         }
         body.modo-tarjeta-alternativo .grid-perfiles .card-gradient-overlay .zona {
             color: #dfc285 !important;
-            font-size: 0.95rem !important;
+            font-size: 0.9rem !important;
             font-weight: 500;
             display: block !important;
         }
         body.modo-tarjeta-alternativo .grid-perfiles .card-gradient-overlay .modalidad-tag {
-            color: #ccc !important;
-            font-size: 0.85rem !important;
+            color: #aaa !important;
+            font-size: 0.8rem !important;
             display: block !important;
-            margin-top: 4px;
+            margin-top: 2px;
         }
     </style>
 </head>
@@ -335,7 +337,7 @@
             const btn = document.getElementById('btnAlternarEstilo');
             if (modoTarjetaActivo) {
                 document.body.classList.add('modo-tarjeta-alternativo');
-                if(btn) btn.textContent = '🏛️️ Cambiar a Estilo Normal (Privé)';
+                if(btn) btn.textContent = '🏛 Cambiar a Estilo Normal (Privé)';
             } else {
                 document.body.classList.remove('modo-tarjeta-alternativo');
                 if(btn) btn.textContent = '✨ Cambiar a Estilo Tarjeta Grande';
