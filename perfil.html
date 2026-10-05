@@ -383,19 +383,20 @@
                 }
 
                 const datosActuales = doc.data();
-                let visitasActuales = parseInt(datosActuales.visitas) || 0;
-                const nuevaSumaVisitas = visitasActuales + 1;
-
-                docRef.set({
-                    visitas: nuevaSumaVisitas
-                }, { merge: true }).then(() => {
-                    console.log("¡Éxito total sumando vistas!");
+                
+                // Incremento atómico ultra seguro con Firebase FieldValue
+                docRef.update({
+                    visitas: firebase.firestore.FieldValue.increment(1)
+                }).then(() => {
+                    console.log("¡Visita incrementada con éxito!");
                 }).catch((err) => {
-                    alert("Error al escribir vista: " + err.message);
+                    console.log("Error al incrementar, inicializando campo:", err);
+                    docRef.set({ visitas: 1 }, { merge: true });
                 });
 
+                let visitasVisuales = (typeof datosActuales.visitas === 'number') ? datosActuales.visitas + 1 : 1;
                 datosModeloActual = datosActuales;
-                datosModeloActual.visitas = nuevaSumaVisitas;
+                datosModeloActual.visitas = visitasVisuales;
 
                 renderizarPerfil(datosModeloActual);
                 inicializarLogicaComentarios();
