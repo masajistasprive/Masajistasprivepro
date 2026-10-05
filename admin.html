@@ -865,7 +865,7 @@
                                 <span class="switch-destacada ${esDestacada ? 'active' : ''}" onclick="toggleDestacada('${docId}', ${!esDestacada})" title="Destacada Gold">★</span>
                                 <button class="btn-accion" onclick="abrirModalEditar('${docId}')">✏️ Editar</button>
                                 <button class="btn-accion" onclick="toggleEstado('${docId}', '${m.estado}')">${esActiva ? '⏸️' : '▶️'}</button>
-                                <button class="btn-accion btn-danger" onclick="eliminarPerfil('${docId}', '${m.nombre}')">🗑️</button>
+                                <button class="btn-accion btn-danger" onclick="eliminarPerfil('${docId}', '${m.nombre}')">🗑️️</button>
                             </div>
                         </div>
                     `;
@@ -992,16 +992,12 @@
                     mData.videoPresentacion = nuevoVideo;
                 }
 
-                // Recopilar todas las fotos que quedaron visibles en la vista previa de galería
+                // Recopilar fotos visibles en la grilla del modal de edición
                 const previewGaleria = document.getElementById('previewEditGaleria');
                 const imagenesRestantes = Array.from(previewGaleria.querySelectorAll('.thumb-box')).map(img => img.src);
                 
-                let galeriaFinal = [];
-                if (fotosGaleriaEdicion.length > 0 || imagenesRestantes.length > 0) {
-                    galeriaFinal = imagenesRestantes.concat(fotosGaleriaEdicion);
-                }
-                if (galeriaFinal.length > 0) {
-                    mData.fotosGaleria = galeriaFinal;
+                if (imagenesRestantes.length > 0) {
+                    mData.fotosGaleria = imagenesRestantes;
                 }
 
                 const datosActualizados = {
@@ -1019,7 +1015,7 @@
                     fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
-                // Validar tamaño antes de enviar
+                // Validar tamaño antes de enviar (Límite Firestore: 1MB por documento)
                 const payloadSize = JSON.stringify(datosActualizados).length;
                 if (payloadSize > 950000) {
                     alert("⚠️ Las imágenes son demasiado pesadas y superan el límite permitido por la base de datos (1MB). Por favor, subí menos fotos a la vez.");
