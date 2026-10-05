@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Control - Masajistas Privé</title>
+    <!-- Tipografía elegante y moderna -->
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -13,33 +14,118 @@
             --gold-glow: rgba(223, 194, 133, 0.25);
             --text-main: #f5f5f5;
             --text-muted: #888888;
+            --danger: #e74c3c;
+            --success: #2ecc71;
+            --danger-bg: rgba(231, 76, 60, 0.15);
+            --success-bg: rgba(46, 204, 113, 0.15);
+            --border-gold: rgba(223, 194, 133, 0.3);
         }
+
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-main); padding: 15px; display: flex; justify-content: center; }
+
+        body { background-color: var(--bg-color); color: var(--text-main); padding: 12px; display: flex; justify-content: center; }
+
         .container { width: 100%; max-width: 650px; }
-        
-        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(223, 194, 133, 0.3); padding-bottom: 15px; margin-bottom: 20px; }
-        h1 { color: var(--gold); font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; letter-spacing: 2px; }
+
+        #loginOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--bg-color); display: flex; justify-content: center; align-items: center; z-index: 1000;
+        }
+
+        .login-card {
+            background-color: var(--card-bg); border: 1px solid var(--gold); border-radius: 12px; padding: 25px; width: 90%; max-width: 360px; text-align: center; box-shadow: 0 4px 25px var(--gold-glow);
+        }
+
+        .login-card h2 {
+            color: var(--gold); margin-bottom: 20px; font-size: 1.1rem; letter-spacing: 1px; font-weight: 600; font-family: 'Cormorant Garamond', serif;
+        }
+
+        .main-content { display: none; }
+
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border-gold); padding-bottom: 12px; }
+
+        h1 {
+            color: var(--gold); font-size: 1.2rem; letter-spacing: 1px; font-family: 'Cormorant Garamond', serif;
+        }
+
         .back-link { color: var(--text-muted); text-decoration: none; font-size: 0.8rem; text-transform: uppercase; }
-        
-        .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px; }
-        .metric-card { background: var(--card-bg); border: 1px solid rgba(223, 194, 133, 0.3); border-radius: 10px; padding: 15px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        .metric-title { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-        .metric-value { font-size: 1.6rem; color: var(--gold); font-weight: bold; }
-        
-        .info-box { background: var(--card-bg); border: 1px solid rgba(223, 194, 133, 0.2); border-radius: 10px; padding: 20px; text-align: center; }
-        .info-box p { color: var(--text-muted); font-size: 0.85rem; }
+        .back-link:hover { color: var(--gold); }
+
+        /* Métricas de Estilos y Caja */
+        .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .metric-card { background: var(--card-bg); border: 1px solid var(--border-gold); border-radius: 10px; padding: 12px; text-align: center; }
+        .metric-title { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        .metric-value { font-size: 1.4rem; color: var(--gold); font-weight: bold; }
+
+        .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+
+        .card-summary {
+            background: linear-gradient(135deg, #141414, #0d0d0d); border: 1px solid var(--border-gold); border-radius: 10px; padding: 12px; text-align: center;
+        }
+
+        .card-summary.total-historico { grid-column: 1 / -1; border-color: var(--success); background: linear-gradient(135deg, #112217, #0d1a11); }
+
+        .summary-title { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        .summary-amount { font-size: 1.5rem; color: var(--gold); font-weight: bold; }
+        .card-summary.total-historico .summary-amount { color: var(--success); }
+
+        .form-card { background-color: var(--card-bg); border: 1px solid var(--border-gold); border-radius: 10px; padding: 15px; margin-bottom: 20px; }
+        .form-card h2 { font-style: italic; font-size: 1rem; color: var(--gold); margin-bottom: 12px; font-weight: 500; font-family: 'Cormorant Garamond', serif; }
+
+        .form-group { margin-bottom: 8px; }
+        label { display: block; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 3px; text-transform: uppercase; }
+        input, select, textarea { width: 100%; padding: 10px; background-color: #1a1a1a; border: 1px solid #333; border-radius: 6px; color: var(--text-main); font-size: 0.9rem; }
+        textarea { resize: vertical; height: 80px; }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--gold), #b89751); color: #0d0d0d; border: none; width: 100%; padding: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin-top: 10px; box-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .btn-reset { background: transparent; color: var(--text-muted); border: 1px solid #444; padding: 8px 12px; font-size: 0.7rem; border-radius: 6px; cursor: pointer; margin-bottom: 12px; text-transform: uppercase; }
+
+        .cards-container { display: flex; flex-direction: column; gap: 10px; }
+
+        .modelo-card { background-color: var(--card-bg); border: 1px solid var(--border-gold); border-radius: 8px; padding: 12px 15px; display: flex; flex-direction: column; gap: 8px; }
+        .modelo-card.pagado-card { opacity: 0.65; border-color: #1a2e22; }
+
+        .modelo-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1f1f1f; padding-bottom: 8px; }
+        .modelo-nombre { font-size: 0.95rem; font-weight: bold; color: var(--text-main); }
+        .modelo-zona-cat { font-size: 0.75rem; color: var(--gold); }
+
+        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
+        .status-activo { background-color: var(--success-bg); color: var(--success); border: 1px solid rgba(46, 204, 113, 0.3); }
+        .status-vencido { background-color: var(--danger-bg); color: var(--danger); border: 1px solid rgba(231, 76, 60, 0.3); }
+
+        .amount-col { color: var(--success); font-weight: bold; }
+        .btn-check { background: none; border: 1px solid #444; color: var(--text-muted); width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .btn-check.pagado { background-color: var(--success-bg); color: var(--success); border-color: var(--success); }
+        .fecha-input { background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 5px 8px; border-radius: 4px; font-size: 0.85rem; }
+        .btn-delete { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 0.75rem; }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <div id="loginOverlay">
+        <div class="login-card">
+            <h2>Acceso Restringido</h2>
+            <form id="loginForm">
+                <div class="form-group" style="text-align: left;">
+                    <label for="passwordInput">Contraseña de Administrador</label>
+                    <input type="password" id="passwordInput" placeholder="Ingresá tu clave" required>
+                </div>
+                <button type="submit" class="btn-submit">Ingresar</button>
+                <div class="error-msg" id="errorMsg" style="color:var(--danger); font-size:0.75rem; margin-top:8px; display:none;">Contraseña incorrecta</div>
+            </form>
+        </div>
+    </div>
+
+    <div class="container main-content" id="mainContent">
         <header>
-            <h1>Panel & Métricas Privé</h1>
+            <h1>Gestor & Fichas Privé</h1>
             <a href="index.html" class="back-link">&larr; Ver Sitio</a>
         </header>
 
-        <!-- Tarjetas de Métricas de Estilos -->
+        <!-- Métricas de Estilos Visuales de los Visitantes -->
         <div class="metrics-grid">
             <div class="metric-card">
                 <div class="metric-title">Estilo Normal (Privé)</div>
@@ -51,9 +137,67 @@
             </div>
         </div>
 
-        <div class="info-box">
-            <p>📊 Las métricas se actualizan automáticamente en tiempo real cada vez que los usuarios interactúan con el selector de diseño en la página principal.</p>
+        <div class="summary-grid">
+            <div class="card-summary">
+                <div class="summary-title" id="tituloMesActual">Mes Actual</div>
+                <div class="summary-amount" id="totalMesActual">$0</div>
+            </div>
+            <div class="card-summary">
+                <div class="summary-title" id="tituloMesAnterior">Mes Anterior</div>
+                <div class="summary-amount" id="totalMesAnterior">$0</div>
+            </div>
+            <div class="card-summary total-historico">
+                <div class="summary-title">Importe Total Ingresado (Histórico)</div>
+                <div class="summary-amount" id="totalHistorico">$0</div>
+            </div>
         </div>
+
+        <div class="form-card">
+            <h2>✨ Creador de Nueva Ficha y Pauta</h2>
+            <form id="cajaForm">
+                <div class="form-group">
+                    <label for="nombre">Nombre y Edad (Ej: Mariana, 25)</label>
+                    <input type="text" id="nombre" placeholder="Ej: Mariana, 25" required>
+                </div>
+                <div class="form-group">
+                    <label for="zona">Barrio / Zona (Ej: Recoleta)</label>
+                    <input type="text" id="zona" placeholder="Ej: Recoleta" required>
+                </div>
+                <div class="form-group">
+                    <label for="categoria">Categoría / Sección</label>
+                    <select id="categoria" required>
+                        <option value="terapeuticas">Terapéuticas</option>
+                        <option value="sensuales">Sensuales</option>
+                        <option value="masculinos">Masculinos</option>
+                        <option value="fantasias">Fantasías</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="monto">Monto de la Pauta ($)</label>
+                    <input type="number" id="monto" placeholder="Ej: 80000" required>
+                </div>
+                <div class="form-group">
+                    <label for="vencimiento">Fecha de Vencimiento</label>
+                    <input type="date" id="vencimiento" required>
+                </div>
+                <div class="form-group">
+                    <label for="fotosGaleria">Enlace de la Foto Principal (URL)</label>
+                    <input type="url" id="fotosGaleria" placeholder="https://..." required>
+                </div>
+                <div class="form-group">
+                    <label for="whatsapp">Número de WhatsApp (Ej: 54911xxxxxxxx)</label>
+                    <input type="text" id="whatsapp" placeholder="Ej: 5491100000000" required>
+                </div>
+                <button type="submit" class="btn-submit">Crear Ficha y Registrar Pauta</button>
+            </form>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h2 style="font-size: 0.95rem; color: var(--gold);">Anunciantes Activos</h2>
+            <button class="btn-reset" onclick="restaurarDatos()">Restaurar</button>
+        </div>
+
+        <div class="cards-container" id="tarjetasContainer"></div>
     </div>
 
     <!-- Firebase SDKs -->
@@ -61,6 +205,31 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <script>
+        const CLASE_PASSWORD = "081101";
+
+        const loginForm = document.getElementById('loginForm');
+        const passwordInput = document.getElementById('passwordInput');
+        const loginOverlay = document.getElementById('loginOverlay');
+        const mainContent = document.getElementById('mainContent');
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (sessionStorage.getItem('prive_magenta_auth') === 'true') {
+            loginOverlay.style.display = 'none';
+            mainContent.style.display = 'block';
+        }
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (passwordInput.value === CLASE_PASSWORD) {
+                sessionStorage.setItem('prive_magenta_auth', 'true');
+                loginOverlay.style.display = 'none';
+                mainContent.style.display = 'block';
+            } else {
+                errorMsg.style.display = 'block';
+                passwordInput.value = '';
+            }
+        });
+
         const firebaseConfig = {
             apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
             authDomain: "masajistasprivepro.firebaseapp.com",
@@ -75,23 +244,195 @@
         }
         const db = firebase.firestore();
 
-        // Escuchar en tiempo real la colección de métricas de estilos de Firebase
+        // Escuchar métricas de estilos en tiempo real
         db.collection("metricas_estilos").onSnapshot((snapshot) => {
             let totalNormal = 0;
             let totalTarjeta = 0;
-
             snapshot.forEach((doc) => {
                 const data = doc.data();
-                if (data.estilo === 'normal_prive') {
-                    totalNormal++;
-                } else if (data.estilo === 'tarjeta_grande') {
-                    totalTarjeta++;
-                }
+                if (data.estilo === 'normal_prive') totalNormal++;
+                else if (data.estilo === 'tarjeta_grande') totalTarjeta++;
             });
-
             document.getElementById('contadorNormal').textContent = totalNormal.toLocaleString('es-AR');
             document.getElementById('contadorTarjeta').textContent = totalTarjeta.toLocaleString('es-AR');
         });
+
+        let registros = JSON.parse(localStorage.getItem('prive_magenta_modelos')) || [];
+        let historialPagos = JSON.parse(localStorage.getItem('prive_magenta_historial')) || [];
+
+        document.getElementById('vencimiento').valueAsDate = new Date();
+
+        const form = document.getElementById('cajaForm');
+        const tarjetasContainer = document.getElementById('tarjetasContainer');
+        const totalMesActual = document.getElementById('totalMesActual');
+        const totalMesAnterior = document.getElementById('totalMesAnterior');
+        const totalHistorico = document.getElementById('totalHistorico');
+        const tituloMesActual = document.getElementById('tituloMesActual');
+        const tituloMesAnterior = document.getElementById('tituloMesAnterior');
+
+        function registrarMovimientoHistorial(nombre, monto) {
+            if (monto <= 0) return;
+            const hoyStr = new Date().toISOString().split('T')[0];
+            historialPagos.push({ fecha: hoyStr, nombre, monto });
+            localStorage.setItem('prive_magenta_historial', JSON.stringify(historialPagos));
+        }
+
+        function renderizarTarjetas() {
+            tarjetasContainer.innerHTML = '';
+            const hoy = new Date();
+            hoy.setHours(0,0,0,0);
+
+            const nombresMeses = {
+                "01": "Enero", "02": "Febrero", "03": "Marzo", "04": "Abril",
+                "05": "Mayo", "06": "Junio", "07": "Julio", "08": "Agosto",
+                "09": "Septiembre", "10": "Octubre", "11": "Noviembre", "12": "Diciembre"
+            };
+
+            const anioActual = hoy.getFullYear();
+            const mesNumActual = String(hoy.getMonth() + 1).padStart(2, '0');
+            const mesActualKey = `${anioActual}-${mesNumActual}`;
+
+            let fechaAnterior = new Date(hoy.getFullYear(), hoy.getMonth() - 1, 1);
+            const anioAnt = fechaAnterior.getFullYear();
+            const mesNumAnt = String(fechaAnterior.getMonth() + 1).padStart(2, '0');
+            const mesAnteriorKey = `${anioAnt}-${mesNumAnt}`;
+
+            tituloMesActual.textContent = `${nombresMeses[mesNumActual]} ${anioActual}`;
+            tituloMesAnterior.textContent = `${nombresMeses[mesNumAnt]} ${anioAnt}`;
+
+            let sumaMesActual = 0;
+            let sumaMesAnterior = 0;
+            let sumaHistorico = 0;
+
+            historialPagos.forEach(p => {
+                if (!p.fecha) return;
+                const montoNum = Number(p.monto || 0);
+                sumaHistorico += montoNum;
+                if (p.fecha.startsWith(mesActualKey)) sumaMesActual += montoNum;
+                else if (p.fecha.startsWith(mesAnteriorKey)) sumaMesAnterior += montoNum;
+            });
+
+            totalMesActual.textContent = `$${sumaMesActual.toLocaleString('es-AR')}`;
+            totalMesAnterior.textContent = `$${sumaMesAnterior.toLocaleString('es-AR')}`;
+            totalHistorico.textContent = `$${sumaHistorico.toLocaleString('es-AR')}`;
+
+            if (registros.length === 0) {
+                tarjetasContainer.innerHTML = `<div style="text-align:center; color:#888; font-size:0.85rem; padding:15px;">No hay registros locales en este dispositivo.</div>`;
+                return;
+            }
+
+            registros.forEach((reg, index) => {
+                const fechaVen = new Date(reg.vencimiento + 'T00:00:00');
+                const estaAlDia = reg.pagado || (fechaVen >= hoy);
+                const badgeHtml = estaAlDia ? `<span class="status-badge status-activo">✓ Al Día</span>` : `<span class="status-badge status-vencido">⚠️ Vencido</span>`;
+
+                const card = document.createElement('div');
+                card.className = reg.pagado ? 'modelo-card pagado-card' : 'modelo-card';
+                card.innerHTML = `
+                    <div class="modelo-header">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <button class="${reg.pagado ? 'btn-check pagado' : 'btn-check'}" onclick="togglePagado(${index})">✓</button>
+                            <div>
+                                <div class="modelo-nombre">${reg.nombre}</div>
+                                <div class="modelo-zona-cat">${reg.zona} • <span>${reg.categoria}</span></div>
+                            </div>
+                        </div>
+                        <div>${badgeHtml}</div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.85rem;">
+                        <div>
+                            <span style="font-size:0.65rem; color:#888;">VENCIMIENTO</span>
+                            <input type="date" value="${reg.vencimiento}" data-index="${index}" class="fecha-input fecha-editable">
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="font-size:0.65rem; color:#888;">MONTO</span>
+                            <span class="amount-col">+$${Number(reg.monto || 0).toLocaleString('es-AR')}</span>
+                        </div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; color:#888; border-top:1px solid #1f1f1f; padding-top:6px;">
+                        <span>Registro local</span>
+                        <button class="btn-delete" onclick="eliminarRegistro(${index})">Eliminar</button>
+                    </div>
+                `;
+                tarjetasContainer.appendChild(card);
+            });
+
+            document.querySelectorAll('.fecha-editable').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const idx = e.target.getAttribute('data-index');
+                    registros[idx].vencimiento = e.target.value;
+                    localStorage.setItem('prive_magenta_modelos', JSON.stringify(registros));
+                    renderizarTarjetas();
+                });
+            });
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nombre = document.getElementById('nombre').value.trim().toUpperCase();
+            const zona = document.getElementById('zona').value.trim().toUpperCase();
+            const categoria = document.getElementById('categoria').value;
+            const monto = parseFloat(document.getElementById('monto').value) || 0;
+            const vencimiento = document.getElementById('vencimiento').value;
+            const ws = document.getElementById('whatsapp').value.trim();
+            const fotoUrl = document.getElementById('fotosGaleria').value.trim();
+
+            const nuevoReg = { vencimiento, monto, nombre, zona, categoria, fotosGaleria: [fotoUrl], whatsapp: ws, pagado: true };
+
+            // Subir también a Firebase para que se vea en el sitio web principal
+            db.collection("modelos_prive").add({
+                nombre,
+                zona,
+                categoria,
+                fotoPrincipal: fotoUrl,
+                whatsapp: ws,
+                modalidad: "Gabinete propio",
+                destacada: false,
+                estado: "activo"
+            }).then(() => {
+                alert('¡Ficha creada y publicada en Firebase con éxito!');
+            }).catch(err => {
+                alert('Guardado localmente, error al sincronizar con Firebase.');
+            });
+
+            registros.unshift(nuevoReg);
+            localStorage.setItem('prive_magenta_modelos', JSON.stringify(registros));
+            registrarMovimientoHistorial(nombre, monto);
+
+            form.reset();
+            document.getElementById('vencimiento').valueAsDate = new Date();
+            renderizarTarjetas();
+        });
+
+        window.togglePagado = function(index) {
+            registros[index].pagado = !registros[index].pagado;
+            if (registros[index].pagado) {
+                registrarMovimientoHistorial(registros[index].nombre, registros[index].monto);
+                let fechaVen = new Date(registros[index].vencimiento + 'T00:00:00');
+                fechaVen.setDate(fechaVen.getDate() + 30);
+                registros[index].vencimiento = fechaVen.toISOString().split('T')[0];
+            }
+            localStorage.setItem('prive_magenta_modelos', JSON.stringify(registros));
+            renderizarTarjetas();
+        };
+
+        window.eliminarRegistro = function(index) {
+            if (confirm('¿Eliminar este registro?')) {
+                registros.splice(index, 1);
+                localStorage.setItem('prive_magenta_modelos', JSON.stringify(registros));
+                renderizarTarjetas();
+            }
+        };
+
+        window.restaurarDatos = function() {
+            if (confirm('¿Limpiar registros locales?')) {
+                localStorage.removeItem('prive_magenta_modelos');
+                localStorage.removeItem('prive_magenta_historial');
+                location.reload();
+            }
+        };
+
+        renderizarTarjetas();
     </script>
 </body>
 </html>
