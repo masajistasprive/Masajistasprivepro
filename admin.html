@@ -3,42 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Administración Protegido | Masajistas Privé</title>
+    <title>Panel de Administración | Masajistas Privé</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         body.admin-body { background-color: #0d0d0d; color: #e5e5e5; font-family: 'Montserrat', sans-serif; margin: 0; padding: 20px; }
         .admin-container { max-width: 1100px; margin: 0 auto; display: none; }
         
-        /* Pantalla de Login */
+        /* Pantalla de Login Mejorada */
         #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0d0d0d; display: flex; justify-content: center; align-items: center; z-index: 999999; }
-        .login-card { background: #141414; border: 1px solid #dfc285; border-radius: 12px; padding: 40px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.9); }
-        .login-card h2 { color: #dfc285; font-family: 'Cormorant Garamond', serif; font-size: 26px; margin-top: 0; margin-bottom: 20px; }
+        .login-card { background: #141414; border: 1px solid #dfc285; border-radius: 14px; padding: 40px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.9); }
+        .login-logo { max-width: 140px; width: 50vw; display: block; margin: 0 auto 20px auto; opacity: 0.9; }
+        .login-card h2 { color: #dfc285; font-family: 'Cormorant Garamond', serif; font-size: 26px; margin-top: 0; margin-bottom: 8px; letter-spacing: 2px; }
         .login-card input { width: 100%; background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 6px; font-size: 14px; margin-bottom: 20px; box-sizing: border-box; text-align: center; }
         .login-card input:focus { border-color: #dfc285; outline: none; }
 
+        /* Cabecera del Admin con Logo */
         .admin-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(223, 194, 133, 0.3); padding-bottom: 20px; margin-bottom: 30px; }
-        .admin-header h1 { color: #dfc285; font-family: 'Cormorant Garamond', serif; font-size: 28px; margin: 0; }
+        .header-brand-box { display: flex; align-items: center; gap: 15px; }
+        .header-logo-admin { width: 55px; height: auto; display: block; }
+        .admin-header h1 { color: #dfc285; font-family: 'Cormorant Garamond', serif; font-size: 26px; margin: 0; letter-spacing: 1px; }
+        .admin-header p { color: #888; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin: 2px 0 0 0; }
         
-        /* Tarjetas de Métricas de Estilos */
-        .metrics-grid-admin { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
-        .metric-card-admin { background: #141414; border: 1px solid rgba(223, 194, 133, 0.3); border-radius: 10px; padding: 20px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
-        .metric-title-admin { font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-        .metric-value-admin { font-size: 1.8rem; color: #dfc285; font-weight: bold; font-family: 'Cormorant Garamond', serif; }
+        /* Tarjetas de Métricas de Estilos Visuales Amigables */
+        .metrics-grid-admin { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+        .metric-card-admin { background: linear-gradient(135deg, #141414, #1a1a1a); border: 1px solid rgba(223, 194, 133, 0.3); border-radius: 12px; padding: 22px; text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.6); position: relative; overflow: hidden; }
+        .metric-card-admin::after { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: #dfc285; }
+        .metric-title-admin { font-size: 0.75rem; color: #aaa; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; font-weight: 500; }
+        .metric-value-admin { font-size: 2.2rem; color: #dfc285; font-weight: bold; font-family: 'Cormorant Garamond', serif; text-shadow: 0 0 10px rgba(223,194,133,0.2); }
 
-        .card-admin { background: #141414; border: 1px solid rgba(223, 194, 133, 0.2); border-radius: 10px; padding: 25px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .card-admin h2 { color: #dfc285; font-size: 20px; margin-top: 0; font-family: 'Cormorant Garamond', serif; border-bottom: 1px solid rgba(223, 194, 133, 0.1); padding-bottom: 10px; }
+        .card-admin { background: #141414; border: 1px solid rgba(223, 194, 133, 0.2); border-radius: 12px; padding: 25px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .card-admin h2 { color: #dfc285; font-size: 20px; margin-top: 0; font-family: 'Cormorant Garamond', serif; border-bottom: 1px solid rgba(223, 194, 133, 0.1); padding-bottom: 12px; letter-spacing: 1px; }
+        
         textarea.html-input { width: 100%; height: 110px; background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 13px; resize: vertical; box-sizing: border-box; }
         textarea.html-input:focus { border-color: #dfc285; outline: none; }
         input[type="text"] { width: 100%; background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px 12px; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 13px; box-sizing: border-box; }
         input[type="text"]:focus { border-color: #dfc285; outline: none; }
         input[type="file"] { background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 8px; border-radius: 6px; width: 100%; font-size: 12px; box-sizing: border-box; cursor: pointer; }
-        .btn-prive { background: #dfc285; color: #0d0d0d; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer; font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 1.5px; transition: all 0.3s; }
-        .btn-prive:hover { background: #c5a86d; }
+        
+        .btn-prive { background: linear-gradient(135deg, #dfc285, #b89751); color: #0d0d0d; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer; font-weight: 700; text-transform: uppercase; font-size: 12px; letter-spacing: 1.5px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(223, 194, 133, 0.2); }
+        .btn-prive:hover { background: #dfc285; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(223, 194, 133, 0.3); }
+        
         .btn-traducir { background: rgba(223, 194, 133, 0.15); border: 1px solid #dfc285; color: #dfc285; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; margin-bottom: 15px; display: inline-flex; align-items: center; gap: 6px; }
         .btn-traducir:hover { background: #dfc285; color: #0d0d0d; }
 
-        /* Estilo Moderno para la Nómina de Modelos (Tarjetas de Lujo) */
+        /* Estilo Moderno para la Nómina de Modelos */
         .modelo-card-admin { display: flex; align-items: center; justify-content: space-between; background: #1a1a1a; border: 1px solid rgba(223, 194, 133, 0.15); border-radius: 8px; padding: 12px 18px; margin-bottom: 12px; transition: all 0.3s ease; gap: 15px; flex-wrap: wrap; }
         .modelo-card-admin:hover { border-color: rgba(223, 194, 133, 0.4); box-shadow: 0 4px 15px rgba(0,0,0,0.6); }
         .modelo-info-left { display: flex; align-items: center; gap: 15px; min-width: 240px; }
@@ -77,7 +86,7 @@
         .metodo-panel.active { display: block; }
 
         #modalEditar { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 99999; padding: 20px; box-sizing: border-box; }
-        .modal-content { background: #141414; border: 1px solid #dfc285; border-radius: 10px; width: 100%; max-width: 750px; padding: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); max-height: 90vh; overflow-y: auto; }
+        .modal-content { background: #141414; border: 1px solid #dfc285; border-radius: 12px; width: 100%; max-width: 750px; padding: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); max-height: 90vh; overflow-y: auto; }
         .modal-content h3 { color: #dfc285; font-family: 'Cormorant Garamond', serif; font-size: 24px; margin-top: 0; border-bottom: 1px solid rgba(223,194,133,0.2); padding-bottom: 10px; }
     </style>
 </head>
@@ -86,8 +95,9 @@
     <!-- PANTALLA DE ACCESO CON CONTRASEÑA -->
     <div id="loginOverlay">
         <div class="login-card">
+            <img src="img/logo.png" alt="Masajistas Privé" class="login-logo">
             <h2>Masajistas Privé</h2>
-            <p style="font-size: 12px; color: #aaa; margin-bottom: 20px;">Panel de Administración Protegido</p>
+            <p style="font-size: 11px; color: #888; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px;">Panel de Administración</p>
             <input type="password" id="inputPassword" placeholder="Ingresá la contraseña" onkeypress="if(event.key === 'Enter') verificarPassword()">
             <button type="button" class="btn-prive" style="width: 100%;" onclick="verificarPassword()">Ingresar al Panel</button>
             <div id="loginError" style="color: #e74c3c; font-size: 12px; margin-top: 12px;"></div>
@@ -97,21 +107,27 @@
     <!-- CONTENEDOR PRINCIPAL DEL PANEL -->
     <div class="admin-container" id="adminMainContent">
         <header class="admin-header">
-            <h1>Panel de Administración — Masajistas Privé</h1>
+            <div class="header-brand-box">
+                <img src="img/logo.png" alt="Logo" class="header-logo-admin">
+                <div>
+                    <h1>Masajistas Privé</h1>
+                    <p>Panel de Control & Métricas</p>
+                </div>
+            </div>
             <div style="display: flex; gap: 15px; align-items: center;">
-                <a href="index.html" style="color: #dfc285; text-decoration: none; font-size: 13px;">← Volver al Portal</a>
+                <a href="index.html" style="color: #dfc285; text-decoration: none; font-size: 13px; font-weight: 500;">← Ver Portal</a>
                 <button type="button" class="btn-accion" onclick="cerrarSesionAdmin()" style="border-color: #e74c3c; color: #e74c3c;">Cerrar Sesión</button>
             </div>
         </header>
 
-        <!-- TARJETAS DE MÉTRICAS DE ESTILOS -->
+        <!-- TARJETAS DE MÉTRICAS DE ESTILOS AMIGABLES -->
         <div class="metrics-grid-admin">
             <div class="metric-card-admin">
-                <div class="metric-title-admin">Uso Estilo Normal (Privé)</div>
+                <div class="metric-title-admin">🏛️ Preferencia Estilo Normal</div>
                 <div class="metric-value-admin" id="contadorNormalAdmin">0</div>
             </div>
             <div class="metric-card-admin">
-                <div class="metric-title-admin">Uso Estilo Tarjeta Grande</div>
+                <div class="metric-title-admin">✨ Preferencia Tarjeta Grande</div>
                 <div class="metric-value-admin" id="contadorTarjetaAdmin">0</div>
             </div>
         </div>
@@ -499,13 +515,13 @@
             const file = input.files[0];
             if (!file) return;
             const status = document.getElementById('statusVideo');
-            status.textContent = "⏳ Procesando video (puede demorar unos segundos)...";
+            status.textContent = "⏳ Procesando video...";
 
             const reader = new FileReader();
             reader.onload = function(e) {
                 videoPresentacionSubido = e.target.result;
                 document.getElementById('urlVideoPresentacion').value = e.target.result;
-                status.textContent = "✅ ¡Video listo para publicar!";
+                status.textContent = "✅ ¡Video listo!";
             };
             reader.readAsDataURL(file);
         }
@@ -556,7 +572,7 @@
 
         async function traducirAutomaticamenteAdmin() {
             const status = document.getElementById('tradStatusAdmin');
-            status.textContent = "⏳ Traduciendo textos automáticamente...";
+            status.textContent = "⏳ Traduciendo textos...";
             
             const campos = ['zona', 'modalidad', 'desc1', 'desc2', 'horarios', 'atencion'];
             const destinos = [{ code: 'en', suf: 'en' }, { code: 'pt', suf: 'pt' }, { code: 'fr', suf: 'fr' }];
@@ -574,7 +590,7 @@
                         }
                     }
                 }
-                status.textContent = "✅ ¡Traducción automática completada con éxito!";
+                status.textContent = "✅ ¡Traducción completada!";
             } catch (e) {
                 status.textContent = "❌ Error al traducir.";
             }
