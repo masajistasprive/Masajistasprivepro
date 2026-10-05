@@ -39,11 +39,17 @@
         textarea.html-input:focus { border-color: #dfc285; outline: none; }
         input[type="text"] { width: 100%; background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px 12px; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 13px; box-sizing: border-box; }
         input[type="text"]:focus { border-color: #dfc285; outline: none; }
-        input[type="file"] { background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 8px; border-radius: 6px; width: 100%; font-size: 12px; box-sizing: border-box; cursor: pointer; }
+        input[type="file"] { display: none; } /* Oculto para usar el botón personalizado con "+" */
+
+        /* Estilos modernos para grilla de miniaturas y botón de carga con "+" */
+        .preview-grid { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; align-items: center; }
+        .thumb-wrapper { position: relative; width: 65px; height: 65px; border-radius: 6px; overflow: hidden; border: 1px solid #dfc285; background: #111; }
+        .thumb-box { width: 100%; height: 100%; object-fit: cover; }
+        .thumb-delete { position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.7); color: #ff5555; border: none; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         
-        /* Contenedores de Miniaturas */
-        .preview-thumb-container { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
-        .thumb-box { width: 60px; height: 60px; border-radius: 6px; object-fit: cover; border: 1px solid #dfc285; background: #111; }
+        .btn-add-more { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 65px; height: 65px; border: 2px dashed #dfc285; border-radius: 6px; background: rgba(223,194,133,0.05); color: #dfc285; cursor: pointer; transition: all 0.2s; font-size: 20px; font-weight: bold; text-align: center; }
+        .btn-add-more:hover { background: rgba(223,194,133,0.15); border-color: #fff; color: #fff; }
+        .btn-add-more span { font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
 
         .btn-prive { background: linear-gradient(135deg, #dfc285, #b89751); color: #0d0d0d; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer; font-weight: 700; text-transform: uppercase; font-size: 12px; letter-spacing: 1.5px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(223, 194, 133, 0.2); }
         .btn-prive:hover { background: #dfc285; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(223, 194, 133, 0.3); }
@@ -174,18 +180,24 @@
                 <!-- SECCIÓN DE SELECCIÓN DE FOTOS Y VIDEO -->
                 <div class="form-grid" style="background: #1a1a1a; padding: 15px; border-radius: 8px; border: 1px solid #333; margin-bottom: 15px;">
                     <div class="form-row" style="margin-bottom: 0;">
-                        <label style="color: #dfc285;">📸 Elegir Foto Principal de la Galería:</label>
+                        <label style="color: #dfc285;">📸 Foto Principal:</label>
                         <input type="file" id="fileFotoPrincipal" accept="image/*" onchange="convertirFotoLocal(this, 'urlFotoPrincipal', 'previewFotoPrin')">
                         <input type="hidden" id="urlFotoPrincipal">
-                        <div id="previewFotoPrin" class="preview-thumb-container"></div>
+                        <div id="previewFotoPrin" class="preview-grid">
+                            <label for="fileFotoPrincipal" class="btn-add-more"><span>+</span><span>Foto</span></label>
+                        </div>
                         <div id="statusFotoPrin" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
                     </div>
+                    
                     <div class="form-row" style="margin-bottom: 0;">
-                        <label style="color: #dfc285;">📸 Elegir Fotos de Galería (¡Sin límite!):</label>
-                        <input type="file" id="fileFotosGaleria" accept="image/*" multiple onchange="convertirGaleriaLocal(this, 'previewGaleria')">
-                        <div id="previewGaleria" class="preview-thumb-container"></div>
+                        <label style="color: #dfc285;">📸 Fotos de Galería (¡Sin límite!):</label>
+                        <input type="file" id="fileFotosGaleria" accept="image/*" multiple onchange="agregarFotosGaleria(this, 'previewGaleria')">
+                        <div id="previewGaleria" class="preview-grid">
+                            <label for="fileFotosGaleria" class="btn-add-more"><span>+</span><span>Agregar</span></label>
+                        </div>
                         <div id="statusGaleria" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
                     </div>
+
                     <div class="form-row" style="margin-bottom: 0; grid-column: 1 / -1; margin-top: 10px;">
                         <label style="color: #dfc285;">🎥 Video de Presentación (Opcional - MP4):</label>
                         <input type="file" id="fileVideoPresentacion" accept="video/mp4,video/*" onchange="convertirVideoLocal(this)">
@@ -338,16 +350,22 @@
                 <div class="form-row" style="margin-bottom: 0;">
                     <label style="color: #dfc285;">📸 Cambiar Foto Principal:</label>
                     <input type="file" id="editFileFotoPrin" accept="image/*" onchange="convertirFotoLocal(this, 'editFotoPrincipal', 'previewEditFotoPrin')">
-                    <input type="text" id="editFotoPrincipal" placeholder="URL o código de foto" style="margin-top: 6px; font-size: 11px;">
-                    <div id="previewEditFotoPrin" class="preview-thumb-container"></div>
+                    <input type="hidden" id="editFotoPrincipal">
+                    <div id="previewEditFotoPrin" class="preview-grid">
+                        <label for="editFileFotoPrin" class="btn-add-more"><span>+</span><span>Foto</span></label>
+                    </div>
                     <div id="statusEditFotoPrin" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
                 </div>
+
                 <div class="form-row" style="margin-bottom: 0;">
-                    <label style="color: #dfc285;">📸 Actualizar Galería de Fotos (¡Sin límite!):</label>
-                    <input type="file" id="editFileGaleria" accept="image/*" multiple onchange="convertirGaleriaEdicion(this, 'previewEditGaleria')">
-                    <div id="previewEditGaleria" class="preview-thumb-container"></div>
+                    <label style="color: #dfc285;">📸 Actualizar Galería de Fotos:</label>
+                    <input type="file" id="editFileGaleria" accept="image/*" multiple onchange="agregarFotosEdicion(this, 'previewEditGaleria')">
+                    <div id="previewEditGaleria" class="preview-grid">
+                        <label for="editFileGaleria" class="btn-add-more"><span>+</span><span>Agregar</span></label>
+                    </div>
                     <div id="statusEditGaleria" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
                 </div>
+
                 <div class="form-row" style="margin-bottom: 0; grid-column: 1 / -1; margin-top: 10px;">
                     <label style="color: #dfc285;">🎥 Actualizar Video de Presentación (MP4):</label>
                     <input type="file" id="editFileVideo" accept="video/mp4,video/*" onchange="convertirVideoEdicion(this)">
@@ -384,7 +402,7 @@
                 </div>
                 <div id="modal-lang-pt" class="lang-section">
                     <div class="form-row"><label>Zona (PT):</label><input type="text" id="editZona_pt"></div>
-                    <div class="form-row"><label>Modalidade (PT):</label><input type="text" id="editModalidad_pt"></div>
+                    <div class="form-row"><label>Modalidade (PT):</label><input type="text" id="editModalidade_pt"></div>
                     <div class="form-row"><label>Descrição 1 (PT):</label><textarea id="editDesc_pt" class="html-input" style="height: 80px;"></textarea></div>
                     <div class="form-row"><label>Descrição 2 (PT):</label><textarea id="editDesc2_pt" class="html-input" style="height: 80px;"></textarea></div>
                 </div>
@@ -506,49 +524,68 @@
 
             comprimirImagen(file, function(compressedUrl) {
                 document.getElementById(targetId).value = compressedUrl;
-                previewBox.innerHTML = `<img src="${compressedUrl}" class="thumb-box" alt="Vista previa">`;
+                previewBox.innerHTML = `
+                    <div class="thumb-wrapper">
+                        <img src="${compressedUrl}" class="thumb-box" alt="Principal">
+                    </div>
+                    <label for="${input.id}" class="btn-add-more"><span>+</span><span>Cambiar</span></label>
+                `;
                 status.textContent = "✅ ¡Foto comprimida y lista!";
             });
         }
 
-        function convertirGaleriaLocal(input, previewContainerId) {
+        function agregarFotosGaleria(input, previewContainerId) {
             const files = input.files;
             if (!files.length) return;
             const status = document.getElementById('statusGaleria');
             const previewBox = document.getElementById(previewContainerId);
-            status.textContent = `⏳ Comprimiendo ${files.length} fotos...`;
-            previewBox.innerHTML = '';
-            fotosGaleriaSubidas = [];
+            status.textContent = `⏳ Comprimiendo fotos...`;
 
-            let procesadas = 0;
             Array.from(files).forEach((file) => {
                 comprimirImagen(file, function(compressedUrl) {
                     fotosGaleriaSubidas.push(compressedUrl);
-                    previewBox.innerHTML += `<img src="${compressedUrl}" class="thumb-box" alt="Miniatura">`;
-                    procesadas++;
-                    status.textContent = `✅ Listas ${procesadas} de ${files.length} fotos comprimidas.`;
+                    
+                    // Renderizar miniatura con botón de eliminar
+                    const thumbDiv = document.createElement('div');
+                    thumbDiv.className = 'thumb-wrapper';
+                    thumbDiv.innerHTML = `
+                        <img src="${compressedUrl}" class="thumb-box" alt="Galería">
+                        <button type="button" class="thumb-delete" onclick="this.parentElement.remove();">×</button>
+                    `;
+                    
+                    // Insertar antes del botón "+"
+                    const addBtn = previewBox.querySelector('.btn-add-more');
+                    previewBox.insertBefore(thumbDiv, addBtn);
+                    status.textContent = `✅ Fotos listas (${fotosGaleriaSubidas.length})`;
                 });
             });
+            input.value = ''; // Resetear input para permitir elegir el mismo archivo de nuevo si se desea
         }
 
-        function convertirGaleriaEdicion(input, previewContainerId) {
+        function agregarFotosEdicion(input, previewContainerId) {
             const files = input.files;
             if (!files.length) return;
             const status = document.getElementById('statusEditGaleria');
             const previewBox = document.getElementById(previewContainerId);
-            status.textContent = `⏳ Comprimiendo ${files.length} fotos nuevas...`;
-            previewBox.innerHTML = '';
-            fotosGaleriaEdicion = [];
+            status.textContent = `⏳ Comprimiendo fotos nuevas...`;
 
-            let procesadas = 0;
             Array.from(files).forEach((file) => {
                 comprimirImagen(file, function(compressedUrl) {
                     fotosGaleriaEdicion.push(compressedUrl);
-                    previewBox.innerHTML += `<img src="${compressedUrl}" class="thumb-box" alt="Miniatura">`;
-                    procesadas++;
-                    status.textContent = `✅ Listas ${procesadas} de ${files.length} fotos nuevas comprimidas.`;
+                    
+                    const thumbDiv = document.createElement('div');
+                    thumbDiv.className = 'thumb-wrapper';
+                    thumbDiv.innerHTML = `
+                        <img src="${compressedUrl}" class="thumb-box" alt="Galería Nueva">
+                        <button type="button" class="thumb-delete" onclick="this.parentElement.remove();">×</button>
+                    `;
+                    
+                    const addBtn = previewBox.querySelector('.btn-add-more');
+                    previewBox.insertBefore(thumbDiv, addBtn);
+                    status.textContent = `✅ Nuevas listas (${fotosGaleriaEdicion.length})`;
                 });
             });
+            input.value = '';
         }
 
         function convertirVideoLocal(input) {
@@ -850,16 +887,25 @@
                     document.getElementById('editFotoPrincipal').value = m.fotoPrincipal || '';
                     document.getElementById('editVideoPresentacion').value = m.videoPresentacion || '';
                     
-                    // Mostrar miniatura de foto principal actual
-                    document.getElementById('previewEditFotoPrin').innerHTML = m.fotoPrincipal ? `<img src="${m.fotoPrincipal}" class="thumb-box" alt="Actual">` : '';
+                    // Mostrar foto principal actual con botón de cambio
+                    document.getElementById('previewEditFotoPrin').innerHTML = m.fotoPrincipal ? `
+                        <div class="thumb-wrapper"><img src="${m.fotoPrincipal}" class="thumb-box" alt="Principal"></div>
+                        <label for="editFileFotoPrin" class="btn-add-more"><span>+</span><span>Cambiar</span></label>
+                    ` : `<label for="editFileFotoPrin" class="btn-add-more"><span>+</span><span>Foto</span></label>`;
                     
-                    // Mostrar miniaturas de galería actual
+                    // Mostrar galería actual con botón "+" para agregar más
                     let galeriaHtml = '';
                     if (m.fotosGaleria && m.fotosGaleria.length) {
                         m.fotosGaleria.forEach(imgUrl => {
-                            galeriaHtml += `<img src="${imgUrl}" class="thumb-box" alt="Galería">`;
+                            galeriaHtml += `
+                                <div class="thumb-wrapper">
+                                    <img src="${imgUrl}" class="thumb-box" alt="Galería">
+                                    <button type="button" class="thumb-delete" onclick="this.parentElement.remove();">×</button>
+                                </div>
+                            `;
                         });
                     }
+                    galeriaHtml += `<label for="editFileGaleria" class="btn-add-more"><span>+</span><span>Agregar</span></label>`;
                     document.getElementById('previewEditGaleria').innerHTML = galeriaHtml;
 
                     document.getElementById('tradStatus').textContent = '';
@@ -948,8 +994,18 @@
                     mData.videoPresentacion = nuevoVideo;
                 }
 
-                if (fotosGaleriaEdicion.length > 0) {
-                    mData.fotosGaleria = fotosGaleriaEdicion;
+                // Recopilar todas las fotos que quedaron visibles en la vista previa de galería
+                const previewGaleria = document.getElementById('previewEditGaleria');
+                const imagenesRestantes = Array.from(previewGaleria.querySelectorAll('.thumb-box')).map(img => img.src);
+                
+                // Si agregaron nuevas o eliminaron alguna, actualizamos la lista
+                let galeriaFinal = [];
+                if (fotosGaleriaEdicion.length > 0 || imagenesRestantes.length > 0) {
+                    // Juntamos las que ya estaban y quedaron en pantalla + las nuevas subidas
+                    galeriaFinal = imagenesRestantes.concat(fotosGaleriaEdicion);
+                }
+                if (galeriaFinal.length > 0) {
+                    mData.fotosGaleria = galeriaFinal;
                 }
 
                 const datosActualizados = {
@@ -992,8 +1048,10 @@
             document.getElementById('statusFotoPrin').textContent = '';
             document.getElementById('statusGaleria').textContent = '';
             document.getElementById('statusVideo').textContent = '';
-            document.getElementById('previewFotoPrin').innerHTML = '';
-            document.getElementById('previewGaleria').innerHTML = '';
+            
+            document.getElementById('previewFotoPrin').innerHTML = `<label for="fileFotoPrincipal" class="btn-add-more"><span>+</span><span>Foto</span></label>`;
+            document.getElementById('previewGaleria').innerHTML = `<label for="fileFotosGaleria" class="btn-add-more"><span>+</span><span>Agregar</span></label>`;
+            
             fotosGaleriaSubidas = [];
             videoPresentacionSubido = "";
         }
