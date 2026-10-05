@@ -377,20 +377,21 @@
 
             docRef.get().then((doc) => {
                 if (!doc.exists) {
-                    container.innerHTML = `<h2 style="color:#e74c3c; text-align:center;">El perfil solicitado no existe o fue removido (${perfilId}).</h2>`;
+                    container.innerHTML = `<h2 style="color:#e74c3c; text-align:center;">⚠️ El documento '${perfilId}' NO EXISTE en Firebase.</h2>`;
                     ocultarTransicionPrive();
                     return;
                 }
 
                 const datosActuales = doc.data();
-                
                 let visitasActuales = parseInt(datosActuales.visitas) || 0;
                 const nuevaSumaVisitas = visitasActuales + 1;
 
                 docRef.set({
                     visitas: nuevaSumaVisitas
-                }, { merge: true }).catch((err) => {
-                    console.log("Error al guardar visita:", err);
+                }, { merge: true }).then(() => {
+                    console.log("¡Éxito total sumando vistas!");
+                }).catch((err) => {
+                    alert("Error al escribir vista: " + err.message);
                 });
 
                 datosModeloActual = datosActuales;
@@ -401,7 +402,7 @@
                 inicializarVisorFotosDinamico();
                 ocultarTransicionPrive();
             }).catch(error => {
-                container.innerHTML = `<p style="color:#e74c3c; text-align:center;">Error al cargar el perfil.</p>`;
+                container.innerHTML = `<h2 style="color:#e74c3c; text-align:center;">❌ Error de conexión: ${error.message}</h2>`;
                 ocultarTransicionPrive();
             });
         }
@@ -596,7 +597,7 @@
                             <button type="button" onclick="window.agregarEmojiPerfil('😊')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">😊</button>
                             <button type="button" onclick="window.agregarEmojiPerfil('👍')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">👍</button>
                             <button type="button" onclick="window.agregarEmojiPerfil('🔥')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">🔥</button>
-                            <button type="button" onclick="window.agregarEmojiPerfil('❤️')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">❤️</button>
+                            <button type="button" onclick="window.agregarEmojiPerfil('❤️️')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">❤️</button>
                             <button type="button" onclick="window.agregarEmojiPerfil('⭐')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">⭐</button>
                             
                             <label title="Adjuntar foto" style="color: #dfc285; cursor: pointer; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; background: rgba(223,194,133,0.1); width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(223, 194, 133, 0.4); margin-left: auto;">
