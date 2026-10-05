@@ -555,9 +555,6 @@
             { vencimiento: "2026-10-26", monto: 50000, nombre: "RENATA", zona: "PTO MADERO", categoria: "SENSUALES", pagado: true }
         ];
 
-        // Forzar actualización de registros y historial exactos
-        localStorage.setItem('prive_control_modelos', JSON.stringify(datosInicialesExcel));
-
         let historialPrecargado = [
             { fecha: "2026-09-01", nombre: "MORA", monto: 50000 },
             { fecha: "2026-09-01", nombre: "MORA S", monto: 50000 },
@@ -565,12 +562,17 @@
             { fecha: "2026-10-02", nombre: "PRADA", monto: 50000 },
             { fecha: "2026-10-02", nombre: "LUPITA", monto: 50000 }
         ];
-        localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPrecargado));
+
+        if (!localStorage.getItem('prive_control_modelos')) {
+            localStorage.setItem('prive_control_modelos', JSON.stringify(datosInicialesExcel));
+        }
+        if (!localStorage.getItem('prive_historial_pagos')) {
+            localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPrecargado));
+        }
 
         let registros = JSON.parse(localStorage.getItem('prive_control_modelos'));
         let historialPagos = JSON.parse(localStorage.getItem('prive_historial_pagos'));
 
-        // Poner fecha de hoy por defecto en el formulario
         document.getElementById('vencimiento').valueAsDate = new Date();
 
         const selectCat = document.getElementById('categoria');
@@ -649,7 +651,7 @@
                 return;
             }
 
-            let registrosOrdenados = registros.map((reg, originalIndex) => ({ ...reg, originalIndex }));
+            let registrosOrdenados = [...registros];
             
             registrosOrdenados.sort((a, b) => {
                 if (a.pagado !== b.pagado) {
@@ -675,7 +677,7 @@
                 card.innerHTML = `
                     <div class="modelo-header">
                         <div class="modelo-nombre-box">
-                            <button class="${btnCheckClass}" onclick="togglePagado(${reg.originalIndex})" title="Marcar como pagado">✓</button>
+                            <button class="${btnCheckClass}" onclick="togglePagado('${reg.nombre.replace(/'/g, "\\'")}')" title="Marcar como pagado">✓</button>
                             <div>
                                 <div class="modelo-nombre">${reg.nombre}</div>
                                 <div class="modelo-zona-cat">${reg.zona} • <span style="color:#dfc285;">${reg.categoria}</span></div>
@@ -686,7 +688,7 @@
                     <div class="modelo-body">
                         <div>
                             <span style="font-size:0.7rem; color:#888; display:block; margin-bottom:2px;">VENCIMIENTO</span>
-                            <input type="date" value="${reg.vencimiento}" data-index="${reg.originalIndex}" class="fecha-input fecha-editable">
+                            <input type="date" value="${reg.vencimiento}" data-nombre="${reg.nombre.replace(/'/g, "\\'")}" class="fecha-input fecha-editable">
                         </div>
                         <div style="text-align: right;">
                             <span style="font-size:0.7rem; color:#888; display:block; margin-bottom:2px;">MONTO</span>
@@ -695,7 +697,7 @@
                     </div>
                     <div class="modelo-footer">
                         <span>Perfil</span>
-                        <button class="btn-delete" onclick="eliminarRegistro(${reg.originalIndex})">Eliminar</button>
+                        <button class="btn-delete" onclick="eliminarRegistro('${reg.nombre.replace(/'/g, "\\'")}')">Eliminar</button>
                     </div>
                 `;
                 tarjetasContainer.appendChild(card);
@@ -703,10 +705,13 @@
 
             document.querySelectorAll('.fecha-editable').forEach(input => {
                 input.addEventListener('change', (e) => {
-                    const idx = e.target.getAttribute('data-index');
-                    registros[idx].vencimiento = e.target.value;
-                    localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
-                    renderizarTarjetas();
+                    const nombreReg = e.target.getAttribute('data-nombre');
+                    const idx = registros.findIndex(r => r.nombre === nombreReg);
+                    if (idx !== -1) {
+                        registros[idx].vencimiento = e.target.value;
+                        localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
+                        renderizarTarjetas();
+                    }
                 });
             });
         }
@@ -786,24 +791,27 @@
             renderizarTarjetas();
         });
 
-        window.togglePagado = function(index) {
-            registros[index].pagado = !registros[index].pagado;
-            
-            if (registros[index].pagado) {
-                registrarMovimientoHistorial(registros[index].nombre, registros[index].monto);
+        window.togglePagado = function(nombreReg) {
+            const idx = registros.findIndex(r => r.nombre === nombreReg);
+            if (idx === -1) return;
 
-                let fechaVen = new Date(registros[index].vencimiento + 'T00:00:00');
+            registros[idx].pagado = !registros[idx].pagado;
+            
+            if (registros[idx].pagado) {
+                registrarMovimientoHistorial(registros[idx].nombre, registros[idx].monto);
+
+                let fechaVen = new Date(registros[idx].vencimiento + 'T00:00:00');
                 fechaVen.setDate(fechaVen.getDate() + 30);
-                registros[index].vencimiento = fechaVen.toISOString().split('T')[0];
+                registros[idx].vencimiento = fechaVen.toISOString().split('T')[0];
             }
 
             localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
             renderizarTarjetas();
         };
 
-        window.eliminarRegistro = function(index) {
-            if (confirm('¿Estás seguro de eliminar este registro?')) {
-                registros.splice(index, 1);
+        window.eliminarRegistro = function(nombreReg) {
+            if (confirm(`¿Estás seguro de eliminar el registro de ${nombreReg}?`)) {
+                registros = registros.filter(r => r.nombre !== nombreReg);
                 localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
                 renderizarTarjetas();
             }
