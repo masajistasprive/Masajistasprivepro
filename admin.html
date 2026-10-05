@@ -545,7 +545,6 @@
                 comprimirImagen(file, function(compressedUrl) {
                     fotosGaleriaSubidas.push(compressedUrl);
                     
-                    // Renderizar miniatura con botón de eliminar
                     const thumbDiv = document.createElement('div');
                     thumbDiv.className = 'thumb-wrapper';
                     thumbDiv.innerHTML = `
@@ -553,13 +552,12 @@
                         <button type="button" class="thumb-delete" onclick="this.parentElement.remove();">×</button>
                     `;
                     
-                    // Insertar antes del botón "+"
                     const addBtn = previewBox.querySelector('.btn-add-more');
                     previewBox.insertBefore(thumbDiv, addBtn);
                     status.textContent = `✅ Fotos listas (${fotosGaleriaSubidas.length})`;
                 });
             });
-            input.value = ''; // Resetear input para permitir elegir el mismo archivo de nuevo si se desea
+            input.value = '';
         }
 
         function agregarFotosEdicion(input, previewContainerId) {
@@ -998,10 +996,8 @@
                 const previewGaleria = document.getElementById('previewEditGaleria');
                 const imagenesRestantes = Array.from(previewGaleria.querySelectorAll('.thumb-box')).map(img => img.src);
                 
-                // Si agregaron nuevas o eliminaron alguna, actualizamos la lista
                 let galeriaFinal = [];
                 if (fotosGaleriaEdicion.length > 0 || imagenesRestantes.length > 0) {
-                    // Juntamos las que ya estaban y quedaron en pantalla + las nuevas subidas
                     galeriaFinal = imagenesRestantes.concat(fotosGaleriaEdicion);
                 }
                 if (galeriaFinal.length > 0) {
