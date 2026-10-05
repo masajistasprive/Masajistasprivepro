@@ -281,8 +281,15 @@
             }
         }
 
+        // Extracción de ID ultra robusta para evitar que falle
         const urlParams = new URLSearchParams(window.location.search);
-        const perfilId = (urlParams.get('id') || window.location.pathname.split("/").pop().replace(".html", "")).trim();
+        let perfilId = urlParams.get('id');
+        if (!perfilId) {
+            const pathParts = window.location.pathname.split("/").filter(p => p.length > 0);
+            const ultimoSegmento = pathParts[pathParts.length - 1] || "";
+            perfilId = ultimoSegmento.replace(".html", "").trim();
+        }
+        if (!perfilId) perfilId = "olivia"; // Fallback de seguridad
 
         let idiomaPerfil = localStorage.getItem('idiomaPrive') || 'es';
         let datosModeloActual = null;
@@ -362,25 +369,23 @@
 
             docRef.get().then((doc) => {
                 if (!doc.exists) {
-                    container.innerHTML = `<h2 style="color:#e74c3c; text-align:center;">El perfil solicitado no existe o fue removido.</h2>`;
+                    container.innerHTML = `<h2 style="color:#e74c3c; text-align:center;">El perfil solicitado no existe o fue removido (${perfilId}).</h2>`;
                     ocultarTransicionPrive();
                     return;
                 }
 
                 const datosActuales = doc.data();
                 
-                // Lógica de visitas blindada y segura
-                let visitasActuales = 0;
-                if (datosActuales.visitas !== undefined && datosActuales.visitas !== null) {
-                    visitasActuales = parseInt(datosActuales.visitas);
-                    if (isNaN(visitasActuales)) visitasActuales = 0;
-                }
+                // Suma de visitas forzada y limpia
+                let visitasActuales = parseInt(datosActuales.visitas) || 0;
                 const nuevaSumaVisitas = visitasActuales + 1;
 
-                docRef.set({
+                // Guardado inmediato en Firebase
+                docRef.update({
                     visitas: nuevaSumaVisitas
-                }, { merge: true }).catch((err) => {
-                    console.log("Error al guardar visita:", err);
+                }).catch(() => {
+                    // Si update falla por si no existe el campo, usa set con merge
+                    docRef.set({ visitas: nuevaSumaVisitas }, { merge: true });
                 });
 
                 datosModeloActual = datosActuales;
@@ -413,7 +418,7 @@
                 favoritos.push(idModelo);
                 if(btnFav) {
                     btnFav.classList.add('activo');
-                    btnFav.innerHTML = "❤️️ Favorito Guardado";
+                    btnFav.innerHTML = "❤️ Favorito Guardado";
                 }
             }
             localStorage.setItem('priveFavoritos', JSON.stringify(favoritos));
@@ -586,7 +591,7 @@
                             <button type="button" onclick="window.agregarEmojiPerfil('😊')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">😊</button>
                             <button type="button" onclick="window.agregarEmojiPerfil('👍')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">👍</button>
                             <button type="button" onclick="window.agregarEmojiPerfil('🔥')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">🔥</button>
-                            <button type="button" onclick="window.agregarEmojiPerfil('❤️️')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">❤️</button>
+                            <button type="button" onclick="window.agregarEmojiPerfil('❤️')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">❤️</button>
                             <button type="button" onclick="window.agregarEmojiPerfil('⭐')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">⭐</button>
                             
                             <label title="Adjuntar foto" style="color: #dfc285; cursor: pointer; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; background: rgba(223,194,133,0.1); width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(223, 194, 133, 0.4); margin-left: auto;">
