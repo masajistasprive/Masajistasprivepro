@@ -282,7 +282,7 @@
         }
 
         const urlParams = new URLSearchParams(window.location.search);
-        const perfilId = urlParams.get('id') || window.location.pathname.split("/").pop().replace(".html", "").trim() || "general";
+        const perfilId = (urlParams.get('id') || window.location.pathname.split("/").pop().replace(".html", "")).trim();
 
         let idiomaPerfil = localStorage.getItem('idiomaPrive') || 'es';
         let datosModeloActual = null;
@@ -368,15 +368,21 @@
                 }
 
                 const datosActuales = doc.data();
-                const visitasActuales = typeof datosActuales.visitas === 'number' ? datosActuales.visitas + 1 : 1;
+                let visitasPrevias = Number(datosActuales.visitas);
+                if (isNaN(visitasPrevias)) {
+                    visitasPrevias = 0;
+                }
+                const nuevasVisitas = visitasPrevias + 1;
 
                 docRef.update({
-                    visitas: visitasActuales
+                    visitas: nuevasVisitas
                 }).catch((err) => {
                     console.log("Error al sumar visita:", err);
                 });
 
                 datosModeloActual = datosActuales;
+                datosModeloActual.visitas = nuevasVisitas;
+
                 renderizarPerfil(datosModeloActual);
                 inicializarLogicaComentarios();
                 inicializarVisorFotosDinamico();
