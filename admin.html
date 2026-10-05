@@ -39,18 +39,8 @@
         textarea.html-input:focus { border-color: #dfc285; outline: none; }
         input[type="text"] { width: 100%; background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px 12px; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 13px; box-sizing: border-box; }
         input[type="text"]:focus { border-color: #dfc285; outline: none; }
-        input[type="file"] { display: none; } /* Oculto para usar el botón personalizado con "+" */
-
-        /* Estilos modernos para grilla de miniaturas y botón de carga con "+" */
-        .preview-grid { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; align-items: center; }
-        .thumb-wrapper { position: relative; width: 65px; height: 65px; border-radius: 6px; overflow: hidden; border: 1px solid #dfc285; background: #111; }
-        .thumb-box { width: 100%; height: 100%; object-fit: cover; }
-        .thumb-delete { position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.7); color: #ff5555; border: none; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        input[type="file"] { background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 8px; border-radius: 6px; width: 100%; font-size: 12px; box-sizing: border-box; cursor: pointer; }
         
-        .btn-add-more { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 65px; height: 65px; border: 2px dashed #dfc285; border-radius: 6px; background: rgba(223,194,133,0.05); color: #dfc285; cursor: pointer; transition: all 0.2s; font-size: 20px; font-weight: bold; text-align: center; }
-        .btn-add-more:hover { background: rgba(223,194,133,0.15); border-color: #fff; color: #fff; }
-        .btn-add-more span { font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
-
         .btn-prive { background: linear-gradient(135deg, #dfc285, #b89751); color: #0d0d0d; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer; font-weight: 700; text-transform: uppercase; font-size: 12px; letter-spacing: 1.5px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(223, 194, 133, 0.2); }
         .btn-prive:hover { background: #dfc285; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(223, 194, 133, 0.3); }
         
@@ -180,24 +170,16 @@
                 <!-- SECCIÓN DE SELECCIÓN DE FOTOS Y VIDEO -->
                 <div class="form-grid" style="background: #1a1a1a; padding: 15px; border-radius: 8px; border: 1px solid #333; margin-bottom: 15px;">
                     <div class="form-row" style="margin-bottom: 0;">
-                        <label style="color: #dfc285;">📸 Foto Principal:</label>
-                        <input type="file" id="fileFotoPrincipal" accept="image/*" onchange="convertirFotoLocal(this, 'urlFotoPrincipal', 'previewFotoPrin')">
+                        <label style="color: #dfc285;">📸 Elegir Foto Principal de la Galería:</label>
+                        <input type="file" id="fileFotoPrincipal" accept="image/*" onchange="convertirFotoLocal(this, 'urlFotoPrincipal')">
                         <input type="hidden" id="urlFotoPrincipal">
-                        <div id="previewFotoPrin" class="preview-grid">
-                            <label for="fileFotoPrincipal" class="btn-add-more"><span>+</span><span>Foto</span></label>
-                        </div>
                         <div id="statusFotoPrin" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
                     </div>
-                    
                     <div class="form-row" style="margin-bottom: 0;">
-                        <label style="color: #dfc285;">📸 Fotos de Galería (¡Sin límite!):</label>
-                        <input type="file" id="fileFotosGaleria" accept="image/*" multiple onchange="agregarFotosGaleria(this, 'previewGaleria')">
-                        <div id="previewGaleria" class="preview-grid">
-                            <label for="fileFotosGaleria" class="btn-add-more"><span>+</span><span>Agregar</span></label>
-                        </div>
+                        <label style="color: #dfc285;">📸 Elegir Fotos de Galería (¡Sin límite!):</label>
+                        <input type="file" id="fileFotosGaleria" accept="image/*" multiple onchange="convertirGaleriaLocal(this)">
                         <div id="statusGaleria" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
                     </div>
-
                     <div class="form-row" style="margin-bottom: 0; grid-column: 1 / -1; margin-top: 10px;">
                         <label style="color: #dfc285;">🎥 Video de Presentación (Opcional - MP4):</label>
                         <input type="file" id="fileVideoPresentacion" accept="video/mp4,video/*" onchange="convertirVideoLocal(this)">
@@ -349,23 +331,15 @@
             <div class="form-grid" style="background: #1a1a1a; padding: 15px; border-radius: 8px; border: 1px solid #333; margin-bottom: 15px;">
                 <div class="form-row" style="margin-bottom: 0;">
                     <label style="color: #dfc285;">📸 Cambiar Foto Principal:</label>
-                    <input type="file" id="editFileFotoPrin" accept="image/*" onchange="convertirFotoLocal(this, 'editFotoPrincipal', 'previewEditFotoPrin')">
-                    <input type="hidden" id="editFotoPrincipal">
-                    <div id="previewEditFotoPrin" class="preview-grid">
-                        <label for="editFileFotoPrin" class="btn-add-more"><span>+</span><span>Foto</span></label>
-                    </div>
+                    <input type="file" id="editFileFotoPrin" accept="image/*" onchange="convertirFotoLocal(this, 'editFotoPrincipal')">
+                    <input type="text" id="editFotoPrincipal" placeholder="URL o código de foto" style="margin-top: 6px; font-size: 11px;">
                     <div id="statusEditFotoPrin" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
                 </div>
-
                 <div class="form-row" style="margin-bottom: 0;">
-                    <label style="color: #dfc285;">📸 Actualizar Galería de Fotos:</label>
-                    <input type="file" id="editFileGaleria" accept="image/*" multiple onchange="agregarFotosEdicion(this, 'previewEditGaleria')">
-                    <div id="previewEditGaleria" class="preview-grid">
-                        <label for="editFileGaleria" class="btn-add-more"><span>+</span><span>Agregar</span></label>
-                    </div>
+                    <label style="color: #dfc285;">📸 Actualizar Galería de Fotos (¡Sin límite!):</label>
+                    <input type="file" id="editFileGaleria" accept="image/*" multiple onchange="convertirGaleriaEdicion(this)">
                     <div id="statusEditGaleria" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
                 </div>
-
                 <div class="form-row" style="margin-bottom: 0; grid-column: 1 / -1; margin-top: 10px;">
                     <label style="color: #dfc285;">🎥 Actualizar Video de Presentación (MP4):</label>
                     <input type="file" id="editFileVideo" accept="video/mp4,video/*" onchange="convertirVideoEdicion(this)">
@@ -402,7 +376,7 @@
                 </div>
                 <div id="modal-lang-pt" class="lang-section">
                     <div class="form-row"><label>Zona (PT):</label><input type="text" id="editZona_pt"></div>
-                    <div class="form-row"><label>Modalidade (PT):</label><input type="text" id="editModalidade_pt"></div>
+                    <div class="form-row"><label>Modalidade (PT):</label><input type="text" id="editModalidad_pt"></div>
                     <div class="form-row"><label>Descrição 1 (PT):</label><textarea id="editDesc_pt" class="html-input" style="height: 80px;"></textarea></div>
                     <div class="form-row"><label>Descrição 2 (PT):</label><textarea id="editDesc2_pt" class="html-input" style="height: 80px;"></textarea></div>
                 </div>
@@ -476,8 +450,10 @@
                 if (data.estilo === 'normal_prive') totalNormal++;
                 else if (data.estilo === 'tarjeta_grande') totalTarjeta++;
             });
-            document.getElementById('contadorNormalAdmin').textContent = totalNormal.toLocaleString('es-AR');
-            document.getElementById('contadorTarjetaAdmin').textContent = totalTarjeta.toLocaleString('es-AR');
+            const elNormal = document.getElementById('contadorNormalAdmin');
+            const elTarjeta = document.getElementById('contadorTarjetaAdmin');
+            if (elNormal) elNormal.textContent = totalNormal.toLocaleString('es-AR');
+            if (elTarjeta) elTarjeta.textContent = totalTarjeta.toLocaleString('es-AR');
         });
 
         let fotosGaleriaSubidas = [];
@@ -485,118 +461,71 @@
         let videoPresentacionSubido = "";
         let videoPresentacionEdicion = "";
 
-        // Función de compresión automática con Canvas (Ancho máx: 1000px, Calidad: 75%)
-        function comprimirImagen(file, callback) {
+        function convertirFotoLocal(input, targetId) {
+            const file = input.files[0];
+            if (!file) return;
+            const status = document.getElementById(targetId === 'urlFotoPrincipal' ? 'statusFotoPrin' : 'statusEditFotoPrin');
+            if(status) status.textContent = "⏳ Procesando foto...";
+
             const reader = new FileReader();
             reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    let width = img.width;
-                    let height = img.height;
-                    const maxWidth = 1000;
-
-                    if (width > maxWidth) {
-                        height = Math.round((height * maxWidth) / width);
-                        width = maxWidth;
-                    }
-
-                    const canvas = document.createElement('canvas');
-                    canvas.width = width;
-                    canvas.height = height;
-
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-
-                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.75);
-                    callback(compressedDataUrl);
-                };
-                img.src = e.target.result;
+                const targetEl = document.getElementById(targetId);
+                if(targetEl) targetEl.value = e.target.result;
+                if(status) status.textContent = "✅ ¡Foto lista!";
             };
             reader.readAsDataURL(file);
         }
 
-        function convertirFotoLocal(input, targetId, previewContainerId) {
-            const file = input.files[0];
-            if (!file) return;
-            const status = document.getElementById(targetId === 'urlFotoPrincipal' ? 'statusFotoPrin' : 'statusEditFotoPrin');
-            const previewBox = document.getElementById(previewContainerId);
-            status.textContent = "⏳ Comprimiendo foto...";
-
-            comprimirImagen(file, function(compressedUrl) {
-                document.getElementById(targetId).value = compressedUrl;
-                previewBox.innerHTML = `
-                    <div class="thumb-wrapper">
-                        <img src="${compressedUrl}" class="thumb-box" alt="Principal">
-                    </div>
-                    <label for="${input.id}" class="btn-add-more"><span>+</span><span>Cambiar</span></label>
-                `;
-                status.textContent = "✅ ¡Foto comprimida y lista!";
-            });
-        }
-
-        function agregarFotosGaleria(input, previewContainerId) {
+        function convertirGaleriaLocal(input) {
             const files = input.files;
             if (!files.length) return;
             const status = document.getElementById('statusGaleria');
-            const previewBox = document.getElementById(previewContainerId);
-            status.textContent = `⏳ Comprimiendo fotos...`;
+            if(status) status.textContent = `⏳ Procesando ${files.length} fotos...`;
+            fotosGaleriaSubidas = [];
 
+            let procesadas = 0;
             Array.from(files).forEach((file) => {
-                comprimirImagen(file, function(compressedUrl) {
-                    fotosGaleriaSubidas.push(compressedUrl);
-                    
-                    const thumbDiv = document.createElement('div');
-                    thumbDiv.className = 'thumb-wrapper';
-                    thumbDiv.innerHTML = `
-                        <img src="${compressedUrl}" class="thumb-box" alt="Galería">
-                        <button type="button" class="thumb-delete" onclick="this.parentElement.remove();">×</button>
-                    `;
-                    
-                    const addBtn = previewBox.querySelector('.btn-add-more');
-                    previewBox.insertBefore(thumbDiv, addBtn);
-                    status.textContent = `✅ Fotos listas (${fotosGaleriaSubidas.length})`;
-                });
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    fotosGaleriaSubidas.push(e.target.result);
+                    procesadas++;
+                    if(status) status.textContent = `✅ Listas ${procesadas} de ${files.length} fotos.`;
+                };
+                reader.readAsDataURL(file);
             });
-            input.value = '';
         }
 
-        function agregarFotosEdicion(input, previewContainerId) {
+        function convertirGaleriaEdicion(input) {
             const files = input.files;
             if (!files.length) return;
             const status = document.getElementById('statusEditGaleria');
-            const previewBox = document.getElementById(previewContainerId);
-            status.textContent = `⏳ Comprimiendo fotos nuevas...`;
+            if(status) status.textContent = `⏳ Procesando ${files.length} fotos nuevas...`;
+            fotosGaleriaEdicion = [];
 
+            let procesadas = 0;
             Array.from(files).forEach((file) => {
-                comprimirImagen(file, function(compressedUrl) {
-                    fotosGaleriaEdicion.push(compressedUrl);
-                    
-                    const thumbDiv = document.createElement('div');
-                    thumbDiv.className = 'thumb-wrapper';
-                    thumbDiv.innerHTML = `
-                        <img src="${compressedUrl}" class="thumb-box" alt="Galería Nueva">
-                        <button type="button" class="thumb-delete" onclick="this.parentElement.remove();">×</button>
-                    `;
-                    
-                    const addBtn = previewBox.querySelector('.btn-add-more');
-                    previewBox.insertBefore(thumbDiv, addBtn);
-                    status.textContent = `✅ Nuevas listas (${fotosGaleriaEdicion.length})`;
-                });
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    fotosGaleriaEdicion.push(e.target.result);
+                    procesadas++;
+                    if(status) status.textContent = `✅ Listas ${procesadas} de ${files.length} fotos nuevas.`;
+                };
+                reader.readAsDataURL(file);
             });
-            input.value = '';
         }
 
         function convertirVideoLocal(input) {
             const file = input.files[0];
             if (!file) return;
             const status = document.getElementById('statusVideo');
-            status.textContent = "⏳ Procesando video...";
+            if(status) status.textContent = "⏳ Procesando video...";
 
             const reader = new FileReader();
             reader.onload = function(e) {
                 videoPresentacionSubido = e.target.result;
-                document.getElementById('urlVideoPresentacion').value = e.target.result;
-                status.textContent = "✅ ¡Video listo!";
+                const vidEl = document.getElementById('urlVideoPresentacion');
+                if(vidEl) vidEl.value = e.target.result;
+                if(status) status.textContent = "✅ ¡Video listo!";
             };
             reader.readAsDataURL(file);
         }
@@ -605,13 +534,14 @@
             const file = input.files[0];
             if (!file) return;
             const status = document.getElementById('statusEditVideo');
-            status.textContent = "⏳ Procesando video...";
+            if(status) status.textContent = "⏳ Procesando video...";
 
             const reader = new FileReader();
             reader.onload = function(e) {
                 videoPresentacionEdicion = e.target.result;
-                document.getElementById('editVideoPresentacion').value = e.target.result;
-                status.textContent = "✅ ¡Video listo!";
+                const editVid = document.getElementById('editVideoPresentacion');
+                if(editVid) editVid.value = e.target.result;
+                if(status) status.textContent = "✅ ¡Video listo!";
             };
             reader.readAsDataURL(file);
         }
@@ -635,19 +565,21 @@
             document.querySelectorAll('#panelMetodoMano .lang-tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('#panelMetodoMano .lang-section').forEach(s => s.classList.remove('active'));
             event.currentTarget.classList.add('active');
-            document.getElementById(`admin-lang-${lang}`).classList.add('active');
+            const sec = document.getElementById(`admin-lang-${lang}`);
+            if(sec) sec.classList.add('active');
         }
 
         function cambiarTabModalLang(lang) {
             document.querySelectorAll('.modal-content .lang-tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.modal-content .lang-section').forEach(s => s.classList.remove('active'));
             event.currentTarget.classList.add('active');
-            document.getElementById(`modal-lang-${lang}`).classList.add('active');
+            const sec = document.getElementById(`modal-lang-${lang}`);
+            if(sec) sec.classList.add('active');
         }
 
         async function traducirAutomaticamenteAdmin() {
             const status = document.getElementById('tradStatusAdmin');
-            status.textContent = "⏳ Traduciendo textos...";
+            if(status) status.textContent = "⏳ Traduciendo textos...";
             
             const campos = ['zona', 'modalidad', 'desc1', 'desc2', 'horarios', 'atencion'];
             const destinos = [{ code: 'en', suf: 'en' }, { code: 'pt', suf: 'pt' }, { code: 'fr', suf: 'fr' }];
@@ -655,19 +587,20 @@
             try {
                 for (let dest of destinos) {
                     for (let campo of campos) {
-                        let valEs = document.getElementById(`${campo}_es`).value;
-                        if (valEs.trim()) {
-                            let res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(valEs)}&langpair=es|${dest.code}`);
+                        const elEs = document.getElementById(`${campo}_es`);
+                        if (elEs && elEs.value.trim()) {
+                            let res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(elEs.value)}&langpair=es|${dest.code}`);
                             let data = await res.json();
                             if (data && data.responseData) {
-                                document.getElementById(`${campo}_${dest.suf}`).value = data.responseData.translatedText;
+                                const elDest = document.getElementById(`${campo}_${dest.suf}`);
+                                if(elDest) elDest.value = data.responseData.translatedText;
                             }
                         }
                     }
                 }
-                status.textContent = "✅ ¡Traducción completada!";
+                if(status) status.textContent = "✅ ¡Traducción completada!";
             } catch (e) {
-                status.textContent = "❌ Error al traducir.";
+                if(status) status.textContent = "❌ Error al traducir.";
             }
         }
 
@@ -677,8 +610,10 @@
             const statusDiv = document.getElementById('statusAdmin');
 
             if (!nombre) {
-                statusDiv.style.color = '#e74c3c';
-                statusDiv.textContent = '❌ Por favor, ingresá al menos el nombre de la modelo.';
+                if(statusDiv) {
+                    statusDiv.style.color = '#e74c3c';
+                    statusDiv.textContent = '❌ Por favor, ingresá al menos el nombre de la modelo.';
+                }
                 return;
             }
 
@@ -694,21 +629,22 @@
 
             let traducciones = { es: {}, en: {}, pt: {}, fr: {} };
             ['es', 'en', 'pt', 'fr'].forEach(l => {
+                const getVal = (id) => document.getElementById(id)?.value.trim() || '';
                 traducciones[l] = {
                     perfilTitle: `${nombre} | Masajistas Privé`,
                     btnVolver: l === 'es' ? '← Volver' : (l === 'en' ? '← Back' : (l === 'pt' ? '← Voltar' : '← Retour')),
                     badgeVerificado: '✓ Privé Verificado',
                     labelZona: l === 'es' ? 'Zona:' : (l === 'en' ? 'Area:' : (l === 'pt' ? 'Zona:' : 'Zone :')),
-                    valorZona: document.getElementById(`zona_${l}`).value.trim(),
+                    valorZona: getVal(`zona_${l}`),
                     labelModalidad: l === 'es' ? 'Modalidad:' : (l === 'en' ? 'Modality:' : (l === 'pt' ? 'Modalidade:' : 'Modalité :')),
-                    valorModalidad: document.getElementById(`modalidad_${l}`).value.trim(),
+                    valorModalidad: getVal(`modalidad_${l}`),
                     tituloSobreMi: l === 'es' ? 'Sobre mí y Servicios' : (l === 'en' ? 'About Me and Services' : (l === 'pt' ? 'Sobre mim e Serviços' : 'À propos de moi et Services')),
-                    descPerfil1: document.getElementById(`desc1_${l}`).value.trim(),
-                    descPerfil2: document.getElementById(`desc2_${l}`).value.trim(),
+                    descPerfil1: getVal(`desc1_${l}`),
+                    descPerfil2: getVal(`desc2_${l}`),
                     labelHorarios: l === 'es' ? 'Horarios:' : (l === 'en' ? 'Hours:' : (l === 'pt' ? 'Horários:' : 'Horaires :')),
-                    valorHorarios: document.getElementById(`horarios_${l}`).value.trim(),
+                    valorHorarios: getVal(`horarios_${l}`),
                     labelAtencion: l === 'es' ? 'Atención:' : (l === 'en' ? 'Care:' : (l === 'pt' ? 'Atendimento:' : 'Attention :')),
-                    valorAtencion: document.getElementById(`atencion_${l}`).value.trim(),
+                    valorAtencion: getVal(`atencion_${l}`),
                     btnWpp: l === 'es' ? 'Contactar por WhatsApp' : (l === 'en' ? 'Contact via WhatsApp' : (l === 'pt' ? 'Contatar por WhatsApp' : 'Contacter par WhatsApp')),
                     footerLegal: "Este es un sitio exclusivo para adultos (+18)...",
                     footerCopy: "© 2026 Masajistas Privé. Todos os direitos reservados."
@@ -737,14 +673,18 @@
 
             db.collection("modelos_prive").doc(slug).set(datosModelo, { merge: true })
                 .then(() => {
-                    statusDiv.style.color = '#2ecc71';
-                    statusDiv.textContent = `🚀 ¡Ficha de ${nombre} publicada con éxito!`;
+                    if(statusDiv) {
+                        statusDiv.style.color = '#2ecc71';
+                        statusDiv.textContent = `🚀 ¡Ficha de ${nombre} publicada con éxito!`;
+                    }
                     limpiarFormularioAdmin();
                     cargarModelosAdmin();
                 })
                 .catch(err => {
-                    statusDiv.style.color = '#e74c3c';
-                    statusDiv.textContent = `❌ Error: ` + err.message;
+                    if(statusDiv) {
+                        statusDiv.style.color = '#e74c3c';
+                        statusDiv.textContent = `❌ Error: ` + err.message;
+                    }
                 });
         }
 
@@ -755,8 +695,10 @@
             const categoria = document.getElementById('selectCategoriaImport').value;
 
             if (!rawHtml.trim()) {
-                statusDiv.style.color = '#e74c3c';
-                statusDiv.textContent = '❌ Por favor, pegá el código HTML.';
+                if(statusDiv) {
+                    statusDiv.style.color = '#e74c3c';
+                    statusDiv.textContent = '❌ Por favor, pegá el código HTML.';
+                }
                 return;
             }
 
@@ -813,19 +755,24 @@
 
                 db.collection("modelos_prive").doc(idSlug).set(perfilData, { merge: true })
                     .then(() => {
-                        statusDiv.style.color = '#2ecc71';
-                        statusDiv.textContent = `✅ ¡Perfil importado con éxito!`;
+                        if(statusDiv) {
+                            statusDiv.style.color = '#2ecc71';
+                            statusDiv.textContent = `✅ ¡Perfil importado con éxito!`;
+                        }
                         document.getElementById('htmlSourceInput').value = '';
                         cargarModelosAdmin();
                     });
             } catch (e) {
-                statusDiv.style.color = '#e74c3c';
-                statusDiv.textContent = `❌ Error al procesar HTML.`;
+                if(statusDiv) {
+                    statusDiv.style.color = '#e74c3c';
+                    statusDiv.textContent = `❌ Error al procesar HTML.`;
+                }
             }
         }
 
         function cargarModelosAdmin() {
             const container = document.getElementById('listaModelosModernContainer');
+            if(!container) return;
             db.collection("modelos_prive").onSnapshot((snapshot) => {
                 if (snapshot.empty) {
                     container.innerHTML = `<p style="text-align: center; color: #777; padding: 20px;">No hay perfiles cargados todavía.</p>`;
@@ -863,9 +810,9 @@
 
                             <div class="modelo-acciones-right">
                                 <span class="switch-destacada ${esDestacada ? 'active' : ''}" onclick="toggleDestacada('${docId}', ${!esDestacada})" title="Destacada Gold">★</span>
-                                <button type="button" class="btn-accion" onclick="abrirModalEditar('${docId}')">✏️ Editar</button>
-                                <button type="button" class="btn-accion" onclick="toggleEstado('${docId}', '${m.estado}')">${esActiva ? '⏸️' : '▶️'}</button>
-                                <button type="button" class="btn-accion btn-danger" onclick="eliminarPerfil('${docId}', '${m.nombre}')">🗑️</button>
+                                <button class="btn-accion" onclick="abrirModalEditar('${docId}')">✏️ Editar</button>
+                                <button class="btn-accion" onclick="toggleEstado('${docId}', '${m.estado}')">${esActiva ? '⏸️' : '▶️'}</button>
+                                <button class="btn-accion btn-danger" onclick="eliminarPerfil('${docId}', '${m.nombre}')">🗑️</button>
                             </div>
                         </div>
                     `;
@@ -878,67 +825,46 @@
             db.collection("modelos_prive").doc(docId).get().then((doc) => {
                 if (doc.exists) {
                     const m = doc.data();
-                    document.getElementById('editDocId').value = docId;
-                    document.getElementById('editNombre').value = m.nombre || '';
-                    document.getElementById('editCategoria').value = m.categoria || 'terapeuticas';
-                    document.getElementById('editWhatsappLink').value = m.whatsappLink || '';
-                    document.getElementById('editFotoPrincipal').value = m.fotoPrincipal || '';
-                    document.getElementById('editVideoPresentacion').value = m.videoPresentacion || '';
-                    
-                    // Mostrar foto principal actual con botón de cambio
-                    document.getElementById('previewEditFotoPrin').innerHTML = m.fotoPrincipal ? `
-                        <div class="thumb-wrapper"><img src="${m.fotoPrincipal}" class="thumb-box" alt="Principal"></div>
-                        <label for="editFileFotoPrin" class="btn-add-more"><span>+</span><span>Cambiar</span></label>
-                    ` : `<label for="editFileFotoPrin" class="btn-add-more"><span>+</span><span>Foto</span></label>`;
-                    
-                    // Mostrar galería actual con botón "+" para agregar más
-                    let galeriaHtml = '';
-                    if (m.fotosGaleria && m.fotosGaleria.length) {
-                        m.fotosGaleria.forEach(imgUrl => {
-                            galeriaHtml += `
-                                <div class="thumb-wrapper">
-                                    <img src="${imgUrl}" class="thumb-box" alt="Galería">
-                                    <button type="button" class="thumb-delete" onclick="this.parentElement.remove();">×</button>
-                                </div>
-                            `;
-                        });
-                    }
-                    galeriaHtml += `<label for="editFileGaleria" class="btn-add-more"><span>+</span><span>Agregar</span></label>`;
-                    document.getElementById('previewEditGaleria').innerHTML = galeriaHtml;
+                    const setVal = (id, val) => { const el = document.getElementById(id); if(el) el.value = val || ''; };
 
-                    document.getElementById('tradStatus').textContent = '';
-                    document.getElementById('statusEditFotoPrin').textContent = '';
-                    document.getElementById('statusEditGaleria').textContent = '';
-                    document.getElementById('statusEditVideo').textContent = '';
-                    document.getElementById('editFileFotoPrin').value = '';
-                    document.getElementById('editFileGaleria').value = '';
-                    document.getElementById('editFileVideo').value = '';
+                    setVal('editDocId', docId);
+                    setVal('editNombre', m.nombre);
+                    setVal('editCategoria', m.categoria || 'terapeuticas');
+                    setVal('editWhatsappLink', m.whatsappLink);
+                    setVal('editFotoPrincipal', m.fotoPrincipal);
+                    setVal('editVideoPresentacion', m.videoPresentacion);
+
+                    const tradStatus = document.getElementById('tradStatus');
+                    if(tradStatus) tradStatus.textContent = '';
+
                     fotosGaleriaEdicion = [];
                     videoPresentacionEdicion = "";
 
                     const trad = m.traducciones || {};
                     ['es', 'en', 'pt', 'fr'].forEach(l => {
                         const tLang = trad[l] || {};
-                        document.getElementById(`editZona_${l}`).value = tLang.valorZona || m.zona || '';
-                        document.getElementById(`editModalidad_${l}`).value = tLang.valorModalidad || m.modalidad || '';
-                        document.getElementById(`editDesc_${l}`).value = tLang.descPerfil1 || m.descripcion || '';
-                        document.getElementById(`editDesc2_${l}`).value = tLang.descPerfil2 || '';
+                        setVal(`editZona_${l}`, tLang.valorZona || m.zona);
+                        setVal(`editModalidad_${l}`, tLang.valorModalidad || m.modalidad);
+                        setVal(`editDesc_${l}`, tLang.descPerfil1 || m.descripcion);
+                        setVal(`editDesc2_${l}`, tLang.descPerfil2);
                     });
 
-                    document.getElementById('modalEditar').style.display = 'flex';
+                    const modal = document.getElementById('modalEditar');
+                    if(modal) modal.style.display = 'flex';
                 }
             }).catch(err => {
-                alert("❌ Error al abrir el perfil para editar: " + err.message);
+                alert("Error al abrir el perfil para editar: " + err.message);
             });
         }
 
         async function traducirAutomaticamenteES() {
             const status = document.getElementById('tradStatus');
-            status.textContent = "⏳ Traduciendo...";
-            const zonaEs = document.getElementById('editZona_es').value;
-            const modalidadEs = document.getElementById('editModalidad_es').value;
-            const descEs = document.getElementById('editDesc_es').value;
-            const desc2Es = document.getElementById('editDesc2_es').value;
+            if(status) status.textContent = "⏳ Traduciendo...";
+            const getVal = (id) => document.getElementById(id)?.value || '';
+            const zonaEs = getVal('editZona_es');
+            const modalidadEs = getVal('editModalidad_es');
+            const descEs = getVal('editDesc_es');
+            const desc2Es = getVal('editDesc2_es');
             const idiomasDestino = [{ code: 'en', suf: 'en' }, { code: 'pt', suf: 'pt' }, { code: 'fr', suf: 'fr' }];
 
             try {
@@ -946,29 +872,44 @@
                     if (zonaEs) {
                         let res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(zonaEs)}&langpair=es|${dest.code}`);
                         let data = await res.json();
-                        if (data?.responseData) document.getElementById(`editZona_${dest.suf}`).value = data.responseData.translatedText;
+                        if (data?.responseData) {
+                            const el = document.getElementById(`editZona_${dest.suf}`);
+                            if(el) el.value = data.responseData.translatedText;
+                        }
                     }
                     if (modalidadEs) {
                         let res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(modalidadEs)}&langpair=es|${dest.code}`);
                         let data = await res.json();
-                        if (data?.responseData) document.getElementById(`editModalidad_${dest.suf}`).value = data.responseData.translatedText;
+                        if (data?.responseData) {
+                            const el = document.getElementById(`editModalidad_${dest.suf}`);
+                            if(el) el.value = data.responseData.translatedText;
+                        }
                     }
                     if (descEs) {
                         let res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(descEs)}&langpair=es|${dest.code}`);
                         let data = await res.json();
-                        if (data?.responseData) document.getElementById(`editDesc_${dest.suf}`).value = data.responseData.translatedText;
+                        if (data?.responseData) {
+                            const el = document.getElementById(`editDesc_${dest.suf}`);
+                            if(el) el.value = data.responseData.translatedText;
+                        }
                     }
                     if (desc2Es) {
                         let res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(desc2Es)}&langpair=es|${dest.code}`);
                         let data = await res.json();
-                        if (data?.responseData) document.getElementById(`editDesc2_${dest.suf}`).value = data.responseData.translatedText;
+                        if (data?.responseData) {
+                            const el = document.getElementById(`editDesc2_${dest.suf}`);
+                            if(el) el.value = data.responseData.translatedText;
+                        }
                     }
                 }
-                status.textContent = "✅ ¡Listo!";
-            } catch (e) { status.textContent = "❌ Error."; }
+                if(status) status.textContent = "✅ ¡Listo!";
+            } catch (e) { if(status) status.textContent = "❌ Error."; }
         }
 
-        function cerrarModalEditar() { document.getElementById('modalEditar').style.display = 'none'; }
+        function cerrarModalEditar() {
+            const modal = document.getElementById('modalEditar');
+            if(modal) modal.style.display = 'none';
+        }
 
         function guardarEdicionPerfil() {
             const docId = document.getElementById('editDocId').value;
@@ -976,38 +917,36 @@
                 let mData = doc.data();
                 if (!mData.traducciones) mData.traducciones = {};
 
+                const getVal = (id) => document.getElementById(id)?.value.trim() || '';
+
                 ['es', 'en', 'pt', 'fr'].forEach(l => {
                     if (!mData.traducciones[l]) mData.traducciones[l] = {};
-                    mData.traducciones[l].valorZona = document.getElementById(`editZona_${l}`).value.trim();
-                    mData.traducciones[l].valorModalidad = document.getElementById(`editModalidad_${l}`).value.trim();
-                    mData.traducciones[l].descPerfil1 = document.getElementById(`editDesc_${l}`).value.trim();
-                    mData.traducciones[l].descPerfil2 = document.getElementById(`editDesc2_${l}`).value.trim();
+                    mData.traducciones[l].valorZona = getVal(`editZona_${l}`);
+                    mData.traducciones[l].valorModalidad = getVal(`editModalidad_${l}`);
+                    mData.traducciones[l].descPerfil1 = getVal(`editDesc_${l}`);
+                    mData.traducciones[l].descPerfil2 = getVal(`editDesc2_${l}`);
                 });
 
-                const nuevaFotoPrin = document.getElementById('editFotoPrincipal').value.trim();
+                const nuevaFotoPrin = getVal('editFotoPrincipal');
                 if (nuevaFotoPrin) {
                     mData.fotoPrincipal = nuevaFotoPrin;
                 }
 
-                const nuevoVideo = document.getElementById('editVideoPresentacion').value.trim();
+                const nuevoVideo = getVal('editVideoPresentacion');
                 if (nuevoVideo) {
                     mData.videoPresentacion = nuevoVideo;
                 }
 
-                // Recopilar fotos visibles en la grilla del modal de edición
-                const previewGaleria = document.getElementById('previewEditGaleria');
-                const imagenesRestantes = Array.from(previewGaleria.querySelectorAll('.thumb-box')).map(img => img.src);
-                
-                if (imagenesRestantes.length > 0) {
-                    mData.fotosGaleria = imagenesRestantes;
+                if (fotosGaleriaEdicion.length > 0) {
+                    mData.fotosGaleria = fotosGaleriaEdicion;
                 }
 
                 const datosActualizados = {
-                    nombre: document.getElementById('editNombre').value.trim(),
+                    nombre: getVal('editNombre'),
                     zona: mData.traducciones.es.valorZona,
                     modalidad: mData.traducciones.es.valorModalidad,
                     categoria: document.getElementById('editCategoria').value,
-                    whatsappLink: document.getElementById('editWhatsappLink').value.trim(),
+                    whatsappLink: getVal('editWhatsappLink'),
                     fotoPrincipal: mData.fotoPrincipal,
                     fotosGaleria: mData.fotosGaleria,
                     videoPresentacion: mData.videoPresentacion || "",
@@ -1017,35 +956,23 @@
                     fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
-                // Validar tamaño antes de enviar (Límite Firestore: 1MB por documento)
-                const payloadSize = JSON.stringify(datosActualizados).length;
-                if (payloadSize > 950000) {
-                    alert("⚠️ Las imágenes son demasiado pesadas y superan el límite permitido por la base de datos (1MB). Por favor, subí menos fotos a la vez.");
-                    return;
-                }
-
                 db.collection("modelos_prive").doc(docId).update(datosActualizados).then(() => {
                     alert("¡Perfil, fotos y video actualizados con éxito!");
                     cerrarModalEditar();
-                }).catch(err => {
-                    alert("❌ Error al guardar en Firebase: " + err.message);
                 });
             });
         }
 
         function limpiarFormularioAdmin() {
-            document.getElementById('inputNombre').value = '';
-            document.getElementById('inputSlug').value = '';
-            document.getElementById('inputWhatsapp').value = '';
-            document.getElementById('urlVideoPresentacion').value = '';
-            document.getElementById('statusAdmin').textContent = '';
-            document.getElementById('statusFotoPrin').textContent = '';
-            document.getElementById('statusGaleria').textContent = '';
-            document.getElementById('statusVideo').textContent = '';
-            
-            document.getElementById('previewFotoPrin').innerHTML = `<label for="fileFotoPrincipal" class="btn-add-more"><span>+</span><span>Foto</span></label>`;
-            document.getElementById('previewGaleria').innerHTML = `<label for="fileFotosGaleria" class="btn-add-more"><span>+</span><span>Agregar</span></label>`;
-            
+            const setVal = (id, val) => { const el = document.getElementById(id); if(el) el.value = val; };
+            setVal('inputNombre', '');
+            setVal('inputSlug', '');
+            setVal('inputWhatsapp', '');
+            setVal('urlVideoPresentacion', '');
+            const st1 = document.getElementById('statusAdmin'); if(st1) st1.textContent = '';
+            const st2 = document.getElementById('statusFotoPrin'); if(st2) st2.textContent = '';
+            const st3 = document.getElementById('statusGaleria'); if(st3) st3.textContent = '';
+            const st4 = document.getElementById('statusVideo'); if(st4) st4.textContent = '';
             fotosGaleriaSubidas = [];
             videoPresentacionSubido = "";
         }
