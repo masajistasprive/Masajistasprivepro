@@ -60,7 +60,7 @@
             100% { opacity: 0.5; transform: scale(1.02); }
         }
 
-        /* --- ESTILOS CORREGIDOS PARA MODO TARJETA GRANDE CON DESCRIPCIÓN VISIBLE --- */
+        /* --- ESTILOS DEFINITIVOS PARA MODO TARJETA GRANDE CON INFORMACIÓN COMPLETA --- */
         body.modo-tarjeta-alternativo .grid-perfiles {
             display: flex !important;
             flex-direction: column !important;
@@ -81,7 +81,7 @@
         }
         body.modo-tarjeta-alternativo .grid-perfiles .card-image {
             width: 100% !important;
-            height: 420px !important;
+            height: 380px !important;
             position: relative !important;
         }
         body.modo-tarjeta-alternativo .grid-perfiles .card-image img {
@@ -100,7 +100,7 @@
             font-size: 11px;
             z-index: 10;
         }
-        /* Forzar que el gradiente/caja de texto inferior sea visible, grande y elegante */
+        /* Forzar que el bloque de texto inferior se expanda y sea totalmente legible con los colores dorados */
         body.modo-tarjeta-alternativo .grid-perfiles .card-gradient-overlay {
             position: relative !important;
             background: linear-gradient(180deg, rgba(13,13,13,0.95) 0%, #0d0d0d 100%) !important;
@@ -120,14 +120,15 @@
         }
         body.modo-tarjeta-alternativo .grid-perfiles .card-gradient-overlay .zona {
             color: #dfc285 !important;
-            font-size: 0.9rem !important;
+            font-size: 0.95rem !important;
             font-weight: 500;
+            display: block !important;
         }
         body.modo-tarjeta-alternativo .grid-perfiles .card-gradient-overlay .modalidad-tag {
-            color: #aaa !important;
+            color: #ccc !important;
             font-size: 0.85rem !important;
             display: block !important;
-            margin-top: 2px;
+            margin-top: 4px;
         }
     </style>
 </head>
@@ -334,7 +335,7 @@
             const btn = document.getElementById('btnAlternarEstilo');
             if (modoTarjetaActivo) {
                 document.body.classList.add('modo-tarjeta-alternativo');
-                if(btn) btn.textContent = '🏛️ Cambiar a Estilo Normal (Privé)';
+                if(btn) btn.textContent = '🏛️️ Cambiar a Estilo Normal (Privé)';
             } else {
                 document.body.classList.remove('modo-tarjeta-alternativo');
                 if(btn) btn.textContent = '✨ Cambiar a Estilo Tarjeta Grande';
