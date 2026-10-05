@@ -368,9 +368,12 @@
                 }
 
                 const datosActuales = doc.data();
-                let visitasActuales = parseInt(datosActuales.visitas);
-                if (isNaN(visitasActuales)) {
-                    visitasActuales = 0;
+                
+                // Lógica de visitas blindada y segura
+                let visitasActuales = 0;
+                if (datosActuales.visitas !== undefined && datosActuales.visitas !== null) {
+                    visitasActuales = parseInt(datosActuales.visitas);
+                    if (isNaN(visitasActuales)) visitasActuales = 0;
                 }
                 const nuevaSumaVisitas = visitasActuales + 1;
 
@@ -410,7 +413,7 @@
                 favoritos.push(idModelo);
                 if(btnFav) {
                     btnFav.classList.add('activo');
-                    btnFav.innerHTML = "❤️ Favorito Guardado";
+                    btnFav.innerHTML = "❤️️ Favorito Guardado";
                 }
             }
             localStorage.setItem('priveFavoritos', JSON.stringify(favoritos));
@@ -583,7 +586,7 @@
                             <button type="button" onclick="window.agregarEmojiPerfil('😊')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">😊</button>
                             <button type="button" onclick="window.agregarEmojiPerfil('👍')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">👍</button>
                             <button type="button" onclick="window.agregarEmojiPerfil('🔥')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">🔥</button>
-                            <button type="button" onclick="window.agregarEmojiPerfil('❤️')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">❤️</button>
+                            <button type="button" onclick="window.agregarEmojiPerfil('❤️️')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">❤️</button>
                             <button type="button" onclick="window.agregarEmojiPerfil('⭐')" style="background:none; border:none; font-size:1.2em; cursor:pointer; padding:2px;">⭐</button>
                             
                             <label title="Adjuntar foto" style="color: #dfc285; cursor: pointer; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; background: rgba(223,194,133,0.1); width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(223, 194, 133, 0.4); margin-left: auto;">
@@ -848,4 +851,3 @@
 
 </body>
 </html>
-
