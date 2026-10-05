@@ -103,7 +103,7 @@
             <img src="img/logo.png" alt="Masajistas Privé" class="login-logo">
             <h2>Masajistas Privé</h2>
             <p style="font-size: 11px; color: #888; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px;">Panel de Administración</p>
-            <input type="password" id="inputPassword" placeholder="Ingresá la contraseña" onkeypress="if(event.key === 'Enter') verificarPassword()">
+            <input type="password" id="inputPassword" placeholder="Ingresá la contraseña">
             <button type="button" class="btn-prive" style="width: 100%;" onclick="verificarPassword()">Ingresar al Panel</button>
             <div id="loginError" style="color: #e74c3c; font-size: 12px; margin-top: 12px;"></div>
         </div>
@@ -142,7 +142,7 @@
             <h2>➕ Crear o Importar Nueva Ficha</h2>
             
             <div class="metodo-selector">
-                <div id="btnMetodoMano" class="btn-metodo active" onclick="cambiarMetodo('mano')">✍️ Escribir a Mano + Elegir Fotos/Videos</div>
+                <div id="btnMetodoMano" class="btn-metodo active" onclick="cambiarMetodo('mano')">✍️️ Escribir a Mano + Elegir Fotos/Videos</div>
                 <div id="btnMetodoHtml" class="btn-metodo" onclick="cambiarMetodo('html')">📥 Importar Código HTML</div>
             </div>
 
@@ -434,7 +434,17 @@
             location.reload();
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputPass = document.getElementById('inputPassword');
+            if (inputPass) {
+                inputPass.addEventListener('keypress', function(event) {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        verificarPassword();
+                    }
+                });
+            }
+
             if (localStorage.getItem('priveAdminAuth') === 'true') {
                 document.getElementById('loginOverlay').style.display = 'none';
                 document.getElementById('adminMainContent').style.display = 'block';
@@ -793,7 +803,7 @@
                 let whatsappLink = wppEl ? wppEl.getAttribute('href') : '';
                 let telefono = '';
                 if (whatsappLink) {
-                    const matchPhone = whatsappLink.match(/phone=([0-9]+/) || whatsappLink.match(/wa\.me\/([0-9]+)/);
+                    const matchPhone = whatsappLink.match(/phone=([0-9]+)/) || whatsappLink.match(/wa\.me\/([0-9]+)/);
                     if (matchPhone) telefono = matchPhone[1];
                 }
 
