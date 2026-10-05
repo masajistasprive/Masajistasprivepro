@@ -59,91 +59,6 @@
             0% { opacity: 0.2; transform: scale(0.98); }
             100% { opacity: 0.5; transform: scale(1.02); }
         }
-
-        /* Selector de Estilo de Navegación */
-        .estilo-switch-wrapper {
-            max-width: 900px;
-            margin: 15px auto 0 auto;
-            padding: 0 4%;
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
-        .btn-estilo {
-            background: rgba(223, 194, 133, 0.08);
-            border: 1px solid rgba(223, 194, 133, 0.3);
-            color: #ccc;
-            padding: 7px 18px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 11px;
-            font-weight: 600;
-            font-family: 'Montserrat', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s;
-        }
-        .btn-estilo.active {
-            background: rgba(223, 194, 133, 0.2);
-            border-color: #dfc285;
-            color: #dfc285;
-            box-shadow: 0 0 10px rgba(223, 194, 133, 0.2);
-        }
-
-        /* Estilo 2: Modo Tarjeta Grande de Ancho Completo (Estilo Colección Privé) */
-        .grid-perfiles.modo-tarjeta-grande {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .grid-perfiles.modo-tarjeta-grande .card-link {
-            width: 100%;
-        }
-        .grid-perfiles.modo-tarjeta-grande .card {
-            height: auto !important;
-            background: #0d0d0d;
-            border: 1px solid rgba(223, 194, 133, 0.3);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
-            display: flex;
-            flex-direction: column;
-        }
-        .grid-perfiles.modo-tarjeta-grande .card-image {
-            width: 100%;
-            height: 380px;
-            position: relative;
-        }
-        .grid-perfiles.modo-tarjeta-grande .card-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .grid-perfiles.modo-tarjeta-grande .badge-verificado {
-            top: 12px;
-            left: 12px;
-        }
-        .grid-perfiles.modo-tarjeta-grande .card-gradient-overlay {
-            position: relative;
-            background: #0d0d0d;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .grid-perfiles.modo-tarjeta-grande .card-gradient-overlay h3 {
-            font-size: 1.2rem;
-            color: #fff;
-            font-family: 'Cormorant Garamond', serif;
-        }
-        .grid-perfiles.modo-tarjeta-grande .card-gradient-overlay .zona {
-            color: #dfc285;
-            font-size: 0.8rem;
-        }
-        .grid-perfiles.modo-tarjeta-grande .card-gradient-overlay .modalidad-tag {
-            color: #888;
-            font-size: 0.75rem;
-        }
     </style>
 </head>
 <body>
@@ -206,12 +121,6 @@
     <!-- Botón de Favoritas Exclusivo por Fuera de las Categorías -->
     <div style="max-width: 900px; margin: 15px auto 0 auto; padding: 0 4%; text-align: center;">
         <button class="pill-btn" data-filter="favoritos" style="background: rgba(223, 194, 133, 0.12); border: 1px solid #dfc285; color: #dfc285; width: 100%; max-width: 280px; font-weight: 600; box-shadow: 0 4px 15px rgba(223, 194, 133, 0.15);">⭐ Mis Favoritas</button>
-    </div>
-
-    <!-- Selector de Estilo de Navegación (Estilo Privé vs Estilo Tarjeta Grande) -->
-    <div class="estilo-switch-wrapper">
-        <button id="btnEstiloPrive" class="btn-estilo active" onclick="cambiarEstiloNavegacion('prive')">🏛️ Estilo Privé (Normal)</button>
-        <button id="btnEstiloTarjeta" class="btn-estilo" onclick="cambiarEstiloNavegacion('tarjeta')">✨ Estilo Tarjeta Grande</button>
     </div>
 
     <!-- Divisor Art Déco -->
@@ -306,7 +215,7 @@
             </div>
 
             <div class="footer-legal">
-                <p data-i18n="footerLegal">Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.</p>
+                <p data-i18n="footerLegal">Este es un sitio exclusivo pour adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.</p>
                 <p style="margin-top: 6px;" data-i18n="footerMarcas">Todo el contenido, marcas y logotipos pertenecen a sus respectivos dueños.</p>
                 <div id="contador-visitas-global" style="margin-top: 12px; color: #dfc285; font-size: 13px; font-weight: 500;">
                     👁 <span data-i18n="visitasTotales">Visitas totales al portal</span>: <span id="visitas-total-num">Cargando...</span>
@@ -334,28 +243,6 @@
             firebase.initializeApp(firebaseConfig);
         }
         const db = firebase.firestore();
-
-        // Control de Estilo de Navegación (Prive vs Tarjeta Grande)
-        let estiloNavegacionActual = localStorage.getItem('priveEstiloNavegacion') || 'prive';
-
-        function cambiarEstiloNavegacion(estilo) {
-            estiloNavegacionActual = estilo;
-            localStorage.setItem('priveEstiloNavegacion', estilo);
-
-            const btnPrive = document.getElementById('btnEstiloPrive');
-            const btnTarjeta = document.getElementById('btnEstiloTarjeta');
-            const grillas = document.querySelectorAll('.grid-perfiles');
-
-            if (estilo === 'tarjeta') {
-                btnPrive.classList.remove('active');
-                btnTarjeta.classList.add('active');
-                grillas.forEach(g => g.classList.add('modo-tarjeta-grande'));
-            } else {
-                btnTarjeta.classList.remove('active');
-                btnPrive.classList.add('active');
-                grillas.forEach(g => g.classList.remove('modo-tarjeta-grande'));
-            }
-        }
 
         function ocultarTransicionPrive() {
             const screen = document.getElementById('priveTransitionScreen');
@@ -482,6 +369,7 @@
                     }
                 });
 
+                // Asegurar que el banner publicitario se agregue en todas las categorías
                 if (htmlTerapeuticas) htmlTerapeuticas += adCardHTML;
                 if (htmlSensuales) htmlSensuales += adCardHTML;
                 if (htmlMasculinos) htmlMasculinos += adCardHTML;
@@ -497,9 +385,6 @@
                 gridFantasias.innerHTML = htmlFantasias;
                 gridFavoritos.innerHTML = htmlFavoritos;
                 storiesContainer.innerHTML = htmlStories;
-
-                // Aplicar el estilo guardado al terminar de renderizar
-                cambiarEstiloNavegacion(estiloNavegacionActual);
 
                 ocultarTransicionPrive();
             });
@@ -818,4 +703,4 @@
         });
     </script>
 </body>
-</html>
+        </html>
