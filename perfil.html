@@ -281,15 +281,23 @@
             }
         }
 
-        // Extracción directa y blindada del ID
-        const urlParams = new URLSearchParams(window.location.search);
-        let perfilId = urlParams.get('id');
-        if (!perfilId) {
-            const pathParts = window.location.pathname.split("/").filter(p => p.length > 0);
-            const ultimoSegmento = pathParts[pathParts.length - 1] || "";
-            perfilId = ultimoSegmento.replace(".html", "").trim();
+        // Extracción de ID ultra blindada
+        function obtenerPerfilIdReal() {
+            const params = new URLSearchParams(window.location.search);
+            let id = params.get('id');
+            if (id) return id.trim();
+
+            const pathParts = window.location.pathname.split("/").filter(Boolean);
+            if (pathParts.length > 0) {
+                let ultimo = pathParts[pathParts.length - 1];
+                if (ultimo) {
+                    return ultimo.replace(".html", "").trim();
+                }
+            }
+            return "olivia";
         }
-        if (!perfilId) perfilId = "olivia";
+
+        const perfilId = obtenerPerfilIdReal();
 
         let idiomaPerfil = localStorage.getItem('idiomaPrive') || 'es';
         let datosModeloActual = null;
@@ -376,7 +384,6 @@
 
                 const datosActuales = doc.data();
                 
-                // Suma de visitas asegurada
                 let visitasActuales = parseInt(datosActuales.visitas) || 0;
                 const nuevaSumaVisitas = visitasActuales + 1;
 
@@ -416,7 +423,7 @@
                 favoritos.push(idModelo);
                 if(btnFav) {
                     btnFav.classList.add('activo');
-                    btnFav.innerHTML = "❤️️ Favorito Guardado";
+                    btnFav.innerHTML = "❤️ Favorito Guardado";
                 }
             }
             localStorage.setItem('priveFavoritos', JSON.stringify(favoritos));
@@ -846,7 +853,6 @@
             }
         }
 
-        // LLAMADA DIRECTA AL CARGAR LA PÁGINA
         window.addEventListener('DOMContentLoaded', () => {
             aplicarIdiomaPerfil(idiomaPerfil);
             cargarPerfilDinamico();
