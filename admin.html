@@ -914,9 +914,18 @@
                     fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
+                // Validar tamaño antes de enviar para evitar cuelgues (Límite Firestore: 1MB por documento)
+                const payloadSize = JSON.stringify(datosActualizados).length;
+                if (payloadSize > 950000) {
+                    alert("⚠️ Las imágenes son demasiado pesadas y superan el límite permitido por la base de datos (1MB). Por favor, subí imágenes más comprimidas o de menor resolución.");
+                    return;
+                }
+
                 db.collection("modelos_prive").doc(docId).update(datosActualizados).then(() => {
                     alert("¡Perfil, fotos y video actualizados con éxito!");
                     cerrarModalEditar();
+                }).catch(err => {
+                    alert("❌ Error al guardar en Firebase: " + err.message);
                 });
             });
         }
