@@ -281,7 +281,7 @@
             }
         }
 
-        // Extracción de ID ultra robusta
+        // Extracción directa y blindada del ID
         const urlParams = new URLSearchParams(window.location.search);
         let perfilId = urlParams.get('id');
         if (!perfilId) {
@@ -369,7 +369,6 @@
 
             docRef.get().then((doc) => {
                 if (!doc.exists) {
-                    alert("DEBUG: El ID buscado fue '" + perfilId + "' y NO existe en la base de datos.");
                     container.innerHTML = `<h2 style="color:#e74c3c; text-align:center;">El perfil solicitado no existe o fue removido (${perfilId}).</h2>`;
                     ocultarTransicionPrive();
                     return;
@@ -377,17 +376,14 @@
 
                 const datosActuales = doc.data();
                 
-                // Depuración visual temporal para confirmar lectura de visitas
+                // Suma de visitas asegurada
                 let visitasActuales = parseInt(datosActuales.visitas) || 0;
                 const nuevaSumaVisitas = visitasActuales + 1;
 
-                // Escritura directa a Firebase
                 docRef.set({
                     visitas: nuevaSumaVisitas
-                }, { merge: true }).then(() => {
-                    console.log("Visita sumada con éxito:", nuevaSumaVisitas);
-                }).catch((err) => {
-                    alert("Error al sumar visita: " + err.message);
+                }, { merge: true }).catch((err) => {
+                    console.log("Error al guardar visita:", err);
                 });
 
                 datosModeloActual = datosActuales;
@@ -398,7 +394,6 @@
                 inicializarVisorFotosDinamico();
                 ocultarTransicionPrive();
             }).catch(error => {
-                alert("Error de conexión a Firebase: " + error.message);
                 container.innerHTML = `<p style="color:#e74c3c; text-align:center;">Error al cargar el perfil.</p>`;
                 ocultarTransicionPrive();
             });
@@ -421,7 +416,7 @@
                 favoritos.push(idModelo);
                 if(btnFav) {
                     btnFav.classList.add('activo');
-                    btnFav.innerHTML = "❤️ Favorito Guardado";
+                    btnFav.innerHTML = "❤️️ Favorito Guardado";
                 }
             }
             localStorage.setItem('priveFavoritos', JSON.stringify(favoritos));
@@ -851,6 +846,7 @@
             }
         }
 
+        // LLAMADA DIRECTA AL CARGAR LA PÁGINA
         window.addEventListener('DOMContentLoaded', () => {
             aplicarIdiomaPerfil(idiomaPerfil);
             cargarPerfilDinamico();
