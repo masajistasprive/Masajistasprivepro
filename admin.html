@@ -450,7 +450,6 @@
         }
         const db = firebase.firestore();
 
-        // Escuchar métricas de estilos en tiempo real
         db.collection("metricas_estilos").onSnapshot((snapshot) => {
             let totalNormal = 0;
             let totalTarjeta = 0;
@@ -470,22 +469,47 @@
         let videoPresentacionSubido = "";
         let videoPresentacionEdicion = "";
 
+        // COMPRESIÓN AUTOMÁTICA PARA FOTO PRINCIPAL (EVITA ERROR 1MB DE FIREBASE)
         function convertirFotoLocal(input, targetId) {
             const file = input.files[0];
             if (!file) return;
             const status = document.getElementById(targetId === 'urlFotoPrincipal' ? 'statusFotoPrin' : 'statusEditFotoPrin');
-            if(status) status.textContent = "⏳ Procesando foto...";
+            if(status) status.textContent = "⏳ Comprimiendo foto...";
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                const targetEl = document.getElementById(targetId);
-                if(targetEl) targetEl.value = e.target.result;
-                if(status) status.textContent = "✅ ¡Foto lista!";
-                
-                if(targetId === 'editFotoPrincipal') {
-                    const box = document.getElementById('previewFotoPrinBox');
-                    if(box) box.innerHTML = `<img src="${e.target.result}" class="preview-img-box">`;
-                }
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    let width = img.width;
+                    let height = img.height;
+                    const maxDim = 800;
+
+                    if (width > height && width > maxDim) {
+                        height *= maxDim / width;
+                        width = maxDim;
+                    } else if (height > maxDim) {
+                        width *= maxDim / height;
+                        height = maxDim;
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+
+                    const targetEl = document.getElementById(targetId);
+                    if(targetEl) targetEl.value = compressedDataUrl;
+                    if(status) status.textContent = "✅ ¡Foto lista y optimizada!";
+                    
+                    if(targetId === 'editFotoPrincipal') {
+                        const box = document.getElementById('previewFotoPrinBox');
+                        if(box) box.innerHTML = `<img src="${compressedDataUrl}" class="preview-img-box">`;
+                    }
+                };
+                img.src = e.target.result;
             };
             reader.readAsDataURL(file);
         }
@@ -509,11 +533,12 @@
             });
         }
 
+        // COMPRESIÓN AUTOMÁTICA PARA GALERÍA EN EDICIÓN
         function convertirGaleriaEdicion(input) {
             const files = input.files;
             if (!files.length) return;
             const status = document.getElementById('statusEditGaleria');
-            if(status) status.textContent = `⏳ Procesando ${files.length} fotos nuevas...`;
+            if(status) status.textContent = `⏳ Comprimiendo ${files.length} fotos nuevas...`;
             fotosGaleriaEdicion = [];
 
             let procesadas = 0;
@@ -523,12 +548,36 @@
             Array.from(files).forEach((file) => {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    fotosGaleriaEdicion.push(e.target.result);
-                    procesadas++;
-                    if(box) {
-                        box.innerHTML += `<img src="${e.target.result}" class="galeria-preview-thumb">`;
-                    }
-                    if(status) status.textContent = `✅ Listas ${procesadas} de ${files.length} fotos nuevas.`;
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        let width = img.width;
+                        let height = img.height;
+                        const maxDim = 800;
+
+                        if (width > height && width > maxDim) {
+                            height *= maxDim / width;
+                            width = maxDim;
+                        } else if (height > maxDim) {
+                            width *= maxDim / height;
+                            height = maxDim;
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                        fotosGaleriaEdicion.push(compressedDataUrl);
+                        procesadas++;
+
+                        if(box) {
+                            box.innerHTML += `<img src="${compressedDataUrl}" class="galeria-preview-thumb">`;
+                        }
+                        if(status) status.textContent = `✅ Listas y optimizadas ${procesadas} de ${files.length} fotos.`;
+                    };
+                    img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             });
