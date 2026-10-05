@@ -360,6 +360,13 @@
 
             const docRef = db.collection("modelos_prive").doc(perfilId);
 
+            // SUMAR 1 VISITA AUTOMÁTICAMENTE AL ABRIR EL PERFIL
+            docRef.update({
+                visitas: firebase.firestore.FieldValue.increment(1)
+            }).catch(() => {
+                // Si el documento por alguna razón no tuviera el campo, no interrumpe la carga
+            });
+
             docRef.get().then((doc) => {
                 if (!doc.exists) {
                     container.innerHTML = `<h2 style="color:#e74c3c; text-align:center;">El perfil solicitado no existe o fue removido.</h2>`;
