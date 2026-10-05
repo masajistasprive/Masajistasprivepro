@@ -328,6 +328,7 @@
             justify-content: space-between;
             align-items: center;
             font-size: 0.85rem;
+            gap: 10px;
         }
 
         .status-badge {
@@ -350,9 +351,16 @@
             border: 1px solid rgba(231, 76, 60, 0.3);
         }
 
-        .amount-col {
+        .monto-input {
+            background: #1a1a1a;
+            border: 1px solid #333;
             color: var(--success);
             font-weight: bold;
+            padding: 5px 8px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            width: 100px;
+            text-align: right;
         }
 
         .btn-check {
@@ -563,6 +571,7 @@
             { fecha: "2026-10-02", nombre: "LUPITA", monto: 50000 }
         ];
 
+        // Solo carga los datos iniciales la primera vez absoluta, después respeta lo que el usuario borre o guarde
         if (!localStorage.getItem('prive_control_modelos')) {
             localStorage.setItem('prive_control_modelos', JSON.stringify(datosInicialesExcel));
         }
@@ -691,8 +700,8 @@
                             <input type="date" value="${reg.vencimiento}" data-nombre="${reg.nombre.replace(/'/g, "\\'")}" class="fecha-input fecha-editable">
                         </div>
                         <div style="text-align: right;">
-                            <span style="font-size:0.7rem; color:#888; display:block; margin-bottom:2px;">MONTO</span>
-                            <span class="amount-col">+$${Number(reg.monto || 0).toLocaleString('es-AR')}</span>
+                            <span style="font-size:0.7rem; color:#888; display:block; margin-bottom:2px;">MONTO ($)</span>
+                            <input type="number" value="${reg.monto || 0}" data-nombre-monto="${reg.nombre.replace(/'/g, "\\'")}" class="monto-input monto-editable">
                         </div>
                     </div>
                     <div class="modelo-footer">
@@ -709,6 +718,18 @@
                     const idx = registros.findIndex(r => r.nombre === nombreReg);
                     if (idx !== -1) {
                         registros[idx].vencimiento = e.target.value;
+                        localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
+                        renderizarTarjetas();
+                    }
+                });
+            });
+
+            document.querySelectorAll('.monto-editable').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const nombreReg = e.target.getAttribute('data-nombre-monto');
+                    const idx = registros.findIndex(r => r.nombre === nombreReg);
+                    if (idx !== -1) {
+                        registros[idx].monto = parseFloat(e.target.value) || 0;
                         localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
                         renderizarTarjetas();
                     }
