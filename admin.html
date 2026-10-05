@@ -337,7 +337,7 @@
                 <div class="form-row" style="margin-bottom: 0;">
                     <label style="color: #dfc285;">📸 Cambiar Foto Principal:</label>
                     <input type="file" id="editFileFotoPrin" accept="image/*" onchange="convertirFotoLocal(this, 'editFotoPrincipal')">
-                    <input type="text" id="editFotoPrincipal" placeholder="URL o código de foto" style="margin-top: 6px; font-size: 11px;">
+                    <input type="hidden" id="editFotoPrincipal">
                     <!-- Vista previa foto principal -->
                     <div id="previewFotoPrinBox"></div>
                     <div id="statusEditFotoPrin" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
@@ -352,7 +352,7 @@
                 <div class="form-row" style="margin-bottom: 0; grid-column: 1 / -1; margin-top: 10px;">
                     <label style="color: #dfc285;">🎥 Actualizar Video de Presentación (MP4):</label>
                     <input type="file" id="editFileVideo" accept="video/mp4,video/*" onchange="convertirVideoEdicion(this)">
-                    <input type="text" id="editVideoPresentacion" placeholder="URL o código de video" style="margin-top: 6px; font-size: 11px;">
+                    <input type="hidden" id="editVideoPresentacion">
                     <div id="statusEditVideo" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
                 </div>
             </div>
@@ -482,7 +482,6 @@
                 if(targetEl) targetEl.value = e.target.result;
                 if(status) status.textContent = "✅ ¡Foto lista!";
                 
-                // Si estamos en el modal de edición, actualizar miniatura visual al instante
                 if(targetId === 'editFotoPrincipal') {
                     const box = document.getElementById('previewFotoPrinBox');
                     if(box) box.innerHTML = `<img src="${e.target.result}" class="preview-img-box">`;
@@ -519,7 +518,7 @@
 
             let procesadas = 0;
             const box = document.getElementById('previewGaleriaBox');
-            if(box) box.innerHTML = ''; // Limpiar anteriores vistas previas
+            if(box) box.innerHTML = '';
 
             Array.from(files).forEach((file) => {
                 const reader = new FileReader();
@@ -833,7 +832,7 @@
                                 <span class="switch-destacada ${esDestacada ? 'active' : ''}" onclick="toggleDestacada('${docId}', ${!esDestacada})" title="Destacada Gold">★</span>
                                 <button class="btn-accion" onclick="abrirModalEditar('${docId}')">✏️ Editar</button>
                                 <button class="btn-accion" onclick="toggleEstado('${docId}', '${m.estado}')">${esActiva ? '⏸️' : '▶️'}</button>
-                                <button class="btn-accion btn-danger" onclick="eliminarPerfil('${docId}', '${m.nombre}')">🗑️️</button>
+                                <button class="btn-accion btn-danger" onclick="eliminarPerfil('${docId}', '${m.nombre}')">🗑</button>
                             </div>
                         </div>
                     `;
@@ -855,13 +854,11 @@
                     setVal('editFotoPrincipal', m.fotoPrincipal);
                     setVal('editVideoPresentacion', m.videoPresentacion);
 
-                    // MOSTRAR MINIATURA DE FOTO PRINCIPAL ACTUAL
                     const boxPrin = document.getElementById('previewFotoPrinBox');
                     if (boxPrin) {
                         boxPrin.innerHTML = m.fotoPrincipal ? `<img src="${m.fotoPrincipal}" class="preview-img-box">` : '<span style="font-size:11px; color:#777;">Sin foto principal</span>';
                     }
 
-                    // MOSTRAR MINIATURAS DE GALERÍA ACTUAL
                     const boxGal = document.getElementById('previewGaleriaBox');
                     if (boxGal) {
                         if (m.fotosGaleria && m.fotosGaleria.length > 0) {
@@ -954,7 +951,10 @@
 
         function guardarEdicionPerfil() {
             const docId = document.getElementById('editDocId').value;
+            if(!docId) return;
+
             db.collection("modelos_prive").doc(docId).get().then((doc) => {
+                if(!doc.exists) return;
                 let mData = doc.data();
                 if (!mData.traducciones) mData.traducciones = {};
 
@@ -993,14 +993,17 @@
                     videoPresentacion: mData.videoPresentacion || "",
                     descripcion: mData.traducciones.es.descPerfil1,
                     traducciones: mData.traducciones,
-                    seccionComentariosHTML: '<div id="seccion-comentarios"></div><script src="comentarios.js"><\/script>',
                     fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
                 db.collection("modelos_prive").doc(docId).update(datosActualizados).then(() => {
                     alert("¡Perfil, fotos y video actualizados con éxito!");
                     cerrarModalEditar();
+                }).catch(err => {
+                    alert("Error al guardar en Firebase: " + err.message);
                 });
+            }).catch(err => {
+                alert("Error al leer el documento: " + err.message);
             });
         }
 
