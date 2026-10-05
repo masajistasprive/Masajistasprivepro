@@ -316,7 +316,7 @@
                 tituloSeccionComentarios: "Experiências e Comentários", labelEstrellas: "Avaliação:", placeholderNombre: "Seu nome ou apelido", placeholderTexto: "Escreva sua experiência...", btnPublicar: "Publicar Experiência", cargandoComentarios: "Carregando experiências...", sinExperiencias: "Nenhuma experiência ainda. Seja o primeiro a deixar uma!", meGusta: "Curtir", destacado: "★ Destaque", eliminar: "🗑 Excluir", alertaIncompleto: "Por favor, preencha seu nome, selecione uma avaliação e escreva sua experiência."
             },
             fr: { 
-                btnVolver: "Retour au Portail", badgeVerificado: "✓ Privé Vérifié", labelZona: "Zone :", labelModalidad: "Modalité :", tituloDesc: "Description", labelTecnicas: "Techniques de massage :", labelHorarios: "Jours et horaires :", labelEquipamiento: "Équipements et services :", labelPagos: "Modes de paiement :", labelTurnos: "Modalité de réservation :", tituloVideo: "Vidéo de Présentation",
+                btnVolver: "Retour au Portail", badgeVerificado: "✓ Privé Vérifié", labelZona: "Zone :", labelModalidad: "Modalité :", tituloDesc: "Description", labelTecnicas: "Techniques de massage :", labelHoraires: "Jours et horaires :", labelEquipamiento: "Équipements et services :", labelPagos: "Modes de paiement :", labelTurnos: "Modalité de réservation :", tituloVideo: "Vidéo de Présentation",
                 btnWppFlotante: "Envoyez-moi un WhatsApp",
                 btnWppPie: "Envoyer WhatsApp",
                 btnFav: "Favori",
@@ -360,13 +360,6 @@
 
             const docRef = db.collection("modelos_prive").doc(perfilId);
 
-            // SUMAR 1 VISITA AUTOMÁTICAMENTE AL ABRIR EL PERFIL
-            docRef.update({
-                visitas: firebase.firestore.FieldValue.increment(1)
-            }).catch(() => {
-                // Si el documento por alguna razón no tuviera el campo, no interrumpe la carga
-            });
-
             docRef.get().then((doc) => {
                 if (!doc.exists) {
                     container.innerHTML = `<h2 style="color:#e74c3c; text-align:center;">El perfil solicitado no existe o fue removido.</h2>`;
@@ -374,7 +367,16 @@
                     return;
                 }
 
-                datosModeloActual = doc.data();
+                const datosActuales = doc.data();
+                const visitasActuales = typeof datosActuales.visitas === 'number' ? datosActuales.visitas + 1 : 1;
+
+                docRef.update({
+                    visitas: visitasActuales
+                }).catch((err) => {
+                    console.log("Error al sumar visita:", err);
+                });
+
+                datosModeloActual = datosActuales;
                 renderizarPerfil(datosModeloActual);
                 inicializarLogicaComentarios();
                 inicializarVisorFotosDinamico();
