@@ -41,6 +41,10 @@
         input[type="text"]:focus { border-color: #dfc285; outline: none; }
         input[type="file"] { background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 8px; border-radius: 6px; width: 100%; font-size: 12px; box-sizing: border-box; cursor: pointer; }
         
+        /* Contenedores de Miniaturas */
+        .preview-thumb-container { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+        .thumb-box { width: 60px; height: 60px; border-radius: 6px; object-fit: cover; border: 1px solid #dfc285; background: #111; }
+
         .btn-prive { background: linear-gradient(135deg, #dfc285, #b89751); color: #0d0d0d; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer; font-weight: 700; text-transform: uppercase; font-size: 12px; letter-spacing: 1.5px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(223, 194, 133, 0.2); }
         .btn-prive:hover { background: #dfc285; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(223, 194, 133, 0.3); }
         
@@ -171,13 +175,15 @@
                 <div class="form-grid" style="background: #1a1a1a; padding: 15px; border-radius: 8px; border: 1px solid #333; margin-bottom: 15px;">
                     <div class="form-row" style="margin-bottom: 0;">
                         <label style="color: #dfc285;">📸 Elegir Foto Principal de la Galería:</label>
-                        <input type="file" id="fileFotoPrincipal" accept="image/*" onchange="convertirFotoLocal(this, 'urlFotoPrincipal')">
+                        <input type="file" id="fileFotoPrincipal" accept="image/*" onchange="convertirFotoLocal(this, 'urlFotoPrincipal', 'previewFotoPrin')">
                         <input type="hidden" id="urlFotoPrincipal">
+                        <div id="previewFotoPrin" class="preview-thumb-container"></div>
                         <div id="statusFotoPrin" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
                     </div>
                     <div class="form-row" style="margin-bottom: 0;">
                         <label style="color: #dfc285;">📸 Elegir Fotos de Galería (¡Sin límite!):</label>
-                        <input type="file" id="fileFotosGaleria" accept="image/*" multiple onchange="convertirGaleriaLocal(this)">
+                        <input type="file" id="fileFotosGaleria" accept="image/*" multiple onchange="convertirGaleriaLocal(this, 'previewGaleria')">
+                        <div id="previewGaleria" class="preview-thumb-container"></div>
                         <div id="statusGaleria" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
                     </div>
                     <div class="form-row" style="margin-bottom: 0; grid-column: 1 / -1; margin-top: 10px;">
@@ -331,13 +337,15 @@
             <div class="form-grid" style="background: #1a1a1a; padding: 15px; border-radius: 8px; border: 1px solid #333; margin-bottom: 15px;">
                 <div class="form-row" style="margin-bottom: 0;">
                     <label style="color: #dfc285;">📸 Cambiar Foto Principal:</label>
-                    <input type="file" id="editFileFotoPrin" accept="image/*" onchange="convertirFotoLocal(this, 'editFotoPrincipal')">
+                    <input type="file" id="editFileFotoPrin" accept="image/*" onchange="convertirFotoLocal(this, 'editFotoPrincipal', 'previewEditFotoPrin')">
                     <input type="text" id="editFotoPrincipal" placeholder="URL o código de foto" style="margin-top: 6px; font-size: 11px;">
+                    <div id="previewEditFotoPrin" class="preview-thumb-container"></div>
                     <div id="statusEditFotoPrin" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
                 </div>
                 <div class="form-row" style="margin-bottom: 0;">
                     <label style="color: #dfc285;">📸 Actualizar Galería de Fotos (¡Sin límite!):</label>
-                    <input type="file" id="editFileGaleria" accept="image/*" multiple onchange="convertirGaleriaEdicion(this)">
+                    <input type="file" id="editFileGaleria" accept="image/*" multiple onchange="convertirGaleriaEdicion(this, 'previewEditGaleria')">
+                    <div id="previewEditGaleria" class="preview-thumb-container"></div>
                     <div id="statusEditGaleria" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
                 </div>
                 <div class="form-row" style="margin-bottom: 0; grid-column: 1 / -1; margin-top: 10px;">
@@ -459,55 +467,87 @@
         let videoPresentacionSubido = "";
         let videoPresentacionEdicion = "";
 
-        function convertirFotoLocal(input, targetId) {
-            const file = input.files[0];
-            if (!file) return;
-            const status = document.getElementById(targetId === 'urlFotoPrincipal' ? 'statusFotoPrin' : 'statusEditFotoPrin');
-            status.textContent = "⏳ Procesando foto...";
-
+        // Función de compresión automática con Canvas (Ancho máx: 1000px, Calidad: 75%)
+        function comprimirImagen(file, callback) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                document.getElementById(targetId).value = e.target.result;
-                status.textContent = "✅ ¡Foto lista!";
+                const img = new Image();
+                img.onload = function() {
+                    let width = img.width;
+                    let height = img.height;
+                    const maxWidth = 1000;
+
+                    if (width > maxWidth) {
+                        height = Math.round((height * maxWidth) / width);
+                        width = maxWidth;
+                    }
+
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.75);
+                    callback(compressedDataUrl);
+                };
+                img.src = e.target.result;
             };
             reader.readAsDataURL(file);
         }
 
-        function convertirGaleriaLocal(input) {
+        function convertirFotoLocal(input, targetId, previewContainerId) {
+            const file = input.files[0];
+            if (!file) return;
+            const status = document.getElementById(targetId === 'urlFotoPrincipal' ? 'statusFotoPrin' : 'statusEditFotoPrin');
+            const previewBox = document.getElementById(previewContainerId);
+            status.textContent = "⏳ Comprimiendo foto...";
+
+            comprimirImagen(file, function(compressedUrl) {
+                document.getElementById(targetId).value = compressedUrl;
+                previewBox.innerHTML = `<img src="${compressedUrl}" class="thumb-box" alt="Vista previa">`;
+                status.textContent = "✅ ¡Foto comprimida y lista!";
+            });
+        }
+
+        function convertirGaleriaLocal(input, previewContainerId) {
             const files = input.files;
             if (!files.length) return;
             const status = document.getElementById('statusGaleria');
-            status.textContent = `⏳ Procesando ${files.length} fotos...`;
+            const previewBox = document.getElementById(previewContainerId);
+            status.textContent = `⏳ Comprimiendo ${files.length} fotos...`;
+            previewBox.innerHTML = '';
             fotosGaleriaSubidas = [];
 
             let procesadas = 0;
             Array.from(files).forEach((file) => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    fotosGaleriaSubidas.push(e.target.result);
+                comprimirImagen(file, function(compressedUrl) {
+                    fotosGaleriaSubidas.push(compressedUrl);
+                    previewBox.innerHTML += `<img src="${compressedUrl}" class="thumb-box" alt="Miniatura">`;
                     procesadas++;
-                    status.textContent = `✅ Listas ${procesadas} de ${files.length} fotos.`;
-                };
-                reader.readAsDataURL(file);
+                    status.textContent = `✅ Listas ${procesadas} de ${files.length} fotos comprimidas.`;
+                });
             });
         }
 
-        function convertirGaleriaEdicion(input) {
+        function convertirGaleriaEdicion(input, previewContainerId) {
             const files = input.files;
             if (!files.length) return;
             const status = document.getElementById('statusEditGaleria');
-            status.textContent = `⏳ Procesando ${files.length} fotos nuevas...`;
+            const previewBox = document.getElementById(previewContainerId);
+            status.textContent = `⏳ Comprimiendo ${files.length} fotos nuevas...`;
+            previewBox.innerHTML = '';
             fotosGaleriaEdicion = [];
 
             let procesadas = 0;
             Array.from(files).forEach((file) => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    fotosGaleriaEdicion.push(e.target.result);
+                comprimirImagen(file, function(compressedUrl) {
+                    fotosGaleriaEdicion.push(compressedUrl);
+                    previewBox.innerHTML += `<img src="${compressedUrl}" class="thumb-box" alt="Miniatura">`;
                     procesadas++;
-                    status.textContent = `✅ Listas ${procesadas} de ${files.length} fotos nuevas.`;
-                };
-                reader.readAsDataURL(file);
+                    status.textContent = `✅ Listas ${procesadas} de ${files.length} fotos nuevas comprimidas.`;
+                });
             });
         }
 
@@ -809,6 +849,19 @@
                     document.getElementById('editWhatsappLink').value = m.whatsappLink || '';
                     document.getElementById('editFotoPrincipal').value = m.fotoPrincipal || '';
                     document.getElementById('editVideoPresentacion').value = m.videoPresentacion || '';
+                    
+                    // Mostrar miniatura de foto principal actual
+                    document.getElementById('previewEditFotoPrin').innerHTML = m.fotoPrincipal ? `<img src="${m.fotoPrincipal}" class="thumb-box" alt="Actual">` : '';
+                    
+                    // Mostrar miniaturas de galería actual
+                    let galeriaHtml = '';
+                    if (m.fotosGaleria && m.fotosGaleria.length) {
+                        m.fotosGaleria.forEach(imgUrl => {
+                            galeriaHtml += `<img src="${imgUrl}" class="thumb-box" alt="Galería">`;
+                        });
+                    }
+                    document.getElementById('previewEditGaleria').innerHTML = galeriaHtml;
+
                     document.getElementById('tradStatus').textContent = '';
                     document.getElementById('statusEditFotoPrin').textContent = '';
                     document.getElementById('statusEditGaleria').textContent = '';
@@ -914,10 +967,10 @@
                     fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
-                // Validar tamaño antes de enviar para evitar cuelgues (Límite Firestore: 1MB por documento)
+                // Validar tamaño antes de enviar
                 const payloadSize = JSON.stringify(datosActualizados).length;
                 if (payloadSize > 950000) {
-                    alert("⚠️ Las imágenes son demasiado pesadas y superan el límite permitido por la base de datos (1MB). Por favor, subí imágenes más comprimidas o de menor resolución.");
+                    alert("⚠️ Las imágenes son demasiado pesadas y superan el límite permitido por la base de datos (1MB). Por favor, subí menos fotos a la vez.");
                     return;
                 }
 
@@ -939,6 +992,8 @@
             document.getElementById('statusFotoPrin').textContent = '';
             document.getElementById('statusGaleria').textContent = '';
             document.getElementById('statusVideo').textContent = '';
+            document.getElementById('previewFotoPrin').innerHTML = '';
+            document.getElementById('previewGaleria').innerHTML = '';
             fotosGaleriaSubidas = [];
             videoPresentacionSubido = "";
         }
