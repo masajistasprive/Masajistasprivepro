@@ -320,10 +320,7 @@
             <div class="footer-legal">
                 <p data-i18n="footerLegal">Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.</p>
                 <p style="margin-top: 6px;" data-i18n="footerMarcas">Todo el contenido, marcas y logotipos pertenecen a sus respectivos dueños.</p>
-                <div id="contador-visitas-global" style="margin-top: 12px; color: #dfc285; font-size: 13px; font-weight: 500;">
-                    👁 <span data-i18n="visitasTotales">Visitas totales al portal</span>: <span id="visitas-total-num">Cargando...</span>
-                </div>
-                <p class="copyright" style="margin-top: 8px; color: #dfc285; font-size: 12px;" data-i18n="footerCopy">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
+                <p class="copyright" style="margin-top: 12px; color: #dfc285; font-size: 12px;" data-i18n="footerCopy">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
             </div>
         </div>
     </footer>
@@ -389,34 +386,6 @@
                 ocultarTransicionPrive();
             }, 1200);
         });
-
-        function registrarYMostrarVisitasGlobales() {
-            const numEl = document.getElementById('visitas-total-num');
-            try {
-                const docRef = db.collection("estadisticas_visitas").doc("portal_index");
-
-                docRef.get().then((doc) => {
-                    if (doc.exists) {
-                        const total = doc.data().visitas || 0;
-                        if(numEl) numEl.textContent = total.toLocaleString('es-AR');
-                        
-                        if (!sessionStorage.getItem("visitaRegistradaIndex")) {
-                            sessionStorage.setItem("visitaRegistradaIndex", "true");
-                            docRef.update({
-                                visitas: firebase.firestore.FieldValue.increment(1)
-                            }).catch(() => {});
-                        }
-                    } else {
-                        docRef.set({ visitas: 1 });
-                        if(numEl) numEl.textContent = "1";
-                    }
-                }).catch(() => {
-                    if(numEl) numEl.textContent = "0";
-                });
-            } catch (e) {
-                if(numEl) numEl.textContent = "0";
-            }
-        }
 
         function cargarPerfilesDesdeFirebase() {
             db.collection("modelos_prive").onSnapshot((snapshot) => {
@@ -570,7 +539,6 @@
                 siguenos: "Síguenos",
                 footerLegal: "Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.",
                 footerMarcas: "Todo el contenido, marcas y logotipos pertenecen a sus respectivos dueños.",
-                visitasTotales: "Visitas totales al portal",
                 footerCopy: "© 2026 Masajistas Privé. Todos los derechos reservados."
             },
             en: {
@@ -603,7 +571,6 @@
                 siguenos: "Follow Us",
                 footerLegal: "This is an exclusive site for adults (+18). The published advertisers are independent and have no employment, corporate, or dependency relationship with this portal.",
                 footerMarcas: "All content, trademarks, and logos belong to their respective owners.",
-                visitasTotales: "Total portal visits",
                 footerCopy: "© 2026 Masajistas Privé. All rights reserved."
             },
             pt: {
@@ -636,7 +603,6 @@
                 siguenos: "Siga-nos",
                 footerLegal: "Este é um site exclusivo para adultos (+18). Os anunciantes publicados são independentes e não possuem vínculo empregatício, societário ou de dependência com este portal.",
                 footerMarcas: "Todo o conteúdo, marcas e logotipos pertencem aos respectivos donos.",
-                visitasTotales: "Visitas totais ao portal",
                 footerCopy: "© 2026 Masajistas Privé. Todos os direitos reservados."
             },
             fr: {
@@ -669,7 +635,6 @@
                 siguenos: "Suivez-nous",
                 footerLegal: "Ceci est un site exclusif pour adultes (+18). Les annonceurs publiés sont indépendants et n'aucun lien d'emploi, d'entreprise ou de dépendance avec ce portail.",
                 footerMarcas: "Tout le contenu, les marques et les logos appartiennent à leurs propriétaires respectifs.",
-                visitasTotales: "Total des visites du portail",
                 footerCopy: "© 2026 Masajistas Privé. Tous droits réservés."
             }
         };
@@ -793,7 +758,6 @@
             aplicarIdioma(idiomaActual);
             obtenerClimaCABA();
             obtenerDolar();
-            registrarYMostrarVisitasGlobales();
             cargarPerfilesDesdeFirebase();
         });
 
