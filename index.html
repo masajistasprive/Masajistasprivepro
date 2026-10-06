@@ -407,14 +407,14 @@
                             }).catch(() => {});
                         }
                     } else {
-                        docRef.set({ visitas: 5000 });
-                        if(numEl) numEl.textContent = "5.000";
+                        docRef.set({ visitas: 1 });
+                        if(numEl) numEl.textContent = "1";
                     }
                 }).catch(() => {
-                    if(numEl) numEl.textContent = "5.000";
+                    if(numEl) numEl.textContent = "Cargando...";
                 });
             } catch (e) {
-                if(numEl) numEl.textContent = "5.000";
+                if(numEl) numEl.textContent = "0";
             }
         }
 
