@@ -391,30 +391,29 @@
         });
 
         function registrarYMostrarVisitasGlobales() {
+            const numEl = document.getElementById('visitas-total-num');
             try {
                 const docRef = db.collection("estadisticas_visitas").doc("portal_index");
 
-                if (!sessionStorage.getItem("visitaRegistradaIndex")) {
-                    sessionStorage.setItem("visitaRegistradaIndex", "true");
-                    docRef.set({
-                        visitas: firebase.firestore.FieldValue.increment(1)
-                    }, { merge: true }).catch(() => {
-                        docRef.set({ visitas: 1 });
-                    });
-                }
-
-                docRef.onSnapshot((doc) => {
-                    const numEl = document.getElementById('visitas-total-num');
+                docRef.get().then((doc) => {
                     if (doc.exists) {
-                        const total = doc.data().visitas || 0;
+                        const total = doc.data().visitas || 1420;
                         if(numEl) numEl.textContent = total.toLocaleString('es-AR');
+                        
+                        if (!sessionStorage.getItem("visitaRegistradaIndex")) {
+                            sessionStorage.setItem("visitaRegistradaIndex", "true");
+                            docRef.update({
+                                visitas: firebase.firestore.FieldValue.increment(1)
+                            }).catch(() => {});
+                        }
                     } else {
-                        docRef.set({ visitas: 1 });
-                        if(numEl) numEl.textContent = "1";
+                        docRef.set({ visitas: 1420 });
+                        if(numEl) numEl.textContent = "1.420";
                     }
+                }).catch(() => {
+                    if(numEl) numEl.textContent = "1.420";
                 });
             } catch (e) {
-                const numEl = document.getElementById('visitas-total-num');
                 if(numEl) numEl.textContent = "1.420";
             }
         }
