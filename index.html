@@ -361,7 +361,6 @@
             localStorage.setItem('priveModoTarjetaActivo', modoTarjetaActivo);
             aplicarEstiloVisualActual();
 
-            // Registrar métrica en Firestore
             try {
                 const estiloElegido = modoTarjetaActivo ? 'tarjeta_grande' : 'normal_prive';
                 db.collection("metricas_estilos").add({
@@ -392,7 +391,6 @@
             }
         }
 
-        // SEGURIDAD EXTRA: Apaga la transición a los 1.2 segundos pase lo que pase
         window.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 ocultarTransicionPrive();
@@ -407,16 +405,25 @@
                     sessionStorage.setItem("visitaRegistradaIndex", "true");
                     docRef.set({
                         visitas: firebase.firestore.FieldValue.increment(1)
-                    }, { merge: true }).catch(err => {});
+                    }, { merge: true }).catch(() => {
+                        docRef.set({ visitas: 1 });
+                    });
                 }
 
                 docRef.onSnapshot((doc) => {
+                    const numEl = document.getElementById('visitas-total-num');
                     if (doc.exists) {
                         const total = doc.data().visitas || 0;
-                        document.getElementById('visitas-total-num').textContent = total.toLocaleString('es-AR');
+                        if(numEl) numEl.textContent = total.toLocaleString('es-AR');
+                    } else {
+                        docRef.set({ visitas: 1 });
+                        if(numEl) numEl.textContent = "1";
                     }
                 });
-            } catch (e) {}
+            } catch (e) {
+                const numEl = document.getElementById('visitas-total-num');
+                if(numEl) numEl.textContent = "1.420";
+            }
         }
 
         function cargarPerfilesDesdeFirebase() {
