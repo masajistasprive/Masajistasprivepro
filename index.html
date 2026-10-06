@@ -212,12 +212,11 @@
         <div class="stories-container" id="stories-destacadas-container"></div>
     </div>
 
-    <!-- Categorías normales (Pills) -->
+    <!-- Categorías normales (Pills) - Sin Masculinos -->
     <nav class="pills-container">
         <button class="pill-btn active" data-filter="todas" data-i18n="filtroTodas">Todas</button>
         <button class="pill-btn" data-filter="terapeuticas" data-i18n="filtroTerapeuticas">Terapéuticas</button>
         <button class="pill-btn" data-filter="sensuales" data-i18n="filtroSensuales">Sensuales</button>
-        <button class="pill-btn" data-filter="masculinos" data-i18n="filtroMasculinos">Masculinos</button>
         <button class="pill-btn" data-filter="fantasias" data-i18n="filtroFantasias">Fantasías</button>
     </nav>
 
@@ -248,12 +247,6 @@
         <div class="categoria-seccion-wrapper" data-sec="sensuales" style="margin-top: 2rem;">
             <h2 class="section-heading" data-i18n="seccionSensuales">Masajistas Sensuales</h2>
             <div class="grid-perfiles" id="grid-sensuales"></div>
-        </div>
-
-        <!-- Sección Masculinos -->
-        <div class="categoria-seccion-wrapper" data-sec="masculinos" style="margin-top: 2rem;">
-            <h2 class="section-heading" data-i18n="seccionMasculinos">Masajistas Masculinos</h2>
-            <div class="grid-perfiles" id="grid-masculinos"></div>
         </div>
 
         <!-- Sección Fantasías -->
@@ -430,7 +423,6 @@
             db.collection("modelos_prive").onSnapshot((snapshot) => {
                 const gridTerapeuticas = document.getElementById('grid-terapeuticas');
                 const gridSensuales = document.getElementById('grid-sensuales');
-                const gridMasculinos = document.getElementById('grid-masculinos');
                 const gridFantasias = document.getElementById('grid-fantasias');
                 const gridFavoritos = document.getElementById('grid-favoritos');
                 const storiesContainer = document.getElementById('stories-destacadas-container');
@@ -439,14 +431,12 @@
 
                 gridTerapeuticas.innerHTML = '';
                 gridSensuales.innerHTML = '';
-                gridMasculinos.innerHTML = '';
                 gridFantasias.innerHTML = '';
                 gridFavoritos.innerHTML = '';
                 storiesContainer.innerHTML = '';
 
                 let htmlTerapeuticas = '';
                 let htmlSensuales = '';
-                let htmlMasculinos = '';
                 let htmlFantasias = '';
                 let htmlFavoritos = '';
                 let htmlStories = '';
@@ -481,7 +471,6 @@
                     const catRaw = (m.categoria || '').toLowerCase().trim();
                     let catLimpia = 'terapeuticas';
                     if (catRaw.includes('sensual')) catLimpia = 'sensuales';
-                    else if (catRaw.includes('masculino')) catLimpia = 'masculinos';
                     else if (catRaw.includes('fantasia')) catLimpia = 'fantasias';
 
                     const cardHTML = `
@@ -514,8 +503,6 @@
                         htmlTerapeuticas += cardHTML;
                     } else if (catLimpia === 'sensuales') {
                         htmlSensuales += cardHTML;
-                    } else if (catLimpia === 'masculinos') {
-                        htmlMasculinos += cardHTML;
                     } else if (catLimpia === 'fantasias') {
                         htmlFantasias += cardHTML;
                     }
@@ -536,7 +523,6 @@
 
                 if (htmlTerapeuticas) htmlTerapeuticas += adCardHTML;
                 if (htmlSensuales) htmlSensuales += adCardHTML;
-                if (htmlMasculinos) htmlMasculinos += adCardHTML;
                 if (htmlFantasias) htmlFantasias += adCardHTML;
 
                 if (htmlFavoritos === '') {
@@ -545,7 +531,6 @@
 
                 gridTerapeuticas.innerHTML = htmlTerapeuticas;
                 gridSensuales.innerHTML = htmlSensuales;
-                gridMasculinos.innerHTML = htmlMasculinos;
                 gridFantasias.innerHTML = htmlFantasias;
                 gridFavoritos.innerHTML = htmlFavoritos;
                 storiesContainer.innerHTML = htmlStories;
@@ -568,11 +553,9 @@
                 filtroTodas: "Todas",
                 filtroTerapeuticas: "Terapéuticas",
                 filtroSensuales: "Sensuales",
-                filtroMasculinos: "Masculinos",
                 filtroFantasias: "Fantasías",
                 seccionTerapeuticas: "Masajistas Terapéuticas",
                 seccionSensuales: "Masajistas Sensuales",
-                seccionMasculinos: "Masajistas Masculinos",
                 seccionFantasias: "Fantasías",
                 badgeVerificado: "✓ Verificado",
                 espacioDisponible: "Espacio Disponible",
@@ -603,11 +586,9 @@
                 filtroTodas: "All",
                 filtroTerapeuticas: "Therapeutic",
                 filtroSensuales: "Sensual",
-                filtroMasculinos: "Male",
                 filtroFantasias: "Fantasies",
                 seccionTerapeuticas: "Therapeutic Masseuses",
                 seccionSensuales: "Sensual Masseuses",
-                seccionMasculinos: "Male Masseurs",
                 seccionFantasias: "Fantasies",
                 badgeVerificado: "✓ Verified",
                 espacioDisponible: "Available Space",
@@ -638,11 +619,9 @@
                 filtroTodas: "Todas",
                 filtroTerapeuticas: "Terapéuticas",
                 filtroSensuales: "Sensuais",
-                filtroMasculinos: "Masculinos",
                 filtroFantasias: "Fantasias",
                 seccionTerapeuticas: "Massagistas Terapéuticas",
                 seccionSensuales: "Massagistas Sensuais",
-                seccionMasculinos: "Massagistas Masculinos",
                 seccionFantasias: "Massagistas Fantasias",
                 badgeVerificado: "✓ Verificado",
                 espacioDisponible: "Espaço Disponível",
@@ -673,11 +652,9 @@
                 filtroTodas: "Tous",
                 filtroTerapeuticas: "Thérapeutiques",
                 filtroSensuales: "Sensuelles",
-                filtroMasculinos: "Hommes",
                 filtroFantasias: "Fantasies",
                 seccionTerapeuticas: "Masseuses Thérapeutiques",
                 seccionSensuales: "Masseuses Sensuelles",
-                seccionMasculinos: "Masseurs Hommes",
                 seccionFantasias: "Fantasies",
                 badgeVerificado: "✓ Vérifié",
                 espacioDisponible: "Espace Disponible",
