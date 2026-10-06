@@ -397,7 +397,7 @@
 
                 docRef.get().then((doc) => {
                     if (doc.exists) {
-                        const total = doc.data().visitas || 1420;
+                        const total = doc.data().visitas || 0;
                         if(numEl) numEl.textContent = total.toLocaleString('es-AR');
                         
                         if (!sessionStorage.getItem("visitaRegistradaIndex")) {
@@ -407,14 +407,14 @@
                             }).catch(() => {});
                         }
                     } else {
-                        docRef.set({ visitas: 1420 });
-                        if(numEl) numEl.textContent = "1.420";
+                        docRef.set({ visitas: 5000 });
+                        if(numEl) numEl.textContent = "5.000";
                     }
                 }).catch(() => {
-                    if(numEl) numEl.textContent = "1.420";
+                    if(numEl) numEl.textContent = "5.000";
                 });
             } catch (e) {
-                if(numEl) numEl.textContent = "1.420";
+                if(numEl) numEl.textContent = "5.000";
             }
         }
 
