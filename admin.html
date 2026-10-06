@@ -10,7 +10,6 @@
         body.admin-body { background-color: #0d0d0d; color: #e5e5e5; font-family: 'Montserrat', sans-serif; margin: 0; padding: 20px; }
         .admin-container { max-width: 1100px; margin: 0 auto; display: none; }
         
-        /* Pantalla de Login Mejorada */
         #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0d0d0d; display: flex; justify-content: center; align-items: center; z-index: 999999; }
         .login-card { background: #141414; border: 1px solid #dfc285; border-radius: 14px; padding: 40px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.9); }
         .login-logo { max-width: 140px; width: 50vw; display: block; margin: 0 auto 20px auto; opacity: 0.9; }
@@ -18,14 +17,12 @@
         .login-card input { width: 100%; background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 6px; font-size: 14px; margin-bottom: 20px; box-sizing: border-box; text-align: center; }
         .login-card input:focus { border-color: #dfc285; outline: none; }
 
-        /* Cabecera del Admin con Logo */
         .admin-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(223, 194, 133, 0.3); padding-bottom: 20px; margin-bottom: 30px; }
         .header-brand-box { display: flex; align-items: center; gap: 15px; }
         .header-logo-admin { width: 55px; height: auto; display: block; }
         .admin-header h1 { color: #dfc285; font-family: 'Cormorant Garamond', serif; font-size: 26px; margin: 0; letter-spacing: 1px; }
         .admin-header p { color: #888; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin: 2px 0 0 0; }
         
-        /* Tarjetas de Métricas de Estilos Visuales Amigables */
         .metrics-grid-admin { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
         .metric-card-admin { background: linear-gradient(135deg, #141414, #1a1a1a); border: 1px solid rgba(223, 194, 133, 0.3); border-radius: 12px; padding: 22px; text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.6); position: relative; overflow: hidden; }
         .metric-card-admin::after { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: #dfc285; }
@@ -47,12 +44,10 @@
         .btn-traducir { background: rgba(223, 194, 133, 0.15); border: 1px solid #dfc285; color: #dfc285; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; margin-bottom: 15px; display: inline-flex; align-items: center; gap: 6px; }
         .btn-traducir:hover { background: #dfc285; color: #0d0d0d; }
 
-        /* Vistas previas / Miniaturas */
         .preview-img-box { width: 70px; height: 70px; border-radius: 6px; object-fit: cover; border: 1px solid #dfc285; margin-top: 8px; }
         .galeria-preview-container { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
         .galeria-preview-thumb { width: 50px; height: 50px; border-radius: 4px; object-fit: cover; border: 1px solid #444; }
 
-        /* Estilo Moderno para la Nómina de Modelos */
         .modelo-card-admin { display: flex; align-items: center; justify-content: space-between; background: #1a1a1a; border: 1px solid rgba(223, 194, 133, 0.15); border-radius: 8px; padding: 12px 18px; margin-bottom: 12px; transition: all 0.3s ease; gap: 15px; flex-wrap: wrap; }
         .modelo-card-admin:hover { border-color: rgba(223, 194, 133, 0.4); box-shadow: 0 4px 15px rgba(0,0,0,0.6); }
         .modelo-info-left { display: flex; align-items: center; gap: 15px; min-width: 240px; }
@@ -97,7 +92,6 @@
 </head>
 <body class="admin-body">
 
-    <!-- PANTALLA DE ACCESO CON CONTRASEÑA -->
     <div id="loginOverlay">
         <div class="login-card">
             <img src="img/logo.png" alt="Masajistas Privé" class="login-logo">
@@ -109,7 +103,6 @@
         </div>
     </div>
 
-    <!-- CONTENEDOR PRINCIPAL DEL PANEL -->
     <div class="admin-container" id="adminMainContent">
         <header class="admin-header">
             <div class="header-brand-box">
@@ -125,7 +118,6 @@
             </div>
         </header>
 
-        <!-- TARJETAS DE MÉTRICAS DE ESTILOS AMIGABLES -->
         <div class="metrics-grid-admin">
             <div class="metric-card-admin">
                 <div class="metric-title-admin">🏛️ Preferencia Estilo Normal</div>
@@ -137,16 +129,14 @@
             </div>
         </div>
 
-        <!-- SECCIÓN DE CREACIÓN / ELECCIÓN DE MÉTODO -->
         <div class="card-admin">
             <h2>➕ Crear o Importar Nueva Ficha</h2>
             
             <div class="metodo-selector">
-                <div id="btnMetodoMano" class="btn-metodo active" onclick="cambiarMetodo('mano')">✍️️ Escribir a Mano + Elegir Fotos/Videos</div>
+                <div id="btnMetodoMano" class="btn-metodo active" onclick="cambiarMetodo('mano')">✍ Escribir a Mano + Elegir Fotos</div>
                 <div id="btnMetodoHtml" class="btn-metodo" onclick="cambiarMetodo('html')">📥 Importar Código HTML</div>
             </div>
 
-            <!-- MÉTODO 1: ESCRIBIR A MANO CON CARGA LOCAL DE FOTOS Y VIDEO -->
             <div id="panelMetodoMano" class="metodo-panel active">
                 <div class="form-grid">
                     <div class="form-row">
@@ -172,34 +162,25 @@
                     </div>
                 </div>
 
-                <!-- SECCIÓN DE SELECCIÓN DE FOTOS Y VIDEO -->
                 <div class="form-grid" style="background: #1a1a1a; padding: 15px; border-radius: 8px; border: 1px solid #333; margin-bottom: 15px;">
                     <div class="form-row" style="margin-bottom: 0;">
-                        <label style="color: #dfc285;">📸 Elegir Foto Principal de la Galería:</label>
+                        <label style="color: #dfc285;">📸 Elegir Foto Principal:</label>
                         <input type="file" id="fileFotoPrincipal" accept="image/*" onchange="convertirFotoLocal(this, 'urlFotoPrincipal')">
                         <input type="hidden" id="urlFotoPrincipal">
                         <div id="statusFotoPrin" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
                     </div>
                     <div class="form-row" style="margin-bottom: 0;">
-                        <label style="color: #dfc285;">📸 Elegir Fotos de Galería (¡Sin límite!):</label>
+                        <label style="color: #dfc285;">📸 Fotos de Galería Adicionales:</label>
                         <input type="file" id="fileFotosGaleria" accept="image/*" multiple onchange="convertirGaleriaLocal(this)">
                         <div id="statusGaleria" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
                     </div>
-                    <div class="form-row" style="margin-bottom: 0; grid-column: 1 / -1; margin-top: 10px;">
-                        <label style="color: #dfc285;">🎥 Video de Presentación (Opcional - MP4):</label>
-                        <input type="file" id="fileVideoPresentacion" accept="video/mp4,video/*" onchange="convertirVideoLocal(this)">
-                        <input type="hidden" id="urlVideoPresentacion">
-                        <div id="statusVideo" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
-                    </div>
                 </div>
 
-                <!-- Botón Traducción Automática -->
                 <div style="margin-top: 15px; border-top: 1px solid rgba(223,194,133,0.2); padding-top: 15px;">
-                    <button type="button" class="btn-traducir" onclick="traducirAutomaticamenteAdmin()">✨ Traducir automáticamente campos de Español a Inglés, Portugués y Francés</button>
+                    <button type="button" class="btn-traducir" onclick="traducirAutomaticamenteAdmin()">✨ Traducir automáticamente campos a Inglés, Portugués y Francés</button>
                     <div id="tradStatusAdmin" style="font-size: 12px; color: #dfc285; margin-top: 5px;"></div>
                 </div>
 
-                <!-- Solapas de Idiomas -->
                 <div style="margin-top: 15px;">
                     <label style="display: block; color: #dfc285; font-size: 12px; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; font-weight: 600;">Textos y Traducciones:</label>
                     <div class="lang-tabs">
@@ -209,7 +190,6 @@
                         <div class="lang-tab" onclick="cambiarTabAdmin('fr')">🇫🇷 Francés</div>
                     </div>
 
-                    <!-- Español -->
                     <div id="admin-lang-es" class="lang-section active">
                         <div class="form-grid">
                             <div class="form-row"><label>Zona (ES):</label><input type="text" id="zona_es" placeholder="Ej: CABA"></div>
@@ -223,7 +203,6 @@
                         </div>
                     </div>
 
-                    <!-- Inglés -->
                     <div id="admin-lang-en" class="lang-section">
                         <div class="form-grid">
                             <div class="form-row"><label>Area (EN):</label><input type="text" id="zona_en"></div>
@@ -237,7 +216,6 @@
                         </div>
                     </div>
 
-                    <!-- Portugués -->
                     <div id="admin-lang-pt" class="lang-section">
                         <div class="form-grid">
                             <div class="form-row"><label>Zona (PT):</label><input type="text" id="zona_pt"></div>
@@ -251,7 +229,6 @@
                         </div>
                     </div>
 
-                    <!-- Francés -->
                     <div id="admin-lang-fr" class="lang-section">
                         <div class="form-grid">
                             <div class="form-row"><label>Zone (FR):</label><input type="text" id="zona_fr"></div>
@@ -273,17 +250,13 @@
                 <div id="statusAdmin" style="margin-top: 15px; font-weight: 500; font-size: 13px;"></div>
             </div>
 
-            <!-- MÉTODO 2: IMPORTAR HTML -->
             <div id="panelMetodoHtml" class="metodo-panel">
-                <p style="font-size: 13px; color: #aaa; margin-bottom: 15px;">Pegá aquí el código HTML completo de la masajista. Si es un perfil con sufijo (ej. <em>luly-sensual</em>), escribilo manualmente en la casilla de ID.</p>
-                
+                <p style="font-size: 13px; color: #aaa; margin-bottom: 15px;">Pegá aquí el código HTML completo de la masajista.</p>
                 <div style="margin-bottom: 15px;">
-                    <label style="display: block; font-size: 11px; color: #dfc285; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">ID Único / Slug para Firebase:</label>
-                    <input type="text" id="customIdInput" placeholder="Ej: luly-sensual (si se deja vacío, se genera solo)">
+                    <label style="display: block; font-size: 11px; color: #dfc285; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">ID Único / Slug:</label>
+                    <input type="text" id="customIdInput" placeholder="Ej: luly">
                 </div>
-
                 <textarea id="htmlSourceInput" class="html-input" placeholder="Pegá el código HTML completo aquí..." style="height: 150px;"></textarea>
-                
                 <div style="margin-top: 15px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
                     <select id="selectCategoriaImport" style="background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px 12px; border-radius: 6px; font-size: 13px;">
                         <option value="terapeuticas">Categoría: Terapéuticas</option>
@@ -291,13 +264,12 @@
                         <option value="masculinos">Categoría: Masculinos</option>
                         <option value="fantasias">Categoría: Fantasías</option>
                     </select>
-                    <button type="button" class="btn-prive" onclick="procesarEscanerHTML()">Escanear y Guardar en Firebase</button>
+                    <button type="button" class="btn-prive" onclick="procesarEscanerHTML()">Escanear y Guardar</button>
                 </div>
                 <div id="importStatus" style="margin-top: 12px; font-size: 13px; font-weight: 500;"></div>
             </div>
         </div>
 
-        <!-- SECCIÓN: LISTADO GENERAL -->
         <div class="card-admin">
             <h2>📋 Nómina de Modelos y Gestión en Tiempo Real</h2>
             <div id="listaModelosModernContainer" style="margin-top: 15px;">
@@ -306,10 +278,9 @@
         </div>
     </div>
 
-    <!-- MODAL DE EDICIÓN -->
     <div id="modalEditar">
         <div class="modal-content">
-            <h3>Editar Perfil, Teléfono, Fotos, Video y Traducciones</h3>
+            <h3>Editar Perfil, Teléfono y Fotos</h3>
             <input type="hidden" id="editDocId">
             
             <div class="form-grid">
@@ -330,12 +301,8 @@
 
             <div class="form-grid">
                 <div class="form-row">
-                    <label>Teléfono WhatsApp (Ej: 54911...):</label>
+                    <label>Teléfono WhatsApp:</label>
                     <input type="text" id="editWhatsapp" placeholder="54911...">
-                </div>
-                <div class="form-row">
-                    <label>Enlace Completo de WhatsApp:</label>
-                    <input type="text" id="editWhatsappLink" placeholder="https://wa.me/...">
                 </div>
             </div>
 
@@ -344,73 +311,24 @@
                     <label style="color: #dfc285;">📸 Cambiar Foto Principal:</label>
                     <input type="file" id="editFileFotoPrin" accept="image/*" onchange="convertirFotoLocal(this, 'editFotoPrincipal')">
                     <input type="hidden" id="editFotoPrincipal">
-                    <!-- Vista previa foto principal -->
                     <div id="previewFotoPrinBox"></div>
                     <div id="statusEditFotoPrin" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
                 </div>
                 <div class="form-row" style="margin-bottom: 0;">
-                    <label style="color: #dfc285;">📸 Actualizar Galería de Fotos (¡Sin límite!):</label>
+                    <label style="color: #dfc285;">📸 Actualizar Galería de Fotos:</label>
                     <input type="file" id="editFileGaleria" accept="image/*" multiple onchange="convertirGaleriaEdicion(this)">
-                    <!-- Vista previa galería actual -->
                     <div id="previewGaleriaBox" class="galeria-preview-container"></div>
                     <div id="statusEditGaleria" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
-                </div>
-                <div class="form-row" style="margin-bottom: 0; grid-column: 1 / -1; margin-top: 10px;">
-                    <label style="color: #dfc285;">🎥 Actualizar Video de Presentación (MP4):</label>
-                    <input type="file" id="editFileVideo" accept="video/mp4,video/*" onchange="convertirVideoEdicion(this)">
-                    <input type="hidden" id="editVideoPresentacion">
-                    <div id="statusEditVideo" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
-                </div>
-            </div>
-
-            <div style="margin-top: 15px; border-top: 1px solid rgba(223,194,133,0.2); padding-top: 15px;">
-                <button type="button" class="btn-traducir" onclick="traducirAutomaticamenteES()">✨ Traducir automáticamente a Inglés, Portugués y Francés</button>
-                <div id="tradStatus" style="font-size: 12px; color: #dfc285; margin-top: 5px;"></div>
-            </div>
-
-            <div style="margin-top: 15px;">
-                <label style="margin-bottom: 8px;">Traducciones de Zona y Descripción:</label>
-                <div class="lang-tabs">
-                    <div class="lang-tab active" onclick="cambiarTabModalLang('es')">🇪🇸 Español</div>
-                    <div class="lang-tab" onclick="cambiarTabModalLang('en')">🇺🇸 Inglés</div>
-                    <div class="lang-tab" onclick="cambiarTabModalLang('pt')">🇧🇷 Portugués</div>
-                    <div class="lang-tab" onclick="cambiarTabModalLang('fr')">🇫🇷 Francés</div>
-                </div>
-
-                <div id="modal-lang-es" class="lang-section active">
-                    <div class="form-row"><label>Zona (ES):</label><input type="text" id="editZona_es"></div>
-                    <div class="form-row"><label>Modalidad (ES):</label><input type="text" id="editModalidad_es"></div>
-                    <div class="form-row"><label>Descripción 1 (ES):</label><textarea id="editDesc_es" class="html-input" style="height: 80px;"></textarea></div>
-                    <div class="form-row"><label>Descripción 2 (ES):</label><textarea id="editDesc2_es" class="html-input" style="height: 80px;"></textarea></div>
-                </div>
-                <div id="modal-lang-en" class="lang-section">
-                    <div class="form-row"><label>Area (EN):</label><input type="text" id="editZona_en"></div>
-                    <div class="form-row"><label>Modality (EN):</label><input type="text" id="editModalidad_en"></div>
-                    <div class="form-row"><label>Description 1 (EN):</label><textarea id="editDesc_en" class="html-input" style="height: 80px;"></textarea></div>
-                    <div class="form-row"><label>Description 2 (EN):</label><textarea id="editDesc2_en" class="html-input" style="height: 80px;"></textarea></div>
-                </div>
-                <div id="modal-lang-pt" class="lang-section">
-                    <div class="form-row"><label>Zona (PT):</label><input type="text" id="editZona_pt"></div>
-                    <div class="form-row"><label>Modalidade (PT):</label><input type="text" id="editModalidad_pt"></div>
-                    <div class="form-row"><label>Descrição 1 (PT):</label><textarea id="editDesc_pt" class="html-input" style="height: 80px;"></textarea></div>
-                    <div class="form-row"><label>Descrição 2 (PT):</label><textarea id="editDesc2_pt" class="html-input" style="height: 80px;"></textarea></div>
-                </div>
-                <div id="modal-lang-fr" class="lang-section">
-                    <div class="form-row"><label>Zone (FR):</label><input type="text" id="editZona_fr"></div>
-                    <div class="form-row"><label>Modalité (FR):</label><input type="text" id="editModalidad_fr"></div>
-                    <div class="form-row"><label>Description 1 (FR):</label><textarea id="editDesc_fr" class="html-input" style="height: 80px;"></textarea></div>
-                    <div class="form-row"><label>Description 2 (FR):</label><textarea id="editDesc2_fr" class="html-input" style="height: 80px;"></textarea></div>
                 </div>
             </div>
 
             <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
                 <button type="button" class="btn-accion" onclick="cerrarModalEditar()" style="padding: 10px 20px;">Cancelar</button>
-                <button type="button" class="btn-prive" onclick="guardarEdicionPerfil()">Guardar Todos los Cambios</button>
+                <button type="button" class="btn-prive" onclick="guardarEdicionPerfil()">Guardar Cambios</button>
             </div>
         </div>
     </div>
 
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
@@ -435,16 +353,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            const inputPass = document.getElementById('inputPassword');
-            if (inputPass) {
-                inputPass.addEventListener('keypress', function(event) {
-                    if (event.key === 'Enter') {
-                        event.preventDefault();
-                        verificarPassword();
-                    }
-                });
-            }
-
             if (localStorage.getItem('priveAdminAuth') === 'true') {
                 document.getElementById('loginOverlay').style.display = 'none';
                 document.getElementById('adminMainContent').style.display = 'block';
@@ -482,8 +390,6 @@
 
         let fotosGaleriaSubidas = [];
         let fotosGaleriaEdicion = [];
-        let videoPresentacionSubido = "";
-        let videoPresentacionEdicion = "";
 
         function convertirFotoLocal(input, targetId) {
             const file = input.files[0];
@@ -514,10 +420,9 @@
                     ctx.drawImage(img, 0, 0, width, height);
 
                     const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
-
                     const targetEl = document.getElementById(targetId);
                     if(targetEl) targetEl.value = compressedDataUrl;
-                    if(status) status.textContent = "✅ ¡Foto lista y optimizada!";
+                    if(status) status.textContent = "✅ ¡Foto lista!";
                     
                     if(targetId === 'editFotoPrincipal') {
                         const box = document.getElementById('previewFotoPrinBox');
@@ -533,16 +438,28 @@
             const files = input.files;
             if (!files.length) return;
             const status = document.getElementById('statusGaleria');
-            if(status) status.textContent = `⏳ Procesando ${files.length} fotos...`;
+            if(status) status.textContent = `⏳ Procesando fotos...`;
             fotosGaleriaSubidas = [];
 
             let procesadas = 0;
             Array.from(files).forEach((file) => {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    fotosGaleriaSubidas.push(e.target.result);
-                    procesadas++;
-                    if(status) status.textContent = `✅ Listas ${procesadas} de ${files.length} fotos.`;
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        let w = img.width, h = img.height;
+                        const max = 800;
+                        if (w > h && w > max) { h *= max / w; w = max; }
+                        else if (h > max) { w *= max / h; h = max; }
+                        canvas.width = w; canvas.height = h;
+                        ctx.drawImage(img, 0, 0, w, h);
+                        fotosGaleriaSubidas.push(canvas.toDataURL('image/jpeg', 0.7));
+                        procesadas++;
+                        if(status) status.textContent = `✅ ${procesadas} de ${files.length} fotos listas.`;
+                    };
+                    img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             });
@@ -552,7 +469,7 @@
             const files = input.files;
             if (!files.length) return;
             const status = document.getElementById('statusEditGaleria');
-            if(status) status.textContent = `⏳ Comprimiendo ${files.length} fotos nuevas...`;
+            if(status) status.textContent = `⏳ Procesando...`;
             fotosGaleriaEdicion = [];
 
             let procesadas = 0;
@@ -566,67 +483,22 @@
                     img.onload = function() {
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
-                        let width = img.width;
-                        let height = img.height;
-                        const maxDim = 800;
-
-                        if (width > height && width > maxDim) {
-                            height *= maxDim / width;
-                            width = maxDim;
-                        } else if (height > maxDim) {
-                            width *= maxDim / height;
-                            height = maxDim;
-                        }
-
-                        canvas.width = width;
-                        canvas.height = height;
-                        ctx.drawImage(img, 0, 0, width, height);
-
-                        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
-                        fotosGaleriaEdicion.push(compressedDataUrl);
+                        let w = img.width, h = img.height;
+                        const max = 800;
+                        if (w > h && w > max) { h *= max / w; w = max; }
+                        else if (h > max) { w *= max / h; h = max; }
+                        canvas.width = w; canvas.height = h;
+                        ctx.drawImage(img, 0, 0, w, h);
+                        const res = canvas.toDataURL('image/jpeg', 0.7);
+                        fotosGaleriaEdicion.push(res);
                         procesadas++;
-
-                        if(box) {
-                            box.innerHTML += `<img src="${compressedDataUrl}" class="galeria-preview-thumb">`;
-                        }
-                        if(status) status.textContent = `✅ Listas y optimizadas ${procesadas} de ${files.length} fotos.`;
+                        if(box) box.innerHTML += `<img src="${res}" class="galeria-preview-thumb">`;
+                        if(status) status.textContent = `✅ ${procesadas} de ${files.length} listas.`;
                     };
                     img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             });
-        }
-
-        function convertirVideoLocal(input) {
-            const file = input.files[0];
-            if (!file) return;
-            const status = document.getElementById('statusVideo');
-            if(status) status.textContent = "⏳ Procesando video...";
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                videoPresentacionSubido = e.target.result;
-                const vidEl = document.getElementById('urlVideoPresentacion');
-                if(vidEl) vidEl.value = e.target.result;
-                if(status) status.textContent = "✅ ¡Video listo!";
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function convertirVideoEdicion(input) {
-            const file = input.files[0];
-            if (!file) return;
-            const status = document.getElementById('statusEditVideo');
-            if(status) status.textContent = "⏳ Procesando video...";
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                videoPresentacionEdicion = e.target.result;
-                const editVid = document.getElementById('editVideoPresentacion');
-                if(editVid) editVid.value = e.target.result;
-                if(status) status.textContent = "✅ ¡Video listo!";
-            };
-            reader.readAsDataURL(file);
         }
 
         function cambiarMetodo(metodo) {
@@ -652,18 +524,9 @@
             if(sec) sec.classList.add('active');
         }
 
-        function cambiarTabModalLang(lang) {
-            document.querySelectorAll('.modal-content .lang-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.modal-content .lang-section').forEach(s => s.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            const sec = document.getElementById(`modal-lang-${lang}`);
-            if(sec) sec.classList.add('active');
-        }
-
         async function traducirAutomaticamenteAdmin() {
             const status = document.getElementById('tradStatusAdmin');
             if(status) status.textContent = "⏳ Traduciendo textos...";
-            
             const campos = ['zona', 'modalidad', 'desc1', 'desc2', 'horarios', 'atencion'];
             const destinos = [{ code: 'en', suf: 'en' }, { code: 'pt', suf: 'pt' }, { code: 'fr', suf: 'fr' }];
 
@@ -695,7 +558,7 @@
             if (!nombre) {
                 if(statusDiv) {
                     statusDiv.style.color = '#e74c3c';
-                    statusDiv.textContent = '❌ Por favor, ingresá al menos el nombre de la modelo.';
+                    statusDiv.textContent = '❌ Ingresá al menos el nombre de la modelo.';
                 }
                 return;
             }
@@ -708,29 +571,22 @@
             const whatsapp = document.getElementById('inputWhatsapp').value.trim();
             const fotoPrincipal = document.getElementById('urlFotoPrincipal').value.trim() || 'img/monograma.png';
             const fotosGaleria = fotosGaleriaSubidas.length > 0 ? fotosGaleriaSubidas : [fotoPrincipal];
-            const videoPresentacion = document.getElementById('urlVideoPresentacion').value.trim();
 
             let traducciones = { es: {}, en: {}, pt: {}, fr: {} };
             ['es', 'en', 'pt', 'fr'].forEach(l => {
                 const getVal = (id) => document.getElementById(id)?.value.trim() || '';
                 traducciones[l] = {
                     perfilTitle: `${nombre} | Masajistas Privé`,
-                    btnVolver: l === 'es' ? '← Volver' : (l === 'en' ? '← Back' : (l === 'pt' ? '← Voltar' : '← Retour')),
+                    btnVolver: '← Volver',
                     badgeVerificado: '✓ Privé Verificado',
-                    labelZona: l === 'es' ? 'Zona:' : (l === 'en' ? 'Area:' : (l === 'pt' ? 'Zona:' : 'Zone :')),
+                    labelZona: 'Zona:',
                     valorZona: getVal(`zona_${l}`),
-                    labelModalidad: l === 'es' ? 'Modalidad:' : (l === 'en' ? 'Modality:' : (l === 'pt' ? 'Modalidade:' : 'Modalité :')),
+                    labelModalidad: 'Modalidad:',
                     valorModalidad: getVal(`modalidad_${l}`),
-                    tituloSobreMi: l === 'es' ? 'Sobre mí y Servicios' : (l === 'en' ? 'About Me and Services' : (l === 'pt' ? 'Sobre mim e Serviços' : 'À propos de moi et Services')),
                     descPerfil1: getVal(`desc1_${l}`),
                     descPerfil2: getVal(`desc2_${l}`),
-                    labelHorarios: l === 'es' ? 'Horarios:' : (l === 'en' ? 'Hours:' : (l === 'pt' ? 'Horários:' : 'Horaires :')),
                     valorHorarios: getVal(`horarios_${l}`),
-                    labelAtencion: l === 'es' ? 'Atención:' : (l === 'en' ? 'Care:' : (l === 'pt' ? 'Atendimento:' : 'Attention :')),
-                    valorAtencion: getVal(`atencion_${l}`),
-                    btnWpp: l === 'es' ? 'Contactar por WhatsApp' : (l === 'en' ? 'Contact via WhatsApp' : (l === 'pt' ? 'Contatar por WhatsApp' : 'Contacter par WhatsApp')),
-                    footerLegal: "Este es un sitio exclusivo para adultos (+18)...",
-                    footerCopy: "© 2026 Masajistas Privé. Todos os direitos reservados."
+                    valorAtencion: getVal(`atencion_${l}`)
                 };
             });
 
@@ -742,7 +598,6 @@
                 whatsappLink: `https://wa.me/${whatsapp}?text=Hola%20${encodeURIComponent(nombre)},%20vi%20tu%20perfil%20en%20Masajistas%20Privé`,
                 fotoPrincipal: fotoPrincipal,
                 fotosGaleria: fotosGaleria,
-                videoPresentacion: videoPresentacion,
                 zona: traducciones.es.valorZona,
                 modalidad: traducciones.es.valorModalidad,
                 descripcion: traducciones.es.descPerfil1,
@@ -750,7 +605,6 @@
                 estado: 'activa',
                 destacada: false,
                 visitas: 0,
-                seccionComentariosHTML: '<div id="seccion-comentarios"></div><script src="comentarios.js"><\/script>',
                 fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
             };
 
@@ -777,79 +631,32 @@
             const statusDiv = document.getElementById('importStatus');
             const categoria = document.getElementById('selectCategoriaImport').value;
 
-            if (!rawHtml.trim()) {
-                if(statusDiv) {
-                    statusDiv.style.color = '#e74c3c';
-                    statusDiv.textContent = '❌ Por favor, pegá el código HTML.';
-                }
-                return;
-            }
+            if (!rawHtml.trim()) return;
 
             try {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(rawHtml, 'text/html');
-                const titleText = doc.querySelector('title')?.textContent || '';
-                const nombre = titleText.split('|')[0].trim() || 'Desconocida';
+                const nombre = doc.querySelector('title')?.textContent.split('|')[0].trim() || 'Modelo';
                 const idSlug = customId !== '' ? customId.toLowerCase().replace(/[^a-z0-9\-]/g, '') : nombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '');
-
-                const zonaEl = doc.querySelector('[data-i18n="valorZona"]') || doc.querySelector('.perfil-ubicacion strong');
-                const zona = zonaEl ? zonaEl.textContent.trim() : 'CABA';
-                const modalEl = doc.querySelector('[data-i18n="valorModalidad"]') || doc.querySelector('.perfil-modalidad strong');
-                const modalidad = modalEl ? modalEl.textContent.trim() : 'Gabinete propio';
-                const descEl = doc.querySelector('[data-i18n="descPerfil1"]') || doc.querySelector('.perfil-descripcion p');
-                const descripcion = descEl ? descEl.textContent.trim() : '';
-
-                const wppEl = doc.querySelector('.btn-whatsapp');
-                let whatsappLink = wppEl ? wppEl.getAttribute('href') : '';
-                let telefono = '';
-                if (whatsappLink) {
-                    const matchPhone = whatsappLink.match(/phone=([0-9]+)/) || whatsappLink.match(/wa\.me\/([0-9]+)/);
-                    if (matchPhone) telefono = matchPhone[1];
-                }
-
-                const fotoPrincipal = doc.getElementById('fotoPrincipal')?.getAttribute('src') || 'img/monograma.png';
-                const miniaturas = Array.from(doc.querySelectorAll('.galeria-miniaturas img')).map(img => img.getAttribute('src'));
-
-                let traduccionesObj = { es: {}, en: {}, pt: {}, fr: {} };
-                const regexTrad = /const\s+traduccionesPerfil\s*=\s*({[\s\S]*?});/m;
-                const matchTrad = rawHtml.match(regexTrad);
-                if (matchTrad) {
-                    try { traduccionesObj = Function('"use strict"; return (' + matchTrad[1] + ')')(); } catch (e) {}
-                }
 
                 const perfilData = {
                     nombre: nombre,
                     idSlug: idSlug,
-                    zona: zona,
-                    modalidad: modalidad,
                     categoria: categoria,
-                    descripcion: descripcion,
-                    whatsapp: telefono,
-                    whatsappLink: whatsappLink,
-                    fotoPrincipal: fotoPrincipal,
-                    fotosGaleria: miniaturas.length > 0 ? miniaturas : [fotoPrincipal],
-                    traducciones: traduccionesObj,
+                    fotoPrincipal: doc.getElementById('fotoPrincipal')?.getAttribute('src') || 'img/monograma.png',
+                    fotosGaleria: [doc.getElementById('fotoPrincipal')?.getAttribute('src') || 'img/monograma.png'],
                     estado: 'activa',
                     destacada: false,
                     visitas: 0,
-                    seccionComentariosHTML: '<div id="seccion-comentarios"></div><script src="comentarios.js"><\/script>',
                     fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
-                db.collection("modelos_prive").doc(idSlug).set(perfilData, { merge: true })
-                    .then(() => {
-                        if(statusDiv) {
-                            statusDiv.style.color = '#2ecc71';
-                            statusDiv.textContent = `✅ ¡Perfil importado con éxito!`;
-                        }
-                        document.getElementById('htmlSourceInput').value = '';
-                        cargarModelosAdmin();
-                    });
+                db.collection("modelos_prive").doc(idSlug).set(perfilData, { merge: true }).then(() => {
+                    if(statusDiv) { statusDiv.style.color = '#2ecc71'; statusDiv.textContent = `✅ ¡Importado!`; }
+                    cargarModelosAdmin();
+                });
             } catch (e) {
-                if(statusDiv) {
-                    statusDiv.style.color = '#e74c3c';
-                    statusDiv.textContent = `❌ Error al procesar HTML.`;
-                }
+                if(statusDiv) { statusDiv.style.color = '#e74c3c'; statusDiv.textContent = `❌ Error al importar.`; }
             }
         }
 
@@ -858,7 +665,7 @@
             if(!container) return;
             db.collection("modelos_prive").onSnapshot((snapshot) => {
                 if (snapshot.empty) {
-                    container.innerHTML = `<p style="text-align: center; color: #777; padding: 20px;">No hay perfiles cargados todavía.</p>`;
+                    container.innerHTML = `<p style="text-align: center; color: #777; padding: 20px;">No hay perfiles.</p>`;
                     return;
                 }
 
@@ -868,12 +675,11 @@
                     const docId = docSnap.id;
                     const esActiva = m.estado !== 'pausado';
                     const esDestacada = m.destacada === true;
-                    const fotoMini = m.fotoPrincipal || 'img/monograma.png';
 
                     htmlContent += `
                         <div class="modelo-card-admin">
                             <div class="modelo-info-left">
-                                <img src="${fotoMini}" alt="${m.nombre}" class="modelo-avatar-admin">
+                                <img src="${m.fotoPrincipal || 'img/monograma.png'}" alt="${m.nombre}" class="modelo-avatar-admin">
                                 <div class="modelo-datos-txt">
                                     <h4>${m.nombre}</h4>
                                     <span class="modelo-slug-code">${docId}</span>
@@ -881,18 +687,14 @@
                             </div>
 
                             <div class="modelo-meta-info">
-                                <span>📍 <strong>${m.zona || 'Sin zona'}</strong></span>
-                                <span style="text-transform: capitalize; color: #dfc285;">🏷️ ${m.categoria || '-'}</span>
+                                <span>📍 <strong>${m.zona || 'CABA'}</strong></span>
+                                <span style="color: #dfc285;">🏷️ ${m.categoria || 'terapeuticas'}</span>
                                 <span>👁 <strong>${(m.visitas || 0).toLocaleString()}</strong></span>
-                                <span>
-                                    <span class="badge-estado ${esActiva ? 'badge-activo' : 'badge-pausado'}">
-                                        ${esActiva ? 'Activa' : 'Pausada'}
-                                    </span>
-                                </span>
+                                <span><span class="badge-estado ${esActiva ? 'badge-activo' : 'badge-pausado'}">${esActiva ? 'Activa' : 'Pausada'}</span></span>
                             </div>
 
                             <div class="modelo-acciones-right">
-                                <span class="switch-destacada ${esDestacada ? 'active' : ''}" onclick="toggleDestacada('${docId}', ${!esDestacada})" title="Destacada Gold">★</span>
+                                <span class="switch-destacada ${esDestacada ? 'active' : ''}" onclick="toggleDestacada('${docId}', ${!esDestacada})">★</span>
                                 <button class="btn-accion" onclick="abrirModalEditar('${docId}')">✏️ Editar</button>
                                 <button class="btn-accion" onclick="toggleEstado('${docId}', '${m.estado}')">${esActiva ? '⏸️' : '▶️'}</button>
                                 <button class="btn-accion btn-danger" onclick="eliminarPerfil('${docId}', '${m.nombre}')">🗑</button>
@@ -908,109 +710,23 @@
             db.collection("modelos_prive").doc(docId).get().then((doc) => {
                 if (doc.exists) {
                     const m = doc.data();
-                    const setVal = (id, val) => { const el = document.getElementById(id); if(el) el.value = val || ''; };
-
-                    setVal('editDocId', docId);
-                    setVal('editNombre', m.nombre);
-                    setVal('editCategoria', m.categoria || 'terapeuticas');
-                    setVal('editWhatsapp', m.whatsapp || '');
-                    setVal('editWhatsappLink', m.whatsappLink || `https://wa.me/${m.whatsapp || ''}`);
-                    setVal('editFotoPrincipal', m.fotoPrincipal);
-                    setVal('editVideoPresentacion', m.videoPresentacion);
+                    document.getElementById('editDocId').value = docId;
+                    document.getElementById('editNombre').value = m.nombre || '';
+                    document.getElementById('editCategoria').value = m.categoria || 'terapeuticas';
+                    document.getElementById('editWhatsapp').value = m.whatsapp || '';
+                    document.getElementById('editFotoPrincipal').value = m.fotoPrincipal || '';
 
                     const boxPrin = document.getElementById('previewFotoPrinBox');
-                    if (boxPrin) {
-                        boxPrin.innerHTML = m.fotoPrincipal ? `<img src="${m.fotoPrincipal}" class="preview-img-box">` : '<span style="font-size:11px; color:#777;">Sin foto principal</span>';
-                    }
-
-                    const boxGal = document.getElementById('previewGaleriaBox');
-                    if (boxGal) {
-                        if (m.fotosGaleria && m.fotosGaleria.length > 0) {
-                            let galHtml = '';
-                            m.fotosGaleria.forEach(f => {
-                                galHtml += `<img src="${f}" class="galeria-preview-thumb">`;
-                            });
-                            boxGal.innerHTML = galHtml;
-                        } else {
-                            boxGal.innerHTML = '<span style="font-size:11px; color:#777;">Sin galería cargada</span>';
-                        }
-                    }
-
-                    const tradStatus = document.getElementById('tradStatus');
-                    if(tradStatus) tradStatus.textContent = '';
+                    if (boxPrin) boxPrin.innerHTML = m.fotoPrincipal ? `<img src="${m.fotoPrincipal}" class="preview-img-box">` : '';
 
                     fotosGaleriaEdicion = [];
-                    videoPresentacionEdicion = "";
-
-                    const trad = m.traducciones || {};
-                    ['es', 'en', 'pt', 'fr'].forEach(l => {
-                        const tLang = trad[l] || {};
-                        setVal(`editZona_${l}`, tLang.valorZona || m.zona);
-                        setVal(`editModalidad_${l}`, tLang.valorModalidad || m.modalidad);
-                        setVal(`editDesc_${l}`, tLang.descPerfil1 || m.descripcion);
-                        setVal(`editDesc2_${l}`, tLang.descPerfil2);
-                    });
-
-                    const modal = document.getElementById('modalEditar');
-                    if(modal) modal.style.display = 'flex';
+                    document.getElementById('modalEditar').style.display = 'flex';
                 }
-            }).catch(err => {
-                alert("Error al abrir el perfil para editar: " + err.message);
             });
         }
 
-        async function traducirAutomaticamenteES() {
-            const status = document.getElementById('tradStatus');
-            if(status) status.textContent = "⏳ Traduciendo...";
-            const getVal = (id) => document.getElementById(id)?.value || '';
-            const zonaEs = getVal('editZona_es');
-            const modalidadEs = getVal('editModalidad_es');
-            const descEs = getVal('editDesc_es');
-            const desc2Es = getVal('editDesc2_es');
-            const idiomasDestino = [{ code: 'en', suf: 'en' }, { code: 'pt', suf: 'pt' }, { code: 'fr', suf: 'fr' }];
-
-            try {
-                for (let dest of idiomasDestino) {
-                    if (zonaEs) {
-                        let res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(zonaEs)}&langpair=es|${dest.code}`);
-                        let data = await res.json();
-                        if (data?.responseData) {
-                            const el = document.getElementById(`editZona_${dest.suf}`);
-                            if(el) el.value = data.responseData.translatedText;
-                        }
-                    }
-                    if (modalidadEs) {
-                        let res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(modalidadEs)}&langpair=es|${dest.code}`);
-                        let data = await res.json();
-                        if (data?.responseData) {
-                            const el = document.getElementById(`editModalidad_${dest.suf}`);
-                            if(el) el.value = data.responseData.translatedText;
-                        }
-                    }
-                    if (descEs) {
-                        let res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(descEs)}&langpair=es|${dest.code}`);
-                        let data = await res.json();
-                        if (data?.responseData) {
-                            const el = document.getElementById(`editDesc_${dest.suf}`);
-                            if(el) el.value = data.responseData.translatedText;
-                        }
-                    }
-                    if (desc2Es) {
-                        let res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(desc2Es)}&langpair=es|${dest.code}`);
-                        let data = await res.json();
-                        if (data?.responseData) {
-                            const el = document.getElementById(`editDesc2_${dest.suf}`);
-                            if(el) el.value = data.responseData.translatedText;
-                        }
-                    }
-                }
-                if(status) status.textContent = "✅ ¡Listo!";
-            } catch (e) { if(status) status.textContent = "❌ Error."; }
-        }
-
         function cerrarModalEditar() {
-            const modal = document.getElementById('modalEditar');
-            if(modal) modal.style.display = 'none';
+            document.getElementById('modalEditar').style.display = 'none';
         }
 
         function guardarEdicionPerfil() {
@@ -1020,75 +736,37 @@
             db.collection("modelos_prive").doc(docId).get().then((doc) => {
                 if(!doc.exists) return;
                 let mData = doc.data();
-                if (!mData.traducciones) mData.traducciones = {};
 
-                const getVal = (id) => document.getElementById(id)?.value.trim() || '';
+                const nuevaFotoPrin = document.getElementById('editFotoPrincipal').value.trim();
+                if (nuevaFotoPrin) mData.fotoPrincipal = nuevaFotoPrin;
 
-                ['es', 'en', 'pt', 'fr'].forEach(l => {
-                    if (!mData.traducciones[l]) mData.traducciones[l] = {};
-                    mData.traducciones[l].valorZona = getVal(`editZona_${l}`);
-                    mData.traducciones[l].valorModalidad = getVal(`editModalidad_${l}`);
-                    mData.traducciones[l].descPerfil1 = getVal(`editDesc_${l}`);
-                    mData.traducciones[l].descPerfil2 = getVal(`editDesc2_${l}`);
-                });
-
-                const nuevaFotoPrin = getVal('editFotoPrincipal');
-                if (nuevaFotoPrin) {
-                    mData.fotoPrincipal = nuevaFotoPrin;
-                }
-
-                const nuevoVideo = getVal('editVideoPresentacion');
-                if (nuevoVideo) {
-                    mData.videoPresentacion = nuevoVideo;
-                }
-
-                if (fotosGaleriaEdicion.length > 0) {
-                    mData.fotosGaleria = fotosGaleriaEdicion;
-                }
-
-                const wppNum = getVal('editWhatsapp');
-                const nombreModelo = getVal('editNombre');
-                const wppLinkFinal = getVal('editWhatsappLink') || `https://wa.me/${wppNum}?text=Hola%20${encodeURIComponent(nombreModelo)},%20vi%20tu%20perfil%20en%20Masajistas%20Privé`;
+                if (fotosGaleriaEdicion.length > 0) mData.fotosGaleria = fotosGaleriaEdicion;
 
                 const datosActualizados = {
-                    nombre: nombreModelo,
-                    zona: mData.traducciones.es.valorZona,
-                    modalidad: mData.traducciones.es.valorModalidad,
+                    nombre: document.getElementById('editNombre').value.trim(),
                     categoria: document.getElementById('editCategoria').value,
-                    whatsapp: wppNum,
-                    whatsappLink: wppLinkFinal,
+                    whatsapp: document.getElementById('editWhatsapp').value.trim(),
                     fotoPrincipal: mData.fotoPrincipal,
                     fotosGaleria: mData.fotosGaleria,
-                    videoPresentacion: mData.videoPresentacion || "",
-                    descripcion: mData.traducciones.es.descPerfil1,
-                    traducciones: mData.traducciones,
-                    visitas: mData.visitas || 0,
                     fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
                 db.collection("modelos_prive").doc(docId).update(datosActualizados).then(() => {
-                    alert("¡Perfil, teléfono y fotos actualizados con éxito!");
+                    alert("¡Actualizado con éxito!");
                     cerrarModalEditar();
-                }).catch(err => {
-                    alert("Error al guardar en Firebase: " + err.message);
                 });
-            }).catch(err => {
-                alert("Error al leer el documento: " + err.message);
             });
         }
 
         function limpiarFormularioAdmin() {
-            const setVal = (id, val) => { const el = document.getElementById(id); if(el) el.value = val; };
-            setVal('inputNombre', '');
-            setVal('inputSlug', '');
-            setVal('inputWhatsapp', '');
-            setVal('urlVideoPresentacion', '');
-            const st1 = document.getElementById('statusAdmin'); if(st1) st1.textContent = '';
-            const st2 = document.getElementById('statusFotoPrin'); if(st2) st2.textContent = '';
-            const st3 = document.getElementById('statusGaleria'); if(st3) st3.textContent = '';
-            const st4 = document.getElementById('statusVideo'); if(st4) st4.textContent = '';
+            document.getElementById('inputNombre').value = '';
+            document.getElementById('inputSlug').value = '';
+            document.getElementById('inputWhatsapp').value = '';
+            document.getElementById('urlFotoPrincipal').value = '';
+            document.getElementById('statusAdmin').textContent = '';
+            document.getElementById('statusFotoPrin').textContent = '';
+            document.getElementById('statusGaleria').textContent = '';
             fotosGaleriaSubidas = [];
-            videoPresentacionSubido = "";
         }
 
         function toggleEstado(docId, estadoActual) {
