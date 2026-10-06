@@ -278,9 +278,10 @@
         </div>
     </div>
 
+    <!-- MODAL DE EDICIÓN COMPLETO -->
     <div id="modalEditar">
         <div class="modal-content">
-            <h3>Editar Perfil, Teléfono y Fotos</h3>
+            <h3>Editar Perfil, Teléfono, Zona y Fotos</h3>
             <input type="hidden" id="editDocId">
             
             <div class="form-grid">
@@ -319,6 +320,41 @@
                     <input type="file" id="editFileGaleria" accept="image/*" multiple onchange="convertirGaleriaEdicion(this)">
                     <div id="previewGaleriaBox" class="galeria-preview-container"></div>
                     <div id="statusEditGaleria" style="font-size: 11px; color: #2ecc71; margin-top: 4px;"></div>
+                </div>
+            </div>
+
+            <div style="margin-top: 15px;">
+                <label style="margin-bottom: 8px; color: #dfc285; font-size: 12px; text-transform: uppercase;">Traducciones y Textos:</label>
+                <div class="lang-tabs">
+                    <div class="lang-tab active" onclick="cambiarTabModalLang('es')">🇪🇸 Español</div>
+                    <div class="lang-tab" onclick="cambiarTabModalLang('en')">🇺🇸 Inglés</div>
+                    <div class="lang-tab" onclick="cambiarTabModalLang('pt')">🇧🇷 Portugués</div>
+                    <div class="lang-tab" onclick="cambiarTabModalLang('fr')">🇫🇷 Francés</div>
+                </div>
+
+                <div id="modal-lang-es" class="lang-section active">
+                    <div class="form-row"><label>Zona (ES):</label><input type="text" id="editZona_es"></div>
+                    <div class="form-row"><label>Modalidad (ES):</label><input type="text" id="editModalidad_es"></div>
+                    <div class="form-row"><label>Descripción 1 (ES):</label><textarea id="editDesc_es" class="html-input" style="height: 80px;"></textarea></div>
+                    <div class="form-row"><label>Descripción 2 (ES):</label><textarea id="editDesc2_es" class="html-input" style="height: 80px;"></textarea></div>
+                </div>
+                <div id="modal-lang-en" class="lang-section">
+                    <div class="form-row"><label>Area (EN):</label><input type="text" id="editZona_en"></div>
+                    <div class="form-row"><label>Modality (EN):</label><input type="text" id="editModalidad_en"></div>
+                    <div class="form-row"><label>Description 1 (EN):</label><textarea id="editDesc_en" class="html-input" style="height: 80px;"></textarea></div>
+                    <div class="form-row"><label>Description 2 (EN):</label><textarea id="editDesc2_en" class="html-input" style="height: 80px;"></textarea></div>
+                </div>
+                <div id="modal-lang-pt" class="lang-section">
+                    <div class="form-row"><label>Zona (PT):</label><input type="text" id="editZona_pt"></div>
+                    <div class="form-row"><label>Modalidade (PT):</label><input type="text" id="editModalidad_pt"></div>
+                    <div class="form-row"><label>Descrição 1 (PT):</label><textarea id="editDesc_pt" class="html-input" style="height: 80px;"></textarea></div>
+                    <div class="form-row"><label>Descrição 2 (PT):</label><textarea id="editDesc2_pt" class="html-input" style="height: 80px;"></textarea></div>
+                </div>
+                <div id="modal-lang-fr" class="lang-section">
+                    <div class="form-row"><label>Zone (FR):</label><input type="text" id="editZona_fr"></div>
+                    <div class="form-row"><label>Modalité (FR):</label><input type="text" id="editModalidad_fr"></div>
+                    <div class="form-row"><label>Description 1 (FR):</label><textarea id="editDesc_fr" class="html-input" style="height: 80px;"></textarea></div>
+                    <div class="form-row"><label>Description 2 (FR):</label><textarea id="editDesc2_fr" class="html-input" style="height: 80px;"></textarea></div>
                 </div>
             </div>
 
@@ -524,6 +560,14 @@
             if(sec) sec.classList.add('active');
         }
 
+        function cambiarTabModalLang(lang) {
+            document.querySelectorAll('.modal-content .lang-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.modal-content .lang-section').forEach(s => s.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            const sec = document.getElementById(`modal-lang-${lang}`);
+            if(sec) sec.classList.add('active');
+        }
+
         async function traducirAutomaticamenteAdmin() {
             const status = document.getElementById('tradStatusAdmin');
             if(status) status.textContent = "⏳ Traduciendo textos...";
@@ -710,14 +754,25 @@
             db.collection("modelos_prive").doc(docId).get().then((doc) => {
                 if (doc.exists) {
                     const m = doc.data();
-                    document.getElementById('editDocId').value = docId;
-                    document.getElementById('editNombre').value = m.nombre || '';
-                    document.getElementById('editCategoria').value = m.categoria || 'terapeuticas';
-                    document.getElementById('editWhatsapp').value = m.whatsapp || '';
-                    document.getElementById('editFotoPrincipal').value = m.fotoPrincipal || '';
+                    const setVal = (id, val) => { const el = document.getElementById(id); if(el) el.value = val || ''; };
+
+                    setVal('editDocId', docId);
+                    setVal('editNombre', m.nombre || '');
+                    setVal('editCategoria', m.categoria || 'terapeuticas');
+                    setVal('editWhatsapp', m.whatsapp || '');
+                    setVal('editFotoPrincipal', m.fotoPrincipal || '');
 
                     const boxPrin = document.getElementById('previewFotoPrinBox');
                     if (boxPrin) boxPrin.innerHTML = m.fotoPrincipal ? `<img src="${m.fotoPrincipal}" class="preview-img-box">` : '';
+
+                    const trad = m.traducciones || {};
+                    ['es', 'en', 'pt', 'fr'].forEach(l => {
+                        const tLang = trad[l] || {};
+                        setVal(`editZona_${l}`, tLang.valorZona || m.zona);
+                        setVal(`editModalidad_${l}`, tLang.valorModalidad || m.modalidad);
+                        setVal(`editDesc_${l}`, tLang.descPerfil1 || m.descripcion);
+                        setVal(`editDesc2_${l}`, tLang.descPerfil2);
+                    });
 
                     fotosGaleriaEdicion = [];
                     document.getElementById('modalEditar').style.display = 'flex';
@@ -736,18 +791,37 @@
             db.collection("modelos_prive").doc(docId).get().then((doc) => {
                 if(!doc.exists) return;
                 let mData = doc.data();
+                if (!mData.traducciones) mData.traducciones = {};
 
-                const nuevaFotoPrin = document.getElementById('editFotoPrincipal').value.trim();
+                const getVal = (id) => document.getElementById(id)?.value.trim() || '';
+
+                ['es', 'en', 'pt', 'fr'].forEach(l => {
+                    if (!mData.traducciones[l]) mData.traducciones[l] = {};
+                    mData.traducciones[l].valorZona = getVal(`editZona_${l}`);
+                    mData.traducciones[l].valorModalidad = getVal(`editModalidad_${l}`);
+                    mData.traducciones[l].descPerfil1 = getVal(`editDesc_${l}`);
+                    mData.traducciones[l].descPerfil2 = getVal(`editDesc2_${l}`);
+                });
+
+                const nuevaFotoPrin = getVal('editFotoPrincipal');
                 if (nuevaFotoPrin) mData.fotoPrincipal = nuevaFotoPrin;
 
                 if (fotosGaleriaEdicion.length > 0) mData.fotosGaleria = fotosGaleriaEdicion;
 
+                const wppNum = getVal('editWhatsapp');
+                const nombreModelo = getVal('editNombre');
+
                 const datosActualizados = {
-                    nombre: document.getElementById('editNombre').value.trim(),
+                    nombre: nombreModelo,
+                    zona: mData.traducciones.es.valorZona,
+                    modalidad: mData.traducciones.es.valorModalidad,
                     categoria: document.getElementById('editCategoria').value,
-                    whatsapp: document.getElementById('editWhatsapp').value.trim(),
+                    whatsapp: wppNum,
+                    whatsappLink: `https://wa.me/${wppNum}?text=Hola%20${encodeURIComponent(nombreModelo)},%20vi%20tu%20perfil%20en%20Masajistas%20Privé`,
                     fotoPrincipal: mData.fotoPrincipal,
                     fotosGaleria: mData.fotosGaleria,
+                    descripcion: mData.traducciones.es.descPerfil1,
+                    traducciones: mData.traducciones,
                     fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
