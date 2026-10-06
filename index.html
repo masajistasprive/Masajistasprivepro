@@ -212,7 +212,7 @@
         <div class="stories-container" id="stories-destacadas-container"></div>
     </div>
 
-    <!-- Categorías normales (Pills) - Sin Masculinos -->
+    <!-- Categorías normales (Pills) -->
     <nav class="pills-container">
         <button class="pill-btn active" data-filter="todas" data-i18n="filtroTodas">Todas</button>
         <button class="pill-btn" data-filter="terapeuticas" data-i18n="filtroTerapeuticas">Terapéuticas</button>
@@ -411,7 +411,7 @@
                         if(numEl) numEl.textContent = "1";
                     }
                 }).catch(() => {
-                    if(numEl) numEl.textContent = "Cargando...";
+                    if(numEl) numEl.textContent = "0";
                 });
             } catch (e) {
                 if(numEl) numEl.textContent = "0";
