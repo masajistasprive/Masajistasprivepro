@@ -543,24 +543,24 @@
         });
 
         const datosInicialesExcel = [
-            { vencimiento: "2026-11-01", monto: 50000, nombre: "PRADA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true },
-            { vencimiento: "2026-11-01", monto: 50000, nombre: "LUPITA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true },
-            { vencimiento: "2026-10-01", monto: 0, nombre: "JENNYFER", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: false },
-            { vencimiento: "2026-10-01", monto: 0, nombre: "DEBY", zona: "CABALLITO", categoria: "SENSUALES", pagado: false },
-            { vencimiento: "2026-10-15", monto: 0, nombre: "PAMELA", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: false },
-            { vencimiento: "2026-10-02", monto: 0, nombre: "SOL", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: false },
-            { vencimiento: "2026-10-01", monto: 0, nombre: "MATIAS", zona: "RECOLETA", categoria: "MASCULINOS", pagado: false },
-            { vencimiento: "2026-10-02", monto: 0, nombre: "DANIELA", zona: "MICROCENTRO", categoria: "TERAPEUTICAS", pagado: false },
-            { vencimiento: "2026-10-02", monto: 0, nombre: "ZARIA", zona: "CABALLITO", categoria: "TERAPEUTICAS", pagado: false },
-            { vencimiento: "2026-10-03", monto: 0, nombre: "DONATELLA", zona: "CABA", categoria: "SENSUALES", pagado: false },
-            { vencimiento: "2026-10-04", monto: 0, nombre: "MARIELA", zona: "CONGRESO", categoria: "TERAPEUTICAS", pagado: false },
-            { vencimiento: "2026-10-04", monto: 0, nombre: "MIA", zona: "CONGRESO", categoria: "SENSUALES", pagado: false },
-            { vencimiento: "2026-10-08", monto: 0, nombre: "CELESTE", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: false },
-            { vencimiento: "2026-10-22", monto: 0, nombre: "LULY S", zona: "CABA", categoria: "SENSUALES", pagado: false },
-            { vencimiento: "2026-10-22", monto: 0, nombre: "LULY", zona: "CABA", categoria: "TERAPEUTICAS", pagado: false },
-            { vencimiento: "2026-10-23", monto: 50000, nombre: "MORA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true },
-            { vencimiento: "2026-10-23", monto: 50000, nombre: "MORA S", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: true },
-            { vencimiento: "2026-10-26", monto: 50000, nombre: "RENATA", zona: "PTO MADERO", categoria: "SENSUALES", pagado: true }
+            { vencimiento: "2026-11-01", monto: 50000, nombre: "PRADA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-10-01" },
+            { vencimiento: "2026-11-01", monto: 50000, nombre: "LUPITA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-10-01" },
+            { vencimiento: "2026-10-01", monto: 0, nombre: "JENNYFER", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: false, fechaPago: "" },
+            { vencimiento: "2026-10-01", monto: 0, nombre: "DEBY", zona: "CABALLITO", categoria: "SENSUALES", pagado: false, fechaPago: "" },
+            { vencimiento: "2026-10-15", monto: 0, nombre: "PAMELA", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: false, fechaPago: "" },
+            { vencimiento: "2026-10-02", monto: 0, nombre: "SOL", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: false, fechaPago: "" },
+            { vencimiento: "2026-10-01", monto: 0, nombre: "MATIAS", zona: "RECOLETA", categoria: "MASCULINOS", pagado: false, fechaPago: "" },
+            { vencimiento: "2026-10-02", monto: 0, nombre: "DANIELA", zona: "MICROCENTRO", categoria: "TERAPEUTICAS", pagado: false, fechaPago: "" },
+            { vencimiento: "2026-10-02", monto: 0, nombre: "ZARIA", zona: "CABALLITO", categoria: "TERAPEUTICAS", pagado: false, fechaPago: "" },
+            { vencimiento: "2026-10-03", monto: 0, nombre: "DONATELLA", zona: "CABA", categoria: "SENSUALES", pagado: false, fechaPago: "" },
+            { vencimiento: "2026-10-04", monto: 0, nombre: "MARIELA", zona: "CONGRESO", categoria: "TERAPEUTICAS", pagado: false, fechaPago: "" },
+            { vencimiento: "2026-10-04", monto: 0, nombre: "MIA", zona: "CONGRESO", categoria: "SENSUALES", pagado: false, fechaPago: "" },
+            { vencimiento: "2026-10-08", monto: 0, nombre: "CELESTE", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: false, fechaPago: "" },
+            { vencimiento: "2026-10-22", monto: 0, nombre: "LULY S", zona: "CABA", categoria: "SENSUALES", pagado: false, fechaPago: "" },
+            { vencimiento: "2026-10-22", monto: 0, nombre: "LULY", zona: "CABA", categoria: "TERAPEUTICAS", pagado: false, fechaPago: "" },
+            { vencimiento: "2026-10-23", monto: 50000, nombre: "MORA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-09-23" },
+            { vencimiento: "2026-10-23", monto: 50000, nombre: "MORA S", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: true, fechaPago: "2026-09-23" },
+            { vencimiento: "2026-10-26", monto: 50000, nombre: "RENATA", zona: "PTO MADERO", categoria: "SENSUALES", pagado: true, fechaPago: "2026-09-26" }
         ];
 
         let historialPrecargado = [
@@ -571,7 +571,6 @@
             { fecha: "2026-10-02", nombre: "LUPITA", monto: 50000 }
         ];
 
-        // Solo carga los datos iniciales la primera vez absoluta, después respeta lo que el usuario borre o guarde
         if (!localStorage.getItem('prive_control_modelos')) {
             localStorage.setItem('prive_control_modelos', JSON.stringify(datosInicialesExcel));
         }
@@ -602,13 +601,6 @@
         const tituloMesActual = document.getElementById('tituloMesActual');
         const tituloMesAnterior = document.getElementById('tituloMesAnterior');
         const historialContent = document.getElementById('historialContent');
-
-        function registrarMovimientoHistorial(nombre, monto) {
-            if (monto <= 0) return;
-            const hoyStr = new Date().toISOString().split('T')[0];
-            historialPagos.push({ fecha: hoyStr, nombre, monto });
-            localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
-        }
 
         function renderizarTarjetas() {
             tarjetasContainer.innerHTML = '';
@@ -666,7 +658,7 @@
                 if (a.pagado !== b.pagado) {
                     return a.pagado ? 1 : -1;
                 }
-                return new Date(a.vencimiento) - new Date(b.vencimiento);
+                return new Date(a.vencimiento + 'T00:00:00') - new Date(b.vencimiento + 'T00:00:00');
             });
 
             registrosOrdenados.forEach((reg) => {
@@ -729,7 +721,21 @@
                     const nombreReg = e.target.getAttribute('data-nombre-monto');
                     const idx = registros.findIndex(r => r.nombre === nombreReg);
                     if (idx !== -1) {
-                        registros[idx].monto = parseFloat(e.target.value) || 0;
+                        const nuevoMonto = parseFloat(e.target.value) || 0;
+                        const montoViejo = Number(registros[idx].monto || 0);
+                        registros[idx].monto = nuevoMonto;
+                        
+                        // Si ya estaba pagado y se edita el monto, ajustamos el último movimiento en el historial
+                        if (registros[idx].pagado && registros[idx].fechaPago) {
+                            const histIdx = historialPagos.findIndex(p => p.nombre === nombreReg && p.fecha === registros[idx].fechaPago);
+                            if (histIdx !== -1) {
+                                historialPagos[histIdx].monto = nuevoMonto;
+                            } else {
+                                historialPagos.push({ fecha: registros[idx].fechaPago, nombre: nombreReg, monto: nuevoMonto });
+                            }
+                            localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
+                        }
+
                         localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
                         renderizarTarjetas();
                     }
@@ -791,6 +797,7 @@
             const nombre = document.getElementById('nombre').value.trim().toUpperCase();
             const monto = parseFloat(document.getElementById('monto').value) || 0;
             const vencimiento = document.getElementById('vencimiento').value;
+            const hoyStr = new Date().toISOString().split('T')[0];
 
             const nuevoReg = {
                 vencimiento,
@@ -798,13 +805,17 @@
                 nombre,
                 zona: document.getElementById('zona').value.trim().toUpperCase(),
                 categoria: document.getElementById('categoria').value,
-                pagado: true
+                pagado: true,
+                fechaPago: hoyStr
             };
 
             registros.unshift(nuevoReg);
             localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
 
-            registrarMovimientoHistorial(nombre, monto);
+            if (monto > 0) {
+                historialPagos.push({ fecha: hoyStr, nombre, monto });
+                localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
+            }
 
             form.reset();
             selectCat.dispatchEvent(new Event('change'));
@@ -817,13 +828,33 @@
             if (idx === -1) return;
 
             registros[idx].pagado = !registros[idx].pagado;
+            const hoyStr = new Date().toISOString().split('T')[0];
             
             if (registros[idx].pagado) {
-                registrarMovimientoHistorial(registros[idx].nombre, registros[idx].monto);
+                registros[idx].fechaPago = hoyStr;
+                const montoActual = Number(registros[idx].monto || 0);
+                if (montoActual > 0) {
+                    historialPagos.push({ fecha: hoyStr, nombre: registros[idx].nombre, monto: montoActual });
+                    localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
+                }
 
-                let fechaVen = new Date(registros[idx].vencimiento + 'T00:00:00');
+                // Sumar 30 días correctamente sin problemas de zona horaria
+                let partesFecha = registros[idx].vencimiento.split('-');
+                let fechaVen = new Date(partesFecha[0], partesFecha[1] - 1, partesFecha[2]);
                 fechaVen.setDate(fechaVen.getDate() + 30);
-                registros[idx].vencimiento = fechaVen.toISOString().split('T')[0];
+                
+                let anio = fechaVen.getFullYear();
+                let mes = String(fechaVen.getMonth() + 1).padStart(2, '0');
+                let dia = String(fechaVen.getDate()).padStart(2, '0');
+                registros[idx].vencimiento = `${anio}-${mes}-${dia}`;
+            } else {
+                // Si se desmarca, removemos el último pago registrado de esta modelo en el historial
+                const histIdx = historialPagos.map(p => p.nombre).lastIndexOf(registros[idx].nombre);
+                if (histIdx !== -1) {
+                    historialPagos.splice(histIdx, 1);
+                    localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
+                }
+                registros[idx].fechaPago = "";
             }
 
             localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
