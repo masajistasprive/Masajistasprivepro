@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Centro de Masajes y Bienestar | CABA</title>
+    <title>Guía de Masajes y Bienestar Holístico | CABA</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -12,7 +12,7 @@
             color: #f5f5f5;
             font-family: 'Montserrat', sans-serif;
             margin: 0;
-            padding: 0;
+            padding: 20px 10px;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
@@ -20,47 +20,79 @@
             align-items: center;
         }
         .landing-box {
-            max-width: 550px;
-            width: 90%;
+            max-width: 600px;
+            width: 100%;
             background: #141414;
             border: 1px solid rgba(223, 194, 133, 0.3);
             border-radius: 14px;
-            padding: 50px 30px;
+            padding: 40px 25px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.9);
             text-align: center;
+            box-sizing: border-box;
         }
         .landing-logo {
-            max-width: 180px;
+            max-width: 150px;
             width: 100%;
             height: auto;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));
+        }
+        .tag-editorial {
+            color: #dfc285;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            font-weight: 500;
+            display: block;
         }
         h1 {
             color: #dfc285;
             font-family: 'Cormorant Garamond', serif;
-            font-size: 26px;
-            margin-bottom: 12px;
+            font-size: 24px;
+            margin-bottom: 15px;
             letter-spacing: 1px;
         }
         p {
             color: #bbb;
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 35px;
+            font-size: 13.5px;
+            line-height: 1.7;
+            margin-bottom: 25px;
             font-weight: 300;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        .feature-item {
+            background: #1a1a1a;
+            border: 1px solid #222;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #ccc;
+        }
+        .feature-item strong {
+            display: block;
+            color: #dfc285;
+            margin-bottom: 3px;
+            font-size: 13px;
+            font-family: 'Cormorant Garamond', serif;
         }
         .btn-ingresar-grande {
             display: block;
             background: linear-gradient(135deg, #dfc285, #c5a059);
             color: #0d0d0d;
             text-decoration: none;
-            padding: 18px 25px;
+            padding: 16px 20px;
             font-weight: 700;
             border-radius: 8px;
             text-transform: uppercase;
             letter-spacing: 2px;
-            font-size: 15px;
+            font-size: 14px;
             box-shadow: 0 6px 20px rgba(223, 194, 133, 0.35);
             transition: all 0.3s ease;
         }
@@ -69,8 +101,8 @@
             box-shadow: 0 8px 25px rgba(223, 194, 133, 0.5);
         }
         .footer-text {
-            margin-top: 25px;
-            font-size: 11px;
+            margin-top: 20px;
+            font-size: 10.5px;
             color: #666;
             letter-spacing: 1px;
             text-transform: uppercase;
@@ -80,17 +112,30 @@
 <body>
 
     <div class="landing-box">
-        <!-- Logo Grande Centrado -->
+        <!-- Logo -->
         <img src="img/logo.png" alt="Masajistas Privé" class="landing-logo">
 
-        <h1>Portal de Bienestar y Masajes en CABA</h1>
-        <p>Espacio exclusivo de atención profesional, gabinetes acondicionados y servicios independientes con reserva previa.</p>
+        <span class="tag-editorial">Directorio de Estética & Salud</span>
+        <h1>El arte de desconectar en Buenos Aires</h1>
+        <p>Un espacio curado para conocer profesionales independientes, gabinetes especializados en masajes descontracturantes, técnicas de relajación y bienestar integral en CABA.</p>
 
-        <!-- Botón Gigante y Llamativo -->
-        <a href="index.html" class="btn-ingresar-grande">Ingresar al Portal &rarr;</a>
+        <!-- Cuadros informativos atractivos para darle aspecto de artículo/guía -->
+        <div class="features-grid">
+            <div class="feature-item">
+                <strong>🌿 Gabinetes Propios</strong>
+                Espacios acondicionados, discretos y climatizados.
+            </div>
+            <div class="feature-item">
+                <strong>📍 Zonas en CABA</strong>
+                Atención en Palermo, Recoleta, Tribunales y más.
+            </div>
+        </div>
+
+        <!-- Botón llamativo -->
+        <a href="index.html" class="btn-ingresar-grande">Ver Guía y Profesionales &rarr;</a>
 
         <div class="footer-text">
-            © 2026 Masajistas Privé. Todos los derechos reservados.
+            © 2026 Masajistas Privé. Contenido exclusivo para mayores de 18 años.
         </div>
     </div>
 
