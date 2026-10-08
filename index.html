@@ -60,14 +60,23 @@
             100% { opacity: 0.5; transform: scale(1.02); }
         }
 
-        /* --- CORRECCIÓN: ESTILOS MODO TARJETA GRANDE VS NORMAL --- */
+        /* --- CORRECCIÓN DE ESTILOS VISUALES (NORMAL VS TARJETA GRANDE) --- */
         
         /* Por defecto la caja amplia está oculta */
         .prive-card-info-box {
             display: none;
         }
 
-        /* Cuando está activo el modo tarjeta grande */
+        /* MODO TARJETA GRANDE: Fuerza diseño de columna y tarjetas amplias */
+        body.modo-tarjeta-alternativo .grid-perfiles {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 25px !important;
+        }
+        body.modo-tarjeta-alternativo .grid-perfiles .card-link {
+            width: 100% !important;
+            display: block !important;
+        }
         body.modo-tarjeta-alternativo .grid-perfiles .card {
             height: auto !important;
             min-height: auto !important;
@@ -105,16 +114,12 @@
         body.modo-tarjeta-alternativo .grid-perfiles .card-gradient-overlay {
             display: none !important;
         }
-        
-        /* Mostrar elementos de tarjeta grande solo en modo alternativo */
         body.modo-tarjeta-alternativo .prive-card-info-box {
             display: block !important;
             background: #0d0d0d;
             padding: 15px;
             border-top: 1px solid rgba(223, 194, 133, 0.2);
         }
-        
-        /* Ocultar barra clásica en modo tarjeta grande */
         body.modo-tarjeta-alternativo .prive-barra-clasica {
             display: none !important;
         }
@@ -556,9 +561,9 @@
                     }
                 });
 
-                if (htmlTerapeuticas) htmlTerapeuticas += adCardHTML;
-                if (htmlSensuales) htmlSensuales += adCardHTML;
-                if (htmlFantasias) htmlFantasias += adCardHTML;
+                htmlTerapeuticas += adCardHTML;
+                htmlSensuales += adCardHTML;
+                htmlFantasias += adCardHTML;
 
                 if (htmlFavoritos === '') {
                     htmlFavoritos = `<p style="grid-column: 1 / -1; text-align: center; color: #888; font-size: 13px; font-style: italic; padding: 20px 0;">No tenés perfiles guardados en favoritos todavía.</p>`;
