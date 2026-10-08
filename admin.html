@@ -405,7 +405,7 @@
         }
         const db = firebase.firestore();
 
-        // CORRECCIÓN DEFINITIVA: Sincronización asincrónica robusta para las subcolecciones de mensajes
+        // CARGA DE MODERACIÓN CON EL ID ÚNICO DEL DOM (CARD-ID)
         function cargarModeracionComentarios() {
             const container = document.getElementById('moderacionComentariosContainer');
             if (!container) return;
@@ -456,14 +456,17 @@
             let html = "";
             pendientesTotales.forEach((c) => {
                 const imgHtml = c.image ? `<img src="${c.image}" style="max-width: 100px; max-height: 100px; display: block; margin-top: 8px; border-radius: 4px; object-fit: cover;" alt="Adjunto">` : '';
+                // Se asigna un ID único de tarjeta para eliminarla al instante del DOM sin recargar
+                const cardId = `card-mod-${c.perfilId}-${c.mensajeId}`;
+                
                 html += `
-                    <div style="background: #1a1a1a; border: 1px solid rgba(223, 194, 133, 0.3); padding: 15px; margin-bottom: 12px; border-radius: 8px;">
+                    <div id="${cardId}" style="background: #1a1a1a; border: 1px solid rgba(223, 194, 133, 0.3); padding: 15px; margin-bottom: 12px; border-radius: 8px;">
                         <p style="color: #dfc285; font-weight: bold; font-size: 13px; margin-bottom: 5px;">Perfil: <strong>${c.perfilId}</strong> | De: ${c.autor} (${c.rating || 5} ★)</p>
                         <p style="color: #fff; font-size: 13px; margin-bottom: 8px;">"${c.contenido}"</p>
                         ${imgHtml}
                         <div style="margin-top: 12px;">
-                            <button onclick="aprobarExperienciaAdmin('${c.perfilId}', '${c.mensajeId}')" style="background: #2ecc71; color: #000; padding: 6px 14px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 11px;">✓ Aprobar</button>
-                            <button onclick="rechazarExperienciaAdmin('${c.perfilId}', '${c.mensajeId}')" style="background: #e74c3c; color: #fff; padding: 6px 14px; border: none; border-radius: 4px; cursor: pointer; margin-left: 10px; font-weight: bold; text-transform: uppercase; font-size: 11px;">✕ Rechazar</button>
+                            <button onclick="aprobarExperienciaAdmin('${c.perfilId}', '${c.mensajeId}', '${cardId}')" style="background: #2ecc71; color: #000; padding: 6px 14px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 11px;">✓ Aprobar</button>
+                            <button onclick="rechazarExperienciaAdmin('${c.perfilId}', '${c.mensajeId}', '${cardId}')" style="background: #e74c3c; color: #fff; padding: 6px 14px; border: none; border-radius: 4px; cursor: pointer; margin-left: 10px; font-weight: bold; text-transform: uppercase; font-size: 11px;">✕ Rechazar</button>
                         </div>
                     </div>
                 `;
@@ -471,14 +474,39 @@
             container.innerHTML = html;
         }
 
-        window.aprobarExperienciaAdmin = function(perfilId, mensajeId) {
+        window.aprobarExperienciaAdmin = function(perfilId, mensajeId, cardId) {
             db.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").doc(mensajeId).update({ aprobado: true })
-                .then(() => { alert("¡Experiencia aprobada y publicada con éxito!"); });
+                .then(() => {
+                    // Elimina la tarjeta del panel al instante para que deje de ocupar lugar
+                    const tarjeta = document.getElementById(cardId);
+                    if (tarjeta) tarjeta.remove();
+                    
+                    // Si ya no quedan más elementos en el contenedor, muestra el mensaje de vacío
+                    const container = document.getElementById('moderacionComentariosContainer');
+                    if (container && container.children.length === 0) {
+                        container.innerHTML = "<p style='color: #777; font-size: 13px;'>No hay experiencias pendientes de moderación.</p>";
+                    }
+                })
+                .catch(err => {
+                    alert("Error al aprobar: " + err.message);
+                });
         };
 
-        window.rechazarExperienciaAdmin = function(perfilId, mensajeId) {
+        window.rechazarExperienciaAdmin = function(perfilId, mensajeId, cardId) {
             if (confirm("¿Estás seguro de rechazar y borrar esta experiencia?")) {
-                db.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").doc(mensajeId).delete();
+                db.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").doc(mensajeId).delete()
+                    .then(() => {
+                        const tarjeta = document.getElementById(cardId);
+                        if (tarjeta) tarjeta.remove();
+                        
+                        const container = document.getElementById('moderacionComentariosContainer');
+                        if (container && container.children.length === 0) {
+                            container.innerHTML = "<p style='color: #777; font-size: 13px;'>No hay experiencias pendientes de moderación.</p>";
+                        }
+                    })
+                    .catch(err => {
+                        alert("Error al borrar: " + err.message);
+                    });
             }
         };
 
@@ -905,6 +933,7 @@
                 const getVal = (id) => document.getElementById(id)?.value.trim() || '';
 
                 ['es', 'en', 'pt', 'fr'].forEach(l => {
+                    if (!mData.traducciones) mData.traducciones = {};
                     if (!mData.traducciones[l]) mData.traducciones[l] = {};
                     mData.traducciones[l].valorZona = getVal(`editZona_${l}`);
                     mData.traducciones[l].valorModalidad = getVal(`editModalidad_${l}`);
