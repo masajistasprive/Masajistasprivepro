@@ -499,7 +499,8 @@
                                     </div>
                                 </a>
                                 
-                                <div onclick="event.preventDefault(); event.stopPropagation();" style="padding: 10px 12px; background: #0d0d0d; border-top: 1px solid rgba(223, 194, 133, 0.2); display: flex; align-items: center; justify-content: space-between; box-sizing: border-box;">
+                                <!-- BARRA INFERIOR FIJA Y UNIFORME PARA EL MODO CLÁSICO -->
+                                <div onclick="event.preventDefault(); event.stopPropagation();" style="height: 44px; padding: 0 12px; background: #0d0d0d; border-top: 1px solid rgba(223, 194, 133, 0.2); display: flex; align-items: center; justify-content: space-between; box-sizing: border-box;">
                                     <button onclick="window.darLikeIndice('${docId}', this)" style="background: ${yaDioLike ? 'rgba(223,194,133,0.3)' : 'transparent'}; border: 1px solid #dfc285; color: #dfc285; padding: 4px 10px; border-radius: 15px; cursor: pointer; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 4px; font-family: 'Montserrat', sans-serif;">
                                         ❤️ <span class="like-count-${docId}">${totalLikes}</span>
                                     </button>
