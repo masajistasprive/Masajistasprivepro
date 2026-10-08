@@ -107,16 +107,23 @@
         body.modo-tarjeta-alternativo .grid-perfiles .card-gradient-overlay {
             display: none !important;
         }
-
+        
+        /* Ocultar elementos de tarjeta grande en modo normal */
         .prive-card-info-box {
             display: none;
+        }
+        /* Mostrar elementos de tarjeta grande solo en modo alternativo */
+        body.modo-tarjeta-alternativo .prive-card-info-box {
+            display: block !important;
             background: #0d0d0d;
             padding: 15px;
             border-top: 1px solid rgba(223, 194, 133, 0.2);
         }
-        body.modo-tarjeta-alternativo .prive-card-info-box {
-            display: block !important;
+        /* Ocultar barra clásica en modo tarjeta grande */
+        body.modo-tarjeta-alternativo .prive-barra-clasica {
+            display: none !important;
         }
+
         .prive-card-nombre {
             font-size: 1.2rem;
             color: #fff;
@@ -499,8 +506,8 @@
                                     </div>
                                 </a>
                                 
-                                <!-- BARRA INFERIOR EXCLUSIVA PARA EL MODO NORMAL -->
-                                <div onclick="event.preventDefault(); event.stopPropagation();" style="height: 44px; padding: 0 12px; background: #0d0d0d; border-top: 1px solid rgba(223, 194, 133, 0.2); display: flex; align-items: center; justify-content: space-between; box-sizing: border-box;">
+                                <!-- BARRA CLÁSICA FIJA (SOLO MODO NORMAL) -->
+                                <div class="prive-barra-clasica" onclick="event.preventDefault(); event.stopPropagation();" style="height: 44px; padding: 0 12px; background: #0d0d0d; border-top: 1px solid rgba(223, 194, 133, 0.2); display: flex; align-items: center; justify-content: space-between; box-sizing: border-box;">
                                     <button onclick="window.darLikeIndice('${docId}', this)" style="background: ${yaDioLike ? 'rgba(223,194,133,0.3)' : 'transparent'}; border: 1px solid #dfc285; color: #dfc285; padding: 4px 10px; border-radius: 15px; cursor: pointer; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 4px; font-family: 'Montserrat', sans-serif;">
                                         ❤️ <span class="like-count-${docId}">${totalLikes}</span>
                                     </button>
@@ -509,7 +516,7 @@
                                     </a>
                                 </div>
 
-                                <!-- CAJA DE INFORMACIÓN EXCLUSIVA PARA EL MODO TARJETA GRANDE -->
+                                <!-- CAJA AMPLIA (SOLO MODO TARJETA GRANDE) -->
                                 <div class="prive-card-info-box">
                                     <div class="prive-card-nombre">${m.nombre}</div>
                                     <div class="prive-card-detalles">📍 ${zonaModelo.toUpperCase()} • ${modalidadModelo.toUpperCase()}</div>
