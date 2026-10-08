@@ -487,12 +487,12 @@
                                     </div>
                                 </a>
 
-                                <!-- BARRA INFERIOR UNIFORME PARA MODO NORMAL (EVITA QUE QUEDEN DESPAREJAS) -->
-                                <div style="padding: 10px 12px; background: #0d0d0d; border-top: 1px solid rgba(223, 194, 133, 0.15); display: flex; align-items: center; justify-content: space-between;">
+                                <!-- BARRA INFERIOR UNIFORME PARA MODO NORMAL (ALTURA FIJA PARA EVITAR DESNIVELES) -->
+                                <div style="height: 42px; padding: 0 12px; background: #0d0d0d; border-top: 1px solid rgba(223, 194, 133, 0.15); display: flex; align-items: center; justify-content: space-between; box-sizing: border-box;">
                                     <button onclick="window.darLikeIndice('${docId}', this)" style="background: ${yaDioLike ? 'rgba(223,194,133,0.25)' : 'transparent'}; border: 1px solid #dfc285; color: #dfc285; padding: 4px 10px; border-radius: 15px; cursor: pointer; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 4px; font-family: 'Montserrat', sans-serif;">
                                         ❤️ <span class="like-count-${docId}">${totalLikes}</span>
                                     </button>
-                                    <a href="perfil.html?id=${docId}#pCommentsContainer" style="background: transparent; border: 1px solid rgba(223,194,133,0.4); color: #fff; padding: 4px 10px; border-radius: 15px; text-decoration: none; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 4px; font-family: 'Montserrat', sans-serif;">
+                                    <a href="perfil.html?id=${docId}#pCommentsContainer" onclick="event.stopPropagation();" style="background: transparent; border: 1px solid rgba(223,194,133,0.4); color: #fff; padding: 4px 10px; border-radius: 15px; text-decoration: none; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 4px; font-family: 'Montserrat', sans-serif;">
                                         💬 Experiencias
                                     </a>
                                 </div>
@@ -504,7 +504,7 @@
                                         <button onclick="window.darLikeIndice('${docId}', this)" style="background: ${yaDioLike ? 'rgba(223,194,133,0.25)' : 'transparent'}; border: 1px solid #dfc285; color: #dfc285; padding: 5px 10px; border-radius: 15px; cursor: pointer; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 5px; font-family: 'Montserrat', sans-serif;">
                                             ❤️ <span class="like-count-${docId}">${totalLikes}</span>
                                         </button>
-                                        <a href="perfil.html?id=${docId}#pCommentsContainer" style="background: transparent; border: 1px solid rgba(223,194,133,0.4); color: #fff; padding: 5px 10px; border-radius: 15px; text-decoration: none; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 5px; font-family: 'Montserrat', sans-serif;">
+                                        <a href="perfil.html?id=${docId}#pCommentsContainer" onclick="event.stopPropagation();" style="background: transparent; border: 1px solid rgba(223,194,133,0.4); color: #fff; padding: 5px 10px; border-radius: 15px; text-decoration: none; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 5px; font-family: 'Montserrat', sans-serif;">
                                             💬 Experiencias
                                         </a>
                                     </div>
