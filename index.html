@@ -60,24 +60,19 @@
             100% { opacity: 0.5; transform: scale(1.02); }
         }
 
-        /* --- CORRECCIÓN DE ESTILOS VISUALES (NORMAL VS TARJETA GRANDE) --- */
-        
-        /* Por defecto la caja amplia está oculta */
-        .prive-card-info-box {
-            display: none;
-        }
-
-        /* MODO NORMAL: Fichas con proporciones idénticas, uniformes y responsivas */
-        body:not(.modo-tarjeta-alternativo) .grid-perfiles {
+        /* --- CONFIGURACIÓN UNIFICADA Y EXACTA PARA TODAS LAS CATEGORÍAS (MODO NORMAL) --- */
+        .grid-perfiles {
             display: grid !important;
             grid-template-columns: repeat(2, 1fr) !important;
             gap: 15px !important;
         }
-        body:not(.modo-tarjeta-alternativo) .grid-perfiles .card-link {
+        
+        .grid-perfiles .card-link {
             width: 100% !important;
             display: block !important;
         }
-        body:not(.modo-tarjeta-alternativo) .grid-perfiles .card {
+        
+        .grid-perfiles .card {
             height: 100% !important;
             min-height: unset !important;
             display: flex !important;
@@ -89,18 +84,25 @@
             width: 100% !important;
             max-width: 100% !important;
         }
-        body:not(.modo-tarjeta-alternativo) .grid-perfiles .card-image {
+        
+        .grid-perfiles .card-image {
             width: 100% !important;
             position: relative !important;
             aspect-ratio: 3 / 4 !important;
         }
-        body:not(.modo-tarjeta-alternativo) .grid-perfiles .card-image img {
+        
+        .grid-perfiles .card-image img {
             width: 100% !important;
             height: 100% !important;
             object-fit: cover !important;
         }
 
-        /* MODO TARJETA GRANDE: Fuerza diseño de columna y tarjetas amplias */
+        /* Por defecto la caja amplia está oculta */
+        .prive-card-info-box {
+            display: none;
+        }
+
+        /* MODO TARJETA GRANDE: Fuerza diseño de columna y tarjetas amplias para todas por igual */
         body.modo-tarjeta-alternativo .grid-perfiles {
             display: flex !important;
             flex-direction: column !important;
@@ -126,6 +128,7 @@
             width: 100% !important;
             height: 380px !important;
             position: relative !important;
+            aspect-ratio: unset !important;
         }
         body.modo-tarjeta-alternativo .grid-perfiles .card-image img {
             width: 100% !important;
@@ -317,7 +320,7 @@
         <div style="text-align: center; margin-bottom: 35px;">
             <span style="color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 3px; font-weight: 500; display: block; margin-bottom: 8px;" data-i18n="editorialSub">Editorial & Bienestar</span>
             <h2 style="font-size: 30px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; color: #dfc285; font-family: 'Cormorant Garamond', serif;" data-i18n="cuadernoTitulo">Cuaderno Privé</h2>
-            <p style="color: #999; font-size: 14px; font-weight: 300;" data-i18n="cuadernoDesc">Crónicas urbanas, secretos de gabinete y el art del relax absoluto en CABA.</p>
+            <p style="color: #999; font-size: 14px; font-weight: 300;" data-i18n="cuadernoDesc">Crónicas urbanas, secretos de gabinete y el arte del relax absoluto en CABA.</p>
         </div>
 
         <div id="cuaderno-rotativo" style="display: grid; gap: 20px;"></div>
@@ -642,7 +645,7 @@
                 cuadernoDesc: "Crónicas urbanas, secretos de gabinete y el arte del relax absoluto en CABA.",
                 btnCerrar: "Cerrar",
                 siguenos: "Síguenos",
-                footerLegal: "Este es un sitio exclusivo pour adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.",
+                footerLegal: "Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.",
                 footerMarcas: "Todo el contenido, marcas y logotipos pertenecen a sus respectivos dueños.",
                 footerCopy: "© 2026 Masajistas Privé. Todos los derechos reservados."
             },
