@@ -405,13 +405,13 @@
         }
         const db = firebase.firestore();
 
-        // CORRECCIÓN DEFINITIVA: Escucha correctamente la subcolección 'mensajes' de cada perfil para capturar las pendientes y existentes
+        // CORRECCIÓN DEFINITIVA: Listado completo de subcolecciones de mensajes en tiempo real
         function cargarModeracionComentarios() {
             const container = document.getElementById('moderacionComentariosContainer');
             if (!container) return;
 
-            db.collection("perfiles_comentarios").onSnapshot((snapshot) => {
-                if (snapshot.empty) {
+            db.collection("modelos_prive").onSnapshot((modelosSnap) => {
+                if (modelosSnap.empty) {
                     container.innerHTML = "<p style='color: #777; font-size: 13px;'>No hay experiencias pendientes de moderación.</p>";
                     return;
                 }
@@ -419,9 +419,9 @@
                 container.innerHTML = "<p style='color: #777; font-size: 13px;'>Buscando experiencias pendientes...</p>";
                 let allPendientesMap = new Map();
 
-                snapshot.forEach((docPerfil) => {
-                    const perfilId = docPerfil.id;
-                    
+                modelosSnap.forEach((modeloDoc) => {
+                    const perfilId = modeloDoc.id;
+
                     db.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").onSnapshot((mensajesSnap) => {
                         mensajesSnap.forEach((mDoc) => {
                             let mData = mDoc.data();
