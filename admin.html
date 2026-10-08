@@ -371,7 +371,7 @@
                 document.getElementById('loginOverlay').style.display = 'none';
                 document.getElementById('adminMainContent').style.display = 'block';
                 cargarModelosAdmin();
-                cargarModeracionComentarios(); // NUEVO: Carga los comentarios pendientes
+                cargarModeracionComentarios();
             } else {
                 document.getElementById('loginError').textContent = "❌ Contraseña incorrecta";
             }
@@ -387,7 +387,7 @@
                 document.getElementById('loginOverlay').style.display = 'none';
                 document.getElementById('adminMainContent').style.display = 'block';
                 cargarModelosAdmin();
-                cargarModeracionComentarios(); // NUEVO: Carga los comentarios pendientes
+                cargarModeracionComentarios();
             }
         });
 
@@ -405,7 +405,7 @@
         }
         const db = firebase.firestore();
 
-        // NUEVO: Función para escuchar y moderar los comentarios pendientes de todas las modelos
+        // MODIFICACIÓN: Captura las pendientes (false) Y las viejas existentes que no tienen el campo definido (undefined)
         function cargarModeracionComentarios() {
             const container = document.getElementById('moderacionComentariosContainer');
             if (!container) return;
@@ -421,14 +421,17 @@
 
                 snapshot.forEach((docPerfil) => {
                     const perfilId = docPerfil.id;
-                    const prom = db.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").where("aprobado", "==", false).get();
+                    const prom = db.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").get();
                     promesas.push(prom.then(mensajesSnap => {
                         mensajesSnap.forEach(mDoc => {
-                            pendientesTotales.push({
-                                perfilId: perfilId,
-                                mensajeId: mDoc.id,
-                                ...mDoc.data()
-                            });
+                            let mData = mDoc.data();
+                            if (mData.aprobado === false || mData.aprobado === undefined) {
+                                pendientesTotales.push({
+                                    perfilId: perfilId,
+                                    mensajeId: mDoc.id,
+                                    ...mData
+                                });
+                            }
                         });
                     }));
                 });
