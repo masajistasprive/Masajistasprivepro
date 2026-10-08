@@ -405,7 +405,7 @@
         }
         const db = firebase.firestore();
 
-        // MODIFICACIÓN: Captura las pendientes (false) Y las viejas existentes que no tienen el campo definido (undefined)
+        // CORRECCIÓN: Escucha en tiempo real la subcolección 'mensajes' de cada perfil para capturar las pendientes y viejas
         function cargarModeracionComentarios() {
             const container = document.getElementById('moderacionComentariosContainer');
             if (!container) return;
@@ -416,50 +416,61 @@
                     return;
                 }
 
-                let pendientesTotales = [];
-                let promesas = [];
+                let unregisterListeners = [];
+
+                // Limpiamos contenedor mientras procesa
+                container.innerHTML = "<p style='color: #777; font-size: 13px;'>Buscando experiencias pendientes...</p>";
+
+                let allPendientesMap = new Map();
 
                 snapshot.forEach((docPerfil) => {
                     const perfilId = docPerfil.id;
-                    const prom = db.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").get();
-                    promesas.push(prom.then(mensajesSnap => {
-                        mensajesSnap.forEach(mDoc => {
+                    
+                    // Escuchamos en tiempo real cada subcolección de mensajes por perfil
+                    db.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").onSnapshot((mensajesSnap) => {
+                        mensajesSnap.forEach((mDoc) => {
                             let mData = mDoc.data();
+                            let key = `${perfilId}_${mDoc.id}`;
+
                             if (mData.aprobado === false || mData.aprobado === undefined) {
-                                pendientesTotales.push({
+                                allPendientesMap.set(key, {
                                     perfilId: perfilId,
                                     mensajeId: mDoc.id,
                                     ...mData
                                 });
+                            } else {
+                                allPendientesMap.delete(key);
                             }
                         });
-                    }));
-                });
 
-                Promise.all(promesas).then(() => {
-                    if (pendientesTotales.length === 0) {
-                        container.innerHTML = "<p style='color: #777; font-size: 13px;'>No hay experiencias pendientes de moderación.</p>";
-                        return;
-                    }
-
-                    let html = "";
-                    pendientesTotales.forEach((c) => {
-                        const imgHtml = c.image ? `<img src="${c.image}" style="max-width: 100px; max-height: 100px; display: block; margin-top: 8px; border-radius: 4px; object-fit: cover;" alt="Adjunto">` : '';
-                        html += `
-                            <div style="background: #1a1a1a; border: 1px solid rgba(223, 194, 133, 0.3); padding: 15px; margin-bottom: 12px; border-radius: 8px;">
-                                <p style="color: #dfc285; font-weight: bold; font-size: 13px; margin-bottom: 5px;">Perfil ID: <strong>${c.perfilId}</strong> | De: ${c.autor} (${c.rating || 5} ★)</p>
-                                <p style="color: #fff; font-size: 13px; margin-bottom: 8px;">"${c.contenido}"</p>
-                                ${imgHtml}
-                                <div style="margin-top: 12px;">
-                                    <button onclick="aprobarExperienciaAdmin('${c.perfilId}', '${c.mensajeId}')" style="background: #2ecc71; color: #000; padding: 6px 14px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 11px;">✓ Aprobar</button>
-                                    <button onclick="rechazarExperienciaAdmin('${c.perfilId}', '${c.mensajeId}')" style="background: #e74c3c; color: #fff; padding: 6px 14px; border: none; border-radius: 4px; cursor: pointer; margin-left: 10px; font-weight: bold; text-transform: uppercase; font-size: 11px;">✕ Rechazar</button>
-                                </div>
-                            </div>
-                        `;
+                        renderizarPanelModeracion(Array.from(allPendientesMap.values()), container);
                     });
-                    container.innerHTML = html;
                 });
             });
+        }
+
+        function renderizarPanelModeracion(pendientesTotales, container) {
+            if (pendientesTotales.length === 0) {
+                container.innerHTML = "<p style='color: #777; font-size: 13px;'>No hay experiencias pendientes de moderación.</p>";
+                return;
+            }
+
+            let html = "";
+            pendientesTotales.forEach((c) => {
+                const imgHtml = c.image ? `<img src="${c.image}" style="max-width: 100px; max-height: 100px; display: block; margin-top: 8px; border-radius: 4px; object-fit: cover;" alt="Adjunto">` : '';
+                html += `
+                    <div style="background: #1a1a1a; border: 1px solid rgba(223, 194, 133, 0.3); padding: 15px; margin-bottom: 12px; border-radius: 8px;">
+                        <p style="color: #dfc285; font-weight: bold; font-size: 13px; margin-bottom: 5px;">Perfil: <strong>${c.perfilId}</strong> | De: ${c.autor} (${c.rating || 5} ★)</p>
+                        <p style="color: #fff; font-size: 13px; margin-bottom: 8px;">"${c.contenido}"</p>
+                        ${imgHtml}
+                        <div style="margin-top: 12px;">
+                            <button onclick="aprobarExperienciaAdmin('${c.perfilId}', '${c.mensajeId}')" style="background: #2ecc71; color: #000; padding: 6px 14px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 11px;">✓ Aprobar</button>
+                            <button onclick="rechazarExperienciaAdmin('${c.perfilId}', '${c.mensajeId}')" style="background: #e74c3c; color: #fff; padding: 6px 14px; border: none; border-radius: 4px; cursor: pointer; margin-left: 10px; font-weight: bold; text-transform: uppercase; font-size: 11px;">✕ Rechazar</button>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
         }
 
         window.aprobarExperienciaAdmin = function(perfilId, mensajeId) {
