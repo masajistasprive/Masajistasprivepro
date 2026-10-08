@@ -388,20 +388,46 @@
                     return;
                 }
 
-                const datosActuales = doc.data();
+                const datosActualces = doc.data();
                 
-                // Incremento atómico ultra seguro
-                docRef.update({
-                    visitas: firebase.firestore.FieldValue.increment(1)
+                // Obtener fecha actual en formato YYYY-MM-DD (Zona horaria Argentina)
+                const opcionesFecha = { timeZone: 'America/Argentina/Buenos_Aires', year: 'numeric', month: '2-digit', day: '2-digit' };
+                const partesFecha = new Intl.DateTimeFormat('es-AR', opcionesFecha).formatToParts(new Date());
+                const anio = partesFecha.find(p => p.type === 'year').value;
+                const mes = partesFecha.find(p => p.type === 'month').value;
+                const dia = partesFecha.find(p => p.type === 'day').value;
+                const fechaHoy = `${anio}-${mes}-${dia}`;
+
+                // Transacción para actualizar vistas totales y diarias de forma segura
+                db.runTransaction((transaction) => {
+                    return transaction.get(docRef).then((tDoc) => {
+                        if (!tDoc.exists) return;
+                        const tData = tDoc.data();
+                        let totalVisitas = (tData.visitas || 0) + 1;
+                        let visitasDiarias = tData.visitasDiarias || 0;
+                        let ultimaFecha = tData.fechaUltimaVisita || "";
+
+                        if (ultimaFecha === fechaHoy) {
+                            visitasDiarias += 1;
+                        } else {
+                            visitasDiarias = 1;
+                            ultimaFecha = fechaHoy;
+                        }
+
+                        transaction.update(docRef, {
+                            visitas: totalVisitas,
+                            visitasDiarias: visitasDiarias,
+                            fechaUltimaVisita: ultimaFecha
+                        });
+                    });
                 }).then(() => {
-                    console.log("¡Visita incrementada con éxito!");
+                    console.log("¡Visitas totales y diarias actualizadas con éxito!");
                 }).catch((err) => {
-                    console.log("Error al incrementar, inicializando campo:", err);
-                    docRef.set({ visitas: 1 }, { merge: true });
+                    console.log("Error en transacción de visitas:", err);
                 });
 
-                let visitasVisuales = (typeof datosActuales.visitas === 'number') ? datosActuales.visitas + 1 : 1;
-                datosModeloActual = datosActuales;
+                let visitasVisuales = (typeof datosActualces.visitas === 'number') ? datosActualces.visitas + 1 : 1;
+                datosModeloActual = datosActualces;
                 datosModeloActual.visitas = visitasVisuales;
 
                 renderizarPerfil(datosModeloActual);
@@ -783,7 +809,7 @@
                 });
 
                 if (lista.length === 0) {
-                    container.innerHTML = `<p style='color: #777; font-size: 13px; text-align: center; font-style: italic;'>No hay experiencias aún. ¡Sé el primeiro en dejar una!</p>`;
+                    container.innerHTML = `<p style='color: #777; font-size: 13px; text-align: center; font-style: italic;'>No hay experiencias aún. ¡Sé el primero en dejar una!</p>`;
                     return;
                 }
                 
