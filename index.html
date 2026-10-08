@@ -483,19 +483,20 @@
                                             <h3>${m.nombre}</h3>
                                             <span class="zona">📍 ${zonaModelo.toUpperCase()}</span>
                                             <span class="modalidad-tag">${modalidadModelo}</span>
-                                            
-                                            <!-- BOTONES INTEGRADOS DENTRO DE LA CAPA FLOTANTE (MODO NORMAL PERFECTAMENTE ALINEADO) -->
-                                            <div onclick="event.preventDefault(); event.stopPropagation();" style="display: flex; gap: 6px; margin-top: 8px; align-items: center; justify-content: space-between;">
-                                                <button onclick="window.darLikeIndice('${docId}', this)" style="background: ${yaDioLike ? 'rgba(223,194,133,0.3)' : 'rgba(0,0,0,0.6)'}; border: 1px solid #dfc285; color: #dfc285; padding: 4px 8px; border-radius: 12px; cursor: pointer; font-size: 10px; font-weight: 600; display: flex; align-items: center; gap: 3px; font-family: 'Montserrat', sans-serif;">
-                                                    ❤️ <span class="like-count-${docId}">${totalLikes}</span>
-                                                </button>
-                                                <a href="perfil.html?id=${docId}#pCommentsContainer" style="background: rgba(0,0,0,0.6); border: 1px solid rgba(223,194,133,0.4); color: #fff; padding: 4px 8px; border-radius: 12px; text-decoration: none; font-size: 10px; font-weight: 600; display: flex; align-items: center; gap: 3px; font-family: 'Montserrat', sans-serif;">
-                                                    💬 Experiencias
-                                                </a>
-                                            </div>
                                         </div>
                                     </div>
                                 </a>
+
+                                <!-- BARRA INFERIOR UNIFORME PARA MODO NORMAL (EVITA QUE QUEDEN DESPAREJAS) -->
+                                <div style="padding: 10px 12px; background: #0d0d0d; border-top: 1px solid rgba(223, 194, 133, 0.15); display: flex; align-items: center; justify-content: space-between;">
+                                    <button onclick="window.darLikeIndice('${docId}', this)" style="background: ${yaDioLike ? 'rgba(223,194,133,0.25)' : 'transparent'}; border: 1px solid #dfc285; color: #dfc285; padding: 4px 10px; border-radius: 15px; cursor: pointer; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 4px; font-family: 'Montserrat', sans-serif;">
+                                        ❤️ <span class="like-count-${docId}">${totalLikes}</span>
+                                    </button>
+                                    <a href="perfil.html?id=${docId}#pCommentsContainer" style="background: transparent; border: 1px solid rgba(223,194,133,0.4); color: #fff; padding: 4px 10px; border-radius: 15px; text-decoration: none; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 4px; font-family: 'Montserrat', sans-serif;">
+                                        💬 Experiencias
+                                    </a>
+                                </div>
+
                                 <div class="prive-card-info-box">
                                     <div class="prive-card-nombre">${m.nombre}</div>
                                     <div class="prive-card-detalles">📍 ${zonaModelo.toUpperCase()} • ${modalidadModelo.toUpperCase()}</div>
