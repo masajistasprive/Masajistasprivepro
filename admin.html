@@ -405,7 +405,7 @@
         }
         const db = firebase.firestore();
 
-        // CORRECCIÓN: Escucha en tiempo real la subcolección 'mensajes' de cada perfil para capturar las pendientes y viejas
+        // CORRECCIÓN DEFINITIVA: Escucha correctamente la subcolección 'mensajes' de cada perfil para capturar las pendientes y existentes
         function cargarModeracionComentarios() {
             const container = document.getElementById('moderacionComentariosContainer');
             if (!container) return;
@@ -416,17 +416,12 @@
                     return;
                 }
 
-                let unregisterListeners = [];
-
-                // Limpiamos contenedor mientras procesa
                 container.innerHTML = "<p style='color: #777; font-size: 13px;'>Buscando experiencias pendientes...</p>";
-
                 let allPendientesMap = new Map();
 
                 snapshot.forEach((docPerfil) => {
                     const perfilId = docPerfil.id;
                     
-                    // Escuchamos en tiempo real cada subcolección de mensajes por perfil
                     db.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").onSnapshot((mensajesSnap) => {
                         mensajesSnap.forEach((mDoc) => {
                             let mData = mDoc.data();
