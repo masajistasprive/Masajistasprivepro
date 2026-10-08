@@ -763,8 +763,8 @@
                 reader.readAsDataURL(input.files[0]);
             }
 
-            // MODIFICACIÓN: Se agrega .where("aprobado", "==", true) para que solo traiga los aprobados
-            db.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").where("aprobado", "==", true).onSnapshot((snapshot) => {
+            // MODIFICACIÓN: Muestra las aprobadas O las viejas que no tenían definido el campo aprobado
+            db.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").onSnapshot((snapshot) => {
                 const container = document.getElementById('pCommentsContainer');
                 if (!container) return;
                 container.innerHTML = "";
@@ -775,7 +775,17 @@
                 }
 
                 let lista = [];
-                snapshot.forEach(doc => lista.push({ id: doc.id, ...doc.data() }));
+                snapshot.forEach(doc => {
+                    let data = doc.data();
+                    if (data.aprobado === true || data.aprobado === undefined) {
+                        lista.push({ id: doc.id, ...data });
+                    }
+                });
+
+                if (lista.length === 0) {
+                    container.innerHTML = `<p style='color: #777; font-size: 13px; text-align: center; font-style: italic;'>No hay experiencias aún. ¡Sé el primero en dejar una!</p>`;
+                    return;
+                }
                 
                 lista.sort((a, b) => {
                     const scoreA = (a.likes || 0) + (a.image ? 5 : 0);
@@ -826,7 +836,6 @@
                 }
 
                 comprimirImagenPerfil((base64) => {
-                    // MODIFICACIÓN: Se agrega aprobado: false para que nazca oculto y pase a moderación
                     db.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").add({
                         autor: autor,
                         contenido: contenido,
