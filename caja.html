@@ -101,7 +101,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .card-summary {
@@ -137,6 +137,26 @@
         .card-summary.total-historico .summary-amount {
             color: var(--success);
             font-size: 1.8rem;
+        }
+
+        .btn-corregir {
+            background: rgba(231, 76, 60, 0.15);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            transition: all 0.2s;
+        }
+
+        .btn-corregir:hover {
+            background: rgba(231, 76, 60, 0.3);
         }
 
         /* Acordeón de Historial Anual */
@@ -458,6 +478,9 @@
                 <div class="summary-amount" id="totalHistorico">$0</div>
             </div>
         </div>
+
+        <!-- Botón para corregir el último pago sumado por error -->
+        <button class="btn-corregir" onclick="deshacerUltimoPago()">↩️ Corregir último pago (Restar)</button>
 
         <!-- Historial Acordeón por Meses -->
         <div class="historial-box">
@@ -790,6 +813,19 @@
             }
         };
 
+        window.deshacerUltimoPago = function() {
+            if (historialPagos.length === 0) {
+                alert("No hay pagos en el historial para deshacer.");
+                return;
+            }
+            const ultimo = historialPagos[historialPagos.length - 1];
+            if (confirm(`¿Deshacer y restar el último pago registrado de "${ultimo.nombre}" por $${Number(ultimo.monto).toLocaleString('es-AR')}?`)) {
+                historialPagos.pop();
+                localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
+                renderizarTarjetas();
+            }
+        };
+
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             const nombre = document.getElementById('nombre').value.trim().toUpperCase();
@@ -833,12 +869,8 @@
                 registros[idx].fechaPago = hoyStr;
                 const montoActual = Number(registros[idx].monto || 0);
                 if (montoActual > 0) {
-                    // Evitamos duplicar en el historial si ya tenía pago registrado hoy
-                    const yaExisteEnHistorial = historialPagos.some(p => p.nombre === registros[idx].nombre && p.fecha === hoyStr && p.monto === montoActual);
-                    if (!yaExisteEnHistorial) {
-                        historialPagos.push({ fecha: hoyStr, nombre: registros[idx].nombre, monto: montoActual });
-                        localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
-                    }
+                    historialPagos.push({ fecha: hoyStr, nombre: registros[idx].nombre, monto: montoActual });
+                    localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
                 }
 
                 let partesFecha = registros[idx].vencimiento.split('-');
