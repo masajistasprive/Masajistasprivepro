@@ -60,15 +60,21 @@
             100% { opacity: 0.5; transform: scale(1.02); }
         }
 
-        /* --- PROPORCIÓN PERFECTA PARA SIMETRÍA EN MODO CLÁSICO --- */
+        /* --- UNIFICACIÓN DE TAMAÑO EXACTO PARA TODAS LAS CATEGORÍAS (MÓDULO CLÁSICO) --- */
         .grid-perfiles .card {
             display: flex !important;
             flex-direction: column !important;
             height: 100% !important;
         }
         .grid-perfiles .card-image {
+            height: 380px !important;
             position: relative !important;
             overflow: hidden !important;
+        }
+        .grid-perfiles .card-image img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
         }
         .grid-perfiles .card-gradient-overlay h3 {
             white-space: nowrap !important;
