@@ -857,7 +857,6 @@
                     const esActiva = m.estado !== 'pausado';
                     const esDestacada = m.destacada === true;
 
-                    // NUEVO: Vistas totales y vistas de hoy
                     const totalVisitas = m.visitas || 0;
                     const visitasHoy = m.visitasDiarias || 0;
 
@@ -987,12 +986,12 @@
             fotosGaleriaSubidas = [];
         }
 
-    function toggleEstado(docId, estadoActual) {
+        function toggleEstado(docId, estadoActual) {
             db.collection("modelos_prive").doc(docId).update({ estado: (estadoActual === 'pausado') ? 'activa' : 'pausado' });
         }
 
         function toggleDestacada(docId, nuevoValor) {
-            db.collection("modelos_prive").docId(docId).update({ destacada: nuevoValor });
+            db.collection("modelos_prive").doc(docId).update({ destacada: nuevoValor });
         }
 
         function eliminarPerfil(docId, nombre) {
