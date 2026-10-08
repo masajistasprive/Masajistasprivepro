@@ -387,12 +387,12 @@
             }, 1200);
         });
 
-        // NUEVO: Función para dar "Me gusta" único por dispositivo (Estilo TikTok)
+        // NUEVO: Función para dar "Me gusta" único por dispositivo (Estilo TikTok con bloqueo de re-clics)
         window.darLikeIndice = function(docId, btnElement) {
             let likesDados = JSON.parse(localStorage.getItem('priveLikesDados') || '{}');
             
             if (likesDados[docId] === true) {
-                return; // Si ya votó desde este dispositivo, no hace nada más
+                return; // Si ya votó desde este dispositivo, no deja sumar de nuevo
             }
 
             likesDados[docId] = true;
@@ -487,20 +487,20 @@
                                         </div>
                                     </div>
                                 </a>
+
+                                <!-- BARRA DE INTERACCIÓN (ME GUSTA + COMENTARIOS) - VISIBLE EN MODO NORMAL -->
+                                <div style="padding: 10px 15px; background: #0d0d0d; border-top: 1px solid rgba(223, 194, 133, 0.15); display: flex; align-items: center; justify-content: space-between;">
+                                    <button onclick="window.darLikeIndice('${docId}', this)" style="background: ${yaDioLike ? 'rgba(223,194,133,0.25)' : 'transparent'}; border: 1px solid #dfc285; color: #dfc285; padding: 5px 10px; border-radius: 15px; cursor: pointer; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 4px; font-family: 'Montserrat', sans-serif;">
+                                        ❤️ <span class="like-count-${docId}">${totalLikes}</span>
+                                    </button>
+                                    <a href="perfil.html?id=${docId}#pCommentsContainer" style="background: transparent; border: 1px solid rgba(223,194,133,0.4); color: #fff; padding: 5px 10px; border-radius: 15px; text-decoration: none; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 4px; font-family: 'Montserrat', sans-serif;">
+                                        💬 Experiencias
+                                    </a>
+                                </div>
+
                                 <div class="prive-card-info-box">
                                     <div class="prive-card-nombre">${m.nombre}</div>
                                     <div class="prive-card-detalles">📍 ${zonaModelo.toUpperCase()} • ${modalidadModelo.toUpperCase()}</div>
-                                    
-                                    <!-- BARRA DE INTERACCIÓN (ME GUSTA + COMENTARIOS) -->
-                                    <div style="display: flex; gap: 10px; margin: 10px 0; align-items: center; justify-content: space-between;">
-                                        <button onclick="window.darLikeIndice('${docId}', this)" style="background: ${yaDioLike ? 'rgba(223,194,133,0.25)' : 'transparent'}; border: 1px solid #dfc285; color: #dfc285; padding: 6px 12px; border-radius: 20px; cursor: pointer; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 5px; font-family: 'Montserrat', sans-serif;">
-                                            ❤️ <span class="like-count-${docId}">${totalLikes}</span>
-                                        </button>
-                                        <a href="perfil.html?id=${docId}#pCommentsContainer" style="background: transparent; border: 1px solid rgba(223,194,133,0.4); color: #fff; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 5px; font-family: 'Montserrat', sans-serif;">
-                                            💬 Experiencias
-                                        </a>
-                                    </div>
-
                                     <div class="prive-card-actions">
                                         <a href="perfil.html?id=${docId}" class="prive-btn-accion prive-btn-perfil">Ver Perfil</a>
                                         <a href="${linkWs}" target="_blank" class="prive-btn-accion prive-btn-ws">WhatsApp</a>
