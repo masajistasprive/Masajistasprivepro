@@ -5,18 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="main-title">Masajistas Privé | Portal Exclusivo de Relax y Masajes en CABA</title>
     
-    <!-- Meta Tags de SEO Avanzado para Google -->
     <meta name="description" content="Portal exclusivo de masajistas independientes y servicios de relax en CABA. Encontrá profesionales verificados, gabinetes y atención a domicilio.">
     <meta name="keywords" content="masajistas caba, masajes descontracturantes, masajistas independientes, relax buenos aires, masajes terapéuticos">
     
-    <!-- Etiquetas Open Graph para Redes Sociales y WhatsApp -->
     <meta property="og:title" content="Masajistas Privé | Portal Exclusivo de Relax en CABA">
     <meta property="og:description" content="Portal exclusivo de masajistas independientes y servicios de relax en CABA. Perfiles verificados.">
     <meta property="og:image" content="https://masajistasprive.com/img/logo.png">
     <meta property="og:url" content="https://masajistasprive.com">
     <meta property="og:type" content="website">
 
-    <!-- CÓDIGO DE GOOGLE ANALYTICS INTEGRADO -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-DXX740HP41"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -166,7 +163,6 @@
 </head>
 <body>
 
-    <!-- Pantalla de Transición / Carga con Logo Tenue -->
     <div id="priveTransitionScreen">
         <div class="prive-transition-logo">
             <img src="img/logo.png" alt="Masajistas Privé - Portal Exclusivo" style="max-width: 220px; width: 60vw; display: block; margin: 0 auto;">
@@ -201,7 +197,6 @@
         </div>
     </header>
 
-    <!-- Tarjeta de Clima Superior -->
     <div class="clima-card" style="background: #141414; border: 1px solid rgba(223, 194, 133, 0.25); border-radius: 10px; padding: 15px 20px; max-width: 900px; margin: 20px auto 0 auto; text-align: center; font-family: 'Montserrat', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
         <span style="color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 2px;" data-i18n="climaTitulo">Clima en Directo</span>
         <div id="clima-info" style="color: #ccc; font-size: 14px; margin-top: 5px;">Buenos Aires (CABA) — <span data-i18n="cargando">Cargando clima...</span></div>
@@ -212,7 +207,6 @@
         <div class="stories-container" id="stories-destacadas-container"></div>
     </div>
 
-    <!-- Categorías normales (Pills) -->
     <nav class="pills-container">
         <button class="pill-btn active" data-filter="todas" data-i18n="filtroTodas">Todas</button>
         <button class="pill-btn" data-filter="terapeuticas" data-i18n="filtroTerapeuticas">Terapéuticas</button>
@@ -220,42 +214,35 @@
         <button class="pill-btn" data-filter="fantasias" data-i18n="filtroFantasias">Fantasías</button>
     </nav>
 
-    <!-- Botón de Favoritas Exclusivo por Fuera de las Categorías -->
     <div style="max-width: 900px; margin: 15px auto 0 auto; padding: 0 4%; text-align: center;">
         <button class="pill-btn" data-filter="favoritos" style="background: rgba(223, 194, 133, 0.12); border: 1px solid #dfc285; color: #dfc285; width: 100%; max-width: 280px; font-weight: 600; box-shadow: 0 4px 15px rgba(223, 194, 133, 0.15);">⭐ Mis Favoritas</button>
     </div>
 
-    <!-- BOTÓN PARA CAMBIAR ENTRE MODO NORMAL Y MODO TARJETA GRANDE -->
     <div style="max-width: 900px; margin: 15px auto 0 auto; padding: 0 4%; text-align: center;">
         <button id="btnAlternarEstilo" onclick="toggleEstiloVisual()" style="background: rgba(223, 194, 133, 0.15); border: 1px solid #dfc285; color: #dfc285; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-size: 11px; font-weight: 600; font-family: 'Montserrat', sans-serif; text-transform: uppercase; letter-spacing: 1.5px; box-shadow: 0 4px 12px rgba(223, 194, 133, 0.2);">
             ✨ Cambiar a Estilo Tarjeta Grande
         </button>
     </div>
 
-    <!-- Divisor Art Déco -->
     <div class="art-deco-divider"><span>♦</span></div>
 
     <main class="container">
 
-        <!-- Sección Terapéuticas -->
         <div class="categoria-seccion-wrapper" data-sec="terapeuticas">
             <h2 class="section-heading" data-i18n="seccionTerapeuticas">Masajistas Terapéuticas</h2>
             <div class="grid-perfiles" id="grid-terapeuticas"></div>
         </div>
 
-        <!-- Sección Sensuales -->
         <div class="categoria-seccion-wrapper" data-sec="sensuales" style="margin-top: 2rem;">
             <h2 class="section-heading" data-i18n="seccionSensuales">Masajistas Sensuales</h2>
             <div class="grid-perfiles" id="grid-sensuales"></div>
         </div>
 
-        <!-- Sección Fantasías -->
         <div class="categoria-seccion-wrapper" data-sec="fantasias" style="margin-top: 2rem;">
             <h2 class="section-heading" data-i18n="seccionFantasias">Fantasías</h2>
             <div class="grid-perfiles" id="grid-fantasias"></div>
         </div>
 
-        <!-- Sección Favoritas (Oculta por defecto) -->
         <div class="categoria-seccion-wrapper" data-sec="favoritos" style="margin-top: 2rem; display: none;">
             <h2 class="section-heading">⭐ Mis Favoritas</h2>
             <div class="grid-perfiles" id="grid-favoritos"></div>
@@ -263,10 +250,8 @@
 
     </main>
 
-    <!-- Divisor Art Déco -->
     <div class="art-deco-divider"><span>♦</span></div>
 
-    <!-- Tarjeta del Dólar -->
     <div class="dolar-card" style="background: #141414; border: 1px solid rgba(223, 194, 133, 0.25); border-radius: 10px; padding: 20px; max-width: 900px; margin: 30px auto; text-align: center; font-family: 'Montserrat', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
         <span style="color: #dfc285; font-size: 11px; text-transform: uppercase; letter-spacing: 2px;" data-i18n="financierosSub">Indicadores Financieros</span>
         <h3 style="color: #fff; font-size: 18px; margin: 8px 0; font-family: 'Cormorant Garamond', serif;" data-i18n="financierosTitulo">Cotización Dólar (Argentina)</h3>
@@ -325,7 +310,6 @@
         </div>
     </footer>
 
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
@@ -387,28 +371,28 @@
             }, 1200);
         });
 
-        // NUEVO: Función para dar "Me gusta" único por dispositivo (Estilo TikTok con bloqueo de re-clics)
+        // Función para dar "Me gusta" único por dispositivo (Estilo TikTok)
         window.darLikeIndice = function(docId, btnElement) {
             let likesDados = JSON.parse(localStorage.getItem('priveLikesDados') || '{}');
             
             if (likesDados[docId] === true) {
-                return; // Si ya votó desde este dispositivo, no deja sumar de nuevo
+                return; 
             }
 
             likesDados[docId] = true;
             localStorage.setItem('priveLikesDados', JSON.stringify(likesDados));
 
-            btnElement.style.background = 'rgba(223,194,133,0.25)';
+            btnElement.style.background = 'rgba(223,194,133,0.3)';
 
             const docRef = db.collection("modelos_prive").doc(docId);
             docRef.update({
                 likes: firebase.firestore.FieldValue.increment(1)
             }).then(() => {
-                const countSpan = document.querySelector(`.like-count-${docId}`);
-                if (countSpan) {
-                    let actual = parseInt(countSpan.textContent) || 0;
-                    countSpan.textContent = actual + 1;
-                }
+                const countSpan = document.querySelectorAll(`.like-count-${docId}`);
+                countSpan.forEach(span => {
+                    let actual = parseInt(span.textContent) || 0;
+                    span.textContent = actual + 1;
+                });
             }).catch(err => {
                 console.log("Error al dar like:", err);
             });
@@ -468,7 +452,6 @@
                     if (catRaw.includes('sensual')) catLimpia = 'sensuales';
                     else if (catRaw.includes('fantasia')) catLimpia = 'fantasias';
 
-                    // Verificación de si el usuario ya dio like desde este dispositivo
                     const likesDados = JSON.parse(localStorage.getItem('priveLikesDados') || '{}');
                     const yaDioLike = likesDados[docId] === true;
                     const totalLikes = m.likes || 0;
@@ -487,13 +470,12 @@
                                         </div>
                                     </div>
                                 </a>
-
-                                <!-- BARRA DE INTERACCIÓN (ME GUSTA + COMENTARIOS) - VISIBLE EN MODO NORMAL -->
-                                <div style="padding: 10px 15px; background: #0d0d0d; border-top: 1px solid rgba(223, 194, 133, 0.15); display: flex; align-items: center; justify-content: space-between;">
-                                    <button onclick="window.darLikeIndice('${docId}', this)" style="background: ${yaDioLike ? 'rgba(223,194,133,0.25)' : 'transparent'}; border: 1px solid #dfc285; color: #dfc285; padding: 5px 10px; border-radius: 15px; cursor: pointer; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 4px; font-family: 'Montserrat', sans-serif;">
+                                
+                                <div onclick="event.preventDefault(); event.stopPropagation();" style="padding: 10px 12px; background: #0d0d0d; border-top: 1px solid rgba(223, 194, 133, 0.2); display: flex; align-items: center; justify-content: space-between; box-sizing: border-box;">
+                                    <button onclick="window.darLikeIndice('${docId}', this)" style="background: ${yaDioLike ? 'rgba(223,194,133,0.3)' : 'transparent'}; border: 1px solid #dfc285; color: #dfc285; padding: 4px 10px; border-radius: 15px; cursor: pointer; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 4px; font-family: 'Montserrat', sans-serif;">
                                         ❤️ <span class="like-count-${docId}">${totalLikes}</span>
                                     </button>
-                                    <a href="perfil.html?id=${docId}#pCommentsContainer" style="background: transparent; border: 1px solid rgba(223,194,133,0.4); color: #fff; padding: 5px 10px; border-radius: 15px; text-decoration: none; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 4px; font-family: 'Montserrat', sans-serif;">
+                                    <a href="perfil.html?id=${docId}#pCommentsContainer" onclick="event.stopPropagation();" style="background: transparent; border: 1px solid rgba(223,194,133,0.4); color: #fff; padding: 4px 10px; border-radius: 15px; text-decoration: none; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 4px; font-family: 'Montserrat', sans-serif;">
                                         💬 Experiencias
                                     </a>
                                 </div>
@@ -501,6 +483,14 @@
                                 <div class="prive-card-info-box">
                                     <div class="prive-card-nombre">${m.nombre}</div>
                                     <div class="prive-card-detalles">📍 ${zonaModelo.toUpperCase()} • ${modalidadModelo.toUpperCase()}</div>
+                                    <div style="display: flex; gap: 10px; margin: 10px 0; align-items: center; justify-content: space-between;">
+                                        <button onclick="window.darLikeIndice('${docId}', this)" style="background: ${yaDioLike ? 'rgba(223,194,133,0.25)' : 'transparent'}; border: 1px solid #dfc285; color: #dfc285; padding: 5px 10px; border-radius: 15px; cursor: pointer; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 5px; font-family: 'Montserrat', sans-serif;">
+                                            ❤️ <span class="like-count-${docId}">${totalLikes}</span>
+                                        </button>
+                                        <a href="perfil.html?id=${docId}#pCommentsContainer" onclick="event.stopPropagation();" style="background: transparent; border: 1px solid rgba(223,194,133,0.4); color: #fff; padding: 5px 10px; border-radius: 15px; text-decoration: none; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 5px; font-family: 'Montserrat', sans-serif;">
+                                            💬 Experiencias
+                                        </a>
+                                    </div>
                                     <div class="prive-card-actions">
                                         <a href="perfil.html?id=${docId}" class="prive-btn-accion prive-btn-perfil">Ver Perfil</a>
                                         <a href="${linkWs}" target="_blank" class="prive-btn-accion prive-btn-ws">WhatsApp</a>
