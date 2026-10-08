@@ -387,6 +387,33 @@
             }, 1200);
         });
 
+        // NUEVO: Función para dar "Me gusta" único por dispositivo (Estilo TikTok)
+        window.darLikeIndice = function(docId, btnElement) {
+            let likesDados = JSON.parse(localStorage.getItem('priveLikesDados') || '{}');
+            
+            if (likesDados[docId] === true) {
+                return; // Si ya votó desde este dispositivo, no hace nada más
+            }
+
+            likesDados[docId] = true;
+            localStorage.setItem('priveLikesDados', JSON.stringify(likesDados));
+
+            btnElement.style.background = 'rgba(223,194,133,0.25)';
+
+            const docRef = db.collection("modelos_prive").doc(docId);
+            docRef.update({
+                likes: firebase.firestore.FieldValue.increment(1)
+            }).then(() => {
+                const countSpan = document.querySelector(`.like-count-${docId}`);
+                if (countSpan) {
+                    let actual = parseInt(countSpan.textContent) || 0;
+                    countSpan.textContent = actual + 1;
+                }
+            }).catch(err => {
+                console.log("Error al dar like:", err);
+            });
+        };
+
         function cargarPerfilesDesdeFirebase() {
             db.collection("modelos_prive").onSnapshot((snapshot) => {
                 const gridTerapeuticas = document.getElementById('grid-terapeuticas');
@@ -441,6 +468,11 @@
                     if (catRaw.includes('sensual')) catLimpia = 'sensuales';
                     else if (catRaw.includes('fantasia')) catLimpia = 'fantasias';
 
+                    // Verificación de si el usuario ya dio like desde este dispositivo
+                    const likesDados = JSON.parse(localStorage.getItem('priveLikesDados') || '{}');
+                    const yaDioLike = likesDados[docId] === true;
+                    const totalLikes = m.likes || 0;
+
                     const cardHTML = `
                         <div class="card-link" data-categoria="${catLimpia}">
                             <article class="card">
@@ -458,6 +490,17 @@
                                 <div class="prive-card-info-box">
                                     <div class="prive-card-nombre">${m.nombre}</div>
                                     <div class="prive-card-detalles">📍 ${zonaModelo.toUpperCase()} • ${modalidadModelo.toUpperCase()}</div>
+                                    
+                                    <!-- BARRA DE INTERACCIÓN (ME GUSTA + COMENTARIOS) -->
+                                    <div style="display: flex; gap: 10px; margin: 10px 0; align-items: center; justify-content: space-between;">
+                                        <button onclick="window.darLikeIndice('${docId}', this)" style="background: ${yaDioLike ? 'rgba(223,194,133,0.25)' : 'transparent'}; border: 1px solid #dfc285; color: #dfc285; padding: 6px 12px; border-radius: 20px; cursor: pointer; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 5px; font-family: 'Montserrat', sans-serif;">
+                                            ❤️ <span class="like-count-${docId}">${totalLikes}</span>
+                                        </button>
+                                        <a href="perfil.html?id=${docId}#pCommentsContainer" style="background: transparent; border: 1px solid rgba(223,194,133,0.4); color: #fff; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 5px; font-family: 'Montserrat', sans-serif;">
+                                            💬 Experiencias
+                                        </a>
+                                    </div>
+
                                     <div class="prive-card-actions">
                                         <a href="perfil.html?id=${docId}" class="prive-btn-accion prive-btn-perfil">Ver Perfil</a>
                                         <a href="${linkWs}" target="_blank" class="prive-btn-accion prive-btn-ws">WhatsApp</a>
