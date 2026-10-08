@@ -763,13 +763,14 @@
                 reader.readAsDataURL(input.files[0]);
             }
 
-            db.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").onSnapshot((snapshot) => {
+            // MODIFICACIÓN: Se agrega .where("aprobado", "==", true) para que solo traiga los aprobados
+            db.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").where("aprobado", "==", true).onSnapshot((snapshot) => {
                 const container = document.getElementById('pCommentsContainer');
                 if (!container) return;
                 container.innerHTML = "";
 
                 if (snapshot.empty) {
-                    container.innerHTML = `<p style='color: #777; font-size: 13px; text-align: center; font-style: italic;'>No hay experiencias aún. ¡Sé el primeiro en dejar una!</p>`;
+                    container.innerHTML = `<p style='color: #777; font-size: 13px; text-align: center; font-style: italic;'>No hay experiencias aún. ¡Sé el primero en dejar una!</p>`;
                     return;
                 }
 
@@ -825,12 +826,14 @@
                 }
 
                 comprimirImagenPerfil((base64) => {
+                    // MODIFICACIÓN: Se agrega aprobado: false para que nazca oculto y pase a moderación
                     db.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").add({
                         autor: autor,
                         contenido: contenido,
                         rating: parseInt(ratingSeleccionado.value),
                         image: base64 || "",
                         likes: 0,
+                        aprobado: false,
                         fecha: firebase.firestore.FieldValue.serverTimestamp()
                     }).then(() => {
                         document.getElementById('pAuthor').value = '';
@@ -838,6 +841,7 @@
                         document.getElementById('pImageFile').value = '';
                         document.getElementById('pFileName').textContent = '';
                         document.querySelectorAll('input[name="rating"]').forEach(r => r.checked = false);
+                        alert("¡Tu experiencia fue enviada correctamente y será publicada tras ser moderada!");
                     });
                 });
             };
