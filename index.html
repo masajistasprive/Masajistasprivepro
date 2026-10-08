@@ -60,6 +60,40 @@
             100% { opacity: 0.5; transform: scale(1.02); }
         }
 
+        /* --- UNIFICACIÓN DE ALTURA PARA SIMETRÍA PERFECTA EN MODO CLÁSICO --- */
+        .grid-perfiles .card {
+            display: flex !important;
+            flex-direction: column !important;
+            height: 100% !important;
+        }
+        .grid-perfiles .card-image {
+            height: 320px !important;
+            position: relative !important;
+            overflow: hidden !important;
+        }
+        .grid-perfiles .card-image img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+        }
+        .grid-perfiles .card-gradient-overlay {
+            position: absolute !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            padding: 15px !important;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 70%, transparent 100%) !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: flex-end !important;
+        }
+        .grid-perfiles .card-gradient-overlay h3 {
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            margin: 0 0 4px 0 !important;
+        }
+
         /* --- ESTILOS MODO TARJETA GRANDE CON BOTONES --- */
         body.modo-tarjeta-alternativo .grid-perfiles {
             display: flex !important;
@@ -507,7 +541,7 @@
                                 </a>
                                 
                                 <!-- BARRA CLÁSICA FIJA (SOLO MODO NORMAL) -->
-                                <div class="prive-barra-clasica" onclick="event.preventDefault(); event.stopPropagation();" style="height: 44px; padding: 0 12px; background: #0d0d0d; border-top: 1px solid rgba(223, 194, 133, 0.2); display: flex; align-items: center; justify-content: space-between; box-sizing: border-box;">
+                                <div class="prive-barra-clasica" onclick="event.preventDefault(); event.stopPropagation();" style="height: 44px; padding: 0 12px; background: #0d0d0d; border-top: 1px solid rgba(223, 194, 133, 0.2); display: flex; align-items: center; justify-content: space-between; box-sizing: border-box; flex-shrink: 0;">
                                     <button onclick="window.darLikeIndice('${docId}', this)" style="background: ${yaDioLike ? 'rgba(223,194,133,0.3)' : 'transparent'}; border: 1px solid #dfc285; color: #dfc285; padding: 4px 10px; border-radius: 15px; cursor: pointer; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 4px; font-family: 'Montserrat', sans-serif;">
                                         ❤️ <span class="like-count-${docId}">${totalLikes}</span>
                                     </button>
