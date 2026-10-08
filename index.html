@@ -60,11 +60,11 @@
             100% { opacity: 0.5; transform: scale(1.02); }
         }
 
-        /* --- CONFIGURACIÓN UNIFICADA Y EXACTA PARA TODAS LAS CATEGORÍAS (MODO NORMAL) --- */
+        /* --- SOLUCIÓN ESTRICTA DE TAMAÑOS UNIFORMES (MODO NORMAL) --- */
         .grid-perfiles {
             display: grid !important;
             grid-template-columns: repeat(2, 1fr) !important;
-            gap: 15px !important;
+            gap: 12px !important;
         }
         
         .grid-perfiles .card-link {
@@ -87,8 +87,8 @@
         
         .grid-perfiles .card-image {
             width: 100% !important;
+            height: 290px !important; /* Altura fija idéntica para todas las fichas */
             position: relative !important;
-            aspect-ratio: 3 / 4 !important;
         }
         
         .grid-perfiles .card-image img {
@@ -102,7 +102,7 @@
             display: none;
         }
 
-        /* MODO TARJETA GRANDE: Fuerza diseño de columna y tarjetas amplias para todas por igual */
+        /* MODO TARJETA GRANDE: Fuerza diseño de columna y tarjetas amplias */
         body.modo-tarjeta-alternativo .grid-perfiles {
             display: flex !important;
             flex-direction: column !important;
@@ -128,7 +128,6 @@
             width: 100% !important;
             height: 380px !important;
             position: relative !important;
-            aspect-ratio: unset !important;
         }
         body.modo-tarjeta-alternativo .grid-perfiles .card-image img {
             width: 100% !important;
