@@ -60,16 +60,14 @@
             100% { opacity: 0.5; transform: scale(1.02); }
         }
 
-        /* --- ESTILOS MODO TARJETA GRANDE CON BOTONES --- */
-        body.modo-tarjeta-alternativo .grid-perfiles {
-            display: flex !important;
-            flex-direction: column !important;
-            gap: 20px !important;
+        /* --- CORRECCIÓN: ESTILOS MODO TARJETA GRANDE VS NORMAL --- */
+        
+        /* Por defecto la caja amplia está oculta */
+        .prive-card-info-box {
+            display: none;
         }
-        body.modo-tarjeta-alternativo .grid-perfiles .card-link {
-            width: 100% !important;
-            display: block !important;
-        }
+
+        /* Cuando está activo el modo tarjeta grande */
         body.modo-tarjeta-alternativo .grid-perfiles .card {
             height: auto !important;
             min-height: auto !important;
@@ -108,10 +106,6 @@
             display: none !important;
         }
         
-        /* Ocultar elementos de tarjeta grande en modo normal */
-        .prive-card-info-box {
-            display: none;
-        }
         /* Mostrar elementos de tarjeta grande solo en modo alternativo */
         body.modo-tarjeta-alternativo .prive-card-info-box {
             display: block !important;
@@ -119,6 +113,7 @@
             padding: 15px;
             border-top: 1px solid rgba(223, 194, 133, 0.2);
         }
+        
         /* Ocultar barra clásica en modo tarjeta grande */
         body.modo-tarjeta-alternativo .prive-barra-clasica {
             display: none !important;
@@ -342,8 +337,6 @@
             authDomain: "masajistasprivepro.firebaseapp.com",
             projectId: "masajistasprivepro",
             storageBucket: "masajistasprivepro.firebasestorage.app",
-            messagingSenderId: "768677270509",
-            appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
             measurementId: "G-SBN70C32JF"
         };
         if (!firebase.apps.length) {
@@ -457,13 +450,11 @@
                     </a>
                 `;
 
-                // CONVERTIMOS EL SNAPSHOT EN UN ARRAY PARA MEZCLARLO ALEATORIAMENTE
                 let documentosArray = [];
                 snapshot.forEach((docSnap) => {
                     documentosArray.push(docSnap);
                 });
 
-                // Algoritmo de mezcla aleatoria (Fisher-Yates)
                 for (let i = documentosArray.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));
                     [documentosArray[i], documentosArray[j]] = [documentosArray[j], documentosArray[i]];
