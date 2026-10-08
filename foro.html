@@ -249,13 +249,11 @@
         </div>
     </div>
 
-    <!-- Acceso discreto para administración -->
     <div class="admin-footer">
         <span class="admin-link" onclick="activarAdmin()">Admin</span>
     </div>
 </div>
 
-<!-- Motor de Traducción Cuatrilingüe -->
 <script>
     const traduccionesForo = {
         es: {
@@ -568,6 +566,9 @@
           `;
           postsContainer.appendChild(postElement);
       });
+  }, (error) => {
+      loadingDiv.style.display = 'none';
+      postsContainer.innerHTML = `<p style='text-align: center; color: #e74c3c;'>⚠️ Error de conexión con la base de datos del foro. Verificá que las reglas de Firestore estén públicas.</p>`;
   });
 
   publicarBtn.addEventListener('click', () => {
@@ -603,7 +604,7 @@
               publicarBtn.textContent = traduccionesForo[idiomaPerfil].btnPublicar;
           })
           .catch((error) => {
-              console.error("Error al guardar el tema: ", error);
+              alert("Error al publicar el tema. Verificá los permisos de Firestore.");
               publicarBtn.disabled = false;
               publicarBtn.textContent = traduccionesForo[idiomaPerfil].btnPublicar;
           });
