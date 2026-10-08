@@ -405,10 +405,12 @@
         }
         const db = firebase.firestore();
 
-        // CORRECCIÓN DEFINITIVA: Listado completo de subcolecciones de mensajes en tiempo real
+        // CORRECCIÓN DEFINITIVA: Sincronización asincrónica robusta para las subcolecciones de mensajes
         function cargarModeracionComentarios() {
             const container = document.getElementById('moderacionComentariosContainer');
             if (!container) return;
+
+            container.innerHTML = "<p style='color: #777; font-size: 13px;'>Buscando experiencias pendientes...</p>";
 
             db.collection("modelos_prive").onSnapshot((modelosSnap) => {
                 if (modelosSnap.empty) {
@@ -416,30 +418,31 @@
                     return;
                 }
 
-                container.innerHTML = "<p style='color: #777; font-size: 13px;'>Buscando experiencias pendientes...</p>";
-                let allPendientesMap = new Map();
-
+                let promesasMensajes = [];
                 modelosSnap.forEach((modeloDoc) => {
                     const perfilId = modeloDoc.id;
+                    const prom = db.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").get();
+                    promesasMensajes.push(
+                        prom.then(mensajesSnap => {
+                            let listaModelo = [];
+                            mensajesSnap.forEach(mDoc => {
+                                let mData = mDoc.data();
+                                if (mData.aprobado === false || mData.aprobado === undefined) {
+                                    listaModelo.push({
+                                        perfilId: perfilId,
+                                        mensajeId: mDoc.id,
+                                        ...mData
+                                    });
+                                }
+                            });
+                            return listaModelo;
+                        }).catch(() => [])
+                    );
+                });
 
-                    db.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").onSnapshot((mensajesSnap) => {
-                        mensajesSnap.forEach((mDoc) => {
-                            let mData = mDoc.data();
-                            let key = `${perfilId}_${mDoc.id}`;
-
-                            if (mData.aprobado === false || mData.aprobado === undefined) {
-                                allPendientesMap.set(key, {
-                                    perfilId: perfilId,
-                                    mensajeId: mDoc.id,
-                                    ...mData
-                                });
-                            } else {
-                                allPendientesMap.delete(key);
-                            }
-                        });
-
-                        renderizarPanelModeracion(Array.from(allPendientesMap.values()), container);
-                    });
+                Promise.all(promesasMensajes).then((resultados) => {
+                    let pendientesTotales = [].concat(...resultados);
+                    renderizarPanelModeracion(pendientesTotales, container);
                 });
             });
         }
