@@ -360,6 +360,7 @@
 
             if (datosModeloActual) {
                 renderizarPerfil(datosModeloActual);
+                inicializarLogicaComentarios();
             }
         }
 
@@ -763,7 +764,6 @@
                 reader.readAsDataURL(input.files[0]);
             }
 
-            // MODIFICACIÓN: Muestra las aprobadas O las viejas que no tenían definido el campo aprobado
             db.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").onSnapshot((snapshot) => {
                 const container = document.getElementById('pCommentsContainer');
                 if (!container) return;
@@ -783,7 +783,7 @@
                 });
 
                 if (lista.length === 0) {
-                    container.innerHTML = `<p style='color: #777; font-size: 13px; text-align: center; font-style: italic;'>No hay experiencias aún. ¡Sé el primero en dejar una!</p>`;
+                    container.innerHTML = `<p style='color: #777; font-size: 13px; text-align: center; font-style: italic;'>No hay experiencias aún. ¡Sé el primeiro en dejar una!</p>`;
                     return;
                 }
                 
