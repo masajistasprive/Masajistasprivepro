@@ -67,6 +67,16 @@
             display: none;
         }
 
+        /* MODO NORMAL: Ajuste de altura para que la barra inferior no rompa las tarjetas asimétricas ni pise secciones */
+        body:not(.modo-tarjeta-alternativo) .grid-perfiles .card {
+            display: flex !important;
+            flex-direction: column !important;
+            height: auto !important;
+        }
+        body:not(.modo-tarjeta-alternativo) .grid-perfiles .card-image {
+            flex-grow: 1 !important;
+        }
+
         /* MODO TARJETA GRANDE: Fuerza diseño de columna y tarjetas amplias */
         body.modo-tarjeta-alternativo .grid-perfiles {
             display: flex !important;
@@ -587,7 +597,7 @@
                 modalEdadTexto: "Este sitio web contiene material exclusivo para adultos (+18) y servicios de relax independientes. Debes ser mayor de edad para ingresar.",
                 btnMayor: "Soy mayor de 18 años",
                 btnSalir: "Salir",
-                climaTitulo: "Clima en Directo",
+                climaTitulo: "Clima in Directo",
                 cargando: "Cargando clima...",
                 destacadasTitulo: "Destacadas",
                 filtroTodas: "Todas",
