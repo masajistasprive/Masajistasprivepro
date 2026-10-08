@@ -67,14 +67,26 @@
             display: none;
         }
 
-        /* MODO NORMAL: Ajuste de altura para que la barra inferior no rompa las tarjetas asimétricas ni pise secciones */
+        /* MODO NORMAL: Corrección estricta de contenedores y proporciones asimétricas */
         body:not(.modo-tarjeta-alternativo) .grid-perfiles .card {
+            height: auto !important;
+            min-height: unset !important;
             display: flex !important;
             flex-direction: column !important;
-            height: auto !important;
+            background: #0d0d0d !important;
+            border-radius: 12px !important;
+            overflow: hidden !important;
+            border: 1px solid rgba(223, 194, 133, 0.2) !important;
         }
         body:not(.modo-tarjeta-alternativo) .grid-perfiles .card-image {
-            flex-grow: 1 !important;
+            height: 340px !important; /* Altura controlada para mantener el estilo asimétrico original */
+            position: relative !important;
+            width: 100% !important;
+        }
+        body:not(.modo-tarjeta-alternativo) .grid-perfiles .card-image img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
         }
 
         /* MODO TARJETA GRANDE: Fuerza diseño de columna y tarjetas amplias */
