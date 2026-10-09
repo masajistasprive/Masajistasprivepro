@@ -32,7 +32,7 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             padding: 12px;
-            padding-bottom: 90px;
+            padding-bottom: 100px;
         }
 
         .container {
@@ -254,16 +254,17 @@
             color: #ccc;
         }
 
-        /* Formularios Interactivos con Vista Previa */
+        /* Estructura Formulario + Vista Previa optimizada para celular */
         .layout-editor-grid {
-            display: grid;
-            grid-template-columns: 1fr;
+            display: flex;
+            flex-direction: column-reverse;
             gap: 20px;
         }
 
-        @media(min-width: 650px) {
+        @media(min-width: 768px) {
             .layout-editor-grid {
-                grid-template-columns: 1.1fr 0.9fr;
+                display: grid;
+                grid-template-columns: 1.2fr 0.8fr;
                 align-items: start;
             }
         }
@@ -272,28 +273,28 @@
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: var(--radius);
-            padding: 18px;
+            padding: 20px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.5);
         }
 
         .form-card h2 {
-            font-size: 0.95rem;
+            font-size: 1rem;
             color: var(--gold);
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             font-family: 'Cormorant Garamond', serif;
         }
 
         .form-group {
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
 
         label {
             display: block;
-            font-size: 0.65rem;
+            font-size: 0.68rem;
             color: var(--text-muted);
-            margin-bottom: 3px;
+            margin-bottom: 5px;
             text-transform: uppercase;
             letter-spacing: 1px;
             font-weight: 700;
@@ -301,17 +302,17 @@
 
         input, select, textarea {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             background-color: #060606;
             border: 1px solid #222;
             border-radius: 8px;
             color: var(--text-main);
-            font-size: 0.85rem;
+            font-size: 0.9rem;
         }
 
         textarea {
             resize: vertical;
-            min-height: 60px;
+            min-height: 80px;
         }
 
         input:focus, select:focus, textarea:focus {
@@ -325,7 +326,7 @@
             background: #1a1a1a;
             border: 1px dashed var(--gold);
             color: var(--gold);
-            padding: 10px;
+            padding: 12px;
             border-radius: 8px;
             text-align: center;
             cursor: pointer;
@@ -345,7 +346,7 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 8px;
             margin-top: 10px;
-            min-height: 70px;
+            min-height: 75px;
             background: #090909;
             padding: 8px;
             border-radius: 8px;
@@ -355,7 +356,7 @@
         .thumb-item {
             position: relative;
             width: 100%;
-            height: 70px;
+            height: 75px;
             border-radius: 6px;
             overflow: hidden;
             border: 1px solid var(--card-border);
@@ -390,9 +391,9 @@
             background: rgba(255, 77, 77, 0.8);
             color: #fff;
             border: none;
-            width: 16px; height: 16px;
+            width: 18px; height: 18px;
             border-radius: 50%;
-            font-size: 10px;
+            font-size: 11px;
             cursor: pointer;
             display: flex; align-items: center; justify-content: center;
         }
@@ -404,8 +405,13 @@
             border-radius: var(--radius);
             padding: 15px;
             text-align: center;
-            position: sticky;
-            top: 15px;
+        }
+
+        @media(min-width: 768px) {
+            .preview-container {
+                position: sticky;
+                top: 15px;
+            }
         }
 
         .preview-title {
@@ -494,14 +500,14 @@
             color: #000;
             border: none;
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             font-weight: 700;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 0.78rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            margin-top: 12px;
+            margin-top: 15px;
             box-shadow: 0 4px 15px rgba(223, 194, 133, 0.3);
         }
 
@@ -935,8 +941,8 @@
 
     <script>
         const CLASE_PASSWORD = "081101";
-        let galeriaTemporal = [];      // Array de Base64s para nuevo registro
-        let galeriaEditTemporal = [];  // Array de Base64s para edición
+        let galeriaTemporal = [];
+        let galeriaEditTemporal = [];
 
         const loginForm = document.getElementById('loginForm');
         const passwordInput = document.getElementById('passwordInput');
@@ -968,7 +974,6 @@
             btnElement.classList.add('active');
         };
 
-        // Procesar múltiples fotos (Creación)
         window.procesarFotosCelular = function(event) {
             const files = event.target.files;
             if (!files.length) return;
@@ -1002,7 +1007,6 @@
                     <button type="button" class="thumb-delete" onclick="eliminarFotoNueva(${idx})">&times;</button>
                 `;
 
-                // Eventos de Arrastre (Drag & Drop)
                 div.addEventListener('dragstart', (e) => {
                     e.dataTransfer.setData('text/plain', idx);
                     div.classList.add('dragging');
@@ -1029,7 +1033,6 @@
             actualizarPreview();
         };
 
-        // Procesar múltiples fotos (Edición)
         window.procesarFotosEdicion = function(event) {
             const files = event.target.files;
             if (!files.length) return;
