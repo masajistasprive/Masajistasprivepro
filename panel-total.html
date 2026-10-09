@@ -3,202 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel General Todo en Uno - Masajistas Privé</title>
+    <title>Master Panel Privé | Gestión Integral</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0b0b0b;
-            --card-bg: #141414;
+            --bg-color: #070707;
+            --card-bg: #121212;
+            --card-border: rgba(223, 194, 133, 0.2);
             --gold: #dfc285;
             --gold-light: #f3e5ab;
             --text-main: #f5f5f5;
-            --text-muted: #aaaaaa;
-            --danger: #e74c3c;
-            --success: #2ecc71;
-            --danger-bg: rgba(231, 76, 60, 0.15);
-            --success-bg: rgba(46, 204, 113, 0.15);
+            --text-muted: #888888;
+            --danger: #ff4d4d;
+            --success: #00e676;
+            --danger-bg: rgba(255, 77, 77, 0.12);
+            --success-bg: rgba(0, 230, 118, 0.12);
+            --radius: 12px;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Montserrat', 'Segoe UI', Tahoma, sans-serif;
+            font-family: 'Montserrat', sans-serif;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            padding: 12px;
-            padding-bottom: 70px;
+            padding: 15px;
+            padding-bottom: 90px;
         }
 
         .container {
-            max-width: 600px;
+            max-width: 650px;
             margin: 0 auto;
         }
 
-        /* Pantalla de Login */
+        /* Pantalla de Login Moderna */
         #loginOverlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background-color: var(--bg-color);
+            background: rgba(7, 7, 7, 0.95);
+            backdrop-filter: blur(10px);
             display: flex; justify-content: center; align-items: center;
-            z-index: 1000;
+            z-index: 9999;
         }
 
         .login-card {
             background-color: var(--card-bg);
             border: 1px solid var(--gold);
-            border-radius: 12px;
-            padding: 25px;
+            border-radius: 16px;
+            padding: 30px;
             width: 90%;
-            max-width: 360px;
+            max-width: 380px;
             text-align: center;
-            box-shadow: 0 4px 25px rgba(223, 194, 133, 0.15);
+            box-shadow: 0 10px 40px rgba(223, 194, 133, 0.2);
         }
 
         .login-card h2 {
             color: var(--gold);
             margin-bottom: 20px;
-            font-size: 1.2rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-size: 1.4rem;
             font-family: 'Cormorant Garamond', serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
         .main-content {
             display: none;
         }
 
+        /* Header Estilo App */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            border-bottom: 1px solid rgba(223, 194, 133, 0.2);
-            padding-bottom: 12px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 15px;
         }
 
         h1 {
             color: var(--gold);
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             font-family: 'Cormorant Garamond', serif;
         }
 
         .back-link {
             color: var(--text-muted);
             text-decoration: none;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.2s;
         }
 
         .back-link:hover {
             color: var(--gold);
         }
 
-        /* Navegación por pestañas móvil */
+        /* Tabs de Navegación */
         .nav-tabs {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 6px;
-            margin-bottom: 15px;
+            gap: 8px;
+            margin-bottom: 20px;
+            background: #0e0e0e;
+            padding: 4px;
+            border-radius: 14px;
+            border: 1px solid var(--card-border);
         }
 
         .tab-btn {
-            background: #141414;
-            border: 1px solid #333;
+            background: transparent;
+            border: none;
             color: var(--text-muted);
-            padding: 10px 4px;
+            padding: 10px 6px;
             font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
             font-weight: 600;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
             text-align: center;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
         }
 
         .tab-btn.active {
-            background: rgba(223, 194, 133, 0.15);
-            border-color: var(--gold);
+            background: linear-gradient(135deg, rgba(223, 194, 133, 0.2), rgba(223, 194, 133, 0.05));
             color: var(--gold);
+            border: 1px solid var(--card-border);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
 
-        /* Secciones del Panel */
         .panel-section {
             display: none;
         }
 
         .panel-section.active {
             display: block;
+            animation: fadeIn 0.3s ease;
         }
 
-        /* Tarjetas de Resumen Grid */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Resúmenes Financieros (Grid) */
         .summary-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 10px;
+            gap: 12px;
+            margin-bottom: 12px;
         }
 
         .card-summary {
-            background: linear-gradient(135deg, #1a1a1a, #111);
-            border: 1px solid var(--gold);
-            border-radius: 10px;
-            padding: 12px;
+            background: linear-gradient(145deg, #141414, #0d0d0d);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 16px;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
         }
 
         .card-summary.total-historico {
             grid-column: 1 / -1;
-            border-color: var(--success);
-            background: linear-gradient(135deg, #112217, #0d1a11);
+            border-color: rgba(0, 230, 118, 0.4);
+            background: linear-gradient(145deg, #0d1a12, #08110c);
         }
 
         .summary-title {
             font-size: 0.65rem;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 4px;
+            letter-spacing: 1.5px;
+            margin-bottom: 6px;
         }
 
         .summary-amount {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             color: var(--gold-light);
-            font-weight: bold;
+            font-weight: 700;
             font-family: 'Cormorant Garamond', serif;
         }
 
         .card-summary.total-historico .summary-amount {
             color: var(--success);
-            font-size: 1.8rem;
+            font-size: 2rem;
         }
 
         .btn-corregir {
-            background: rgba(231, 76, 60, 0.15);
-            border: 1px solid var(--danger);
+            background: var(--danger-bg);
+            border: 1px solid rgba(255, 77, 77, 0.4);
             color: var(--danger);
             width: 100%;
-            padding: 9px;
-            border-radius: 6px;
+            padding: 12px;
+            border-radius: var(--radius);
             cursor: pointer;
             font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-            margin-bottom: 15px;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            transition: background 0.2s;
+        }
+
+        .btn-corregir:hover {
+            background: rgba(255, 77, 77, 0.25);
         }
 
         /* Acordeón de Historial Anual */
         .historial-box {
             background-color: var(--card-bg);
-            border: 1px solid #222;
-            border-radius: 10px;
-            padding: 12px 15px;
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 15px;
             margin-bottom: 20px;
         }
 
@@ -208,11 +231,11 @@
             color: var(--gold);
             width: 100%;
             text-align: left;
-            font-size: 0.85rem;
-            font-weight: bold;
+            font-size: 0.8rem;
+            font-weight: 700;
             cursor: pointer;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -220,10 +243,10 @@
 
         .historial-content {
             display: none;
-            margin-top: 10px;
-            border-top: 1px solid #1f1f1f;
+            margin-top: 12px;
+            border-top: 1px solid rgba(255,255,255,0.05);
             padding-top: 10px;
-            max-height: 180px;
+            max-height: 200px;
             overflow-y: auto;
         }
 
@@ -231,230 +254,330 @@
             display: flex;
             justify-content: space-between;
             font-size: 0.8rem;
-            padding: 5px 0;
-            border-bottom: 1px solid #1a1a1a;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            color: #ccc;
         }
 
-        /* Formulario de Carga */
+        /* Formularios y Inputs Modernos */
         .form-card {
             background-color: var(--card-bg);
-            border: 1px solid rgba(223, 194, 133, 0.25);
-            border-radius: 10px;
-            padding: 15px;
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 20px;
             margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
         }
 
         .form-card h2 {
-            font-size: 0.95rem;
+            font-size: 1rem;
             color: var(--gold);
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 10px;
+            letter-spacing: 1.5px;
+            font-family: 'Cormorant Garamond', serif;
         }
 
         .form-group {
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
 
         label {
             display: block;
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             color: var(--text-muted);
-            margin-bottom: 3px;
+            margin-bottom: 5px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
+            font-weight: 600;
         }
 
         input, select {
             width: 100%;
-            padding: 10px;
-            background-color: #1a1a1a;
-            border: 1px solid #333;
-            border-radius: 6px;
+            padding: 12px;
+            background-color: #0b0b0b;
+            border: 1px solid #222;
+            border-radius: 8px;
             color: var(--text-main);
             font-size: 0.9rem;
+            transition: border-color 0.2s;
         }
 
         input:focus, select:focus {
             outline: none;
             border-color: var(--gold);
+            box-shadow: 0 0 10px rgba(223, 194, 133, 0.15);
         }
 
         .btn-submit {
-            background: linear-gradient(135deg, #dfc285, #c5a059);
+            background: linear-gradient(135deg, var(--gold), #b89751);
             color: #000;
             border: none;
             width: 100%;
-            padding: 12px;
-            font-weight: bold;
-            border-radius: 6px;
+            padding: 14px;
+            font-weight: 700;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(223, 194, 133, 0.3);
+            transition: opacity 0.2s;
+        }
+
+        .btn-submit:hover {
+            opacity: 0.9;
         }
 
         .btn-reset {
             background: transparent;
             color: var(--text-muted);
-            border: 1px solid #444;
-            padding: 8px 12px;
+            border: 1px solid #333;
+            padding: 8px 14px;
             font-size: 0.7rem;
             border-radius: 6px;
             cursor: pointer;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 12px;
+            transition: all 0.2s;
         }
 
-        /* Listado en Tarjetas (Mobile Friendly) */
+        .btn-reset:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        /* Listado de Anunciantes / Fichas */
         .cards-container {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
         .modelo-card {
             background-color: var(--card-bg);
-            border: 1px solid #222;
-            border-radius: 8px;
-            padding: 12px 15px;
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 15px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-            transition: opacity 0.3s;
+            gap: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            transition: transform 0.2s;
         }
 
         .modelo-card.pagado-card {
-            opacity: 0.65;
-            border-color: #1a2e22;
+            opacity: 0.75;
+            border-color: rgba(0, 230, 118, 0.2);
+            background: linear-gradient(145deg, #121212, #0d120f);
         }
 
         .modelo-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #1f1f1f;
-            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 10px;
         }
 
         .modelo-nombre-box {
             display: flex;
             align-items: center;
-            gap: 8px;
-        }
-
-        .modelo-nombre {
-            font-size: 0.95rem;
-            font-weight: bold;
-            color: var(--text-main);
-        }
-
-        .modelo-zona-cat {
-            font-size: 0.75rem;
-            color: var(--gold);
-        }
-
-        .modelo-body {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.85rem;
             gap: 10px;
         }
 
-        .status-badge {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            font-weight: 600;
+        .modelo-nombre {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+
+        .modelo-zona-cat {
+            font-size: 0.72rem;
+            color: var(--gold);
             text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+
+        .modelo-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .status-activo {
             background-color: var(--success-bg);
             color: var(--success);
-            border: 1px solid rgba(46, 204, 113, 0.3);
+            border: 1px solid rgba(0, 230, 118, 0.3);
         }
 
         .status-vencido {
             background-color: var(--danger-bg);
             color: var(--danger);
-            border: 1px solid rgba(231, 76, 60, 0.3);
+            border: 1px solid rgba(255, 77, 77, 0.3);
         }
 
         .monto-input {
-            background: #1a1a1a;
-            border: 1px solid #333;
+            background: #090909;
+            border: 1px solid #222;
             color: var(--success);
-            font-weight: bold;
-            padding: 5px 8px;
-            border-radius: 4px;
+            font-weight: 700;
+            padding: 8px;
+            border-radius: 6px;
             font-size: 0.9rem;
-            width: 100px;
+            width: 100%;
             text-align: right;
         }
 
         .btn-check {
-            background: none;
-            border: 1px solid #444;
+            background: #1a1a1a;
+            border: 1px solid #333;
             color: var(--text-muted);
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 1.1rem;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.2s;
         }
 
         .btn-check.pagado {
             background-color: var(--success-bg);
             color: var(--success);
             border-color: var(--success);
+            box-shadow: 0 0 12px rgba(0, 230, 118, 0.4);
         }
 
         .modelo-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             color: var(--text-muted);
-            border-top: 1px solid #1f1f1f;
-            padding-top: 6px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 8px;
         }
 
         .fecha-input {
-            background: #1a1a1a;
-            border: 1px solid #333;
+            background: #090909;
+            border: 1px solid #222;
             color: #fff;
-            padding: 5px 8px;
-            border-radius: 4px;
-            font-size: 0.85rem;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            width: 100%;
+        }
+
+        .actions-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-accion-card {
+            background: rgba(223, 194, 133, 0.1);
+            border: 1px solid var(--card-border);
+            color: var(--gold);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: background 0.2s;
+        }
+
+        .btn-accion-card:hover {
+            background: rgba(223, 194, 133, 0.2);
         }
 
         .btn-delete {
-            background: none;
-            border: none;
+            background: rgba(255, 77, 77, 0.1);
+            border: 1px solid rgba(255, 77, 77, 0.3);
             color: var(--danger);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        /* Modal Flotante para Editar Ficha Completa */
+        #modalEditar {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--gold);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 450px;
+            padding: 25px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.9);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-content h3 {
+            color: var(--gold);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-cancelar {
+            background: #222;
+            color: #fff;
+            border: 1px solid #444;
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
         }
 
         .empty-state {
             text-align: center;
-            padding: 20px;
+            padding: 30px;
             color: var(--text-muted);
             font-style: italic;
+            font-size: 0.85rem;
         }
     </style>
 </head>
@@ -463,14 +586,14 @@
     <!-- Pantalla de Login -->
     <div id="loginOverlay">
         <div class="login-card">
-            <h2>Acceso Restringido</h2>
+            <h2>Master Privé</h2>
             <form id="loginForm">
                 <div class="form-group" style="text-align: left;">
-                    <label for="passwordInput">Contraseña de Administrador</label>
-                    <input type="password" id="passwordInput" placeholder="Ingresá tu clave" required>
+                    <label for="passwordInput">Contraseña de Acceso</label>
+                    <input type="password" id="passwordInput" placeholder="••••••" required>
                 </div>
-                <button type="submit" class="btn-submit">Ingresar</button>
-                <div class="error-msg" id="errorMsg" style="color:var(--danger); font-size:0.75rem; margin-top:8px; display:none;">Contraseña incorrecta</div>
+                <button type="submit" class="btn-submit">Ingresar al Sistema</button>
+                <div class="error-msg" id="errorMsg" style="color:var(--danger); font-size:0.75rem; margin-top:10px; display:none;">Contraseña incorrecta</div>
             </form>
         </div>
     </div>
@@ -478,15 +601,15 @@
     <!-- Contenido Principal -->
     <div class="container main-content" id="mainContent">
         <header>
-            <h1>Panel General Privé</h1>
+            <h1>Master Panel Privé</h1>
             <a href="admin.html" class="back-link">&larr; Menú Principal</a>
         </header>
 
-        <!-- Navegación por Pestañas Móviles -->
+        <!-- Navegación por Pestañas -->
         <div class="nav-tabs">
-            <button class="tab-btn active" onclick="cambiarTab('cajaTab', this)">📊 Caja & Finanzas</button>
-            <button class="tab-btn" onclick="cambiarTab('anunciantesTab', this)">👥 Anunciantes</button>
-            <button class="tab-btn" onclick="cambiarTab('nuevoTab', this)">➕ Nuevo Perfil</button>
+            <button class="tab-btn active" onclick="cambiarTab('cajaTab', this)">📊 Caja</button>
+            <button class="tab-btn" onclick="cambiarTab('anunciantesTab', this)">👥 Fichas</button>
+            <button class="tab-btn" onclick="cambiarTab('nuevoTab', this)">➕ Registrar</button>
         </div>
 
         <!-- PESTAÑA 1: CAJA & FINANZAS -->
@@ -510,17 +633,17 @@
 
             <div class="historial-box">
                 <button class="historial-toggle" onclick="toggleHistorial()">
-                    <span>📊 Ver Desglose Anual por Meses</span>
+                    <span>📊 Desglose Anual por Meses</span>
                     <span id="flechaHistorial">▼</span>
                 </button>
                 <div class="historial-content" id="historialContent"></div>
             </div>
         </div>
 
-        <!-- PESTAÑA 2: ANUNCIANTES & VENCIMIENTOS -->
+        <!-- PESTAÑA 2: ANUNCIANTES & EDICIÓN DE FICHAS -->
         <div id="anunciantesTab" class="panel-section">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <h2 style="font-size:0.95rem; color: var(--gold); text-transform: uppercase; letter-spacing:1px;">Listado General</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h2 style="font-size:0.9rem; color: var(--gold); text-transform: uppercase; letter-spacing:1px;">Gestión de Fichas</h2>
                 <button class="btn-reset" onclick="restaurarDatosExcel()">Restaurar Originales</button>
             </div>
             <div class="cards-container" id="tarjetasContainer"></div>
@@ -529,40 +652,76 @@
         <!-- PESTAÑA 3: REGISTRAR NUEVO PERFIL -->
         <div id="nuevoTab" class="panel-section">
             <div class="form-card">
-                <h2>Registrar Nuevo Perfil</h2>
+                <h2>Nuevo Registro</h2>
                 <form id="cajaForm">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="nombre">Nombre de la Modelo</label>
-                            <input type="text" id="nombre" placeholder="Ej: Jennyfer" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="zona">Barrio / Zona</label>
-                            <input type="text" id="zona" placeholder="Ej: Tribunales" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="categoria">Categoría</label>
-                            <select id="categoria" required>
-                                <option value="TERAPEUTICAS">Terapéuticas ($50k)</option>
-                                <option value="SENSUALES">Sensuales ($70k)</option>
-                                <option value="FANTASIAS">Fantasías ($100k)</option>
-                                <option value="MASCULINOS">Masculinos ($50k)</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="monto">Monto Pagado ($)</label>
-                            <input type="number" id="monto" placeholder="Ej: 50000" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="vencimiento">Fecha de Vencimiento</label>
-                            <input type="date" id="vencimiento" required>
-                        </div>
+                    <div class="form-group">
+                        <label for="nombre">Nombre de la Modelo</label>
+                        <input type="text" id="nombre" placeholder="Ej: Jennyfer" required>
                     </div>
-                    <button type="submit" class="btn-submit">Guardar y Registrar</button>
+                    <div class="form-group">
+                        <label for="zona">Barrio / Zona</label>
+                        <input type="text" id="zona" placeholder="Ej: Tribunales" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="categoria">Categoría</label>
+                        <select id="categoria" required>
+                            <option value="TERAPEUTICAS">Terapéuticas ($50k)</option>
+                            <option value="SENSUALES">Sensuales ($70k)</option>
+                            <option value="FANTASIAS">Fantasías ($100k)</option>
+                            <option value="MASCULINOS">Masculinos ($50k)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="monto">Monto Pagado ($)</label>
+                        <input type="number" id="monto" placeholder="50000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="vencimiento">Fecha de Vencimiento</label>
+                        <input type="date" id="vencimiento" required>
+                    </div>
+                    <button type="submit" class="btn-submit">Guardar Registro</button>
                 </form>
             </div>
         </div>
+    </div>
 
+    <!-- MODAL DE EDICIÓN DE FICHA -->
+    <div id="modalEditar">
+        <div class="modal-content">
+            <h3 id="modalTitulo">Editar Ficha</h3>
+            <form id="formEditarFicha">
+                <input type="hidden" id="editIndex">
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="text" id="editNombre" required>
+                </div>
+                <div class="form-group">
+                    <label>Zona / Barrio</label>
+                    <input type="text" id="editZona" required>
+                </div>
+                <div class="form-group">
+                    <label>Categoría</label>
+                    <select id="editCategoria">
+                        <option value="TERAPEUTICAS">Terapéuticas</option>
+                        <option value="SENSUALES">Sensuales</option>
+                        <option value="FANTASIAS">Fantasías</option>
+                        <option value="MASCULINOS">Masculinos</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Monto Actual ($)</label>
+                    <input type="number" id="editMonto">
+                </div>
+                <div class="form-group">
+                    <label>Fecha de Vencimiento</label>
+                    <input type="date" id="editVencimiento">
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-cancelar" onclick="cerrarModalEditar()">Cancelar</button>
+                    <button type="submit" class="btn-submit" style="margin-top:0;">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <script>
@@ -574,7 +733,7 @@
         const mainContent = document.getElementById('mainContent');
         const errorMsg = document.getElementById('errorMsg');
 
-        if (sessionStorage.getItem('prive_panel_total_auth') === 'true') {
+        if (sessionStorage.getItem('master_panel_auth') === 'true') {
             loginOverlay.style.display = 'none';
             mainContent.style.display = 'block';
         }
@@ -582,7 +741,7 @@
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
             if (passwordInput.value === CLASE_PASSWORD) {
-                sessionStorage.setItem('prive_panel_total_auth', 'true');
+                sessionStorage.setItem('master_panel_auth', 'true');
                 loginOverlay.style.display = 'none';
                 mainContent.style.display = 'block';
             } else {
@@ -591,7 +750,6 @@
             }
         });
 
-        // Cambiar entre pestañas
         window.cambiarTab = function(tabId, btnElement) {
             document.querySelectorAll('.panel-section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -715,7 +873,9 @@
                 return new Date(a.vencimiento + 'T00:00:00') - new Date(b.vencimiento + 'T00:00:00');
             });
 
-            registrosOrdenados.forEach((reg) => {
+            registrosOrdenados.forEach((reg, indexOriginal) => {
+                // Buscamos el índice real en el array original
+                const realIndex = registros.findIndex(r => r.nombre === reg.nombre);
                 const fechaVen = new Date(reg.vencimiento + 'T00:00:00');
                 const estaVencidoPorFecha = fechaVen < hoy;
                 const estaAlDia = reg.pagado || !estaVencidoPorFecha;
@@ -732,7 +892,7 @@
                 card.innerHTML = `
                     <div class="modelo-header">
                         <div class="modelo-nombre-box">
-                            <button class="${btnCheckClass}" onclick="togglePagado('${reg.nombre.replace(/'/g, "\\'")}')" title="Marcar como pagado">✓</button>
+                            <button class="${btnCheckClass}" onclick="togglePagado(${realIndex})" title="Marcar como pagado">✓</button>
                             <div>
                                 <div class="modelo-nombre">${reg.nombre}</div>
                                 <div class="modelo-zona-cat">${reg.zona} • <span style="color:#dfc285;">${reg.categoria}</span></div>
@@ -742,58 +902,80 @@
                     </div>
                     <div class="modelo-body">
                         <div>
-                            <span style="font-size:0.7rem; color:#888; display:block; margin-bottom:2px;">VENCIMIENTO</span>
-                            <input type="date" value="${reg.vencimiento}" data-nombre="${reg.nombre.replace(/'/g, "\\'")}" class="fecha-input fecha-editable">
+                            <span style="font-size:0.65rem; color:#888; display:block; margin-bottom:2px;">VENCIMIENTO</span>
+                            <input type="date" value="${reg.vencimiento}" onchange="actualizarFecha(${realIndex}, this.value)" class="fecha-input">
                         </div>
-                        <div style="text-align: right;">
-                            <span style="font-size:0.7rem; color:#888; display:block; margin-bottom:2px;">MONTO ($)</span>
-                            <input type="number" value="${reg.monto || 0}" data-nombre-monto="${reg.nombre.replace(/'/g, "\\'")}" class="monto-input monto-editable">
+                        <div>
+                            <span style="font-size:0.65rem; color:#888; display:block; margin-bottom:2px;">MONTO ($)</span>
+                            <input type="number" value="${reg.monto || 0}" onchange="actualizarMonto(${realIndex}, this.value)" class="monto-input">
                         </div>
                     </div>
                     <div class="modelo-footer">
-                        <span>Perfil</span>
-                        <button class="btn-delete" onclick="eliminarRegistro('${reg.nombre.replace(/'/g, "\\'")}')">Eliminar</button>
+                        <div class="actions-row">
+                            <button class="btn-accion-card" onclick="abrirModalEditar(${realIndex})">✏️ Editar Ficha</button>
+                        </div>
+                        <button class="btn-delete" onclick="eliminarRegistro(${realIndex})">Eliminar</button>
                     </div>
                 `;
                 tarjetasContainer.appendChild(card);
             });
-
-            document.querySelectorAll('.fecha-editable').forEach(input => {
-                input.addEventListener('change', (e) => {
-                    const nombreReg = e.target.getAttribute('data-nombre');
-                    const idx = registros.findIndex(r => r.nombre === nombreReg);
-                    if (idx !== -1) {
-                        registros[idx].vencimiento = e.target.value;
-                        localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
-                        renderizarPanel();
-                    }
-                });
-            });
-
-            document.querySelectorAll('.monto-editable').forEach(input => {
-                input.addEventListener('change', (e) => {
-                    const nombreReg = e.target.getAttribute('data-nombre-monto');
-                    const idx = registros.findIndex(r => r.nombre === nombreReg);
-                    if (idx !== -1) {
-                        const nuevoMonto = parseFloat(e.target.value) || 0;
-                        registros[idx].monto = nuevoMonto;
-                        
-                        if (registros[idx].pagado && registros[idx].fechaPago) {
-                            const histIdx = historialPagos.findIndex(p => p.nombre === nombreReg && p.fecha === registros[idx].fechaPago);
-                            if (histIdx !== -1) {
-                                historialPagos[histIdx].monto = nuevoMonto;
-                            } else {
-                                historialPagos.push({ fecha: registros[idx].fechaPago, nombre: nombreReg, monto: nuevoMonto });
-                            }
-                            localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
-                        }
-
-                        localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
-                        renderizarPanel();
-                    }
-                });
-            });
         }
+
+        window.actualizarFecha = function(index, nuevaFecha) {
+            registros[index].vencimiento = nuevaFecha;
+            localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
+            renderizarPanel();
+        };
+
+        window.actualizarMonto = function(index, nuevoMontoStr) {
+            const nuevoMonto = parseFloat(nuevoMontoStr) || 0;
+            const reg = registros[index];
+            reg.monto = nuevoMonto;
+            
+            if (reg.pagado && reg.fechaPago) {
+                const histIdx = historialPagos.findIndex(p => p.nombre === reg.nombre && p.fecha === reg.fechaPago);
+                if (histIdx !== -1) {
+                    historialPagos[histIdx].monto = nuevoMonto;
+                } else {
+                    historialPagos.push({ fecha: reg.fechaPago, nombre: reg.nombre, monto: nuevoMonto });
+                }
+                localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
+            }
+
+            localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
+            renderizarPanel();
+        };
+
+        // FUNCIONES DE EDICIÓN MEDIANTE MODAL
+        window.abrirModalEditar = function(index) {
+            const reg = registros[index];
+            document.getElementById('editIndex').value = index;
+            document.getElementById('editNombre').value = reg.nombre;
+            document.getElementById('editZona').value = reg.zona;
+            document.getElementById('editCategoria').value = reg.categoria;
+            document.getElementById('editMonto').value = reg.monto;
+            document.getElementById('editVencimiento').value = reg.vencimiento;
+            document.getElementById('modalEditar').style.display = 'flex';
+        };
+
+        window.cerrarModalEditar = function() {
+            document.getElementById('modalEditar').style.display = 'none';
+        };
+
+        document.getElementById('formEditarFicha').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const index = parseInt(document.getElementById('editIndex').value);
+            
+            registros[index].nombre = document.getElementById('editNombre').value.trim().toUpperCase();
+            registros[index].zona = document.getElementById('editZona').value.trim().toUpperCase();
+            registros[index].categoria = document.getElementById('editCategoria').value;
+            registros[index].monto = parseFloat(document.getElementById('editMonto').value) || 0;
+            registros[index].vencimiento = document.getElementById('editVencimiento').value;
+
+            localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
+            cerrarModalEditar();
+            renderizarPanel();
+        });
 
         function renderizarHistorialAnual() {
             historialContent.innerHTML = '';
@@ -885,51 +1067,48 @@
             selectCat.dispatchEvent(new Event('change'));
             document.getElementById('vencimiento').valueAsDate = new Date();
             
-            // Redirigir a la pestaña de anunciantes para ver el resultado
             document.querySelectorAll('.tab-btn')[1].click();
             renderizarPanel();
         });
 
-        window.togglePagado = function(nombreReg) {
-            const idx = registros.findIndex(r => r.nombre === nombreReg);
-            if (idx === -1) return;
-
-            const estadoAnterior = registros[idx].pagado;
-            registros[idx].pagado = !estadoAnterior;
+        window.togglePagado = function(index) {
+            const reg = registros[index];
+            reg.pagado = !reg.pagado;
             const hoyStr = new Date().toISOString().split('T')[0];
             
-            if (registros[idx].pagado) {
-                registros[idx].fechaPago = hoyStr;
-                const montoActual = Number(registros[idx].monto || 0);
+            if (reg.pagado) {
+                reg.fechaPago = hoyStr;
+                const montoActual = Number(reg.monto || 0);
                 if (montoActual > 0) {
-                    historialPagos.push({ fecha: hoyStr, nombre: registros[idx].nombre, monto: montoActual });
+                    historialPagos.push({ fecha: hoyStr, nombre: reg.nombre, monto: montoActual });
                     localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
                 }
 
-                let partesFecha = registros[idx].vencimiento.split('-');
+                let partesFecha = reg.vencimiento.split('-');
                 let fechaVen = new Date(partesFecha[0], partesFecha[1] - 1, partesFecha[2]);
                 fechaVen.setDate(fechaVen.getDate() + 30);
                 
                 let anio = fechaVen.getFullYear();
                 let mes = String(fechaVen.getMonth() + 1).padStart(2, '0');
                 let dia = String(fechaVen.getDate()).padStart(2, '0');
-                registros[idx].vencimiento = `${anio}-${mes}-${dia}`;
+                reg.vencimiento = `${anio}-${mes}-${dia}`;
             } else {
-                const histIdx = historialPagos.map(p => p.nombre).lastIndexOf(registros[idx].nombre);
+                const histIdx = historialPagos.map(p => p.nombre).lastIndexOf(reg.nombre);
                 if (histIdx !== -1) {
                     historialPagos.splice(histIdx, 1);
                     localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
                 }
-                registros[idx].fechaPago = "";
+                reg.fechaPago = "";
             }
 
             localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
             renderizarPanel();
         };
 
-        window.eliminarRegistro = function(nombreReg) {
-            if (confirm(`¿Estás seguro de eliminar el registro de ${nombreReg}?`)) {
-                registros = registros.filter(r => r.nombre !== nombreReg);
+        window.eliminarRegistro = function(index) {
+            const reg = registros[index];
+            if (confirm(`¿Estás seguro de eliminar el registro de ${reg.nombre}?`)) {
+                registros.splice(index, 1);
                 localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
                 renderizarPanel();
             }
