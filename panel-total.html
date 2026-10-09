@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel General Todo en Uno - Masajistas Privé</title>
+    <style>
+        :root {
+            --bg-color: #0b0b0b;
+            --card-bg: #141414;
+            --gold: #dfc285;
+            --gold-light: #f3e5ab;
+            --text-main: #f5f5f5;
+            --text-muted: #aaaaaa;
+            --danger: #e74c3c;
+            --success: #2ecc71;
+            --danger-bg: rgba(231, 76, 60, 0.15);
+            --success-bg: rgba(46, 204, 113, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 12px;
+            padding-bottom: 70px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Pantalla de Login */
+        #loginOverlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--bg-color);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 1000;
+        }
+
+        .login-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--gold);
+            border-radius: 12px;
+            padding: 25px;
+            width: 90%;
+            max-width: 360px;
+            text-align: center;
+            box-shadow: 0 4px 25px rgba(223, 194, 133, 0.15);
+        }
+
+        .login-card h2 {
+            color: var(--gold);
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .main-content {
+            display: none;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(223, 194, 133, 0.2);
+            padding-bottom: 12px;
+        }
+
+        h1 {
+            color: var(--gold);
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .back-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.8rem;
+        }
+
+        .back-link:hover {
+            color: var(--gold);
+        }
+
+        /* Navegación por pestañas móvil */
+        .nav-tabs {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            margin-bottom: 15px;
+        }
+
+        .tab-btn {
+            background: #141414;
+            border: 1px solid #333;
+            color: var(--text-muted);
+            padding: 10px 4px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: rgba(223, 194, 133, 0.15);
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        /* Secciones del Panel */
+        .panel-section {
+            display: none;
+        }
+
+        .panel-section.active {
+            display: block;
+        }
+
+        /* Tarjetas de Resumen Grid */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .card-summary {
+            background: linear-gradient(135deg, #1a1a1a, #111);
+            border: 1px solid var(--gold);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+        }
+
+        .card-summary.total-historico {
+            grid-column: 1 / -1;
+            border-color: var(--success);
+            background: linear-gradient(135deg, #112217, #0d1a11);
+        }
+
+        .summary-title {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .summary-amount {
+            font-size: 1.5rem;
+            color: var(--gold-light);
+            font-weight: bold;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .card-summary.total-historico .summary-amount {
+            color: var(--success);
+            font-size: 1.8rem;
+        }
+
+        .btn-corregir {
+            background: rgba(231, 76, 60, 0.15);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            width: 100%;
+            padding: 9px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        /* Acordeón de Historial Anual */
+        .historial-box {
+            background-color: var(--card-bg);
+            border: 1px solid #222;
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+        }
+
+        .historial-toggle {
+            background: none;
+            border: none;
+            color: var(--gold);
+            width: 100%;
+            text-align: left;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .historial-content {
+            display: none;
+            margin-top: 10px;
+            border-top: 1px solid #1f1f1f;
+            padding-top: 10px;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+
+        .mes-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            padding: 5px 0;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        /* Formulario de Carga */
+        .form-card {
+            background-color: var(--card-bg);
+            border: 1px solid rgba(223, 194, 133, 0.25);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-card h2 {
+            font-size: 0.95rem;
+            color: var(--gold);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 8px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 3px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: var(--text-main);
+            font-size: 0.9rem;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #dfc285, #c5a059);
+            color: #000;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+
+        .btn-reset {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid #444;
+            padding: 8px 12px;
+            font-size: 0.7rem;
+            border-radius: 6px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        /* Listado en Tarjetas (Mobile Friendly) */
+        .cards-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .modelo-card {
+            background-color: var(--card-bg);
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 12px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            transition: opacity 0.3s;
+        }
+
+        .modelo-card.pagado-card {
+            opacity: 0.65;
+            border-color: #1a2e22;
+        }
+
+        .modelo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #1f1f1f;
+            padding-bottom: 8px;
+        }
+
+        .modelo-nombre-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modelo-nombre {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--text-main);
+        }
+
+        .modelo-zona-cat {
+            font-size: 0.75rem;
+            color: var(--gold);
+        }
+
+        .modelo-body {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            gap: 10px;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-activo {
+            background-color: var(--success-bg);
+            color: var(--success);
+            border: 1px solid rgba(46, 204, 113, 0.3);
+        }
+
+        .status-vencido {
+            background-color: var(--danger-bg);
+            color: var(--danger);
+            border: 1px solid rgba(231, 76, 60, 0.3);
+        }
+
+        .monto-input {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: var(--success);
+            font-weight: bold;
+            padding: 5px 8px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            width: 100px;
+            text-align: right;
+        }
+
+        .btn-check {
+            background: none;
+            border: 1px solid #444;
+            color: var(--text-muted);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-check.pagado {
+            background-color: var(--success-bg);
+            color: var(--success);
+            border-color: var(--success);
+        }
+
+        .modelo-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            border-top: 1px solid #1f1f1f;
+            padding-top: 6px;
+        }
+
+        .fecha-input {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 5px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        .btn-delete {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Pantalla de Login -->
+    <div id="loginOverlay">
+        <div class="login-card">
+            <h2>Acceso Restringido</h2>
+            <form id="loginForm">
+                <div class="form-group" style="text-align: left;">
+                    <label for="passwordInput">Contraseña de Administrador</label>
+                    <input type="password" id="passwordInput" placeholder="Ingresá tu clave" required>
+                </div>
+                <button type="submit" class="btn-submit">Ingresar</button>
+                <div class="error-msg" id="errorMsg" style="color:var(--danger); font-size:0.75rem; margin-top:8px; display:none;">Contraseña incorrecta</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Contenido Principal -->
+    <div class="container main-content" id="mainContent">
+        <header>
+            <h1>Panel General Privé</h1>
+            <a href="admin.html" class="back-link">&larr; Menú Principal</a>
+        </header>
+
+        <!-- Navegación por Pestañas Móviles -->
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="cambiarTab('cajaTab', this)">📊 Caja & Finanzas</button>
+            <button class="tab-btn" onclick="cambiarTab('anunciantesTab', this)">👥 Anunciantes</button>
+            <button class="tab-btn" onclick="cambiarTab('nuevoTab', this)">➕ Nuevo Perfil</button>
+        </div>
+
+        <!-- PESTAÑA 1: CAJA & FINANZAS -->
+        <div id="cajaTab" class="panel-section active">
+            <div class="summary-grid">
+                <div class="card-summary">
+                    <div class="summary-title" id="tituloMesActual">Mes Actual</div>
+                    <div class="summary-amount" id="totalMesActual">$0</div>
+                </div>
+                <div class="card-summary">
+                    <div class="summary-title" id="tituloMesAnterior">Mes Anterior</div>
+                    <div class="summary-amount" id="totalMesAnterior">$0</div>
+                </div>
+                <div class="card-summary total-historico">
+                    <div class="summary-title">Importe Total Ingresado (Histórico)</div>
+                    <div class="summary-amount" id="totalHistorico">$0</div>
+                </div>
+            </div>
+
+            <button class="btn-corregir" onclick="deshacerUltimoPago()">↩️ Corregir último pago (Restar)</button>
+
+            <div class="historial-box">
+                <button class="historial-toggle" onclick="toggleHistorial()">
+                    <span>📊 Ver Desglose Anual por Meses</span>
+                    <span id="flechaHistorial">▼</span>
+                </button>
+                <div class="historial-content" id="historialContent"></div>
+            </div>
+        </div>
+
+        <!-- PESTAÑA 2: ANUNCIANTES & VENCIMIENTOS -->
+        <div id="anunciantesTab" class="panel-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h2 style="font-size:0.95rem; color: var(--gold); text-transform: uppercase; letter-spacing:1px;">Listado General</h2>
+                <button class="btn-reset" onclick="restaurarDatosExcel()">Restaurar Originales</button>
+            </div>
+            <div class="cards-container" id="tarjetasContainer"></div>
+        </div>
+
+        <!-- PESTAÑA 3: REGISTRAR NUEVO PERFIL -->
+        <div id="nuevoTab" class="panel-section">
+            <div class="form-card">
+                <h2>Registrar Nuevo Perfil</h2>
+                <form id="cajaForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nombre">Nombre de la Modelo</label>
+                            <input type="text" id="nombre" placeholder="Ej: Jennyfer" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="zona">Barrio / Zona</label>
+                            <input type="text" id="zona" placeholder="Ej: Tribunales" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="categoria">Categoría</label>
+                            <select id="categoria" required>
+                                <option value="TERAPEUTICAS">Terapéuticas ($50k)</option>
+                                <option value="SENSUALES">Sensuales ($70k)</option>
+                                <option value="FANTASIAS">Fantasías ($100k)</option>
+                                <option value="MASCULINOS">Masculinos ($50k)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="monto">Monto Pagado ($)</label>
+                            <input type="number" id="monto" placeholder="Ej: 50000" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="vencimiento">Fecha de Vencimiento</label>
+                            <input type="date" id="vencimiento" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit">Guardar y Registrar</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const CLASE_PASSWORD = "081101";
+
+        const loginForm = document.getElementById('loginForm');
+        const passwordInput = document.getElementById('passwordInput');
+        const loginOverlay = document.getElementById('loginOverlay');
+        const mainContent = document.getElementById('mainContent');
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (sessionStorage.getItem('prive_panel_total_auth') === 'true') {
+            loginOverlay.style.display = 'none';
+            mainContent.style.display = 'block';
+        }
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (passwordInput.value === CLASE_PASSWORD) {
+                sessionStorage.setItem('prive_panel_total_auth', 'true');
+                loginOverlay.style.display = 'none';
+                mainContent.style.display = 'block';
+            } else {
+                errorMsg.style.display = 'block';
+                passwordInput.value = '';
+            }
+        });
+
+        // Cambiar entre pestañas
+        window.cambiarTab = function(tabId, btnElement) {
+            document.querySelectorAll('.panel-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btnElement.classList.add('active');
+        };
+
+        const datosInicialesExcel = [
+            { vencimiento: "2026-11-01", monto: 50000, nombre: "PRADA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-10-01" },
+            { vencimiento: "2026-11-01", monto: 50000, nombre: "LUPITA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-10-01" },
+            { vencimiento: "2026-10-01", monto: 0, nombre: "JENNYFER", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: false, fechaPago: "" },
+            { vencimiento: "2026-10-01", monto: 0, nombre: "DEBY", zona: "CABALLITO", categoria: "SENSUALES", pagado: false, fechaPago: "" },
+            { vencimiento: "2026-10-15", monto: 0, nombre: "PAMELA", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: false, fechaPago: "" },
+            { vencimiento: "2026-10-02", monto: 0, nombre: "SOL", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: false, fechaPago: "" },
+            { vencimiento: "2026-10-01", monto: 0, nombre: "MATIAS", zona: "RECOLETA", categoria: "MASCULINOS", pagado: false, fechaPago: "" },
+            { vencimiento: "2026-10-02", monto: 0, nombre: "DANIELA", zona: "MICROCENTRO", categoria: "TERAPEUTICAS", pagado: false, fechaPago: "" },
+            { vencimiento: "2026-10-02", monto: 0, nombre: "ZARIA", zona: "CABALLITO", categoria: "TERAPEUTICAS", pagado: false, fechaPago: "" },
+            { vencimiento: "2026-10-03", monto: 0, nombre: "DONATELLA", zona: "CABA", categoria: "SENSUALES", pagado: false, fechaPago: "" },
+            { vencimiento: "2026-10-04", monto: 0, nombre: "MARIELA", zona: "CONGRESO", categoria: "TERAPEUTICAS", pagado: false, fechaPago: "" },
+            { vencimiento: "2026-10-04", monto: 0, nombre: "MIA", zona: "CONGRESO", categoria: "SENSUALES", pagado: false, fechaPago: "" },
+            { vencimiento: "2026-10-08", monto: 0, nombre: "CELESTE", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: false, fechaPago: "" },
+            { vencimiento: "2026-10-22", monto: 0, nombre: "LULY S", zona: "CABA", categoria: "SENSUALES", pagado: false, fechaPago: "" },
+            { vencimiento: "2026-10-22", monto: 0, nombre: "LULY", zona: "CABA", categoria: "TERAPEUTICAS", pagado: false, fechaPago: "" },
+            { vencimiento: "2026-10-23", monto: 50000, nombre: "MORA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-09-23" },
+            { vencimiento: "2026-10-23", monto: 50000, nombre: "MORA S", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: true, fechaPago: "2026-09-23" },
+            { vencimiento: "2026-10-26", monto: 50000, nombre: "RENATA", zona: "PTO MADERO", categoria: "SENSUALES", pagado: true, fechaPago: "2026-09-26" }
+        ];
+
+        let historialPrecargado = [
+            { fecha: "2026-09-01", nombre: "MORA", monto: 50000 },
+            { fecha: "2026-09-01", nombre: "MORA S", monto: 50000 },
+            { fecha: "2026-09-01", nombre: "RENATA", monto: 50000 },
+            { fecha: "2026-10-02", nombre: "PRADA", monto: 50000 },
+            { fecha: "2026-10-02", nombre: "LUPITA", monto: 50000 }
+        ];
+
+        if (!localStorage.getItem('prive_control_modelos')) {
+            localStorage.setItem('prive_control_modelos', JSON.stringify(datosInicialesExcel));
+        }
+        if (!localStorage.getItem('prive_historial_pagos')) {
+            localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPrecargado));
+        }
+
+        let registros = JSON.parse(localStorage.getItem('prive_control_modelos'));
+        let historialPagos = JSON.parse(localStorage.getItem('prive_historial_pagos'));
+
+        document.getElementById('vencimiento').valueAsDate = new Date();
+
+        const selectCat = document.getElementById('categoria');
+        const inputMonto = document.getElementById('monto');
+        
+        selectCat.addEventListener('change', () => {
+            if(selectCat.value === 'TERAPEUTICAS' || selectCat.value === 'MASCULINOS') inputMonto.value = '50000';
+            else if(selectCat.value === 'SENSUALES') inputMonto.value = '70000';
+            else if(selectCat.value === 'FANTASIAS') inputMonto.value = '100000';
+        });
+        selectCat.dispatchEvent(new Event('change'));
+
+        const form = document.getElementById('cajaForm');
+        const tarjetasContainer = document.getElementById('tarjetasContainer');
+        const totalMesActual = document.getElementById('totalMesActual');
+        const totalMesAnterior = document.getElementById('totalMesAnterior');
+        const totalHistorico = document.getElementById('totalHistorico');
+        const tituloMesActual = document.getElementById('tituloMesActual');
+        const tituloMesAnterior = document.getElementById('tituloMesAnterior');
+        const historialContent = document.getElementById('historialContent');
+
+        function renderizarPanel() {
+            tarjetasContainer.innerHTML = '';
+            const hoy = new Date();
+            hoy.setHours(0,0,0,0);
+
+            const nombresMeses = {
+                "01": "Enero", "02": "Febrero", "03": "Marzo", "04": "Abril",
+                "05": "Mayo", "06": "Junio", "07": "Julio", "08": "Agosto",
+                "09": "Septiembre", "10": "Octubre", "11": "Noviembre", "12": "Diciembre"
+            };
+
+            const anioActual = hoy.getFullYear();
+            const mesNumActual = String(hoy.getMonth() + 1).padStart(2, '0');
+            const mesActualKey = `${anioActual}-${mesNumActual}`;
+
+            let fechaAnterior = new Date(hoy.getFullYear(), hoy.getMonth() - 1, 1);
+            const anioAnt = fechaAnterior.getFullYear();
+            const mesNumAnt = String(fechaAnterior.getMonth() + 1).padStart(2, '0');
+            const mesAnteriorKey = `${anioAnt}-${mesNumAnt}`;
+
+            tituloMesActual.textContent = `${nombresMeses[mesNumActual]} ${anioActual}`;
+            tituloMesAnterior.textContent = `${nombresMeses[mesNumAnt]} ${anioAnt}`;
+
+            let sumaMesActual = 0;
+            let sumaMesAnterior = 0;
+            let sumaHistorico = 0;
+
+            historialPagos.forEach(p => {
+                if (!p.fecha) return;
+                const montoNum = Number(p.monto || 0);
+                sumaHistorico += montoNum;
+
+                if (p.fecha.startsWith(mesActualKey)) {
+                    sumaMesActual += montoNum;
+                } else if (p.fecha.startsWith(mesAnteriorKey)) {
+                    sumaMesAnterior += montoNum;
+                }
+            });
+
+            totalMesActual.textContent = `$${sumaMesActual.toLocaleString('es-AR')}`;
+            totalMesAnterior.textContent = `$${sumaMesAnterior.toLocaleString('es-AR')}`;
+            totalHistorico.textContent = `$${sumaHistorico.toLocaleString('es-AR')}`;
+
+            renderizarHistorialAnual();
+
+            if (registros.length === 0) {
+                tarjetasContainer.innerHTML = `<div class="empty-state">No hay perfiles registrados todavía.</div>`;
+                return;
+            }
+
+            let registrosOrdenados = [...registros];
+            registrosOrdenados.sort((a, b) => {
+                if (a.pagado !== b.pagado) return a.pagado ? 1 : -1;
+                return new Date(a.vencimiento + 'T00:00:00') - new Date(b.vencimiento + 'T00:00:00');
+            });
+
+            registrosOrdenados.forEach((reg) => {
+                const fechaVen = new Date(reg.vencimiento + 'T00:00:00');
+                const estaVencidoPorFecha = fechaVen < hoy;
+                const estaAlDia = reg.pagado || !estaVencidoPorFecha;
+
+                const badgeHtml = estaAlDia 
+                    ? `<span class="status-badge status-activo">✓ Al Día</span>` 
+                    : `<span class="status-badge status-vencido">⚠️ Vencido</span>`;
+
+                const btnCheckClass = reg.pagado ? 'btn-check pagado' : 'btn-check';
+                const cardClass = reg.pagado ? 'modelo-card pagado-card' : 'modelo-card';
+
+                const card = document.createElement('div');
+                card.className = cardClass;
+                card.innerHTML = `
+                    <div class="modelo-header">
+                        <div class="modelo-nombre-box">
+                            <button class="${btnCheckClass}" onclick="togglePagado('${reg.nombre.replace(/'/g, "\\'")}')" title="Marcar como pagado">✓</button>
+                            <div>
+                                <div class="modelo-nombre">${reg.nombre}</div>
+                                <div class="modelo-zona-cat">${reg.zona} • <span style="color:#dfc285;">${reg.categoria}</span></div>
+                            </div>
+                        </div>
+                        <div>${badgeHtml}</div>
+                    </div>
+                    <div class="modelo-body">
+                        <div>
+                            <span style="font-size:0.7rem; color:#888; display:block; margin-bottom:2px;">VENCIMIENTO</span>
+                            <input type="date" value="${reg.vencimiento}" data-nombre="${reg.nombre.replace(/'/g, "\\'")}" class="fecha-input fecha-editable">
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="font-size:0.7rem; color:#888; display:block; margin-bottom:2px;">MONTO ($)</span>
+                            <input type="number" value="${reg.monto || 0}" data-nombre-monto="${reg.nombre.replace(/'/g, "\\'")}" class="monto-input monto-editable">
+                        </div>
+                    </div>
+                    <div class="modelo-footer">
+                        <span>Perfil</span>
+                        <button class="btn-delete" onclick="eliminarRegistro('${reg.nombre.replace(/'/g, "\\'")}')">Eliminar</button>
+                    </div>
+                `;
+                tarjetasContainer.appendChild(card);
+            });
+
+            document.querySelectorAll('.fecha-editable').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const nombreReg = e.target.getAttribute('data-nombre');
+                    const idx = registros.findIndex(r => r.nombre === nombreReg);
+                    if (idx !== -1) {
+                        registros[idx].vencimiento = e.target.value;
+                        localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
+                        renderizarPanel();
+                    }
+                });
+            });
+
+            document.querySelectorAll('.monto-editable').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const nombreReg = e.target.getAttribute('data-nombre-monto');
+                    const idx = registros.findIndex(r => r.nombre === nombreReg);
+                    if (idx !== -1) {
+                        const nuevoMonto = parseFloat(e.target.value) || 0;
+                        registros[idx].monto = nuevoMonto;
+                        
+                        if (registros[idx].pagado && registros[idx].fechaPago) {
+                            const histIdx = historialPagos.findIndex(p => p.nombre === nombreReg && p.fecha === registros[idx].fechaPago);
+                            if (histIdx !== -1) {
+                                historialPagos[histIdx].monto = nuevoMonto;
+                            } else {
+                                historialPagos.push({ fecha: registros[idx].fechaPago, nombre: nombreReg, monto: nuevoMonto });
+                            }
+                            localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
+                        }
+
+                        localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
+                        renderizarPanel();
+                    }
+                });
+            });
+        }
+
+        function renderizarHistorialAnual() {
+            historialContent.innerHTML = '';
+            let agrupadoMeses = {};
+
+            historialPagos.forEach(p => {
+                if (!p.fecha) return;
+                const mesAnio = p.fecha.slice(0, 7);
+                if (!agrupadoMeses[mesAnio]) agrupadoMeses[mesAnio] = 0;
+                agrupadoMeses[mesAnio] += Number(p.monto || 0);
+            });
+
+            const mesesKeys = Object.keys(agrupadoMeses).sort().reverse();
+            if (mesesKeys.length === 0) {
+                historialContent.innerHTML = `<div style="font-size:0.8rem; color:#888; text-align:center; padding:5px;">Sin pagos registrados aún.</div>`;
+                return;
+            }
+
+            const nombresMeses = {
+                "01": "Enero", "02": "Febrero", "03": "Marzo", "04": "Abril",
+                "05": "Mayo", "06": "Junio", "07": "Julio", "08": "Agosto",
+                "09": "Septiembre", "10": "Octubre", "11": "Noviembre", "12": "Diciembre"
+            };
+
+            mesesKeys.forEach(m => {
+                const [anio, mesNum] = m.split('-');
+                const nombreMesFormateado = `${nombresMeses[mesNum] || mesNum} ${anio}`;
+                const row = document.createElement('div');
+                row.className = 'mes-row';
+                row.innerHTML = `
+                    <span>${nombreMesFormateado}</span>
+                    <strong style="color:var(--success);">+$${agrupadoMeses[m].toLocaleString('es-AR')}</strong>
+                `;
+                historialContent.appendChild(row);
+            });
+        }
+
+        window.toggleHistorial = function() {
+            const content = document.getElementById('historialContent');
+            const flecha = document.getElementById('flechaHistorial');
+            if (content.style.display === 'block') {
+                content.style.display = 'none';
+                flecha.textContent = '▼';
+            } else {
+                content.style.display = 'block';
+                flecha.textContent = '▲';
+            }
+        };
+
+        window.deshacerUltimoPago = function() {
+            if (historialPagos.length === 0) {
+                alert("No hay pagos en el historial para deshacer.");
+                return;
+            }
+            const ultimo = historialPagos[historialPagos.length - 1];
+            if (confirm(`¿Deshacer y restar el último pago registrado de "${ultimo.nombre}" por $${Number(ultimo.monto).toLocaleString('es-AR')}?`)) {
+                historialPagos.pop();
+                localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
+                renderizarPanel();
+            }
+        };
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nombre = document.getElementById('nombre').value.trim().toUpperCase();
+            const monto = parseFloat(document.getElementById('monto').value) || 0;
+            const vencimiento = document.getElementById('vencimiento').value;
+            const hoyStr = new Date().toISOString().split('T')[0];
+
+            const nuevoReg = {
+                vencimiento,
+                monto,
+                nombre,
+                zona: document.getElementById('zona').value.trim().toUpperCase(),
+                categoria: document.getElementById('categoria').value,
+                pagado: true,
+                fechaPago: hoyStr
+            };
+
+            registros.unshift(nuevoReg);
+            localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
+
+            if (monto > 0) {
+                historialPagos.push({ fecha: hoyStr, nombre, monto });
+                localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
+            }
+
+            form.reset();
+            selectCat.dispatchEvent(new Event('change'));
+            document.getElementById('vencimiento').valueAsDate = new Date();
+            
+            // Redirigir a la pestaña de anunciantes para ver el resultado
+            document.querySelectorAll('.tab-btn')[1].click();
+            renderizarPanel();
+        });
+
+        window.togglePagado = function(nombreReg) {
+            const idx = registros.findIndex(r => r.nombre === nombreReg);
+            if (idx === -1) return;
+
+            const estadoAnterior = registros[idx].pagado;
+            registros[idx].pagado = !estadoAnterior;
+            const hoyStr = new Date().toISOString().split('T')[0];
+            
+            if (registros[idx].pagado) {
+                registros[idx].fechaPago = hoyStr;
+                const montoActual = Number(registros[idx].monto || 0);
+                if (montoActual > 0) {
+                    historialPagos.push({ fecha: hoyStr, nombre: registros[idx].nombre, monto: montoActual });
+                    localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
+                }
+
+                let partesFecha = registros[idx].vencimiento.split('-');
+                let fechaVen = new Date(partesFecha[0], partesFecha[1] - 1, partesFecha[2]);
+                fechaVen.setDate(fechaVen.getDate() + 30);
+                
+                let anio = fechaVen.getFullYear();
+                let mes = String(fechaVen.getMonth() + 1).padStart(2, '0');
+                let dia = String(fechaVen.getDate()).padStart(2, '0');
+                registros[idx].vencimiento = `${anio}-${mes}-${dia}`;
+            } else {
+                const histIdx = historialPagos.map(p => p.nombre).lastIndexOf(registros[idx].nombre);
+                if (histIdx !== -1) {
+                    historialPagos.splice(histIdx, 1);
+                    localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
+                }
+                registros[idx].fechaPago = "";
+            }
+
+            localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
+            renderizarPanel();
+        };
+
+        window.eliminarRegistro = function(nombreReg) {
+            if (confirm(`¿Estás seguro de eliminar el registro de ${nombreReg}?`)) {
+                registros = registros.filter(r => r.nombre !== nombreReg);
+                localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
+                renderizarPanel();
+            }
+        };
+
+        window.restaurarDatosExcel = function() {
+            if (confirm('¿Restaurar los datos originales de la planilla? Se perderán los cambios recientes.')) {
+                localStorage.removeItem('prive_control_modelos');
+                localStorage.removeItem('prive_historial_pagos');
+                location.reload();
+            }
+        };
+
+        renderizarPanel();
+    </script>
+</body>
+</html>
