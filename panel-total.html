@@ -286,7 +286,7 @@
         }
 
         .form-group {
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         label {
@@ -320,7 +320,7 @@
             box-shadow: 0 0 10px rgba(223, 194, 133, 0.15);
         }
 
-        /* Botón de subida de archivos personalizado */
+        /* Subida de Múltiples Fotos y Galería Ordenable */
         .file-upload-btn {
             background: #1a1a1a;
             border: 1px dashed var(--gold);
@@ -338,6 +338,63 @@
 
         .file-upload-btn:hover {
             background: rgba(223, 194, 133, 0.1);
+        }
+
+        .thumbnails-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+            min-height: 70px;
+            background: #090909;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #222;
+        }
+
+        .thumb-item {
+            position: relative;
+            width: 100%;
+            height: 70px;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid var(--card-border);
+            cursor: grab;
+            background: #000;
+        }
+
+        .thumb-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+        }
+
+        .thumb-item.dragging {
+            opacity: 0.4;
+        }
+
+        .thumb-badge {
+            position: absolute;
+            top: 2px; left: 2px;
+            background: rgba(0,0,0,0.8);
+            color: var(--gold);
+            font-size: 8px;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        .thumb-delete {
+            position: absolute;
+            top: 2px; right: 2px;
+            background: rgba(255, 77, 77, 0.8);
+            color: #fff;
+            border: none;
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            font-size: 10px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
         }
 
         /* VISTA PREVIA EN VIVO */
@@ -753,7 +810,7 @@
             <div class="cards-container" id="tarjetasContainer"></div>
         </div>
 
-        <!-- PESTAÑA 3: CREAR FICHA CON VISTA PREVIA EN VIVO Y SUBIDA DE FOTO -->
+        <!-- PESTAÑA 3: CREAR FICHA CON VISTA PREVIA Y FOTOS ORDENABLES -->
         <div id="nuevoTab" class="panel-section">
             <div class="layout-editor-grid">
                 <!-- Formulario de Creación -->
@@ -782,9 +839,11 @@
                             <input type="text" id="whatsapp" placeholder="Ej: 5491131774848">
                         </div>
                         <div class="form-group">
-                            <label>Foto Principal (Desde el Celular)</label>
-                            <label for="fileFoto" class="file-upload-btn">📁 Seleccionar Imagen de la Galería</label>
-                            <input type="file" id="fileFoto" accept="image/*" style="display: none;" onchange="procesarImagenCelular(event)">
+                            <label>Fotos (Seleccioná varias desde el celular)</label>
+                            <label for="fileFotos" class="file-upload-btn">📁 Agregar Fotos a la Galería</label>
+                            <input type="file" id="fileFotos" accept="image/*" multiple style="display: none;" onchange="procesarFotosCelular(event)">
+                            <div class="thumbnails-grid" id="thumbnailsGrid"></div>
+                            <span style="font-size:0.6rem; color:#888; display:block; margin-top:4px;">* La primera foto es la principal. Arrastrá las miniaturas para ordenar.</span>
                         </div>
                         <div class="form-group">
                             <label for="descripcion">Descripción / Perfil</label>
@@ -849,9 +908,10 @@
                     <input type="text" id="editWhatsapp">
                 </div>
                 <div class="form-group">
-                    <label>Cambiar Foto (Desde Celular)</label>
-                    <label for="editFileFoto" class="file-upload-btn">📁 Seleccionar Nueva Imagen</label>
-                    <input type="file" id="editFileFoto" accept="image/*" style="display: none;" onchange="procesarImagenEdicion(event)">
+                    <label>Fotos de la Galería</label>
+                    <label for="editFileFotos" class="file-upload-btn">📁 Agregar Más Fotos</label>
+                    <input type="file" id="editFileFotos" accept="image/*" multiple style="display: none;" onchange="procesarFotosEdicion(event)">
+                    <div class="thumbnails-grid" id="editThumbnailsGrid"></div>
                 </div>
                 <div class="form-group">
                     <label>Descripción / Perfil</label>
@@ -875,8 +935,8 @@
 
     <script>
         const CLASE_PASSWORD = "081101";
-        let fotoTemporalBase64 = "";
-        let fotoEditTemporalBase64 = "";
+        let galeriaTemporal = [];      // Array de Base64s para nuevo registro
+        let galeriaEditTemporal = [];  // Array de Base64s para edición
 
         const loginForm = document.getElementById('loginForm');
         const passwordInput = document.getElementById('passwordInput');
@@ -908,29 +968,122 @@
             btnElement.classList.add('active');
         };
 
-        // Procesar imagen seleccionada desde el celular (Creación)
-        window.procesarImagenCelular = function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                fotoTemporalBase64 = e.target.result;
-                const imgBox = document.getElementById('prevImgBox');
-                imgBox.innerHTML = `<img src="${fotoTemporalBase64}" alt="Preview"><span class="preview-badge">✓ Verificado</span>`;
-            };
-            reader.readAsDataURL(file);
+        // Procesar múltiples fotos (Creación)
+        window.procesarFotosCelular = function(event) {
+            const files = event.target.files;
+            if (!files.length) return;
+
+            let loadedCount = 0;
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    galeriaTemporal.push(e.target.result);
+                    loadedCount++;
+                    if (loadedCount === files.length) {
+                        renderizarMiniaturasNuevo();
+                        actualizarPreview();
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
         };
 
-        // Procesar imagen seleccionada desde el celular (Edición)
-        window.procesarImagenEdicion = function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                fotoEditTemporalBase64 = e.target.result;
-                alert("¡Imagen cargada con éxito para la edición!");
-            };
-            reader.readAsDataURL(file);
+        function renderizarMiniaturasNuevo() {
+            const grid = document.getElementById('thumbnailsGrid');
+            grid.innerHTML = '';
+            galeriaTemporal.forEach((foto, idx) => {
+                const div = document.createElement('div');
+                div.className = 'thumb-item';
+                div.draggable = true;
+                div.dataset.index = idx;
+                div.innerHTML = `
+                    <img src="${foto}" alt="Miniatura">
+                    <span class="thumb-badge">${idx === 0 ? 'Principal' : idx + 1}</span>
+                    <button type="button" class="thumb-delete" onclick="eliminarFotoNueva(${idx})">&times;</button>
+                `;
+
+                // Eventos de Arrastre (Drag & Drop)
+                div.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', idx);
+                    div.classList.add('dragging');
+                });
+                div.addEventListener('dragend', () => div.classList.remove('dragging'));
+                div.addEventListener('dragover', (e) => e.preventDefault());
+                div.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
+                    const toIdx = idx;
+                    const movedItem = galeriaTemporal.splice(fromIdx, 1)[0];
+                    galeriaTemporal.splice(toIdx, 0, movedItem);
+                    renderizarMiniaturasNuevo();
+                    actualizarPreview();
+                });
+
+                grid.appendChild(div);
+            });
+        }
+
+        window.eliminarFotoNueva = function(idx) {
+            galeriaTemporal.splice(idx, 1);
+            renderizarMiniaturasNuevo();
+            actualizarPreview();
+        };
+
+        // Procesar múltiples fotos (Edición)
+        window.procesarFotosEdicion = function(event) {
+            const files = event.target.files;
+            if (!files.length) return;
+
+            let loadedCount = 0;
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    galeriaEditTemporal.push(e.target.result);
+                    loadedCount++;
+                    if (loadedCount === files.length) {
+                        renderizarMiniaturasEdicion();
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
+        };
+
+        function renderizarMiniaturasEdicion() {
+            const grid = document.getElementById('editThumbnailsGrid');
+            grid.innerHTML = '';
+            galeriaEditTemporal.forEach((foto, idx) => {
+                const div = document.createElement('div');
+                div.className = 'thumb-item';
+                div.draggable = true;
+                div.dataset.index = idx;
+                div.innerHTML = `
+                    <img src="${foto}" alt="Miniatura">
+                    <span class="thumb-badge">${idx === 0 ? 'Principal' : idx + 1}</span>
+                    <button type="button" class="thumb-delete" onclick="eliminarFotoEdicion(${idx})">&times;</button>
+                `;
+
+                div.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', idx);
+                    div.classList.add('dragging');
+                });
+                div.addEventListener('dragend', () => div.classList.remove('dragging'));
+                div.addEventListener('dragover', (e) => e.preventDefault());
+                div.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
+                    const toIdx = idx;
+                    const movedItem = galeriaEditTemporal.splice(fromIdx, 1)[0];
+                    galeriaEditTemporal.splice(toIdx, 0, movedItem);
+                    renderizarMiniaturasEdicion();
+                });
+
+                grid.appendChild(div);
+            });
+        }
+
+        window.eliminarFotoEdicion = function(idx) {
+            galeriaEditTemporal.splice(idx, 1);
+            renderizarMiniaturasEdicion();
         };
 
         window.actualizarPreview = function() {
@@ -942,15 +1095,17 @@
             document.getElementById('prevZona').textContent = zona ? `📍 ${zona.toUpperCase()}` : '📍 ZONA';
             document.getElementById('prevDesc').textContent = desc || 'La descripción del perfil aparecerá aquí en tiempo real...';
 
-            if (!fotoTemporalBase64) {
-                const imgBox = document.getElementById('prevImgBox');
+            const imgBox = document.getElementById('prevImgBox');
+            if (galeriaTemporal.length > 0) {
+                imgBox.innerHTML = `<img src="${galeriaTemporal[0]}" alt="Preview"><span class="preview-badge">✓ Verificado</span>`;
+            } else {
                 imgBox.innerHTML = `<span>Sin Imagen</span><span class="preview-badge">✓ Verificado</span>`;
             }
         };
 
         const datosInicialesExcel = [
-            { vencimiento: "2026-11-01", monto: 50000, nombre: "PRADA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-10-01", whatsapp: "5491131774848", fotoPrincipal: "", descripcion: "Masajes profesionales en gabinete propio." },
-            { vencimiento: "2026-11-01", monto: 50000, nombre: "LUPITA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-10-01", whatsapp: "5491131774848", fotoPrincipal: "", descripcion: "Atención especializada." }
+            { vencimiento: "2026-11-01", monto: 50000, nombre: "PRADA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-10-01", whatsapp: "5491131774848", fotosGaleria: [], descripcion: "Masajes profesionales en gabinete propio." },
+            { vencimiento: "2026-11-01", monto: 50000, nombre: "LUPITA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-10-01", whatsapp: "5491131774848", fotosGaleria: [], descripcion: "Atención especializada." }
         ];
 
         let historialPrecargado = [
@@ -1128,7 +1283,9 @@
             document.getElementById('editDescripcion').value = reg.descripcion || '';
             document.getElementById('editMonto').value = reg.monto || 0;
             document.getElementById('editVencimiento').value = reg.vencimiento || '';
-            fotoEditTemporalBase64 = reg.fotoPrincipal || '';
+            
+            galeriaEditTemporal = reg.fotosGaleria ? [...reg.fotosGaleria] : (reg.fotoPrincipal ? [reg.fotoPrincipal] : []);
+            renderizarMiniaturasEdicion();
             document.getElementById('modalEditar').style.display = 'flex';
         };
 
@@ -1144,9 +1301,8 @@
             registros[index].zona = document.getElementById('editZona').value.trim().toUpperCase();
             registros[index].categoria = document.getElementById('editCategoria').value;
             registros[index].whatsapp = document.getElementById('editWhatsapp').value.trim();
-            if (fotoEditTemporalBase64) {
-                registros[index].fotoPrincipal = fotoEditTemporalBase64;
-            }
+            registros[index].fotosGaleria = [...galeriaEditTemporal];
+            registros[index].fotoPrincipal = galeriaEditTemporal.length > 0 ? galeriaEditTemporal[0] : '';
             registros[index].descripcion = document.getElementById('editDescripcion').value.trim();
             registros[index].monto = parseFloat(document.getElementById('editMonto').value) || 0;
             registros[index].vencimiento = document.getElementById('editVencimiento').value;
@@ -1231,7 +1387,8 @@
                 zona: document.getElementById('zona').value.trim().toUpperCase(),
                 categoria: document.getElementById('categoria').value,
                 whatsapp: document.getElementById('whatsapp').value.trim(),
-                fotoPrincipal: fotoTemporalBase64 || '',
+                fotosGaleria: [...galeriaTemporal],
+                fotoPrincipal: galeriaTemporal.length > 0 ? galeriaTemporal[0] : '',
                 descripcion: document.getElementById('descripcion').value.trim(),
                 pagado: true,
                 fechaPago: hoyStr
@@ -1246,7 +1403,8 @@
             }
 
             form.reset();
-            fotoTemporalBase64 = "";
+            galeriaTemporal = [];
+            document.getElementById('thumbnailsGrid').innerHTML = '';
             selectCat.dispatchEvent(new Event('change'));
             document.getElementById('vencimiento').valueAsDate = new Date();
             actualizarPreview();
