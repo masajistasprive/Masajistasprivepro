@@ -320,7 +320,27 @@
             box-shadow: 0 0 10px rgba(223, 194, 133, 0.15);
         }
 
-        /* VISTA PREVIA EN VIVO (Simulador de Tarjeta y Perfil) */
+        /* Botón de subida de archivos personalizado */
+        .file-upload-btn {
+            background: #1a1a1a;
+            border: 1px dashed var(--gold);
+            color: var(--gold);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            display: block;
+            transition: background 0.2s;
+        }
+
+        .file-upload-btn:hover {
+            background: rgba(223, 194, 133, 0.1);
+        }
+
+        /* VISTA PREVIA EN VIVO */
         .preview-container {
             background: #0b0b0b;
             border: 1px dashed var(--gold);
@@ -340,7 +360,6 @@
             font-weight: 700;
         }
 
-        /* Mini Tarjeta Simulada */
         .preview-card-mock {
             width: 100%;
             max-width: 260px;
@@ -446,7 +465,7 @@
             color: var(--gold);
         }
 
-        /* Listado de Tarjetas de Fichas */
+        /* Listado de Tarjetas */
         .cards-container {
             display: flex;
             flex-direction: column;
@@ -734,7 +753,7 @@
             <div class="cards-container" id="tarjetasContainer"></div>
         </div>
 
-        <!-- PESTAÑA 3: CREAR FICHA CON VISTA PREVIA EN VIVO -->
+        <!-- PESTAÑA 3: CREAR FICHA CON VISTA PREVIA EN VIVO Y SUBIDA DE FOTO -->
         <div id="nuevoTab" class="panel-section">
             <div class="layout-editor-grid">
                 <!-- Formulario de Creación -->
@@ -763,8 +782,9 @@
                             <input type="text" id="whatsapp" placeholder="Ej: 5491131774848">
                         </div>
                         <div class="form-group">
-                            <label for="fotoPrincipal">URL de Foto Principal</label>
-                            <input type="url" id="fotoPrincipal" placeholder="https://..." oninput="actualizarPreview()">
+                            <label>Foto Principal (Desde el Celular)</label>
+                            <label for="fileFoto" class="file-upload-btn">📁 Seleccionar Imagen de la Galería</label>
+                            <input type="file" id="fileFoto" accept="image/*" style="display: none;" onchange="procesarImagenCelular(event)">
                         </div>
                         <div class="form-group">
                             <label for="descripcion">Descripción / Perfil</label>
@@ -829,8 +849,9 @@
                     <input type="text" id="editWhatsapp">
                 </div>
                 <div class="form-group">
-                    <label>URL de Foto Principal</label>
-                    <input type="url" id="editFotoPrincipal">
+                    <label>Cambiar Foto (Desde Celular)</label>
+                    <label for="editFileFoto" class="file-upload-btn">📁 Seleccionar Nueva Imagen</label>
+                    <input type="file" id="editFileFoto" accept="image/*" style="display: none;" onchange="procesarImagenEdicion(event)">
                 </div>
                 <div class="form-group">
                     <label>Descripción / Perfil</label>
@@ -854,6 +875,8 @@
 
     <script>
         const CLASE_PASSWORD = "081101";
+        let fotoTemporalBase64 = "";
+        let fotoEditTemporalBase64 = "";
 
         const loginForm = document.getElementById('loginForm');
         const passwordInput = document.getElementById('passwordInput');
@@ -885,37 +908,54 @@
             btnElement.classList.add('active');
         };
 
-        // Función para actualizar la Vista Previa en tiempo real
+        // Procesar imagen seleccionada desde el celular (Creación)
+        window.procesarImagenCelular = function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                fotoTemporalBase64 = e.target.result;
+                const imgBox = document.getElementById('prevImgBox');
+                imgBox.innerHTML = `<img src="${fotoTemporalBase64}" alt="Preview"><span class="preview-badge">✓ Verificado</span>`;
+            };
+            reader.readAsDataURL(file);
+        };
+
+        // Procesar imagen seleccionada desde el celular (Edición)
+        window.procesarImagenEdicion = function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                fotoEditTemporalBase64 = e.target.result;
+                alert("¡Imagen cargada con éxito para la edición!");
+            };
+            reader.readAsDataURL(file);
+        };
+
         window.actualizarPreview = function() {
             const nombre = document.getElementById('nombre').value.trim();
             const zona = document.getElementById('zona').value.trim();
-            const foto = document.getElementById('fotoPrincipal').value.trim();
             const desc = document.getElementById('descripcion').value.trim();
 
             document.getElementById('prevNombre').textContent = nombre || 'NOMBRE';
             document.getElementById('prevZona').textContent = zona ? `📍 ${zona.toUpperCase()}` : '📍 ZONA';
             document.getElementById('prevDesc').textContent = desc || 'La descripción del perfil aparecerá aquí en tiempo real...';
 
-            const imgBox = document.getElementById('prevImgBox');
-            if (foto) {
-                imgBox.innerHTML = `<img src="${foto}" alt="Preview"><span class="preview-badge">✓ Verificado</span>`;
-            } else {
+            if (!fotoTemporalBase64) {
+                const imgBox = document.getElementById('prevImgBox');
                 imgBox.innerHTML = `<span>Sin Imagen</span><span class="preview-badge">✓ Verificado</span>`;
             }
         };
 
         const datosInicialesExcel = [
             { vencimiento: "2026-11-01", monto: 50000, nombre: "PRADA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-10-01", whatsapp: "5491131774848", fotoPrincipal: "", descripcion: "Masajes profesionales en gabinete propio." },
-            { vencimiento: "2026-11-01", monto: 50000, nombre: "LUPITA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-10-01", whatsapp: "5491131774848", fotoPrincipal: "", descripcion: "Atención especializada." },
-            { vencimiento: "2026-10-01", monto: 0, nombre: "JENNYFER", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: false, fechaPago: "", whatsapp: "", fotoPrincipal: "", descripcion: "" }
+            { vencimiento: "2026-11-01", monto: 50000, nombre: "LUPITA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-10-01", whatsapp: "5491131774848", fotoPrincipal: "", descripcion: "Atención especializada." }
         ];
 
         let historialPrecargado = [
             { fecha: "2026-09-01", nombre: "MORA", monto: 50000 },
-            { fecha: "2026-09-01", nombre: "MORA S", monto: 50000 },
-            { fecha: "2026-09-01", nombre: "RENATA", monto: 50000 },
-            { fecha: "2026-10-02", nombre: "PRADA", monto: 50000 },
-            { fecha: "2026-10-02", nombre: "LUPITA", monto: 50000 }
+            { fecha: "2026-10-02", nombre: "PRADA", monto: 50000 }
         ];
 
         if (!localStorage.getItem('prive_control_modelos')) {
@@ -1085,10 +1125,10 @@
             document.getElementById('editZona').value = reg.zona || '';
             document.getElementById('editCategoria').value = reg.categoria || 'TERAPEUTICAS';
             document.getElementById('editWhatsapp').value = reg.whatsapp || '';
-            document.getElementById('editFotoPrincipal').value = reg.fotoPrincipal || '';
             document.getElementById('editDescripcion').value = reg.descripcion || '';
             document.getElementById('editMonto').value = reg.monto || 0;
             document.getElementById('editVencimiento').value = reg.vencimiento || '';
+            fotoEditTemporalBase64 = reg.fotoPrincipal || '';
             document.getElementById('modalEditar').style.display = 'flex';
         };
 
@@ -1104,7 +1144,9 @@
             registros[index].zona = document.getElementById('editZona').value.trim().toUpperCase();
             registros[index].categoria = document.getElementById('editCategoria').value;
             registros[index].whatsapp = document.getElementById('editWhatsapp').value.trim();
-            registros[index].fotoPrincipal = document.getElementById('editFotoPrincipal').value.trim();
+            if (fotoEditTemporalBase64) {
+                registros[index].fotoPrincipal = fotoEditTemporalBase64;
+            }
             registros[index].descripcion = document.getElementById('editDescripcion').value.trim();
             registros[index].monto = parseFloat(document.getElementById('editMonto').value) || 0;
             registros[index].vencimiento = document.getElementById('editVencimiento').value;
@@ -1189,7 +1231,7 @@
                 zona: document.getElementById('zona').value.trim().toUpperCase(),
                 categoria: document.getElementById('categoria').value,
                 whatsapp: document.getElementById('whatsapp').value.trim(),
-                fotoPrincipal: document.getElementById('fotoPrincipal').value.trim(),
+                fotoPrincipal: fotoTemporalBase64 || '',
                 descripcion: document.getElementById('descripcion').value.trim(),
                 pagado: true,
                 fechaPago: hoyStr
@@ -1204,6 +1246,7 @@
             }
 
             form.reset();
+            fotoTemporalBase64 = "";
             selectCat.dispatchEvent(new Event('change'));
             document.getElementById('vencimiento').valueAsDate = new Date();
             actualizarPreview();
