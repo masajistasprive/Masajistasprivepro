@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Panel Privé | Gestión Integral</title>
+    <title>Master Panel Profesional | Masajistas Privé</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #070707;
-            --card-bg: #121212;
-            --card-border: rgba(223, 194, 133, 0.2);
+            --bg-color: #050505;
+            --card-bg: #111111;
+            --card-border: rgba(223, 194, 133, 0.25);
             --gold: #dfc285;
             --gold-light: #f3e5ab;
             --text-main: #f5f5f5;
@@ -18,7 +18,7 @@
             --success: #00e676;
             --danger-bg: rgba(255, 77, 77, 0.12);
             --success-bg: rgba(0, 230, 118, 0.12);
-            --radius: 12px;
+            --radius: 14px;
         }
 
         * {
@@ -31,34 +31,34 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            padding: 15px;
+            padding: 12px;
             padding-bottom: 90px;
         }
 
         .container {
-            max-width: 650px;
+            max-width: 700px;
             margin: 0 auto;
         }
 
-        /* Pantalla de Login Moderna */
+        /* Pantalla de Login */
         #loginOverlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(7, 7, 7, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(5, 5, 5, 0.96);
+            backdrop-filter: blur(12px);
             display: flex; justify-content: center; align-items: center;
-            z-index: 9999;
+            z-index: 99999;
         }
 
         .login-card {
             background-color: var(--card-bg);
             border: 1px solid var(--gold);
-            border-radius: 16px;
+            border-radius: 18px;
             padding: 30px;
             width: 90%;
             max-width: 380px;
             text-align: center;
-            box-shadow: 0 10px 40px rgba(223, 194, 133, 0.2);
+            box-shadow: 0 15px 50px rgba(223, 194, 133, 0.2);
         }
 
         .login-card h2 {
@@ -74,19 +74,19 @@
             display: none;
         }
 
-        /* Header Estilo App */
+        /* Header */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             border-bottom: 1px solid var(--card-border);
-            padding-bottom: 15px;
+            padding-bottom: 12px;
         }
 
         h1 {
             color: var(--gold);
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             text-transform: uppercase;
             letter-spacing: 2px;
             font-family: 'Cormorant Garamond', serif;
@@ -109,10 +109,10 @@
         .nav-tabs {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-bottom: 20px;
-            background: #0e0e0e;
-            padding: 4px;
+            gap: 6px;
+            margin-bottom: 18px;
+            background: #0b0b0b;
+            padding: 5px;
             border-radius: 14px;
             border: 1px solid var(--card-border);
         }
@@ -121,11 +121,11 @@
             background: transparent;
             border: none;
             color: var(--text-muted);
-            padding: 10px 6px;
-            font-size: 0.7rem;
+            padding: 10px 4px;
+            font-size: 0.68rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-weight: 600;
+            font-weight: 700;
             border-radius: 10px;
             cursor: pointer;
             text-align: center;
@@ -133,10 +133,10 @@
         }
 
         .tab-btn.active {
-            background: linear-gradient(135deg, rgba(223, 194, 133, 0.2), rgba(223, 194, 133, 0.05));
+            background: linear-gradient(135deg, rgba(223, 194, 133, 0.25), rgba(223, 194, 133, 0.05));
             color: var(--gold);
             border: 1px solid var(--card-border);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
         }
 
         .panel-section {
@@ -149,15 +149,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
+            from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Resúmenes Financieros (Grid) */
+        /* Resúmenes Financieros */
         .summary-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 10px;
             margin-bottom: 12px;
         }
 
@@ -165,9 +165,9 @@
             background: linear-gradient(145deg, #141414, #0d0d0d);
             border: 1px solid var(--card-border);
             border-radius: var(--radius);
-            padding: 16px;
+            padding: 14px;
             text-align: center;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
         }
 
         .card-summary.total-historico {
@@ -177,15 +177,15 @@
         }
 
         .summary-title {
-            font-size: 0.65rem;
+            font-size: 0.62rem;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .summary-amount {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             color: var(--gold-light);
             font-weight: 700;
             font-family: 'Cormorant Garamond', serif;
@@ -193,7 +193,7 @@
 
         .card-summary.total-historico .summary-amount {
             color: var(--success);
-            font-size: 2rem;
+            font-size: 1.8rem;
         }
 
         .btn-corregir {
@@ -201,27 +201,22 @@
             border: 1px solid rgba(255, 77, 77, 0.4);
             color: var(--danger);
             width: 100%;
-            padding: 12px;
+            padding: 11px;
             border-radius: var(--radius);
             cursor: pointer;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             font-weight: 700;
-            margin-bottom: 20px;
-            transition: background 0.2s;
+            margin-bottom: 15px;
         }
 
-        .btn-corregir:hover {
-            background: rgba(255, 77, 77, 0.25);
-        }
-
-        /* Acordeón de Historial Anual */
+        /* Historial Acordeón */
         .historial-box {
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: var(--radius);
-            padding: 15px;
+            padding: 14px;
             margin-bottom: 20px;
         }
 
@@ -231,7 +226,7 @@
             color: var(--gold);
             width: 100%;
             text-align: left;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             font-weight: 700;
             cursor: pointer;
             text-transform: uppercase;
@@ -243,69 +238,80 @@
 
         .historial-content {
             display: none;
-            margin-top: 12px;
-            border-top: 1px solid rgba(255,255,255,0.05);
+            margin-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.06);
             padding-top: 10px;
-            max-height: 200px;
+            max-height: 180px;
             overflow-y: auto;
         }
 
         .mes-row {
             display: flex;
             justify-content: space-between;
-            font-size: 0.8rem;
-            padding: 8px 0;
+            font-size: 0.78rem;
+            padding: 7px 0;
             border-bottom: 1px solid rgba(255,255,255,0.03);
             color: #ccc;
         }
 
-        /* Formularios y Inputs Modernos */
+        /* Formularios Interactivos con Vista Previa */
+        .layout-editor-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media(min-width: 650px) {
+            .layout-editor-grid {
+                grid-template-columns: 1.1fr 0.9fr;
+                align-items: start;
+            }
+        }
+
         .form-card {
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: var(--radius);
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            padding: 18px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
         }
 
         .form-card h2 {
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: var(--gold);
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             font-family: 'Cormorant Garamond', serif;
         }
 
         .form-group {
-            margin-bottom: 14px;
+            margin-bottom: 10px;
         }
 
         label {
             display: block;
-            font-size: 0.68rem;
+            font-size: 0.65rem;
             color: var(--text-muted);
-            margin-bottom: 5px;
+            margin-bottom: 3px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         input, select, textarea {
             width: 100%;
-            padding: 12px;
-            background-color: #0b0b0b;
+            padding: 10px;
+            background-color: #060606;
             border: 1px solid #222;
             border-radius: 8px;
             color: var(--text-main);
-            font-size: 0.9rem;
-            transition: border-color 0.2s;
+            font-size: 0.85rem;
         }
 
         textarea {
             resize: vertical;
-            min-height: 80px;
+            min-height: 60px;
         }
 
         input:focus, select:focus, textarea:focus {
@@ -314,38 +320,125 @@
             box-shadow: 0 0 10px rgba(223, 194, 133, 0.15);
         }
 
+        /* VISTA PREVIA EN VIVO (Simulador de Tarjeta y Perfil) */
+        .preview-container {
+            background: #0b0b0b;
+            border: 1px dashed var(--gold);
+            border-radius: var(--radius);
+            padding: 15px;
+            text-align: center;
+            position: sticky;
+            top: 15px;
+        }
+
+        .preview-title {
+            font-size: 0.68rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        /* Mini Tarjeta Simulada */
+        .preview-card-mock {
+            width: 100%;
+            max-width: 260px;
+            margin: 0 auto;
+            background: #141414;
+            border: 1px solid rgba(223, 194, 133, 0.4);
+            border-radius: 12px;
+            overflow: hidden;
+            text-align: left;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .preview-img-box {
+            width: 100%;
+            height: 220px;
+            background: #1a1a1a;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            font-size: 0.75rem;
+            overflow: hidden;
+        }
+
+        .preview-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-badge {
+            position: absolute;
+            top: 8px; left: 8px;
+            background: rgba(0,0,0,0.8);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            font-size: 9px;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        .preview-info {
+            padding: 12px;
+        }
+
+        .preview-nombre {
+            font-size: 1rem;
+            color: #fff;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .preview-zona {
+            font-size: 0.68rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-top: 2px;
+            margin-bottom: 8px;
+        }
+
+        .preview-desc {
+            font-size: 0.7rem;
+            color: #aaa;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
         .btn-submit {
             background: linear-gradient(135deg, var(--gold), #b89751);
             color: #000;
             border: none;
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             font-weight: 700;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            margin-top: 10px;
+            margin-top: 12px;
             box-shadow: 0 4px 15px rgba(223, 194, 133, 0.3);
-            transition: opacity 0.2s;
-        }
-
-        .btn-submit:hover {
-            opacity: 0.9;
         }
 
         .btn-reset {
             background: transparent;
             color: var(--text-muted);
             border: 1px solid #333;
-            padding: 8px 14px;
-            font-size: 0.7rem;
+            padding: 7px 12px;
+            font-size: 0.68rem;
             border-radius: 6px;
             cursor: pointer;
             text-transform: uppercase;
             letter-spacing: 1px;
-            transition: all 0.2s;
         }
 
         .btn-reset:hover {
@@ -353,21 +446,21 @@
             color: var(--gold);
         }
 
-        /* Listado de Anunciantes / Fichas */
+        /* Listado de Tarjetas de Fichas */
         .cards-container {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
 
         .modelo-card {
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: var(--radius);
-            padding: 15px;
+            padding: 12px 15px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
 
@@ -382,44 +475,40 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding-bottom: 10px;
+            padding-bottom: 8px;
         }
 
         .modelo-nombre-box {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .modelo-nombre {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 700;
             color: #fff;
-            letter-spacing: 0.5px;
         }
 
         .modelo-zona-cat {
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             color: var(--gold);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 2px;
         }
 
         .modelo-body {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 10px;
             align-items: center;
         }
 
         .status-badge {
-            padding: 4px 10px;
+            padding: 4px 8px;
             border-radius: 6px;
-            font-size: 0.68rem;
+            font-size: 0.65rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
         .status-activo {
@@ -435,13 +524,13 @@
         }
 
         .monto-input {
-            background: #090909;
+            background: #060606;
             border: 1px solid #222;
             color: var(--success);
             font-weight: 700;
-            padding: 8px;
+            padding: 6px 8px;
             border-radius: 6px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             width: 100%;
             text-align: right;
         }
@@ -450,90 +539,82 @@
             background: #1a1a1a;
             border: 1px solid #333;
             color: var(--text-muted);
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 1.1rem;
+            font-size: 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
         }
 
         .btn-check.pagado {
             background-color: var(--success-bg);
             color: var(--success);
             border-color: var(--success);
-            box-shadow: 0 0 12px rgba(0, 230, 118, 0.4);
         }
 
         .modelo-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             color: var(--text-muted);
             border-top: 1px solid rgba(255,255,255,0.05);
-            padding-top: 8px;
+            padding-top: 6px;
         }
 
         .fecha-input {
-            background: #090909;
+            background: #060606;
             border: 1px solid #222;
             color: #fff;
-            padding: 6px 10px;
+            padding: 5px 8px;
             border-radius: 6px;
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             width: 100%;
         }
 
         .actions-row {
             display: flex;
-            gap: 8px;
+            gap: 6px;
         }
 
         .btn-accion-card {
             background: rgba(223, 194, 133, 0.1);
             border: 1px solid var(--card-border);
             color: var(--gold);
-            padding: 6px 10px;
+            padding: 5px 8px;
             border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 600;
+            font-size: 0.65rem;
+            font-weight: 700;
             cursor: pointer;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            transition: background 0.2s;
-        }
-
-        .btn-accion-card:hover {
-            background: rgba(223, 194, 133, 0.2);
         }
 
         .btn-delete {
             background: rgba(255, 77, 77, 0.1);
             border: 1px solid rgba(255, 77, 77, 0.3);
             color: var(--danger);
-            padding: 6px 10px;
+            padding: 5px 8px;
             border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 600;
+            font-size: 0.65rem;
+            font-weight: 700;
             cursor: pointer;
             text-transform: uppercase;
         }
 
-        /* Modal Flotante para Editar Ficha Completa */
+        /* Modal Completo de Edición */
         #modalEditar {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.85);
             backdrop-filter: blur(8px);
-            z-index: 10000;
+            z-index: 100000;
             justify-content: center;
             align-items: center;
-            padding: 15px;
+            padding: 12px;
         }
 
         .modal-content {
@@ -542,7 +623,7 @@
             border-radius: 16px;
             width: 100%;
             max-width: 480px;
-            padding: 25px;
+            padding: 22px;
             box-shadow: 0 15px 50px rgba(0,0,0,0.9);
             max-height: 90vh;
             overflow-y: auto;
@@ -551,8 +632,8 @@
         .modal-content h3 {
             color: var(--gold);
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.3rem;
-            margin-bottom: 15px;
+            font-size: 1.25rem;
+            margin-bottom: 12px;
             text-transform: uppercase;
             letter-spacing: 1.5px;
         }
@@ -568,10 +649,10 @@
             color: #fff;
             border: 1px solid #444;
             flex: 1;
-            padding: 12px;
+            padding: 11px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             text-transform: uppercase;
             font-weight: 700;
         }
@@ -605,15 +686,15 @@
     <!-- Contenido Principal -->
     <div class="container main-content" id="mainContent">
         <header>
-            <h1>Master Panel Privé</h1>
+            <h1>Master Panel Profesional</h1>
             <a href="admin.html" class="back-link">&larr; Menú Principal</a>
         </header>
 
         <!-- Navegación por Pestañas -->
         <div class="nav-tabs">
-            <button class="tab-btn active" onclick="cambiarTab('cajaTab', this)">📊 Caja</button>
-            <button class="tab-btn" onclick="cambiarTab('anunciantesTab', this)">👥 Fichas</button>
-            <button class="tab-btn" onclick="cambiarTab('nuevoTab', this)">➕ Registrar</button>
+            <button class="tab-btn active" onclick="cambiarTab('cajaTab', this)">📊 Caja & Finanzas</button>
+            <button class="tab-btn" onclick="cambiarTab('anunciantesTab', this)">👥 Gestión de Fichas</button>
+            <button class="tab-btn" onclick="cambiarTab('nuevoTab', this)">➕ Crear & Preview</button>
         </div>
 
         <!-- PESTAÑA 1: CAJA & FINANZAS -->
@@ -644,64 +725,83 @@
             </div>
         </div>
 
-        <!-- PESTAÑA 2: ANUNCIANTES & GESTIÓN DE FICHAS -->
+        <!-- PESTAÑA 2: GESTIÓN DE FICHAS -->
         <div id="anunciantesTab" class="panel-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                <h2 style="font-size:0.9rem; color: var(--gold); text-transform: uppercase; letter-spacing:1px;">Gestión de Fichas</h2>
+                <h2 style="font-size:0.85rem; color: var(--gold); text-transform: uppercase; letter-spacing:1px;">Listado de Anunciantes</h2>
                 <button class="btn-reset" onclick="restaurarDatosExcel()">Restaurar Originales</button>
             </div>
             <div class="cards-container" id="tarjetasContainer"></div>
         </div>
 
-        <!-- PESTAÑA 3: REGISTRAR NUEVO PERFIL -->
+        <!-- PESTAÑA 3: CREAR FICHA CON VISTA PREVIA EN VIVO -->
         <div id="nuevoTab" class="panel-section">
-            <div class="form-card">
-                <h2>Nueva Ficha Completa</h2>
-                <form id="cajaForm">
-                    <div class="form-group">
-                        <label for="nombre">Nombre de la Modelo</label>
-                        <input type="text" id="nombre" placeholder="Ej: Jennyfer" required>
+            <div class="layout-editor-grid">
+                <!-- Formulario de Creación -->
+                <div class="form-card">
+                    <h2>Nueva Ficha & Perfil</h2>
+                    <form id="cajaForm">
+                        <div class="form-group">
+                            <label for="nombre">Nombre de la Modelo</label>
+                            <input type="text" id="nombre" placeholder="Ej: Jennyfer" oninput="actualizarPreview()" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="zona">Barrio / Zona</label>
+                            <input type="text" id="zona" placeholder="Ej: Tribunales" oninput="actualizarPreview()" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="categoria">Categoría</label>
+                            <select id="categoria" onchange="actualizarPreview()" required>
+                                <option value="TERAPEUTICAS">Terapéuticas ($50k)</option>
+                                <option value="SENSUALES">Sensuales ($70k)</option>
+                                <option value="FANTASIAS">Fantasías ($100k)</option>
+                                <option value="MASCULINOS">Masculinos ($50k)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="whatsapp">WhatsApp / Teléfono</label>
+                            <input type="text" id="whatsapp" placeholder="Ej: 5491131774848">
+                        </div>
+                        <div class="form-group">
+                            <label for="fotoPrincipal">URL de Foto Principal</label>
+                            <input type="url" id="fotoPrincipal" placeholder="https://..." oninput="actualizarPreview()">
+                        </div>
+                        <div class="form-group">
+                            <label for="descripcion">Descripción / Perfil</label>
+                            <textarea id="descripcion" placeholder="Detalles de masajes y atención..." oninput="actualizarPreview()"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="monto">Monto Pagado ($)</label>
+                            <input type="number" id="monto" placeholder="50000" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="vencimiento">Fecha de Vencimiento</label>
+                            <input type="date" id="vencimiento" required>
+                        </div>
+                        <button type="submit" class="btn-submit">Guardar y Publicar Ficha</button>
+                    </form>
+                </div>
+
+                <!-- Vista Previa en Vivo Interactiva -->
+                <div class="preview-container">
+                    <div class="preview-title">👁️ Vista Previa en Vivo (Tarjeta)</div>
+                    <div class="preview-card-mock">
+                        <div class="preview-img-box" id="prevImgBox">
+                            <span>Sin Imagen</span>
+                            <span class="preview-badge">✓ Verificado</span>
+                        </div>
+                        <div class="preview-info">
+                            <div class="preview-nombre" id="prevNombre">NOMBRE</div>
+                            <div class="preview-zona" id="prevZona">📍 ZONA</div>
+                            <div class="preview-desc" id="prevDesc">La descripción del perfil aparecerá aquí en tiempo real...</div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="zona">Barrio / Zona</label>
-                        <input type="text" id="zona" placeholder="Ej: Tribunales" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="categoria">Categoría</label>
-                        <select id="categoria" required>
-                            <option value="TERAPEUTICAS">Terapéuticas ($50k)</option>
-                            <option value="SENSUALES">Sensuales ($70k)</option>
-                            <option value="FANTASIAS">Fantasías ($100k)</option>
-                            <option value="MASCULINOS">Masculinos ($50k)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="whatsapp">WhatsApp / Teléfono</label>
-                        <input type="text" id="whatsapp" placeholder="Ej: 5491131774848">
-                    </div>
-                    <div class="form-group">
-                        <label for="fotoPrincipal">URL de la Foto Principal</label>
-                        <input type="url" id="fotoPrincipal" placeholder="https://...">
-                    </div>
-                    <div class="form-group">
-                        <label for="descripcion">Descripción / Perfil</label>
-                        <textarea id="descripcion" placeholder="Escribí los detalles de los masajes, gabinete o atención..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="monto">Monto Pagado ($)</label>
-                        <input type="number" id="monto" placeholder="50000" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="vencimiento">Fecha de Vencimiento</label>
-                        <input type="date" id="vencimiento" required>
-                    </div>
-                    <button type="submit" class="btn-submit">Guardar Registro</button>
-                </form>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- MODAL DE EDICIÓN DE FICHA COMPLETA -->
+    <!-- MODAL DE EDICIÓN COMPLETA -->
     <div id="modalEditar">
         <div class="modal-content">
             <h3>Editar Ficha Completa</h3>
@@ -729,7 +829,7 @@
                     <input type="text" id="editWhatsapp">
                 </div>
                 <div class="form-group">
-                    <label>URL de la Foto Principal</label>
+                    <label>URL de Foto Principal</label>
                     <input type="url" id="editFotoPrincipal">
                 </div>
                 <div class="form-group">
@@ -783,6 +883,25 @@
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             btnElement.classList.add('active');
+        };
+
+        // Función para actualizar la Vista Previa en tiempo real
+        window.actualizarPreview = function() {
+            const nombre = document.getElementById('nombre').value.trim();
+            const zona = document.getElementById('zona').value.trim();
+            const foto = document.getElementById('fotoPrincipal').value.trim();
+            const desc = document.getElementById('descripcion').value.trim();
+
+            document.getElementById('prevNombre').textContent = nombre || 'NOMBRE';
+            document.getElementById('prevZona').textContent = zona ? `📍 ${zona.toUpperCase()}` : '📍 ZONA';
+            document.getElementById('prevDesc').textContent = desc || 'La descripción del perfil aparecerá aquí en tiempo real...';
+
+            const imgBox = document.getElementById('prevImgBox');
+            if (foto) {
+                imgBox.innerHTML = `<img src="${foto}" alt="Preview"><span class="preview-badge">✓ Verificado</span>`;
+            } else {
+                imgBox.innerHTML = `<span>Sin Imagen</span><span class="preview-badge">✓ Verificado</span>`;
+            }
         };
 
         const datosInicialesExcel = [
@@ -914,15 +1033,15 @@
                     </div>
                     <div class="modelo-body">
                         <div>
-                            <span style="font-size:0.65rem; color:#888; display:block; margin-bottom:2px;">VENCIMIENTO</span>
+                            <span style="font-size:0.6rem; color:#888; display:block; margin-bottom:2px;">VENCIMIENTO</span>
                             <input type="date" value="${reg.vencimiento}" onchange="actualizarFecha(${realIndex}, this.value)" class="fecha-input">
                         </div>
                         <div>
-                            <span style="font-size:0.65rem; color:#888; display:block; margin-bottom:2px;">MONTO ($)</span>
+                            <span style="font-size:0.6rem; color:#888; display:block; margin-bottom:2px;">MONTO ($)</span>
                             <input type="number" value="${reg.monto || 0}" onchange="actualizarMonto(${realIndex}, this.value)" class="monto-input">
                         </div>
                     </div>
-                    ${reg.descripcion ? `<div style="font-size:0.75rem; color:#aaa; font-style:italic; border-left:2px solid var(--gold); padding-left:6px;">"${reg.descripcion}"</div>` : ''}
+                    ${reg.descripcion ? `<div style="font-size:0.72rem; color:#aaa; font-style:italic; border-left:2px solid var(--gold); padding-left:6px;">"${reg.descripcion}"</div>` : ''}
                     <div class="modelo-footer">
                         <div class="actions-row">
                             <button class="btn-accion-card" onclick="abrirModalEditar(${realIndex})">✏️ Editar Ficha Completa</button>
@@ -1087,6 +1206,7 @@
             form.reset();
             selectCat.dispatchEvent(new Event('change'));
             document.getElementById('vencimiento').valueAsDate = new Date();
+            actualizarPreview();
             
             document.querySelectorAll('.tab-btn')[1].click();
             renderizarPanel();
@@ -1144,6 +1264,7 @@
         };
 
         renderizarPanel();
+        actualizarPreview();
     </script>
 </body>
 </html>
