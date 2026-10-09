@@ -279,7 +279,7 @@
         }
 
         .form-group {
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
 
         label {
@@ -292,7 +292,7 @@
             font-weight: 600;
         }
 
-        input, select {
+        input, select, textarea {
             width: 100%;
             padding: 12px;
             background-color: #0b0b0b;
@@ -303,7 +303,12 @@
             transition: border-color 0.2s;
         }
 
-        input:focus, select:focus {
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--gold);
             box-shadow: 0 0 10px rgba(223, 194, 133, 0.15);
@@ -364,7 +369,6 @@
             flex-direction: column;
             gap: 10px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-            transition: transform 0.2s;
         }
 
         .modelo-card.pagado-card {
@@ -537,7 +541,7 @@
             border: 1px solid var(--gold);
             border-radius: 16px;
             width: 100%;
-            max-width: 450px;
+            max-width: 480px;
             padding: 25px;
             box-shadow: 0 15px 50px rgba(0,0,0,0.9);
             max-height: 90vh;
@@ -640,7 +644,7 @@
             </div>
         </div>
 
-        <!-- PESTAÑA 2: ANUNCIANTES & EDICIÓN DE FICHAS -->
+        <!-- PESTAÑA 2: ANUNCIANTES & GESTIÓN DE FICHAS -->
         <div id="anunciantesTab" class="panel-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                 <h2 style="font-size:0.9rem; color: var(--gold); text-transform: uppercase; letter-spacing:1px;">Gestión de Fichas</h2>
@@ -652,7 +656,7 @@
         <!-- PESTAÑA 3: REGISTRAR NUEVO PERFIL -->
         <div id="nuevoTab" class="panel-section">
             <div class="form-card">
-                <h2>Nuevo Registro</h2>
+                <h2>Nueva Ficha Completa</h2>
                 <form id="cajaForm">
                     <div class="form-group">
                         <label for="nombre">Nombre de la Modelo</label>
@@ -672,6 +676,18 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label for="whatsapp">WhatsApp / Teléfono</label>
+                        <input type="text" id="whatsapp" placeholder="Ej: 5491131774848">
+                    </div>
+                    <div class="form-group">
+                        <label for="fotoPrincipal">URL de la Foto Principal</label>
+                        <input type="url" id="fotoPrincipal" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion">Descripción / Perfil</label>
+                        <textarea id="descripcion" placeholder="Escribí los detalles de los masajes, gabinete o atención..."></textarea>
+                    </div>
+                    <div class="form-group">
                         <label for="monto">Monto Pagado ($)</label>
                         <input type="number" id="monto" placeholder="50000" required>
                     </div>
@@ -685,10 +701,10 @@
         </div>
     </div>
 
-    <!-- MODAL DE EDICIÓN DE FICHA -->
+    <!-- MODAL DE EDICIÓN DE FICHA COMPLETA -->
     <div id="modalEditar">
         <div class="modal-content">
-            <h3 id="modalTitulo">Editar Ficha</h3>
+            <h3>Editar Ficha Completa</h3>
             <form id="formEditarFicha">
                 <input type="hidden" id="editIndex">
                 <div class="form-group">
@@ -707,6 +723,18 @@
                         <option value="FANTASIAS">Fantasías</option>
                         <option value="MASCULINOS">Masculinos</option>
                     </select>
+                </div>
+                <div class="form-group">
+                    <label>WhatsApp / Teléfono</label>
+                    <input type="text" id="editWhatsapp">
+                </div>
+                <div class="form-group">
+                    <label>URL de la Foto Principal</label>
+                    <input type="url" id="editFotoPrincipal">
+                </div>
+                <div class="form-group">
+                    <label>Descripción / Perfil</label>
+                    <textarea id="editDescripcion"></textarea>
                 </div>
                 <div class="form-group">
                     <label>Monto Actual ($)</label>
@@ -758,24 +786,9 @@
         };
 
         const datosInicialesExcel = [
-            { vencimiento: "2026-11-01", monto: 50000, nombre: "PRADA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-10-01" },
-            { vencimiento: "2026-11-01", monto: 50000, nombre: "LUPITA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-10-01" },
-            { vencimiento: "2026-10-01", monto: 0, nombre: "JENNYFER", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: false, fechaPago: "" },
-            { vencimiento: "2026-10-01", monto: 0, nombre: "DEBY", zona: "CABALLITO", categoria: "SENSUALES", pagado: false, fechaPago: "" },
-            { vencimiento: "2026-10-15", monto: 0, nombre: "PAMELA", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: false, fechaPago: "" },
-            { vencimiento: "2026-10-02", monto: 0, nombre: "SOL", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: false, fechaPago: "" },
-            { vencimiento: "2026-10-01", monto: 0, nombre: "MATIAS", zona: "RECOLETA", categoria: "MASCULINOS", pagado: false, fechaPago: "" },
-            { vencimiento: "2026-10-02", monto: 0, nombre: "DANIELA", zona: "MICROCENTRO", categoria: "TERAPEUTICAS", pagado: false, fechaPago: "" },
-            { vencimiento: "2026-10-02", monto: 0, nombre: "ZARIA", zona: "CABALLITO", categoria: "TERAPEUTICAS", pagado: false, fechaPago: "" },
-            { vencimiento: "2026-10-03", monto: 0, nombre: "DONATELLA", zona: "CABA", categoria: "SENSUALES", pagado: false, fechaPago: "" },
-            { vencimiento: "2026-10-04", monto: 0, nombre: "MARIELA", zona: "CONGRESO", categoria: "TERAPEUTICAS", pagado: false, fechaPago: "" },
-            { vencimiento: "2026-10-04", monto: 0, nombre: "MIA", zona: "CONGRESO", categoria: "SENSUALES", pagado: false, fechaPago: "" },
-            { vencimiento: "2026-10-08", monto: 0, nombre: "CELESTE", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: false, fechaPago: "" },
-            { vencimiento: "2026-10-22", monto: 0, nombre: "LULY S", zona: "CABA", categoria: "SENSUALES", pagado: false, fechaPago: "" },
-            { vencimiento: "2026-10-22", monto: 0, nombre: "LULY", zona: "CABA", categoria: "TERAPEUTICAS", pagado: false, fechaPago: "" },
-            { vencimiento: "2026-10-23", monto: 50000, nombre: "MORA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-09-23" },
-            { vencimiento: "2026-10-23", monto: 50000, nombre: "MORA S", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: true, fechaPago: "2026-09-23" },
-            { vencimiento: "2026-10-26", monto: 50000, nombre: "RENATA", zona: "PTO MADERO", categoria: "SENSUALES", pagado: true, fechaPago: "2026-09-26" }
+            { vencimiento: "2026-11-01", monto: 50000, nombre: "PRADA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-10-01", whatsapp: "5491131774848", fotoPrincipal: "", descripcion: "Masajes profesionales en gabinete propio." },
+            { vencimiento: "2026-11-01", monto: 50000, nombre: "LUPITA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-10-01", whatsapp: "5491131774848", fotoPrincipal: "", descripcion: "Atención especializada." },
+            { vencimiento: "2026-10-01", monto: 0, nombre: "JENNYFER", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: false, fechaPago: "", whatsapp: "", fotoPrincipal: "", descripcion: "" }
         ];
 
         let historialPrecargado = [
@@ -873,8 +886,7 @@
                 return new Date(a.vencimiento + 'T00:00:00') - new Date(b.vencimiento + 'T00:00:00');
             });
 
-            registrosOrdenados.forEach((reg, indexOriginal) => {
-                // Buscamos el índice real en el array original
+            registrosOrdenados.forEach((reg) => {
                 const realIndex = registros.findIndex(r => r.nombre === reg.nombre);
                 const fechaVen = new Date(reg.vencimiento + 'T00:00:00');
                 const estaVencidoPorFecha = fechaVen < hoy;
@@ -910,9 +922,10 @@
                             <input type="number" value="${reg.monto || 0}" onchange="actualizarMonto(${realIndex}, this.value)" class="monto-input">
                         </div>
                     </div>
+                    ${reg.descripcion ? `<div style="font-size:0.75rem; color:#aaa; font-style:italic; border-left:2px solid var(--gold); padding-left:6px;">"${reg.descripcion}"</div>` : ''}
                     <div class="modelo-footer">
                         <div class="actions-row">
-                            <button class="btn-accion-card" onclick="abrirModalEditar(${realIndex})">✏️ Editar Ficha</button>
+                            <button class="btn-accion-card" onclick="abrirModalEditar(${realIndex})">✏️ Editar Ficha Completa</button>
                         </div>
                         <button class="btn-delete" onclick="eliminarRegistro(${realIndex})">Eliminar</button>
                     </div>
@@ -946,15 +959,17 @@
             renderizarPanel();
         };
 
-        // FUNCIONES DE EDICIÓN MEDIANTE MODAL
         window.abrirModalEditar = function(index) {
             const reg = registros[index];
             document.getElementById('editIndex').value = index;
-            document.getElementById('editNombre').value = reg.nombre;
-            document.getElementById('editZona').value = reg.zona;
-            document.getElementById('editCategoria').value = reg.categoria;
-            document.getElementById('editMonto').value = reg.monto;
-            document.getElementById('editVencimiento').value = reg.vencimiento;
+            document.getElementById('editNombre').value = reg.nombre || '';
+            document.getElementById('editZona').value = reg.zona || '';
+            document.getElementById('editCategoria').value = reg.categoria || 'TERAPEUTICAS';
+            document.getElementById('editWhatsapp').value = reg.whatsapp || '';
+            document.getElementById('editFotoPrincipal').value = reg.fotoPrincipal || '';
+            document.getElementById('editDescripcion').value = reg.descripcion || '';
+            document.getElementById('editMonto').value = reg.monto || 0;
+            document.getElementById('editVencimiento').value = reg.vencimiento || '';
             document.getElementById('modalEditar').style.display = 'flex';
         };
 
@@ -969,6 +984,9 @@
             registros[index].nombre = document.getElementById('editNombre').value.trim().toUpperCase();
             registros[index].zona = document.getElementById('editZona').value.trim().toUpperCase();
             registros[index].categoria = document.getElementById('editCategoria').value;
+            registros[index].whatsapp = document.getElementById('editWhatsapp').value.trim();
+            registros[index].fotoPrincipal = document.getElementById('editFotoPrincipal').value.trim();
+            registros[index].descripcion = document.getElementById('editDescripcion').value.trim();
             registros[index].monto = parseFloat(document.getElementById('editMonto').value) || 0;
             registros[index].vencimiento = document.getElementById('editVencimiento').value;
 
@@ -1051,6 +1069,9 @@
                 nombre,
                 zona: document.getElementById('zona').value.trim().toUpperCase(),
                 categoria: document.getElementById('categoria').value,
+                whatsapp: document.getElementById('whatsapp').value.trim(),
+                fotoPrincipal: document.getElementById('fotoPrincipal').value.trim(),
+                descripcion: document.getElementById('descripcion').value.trim(),
                 pagado: true,
                 fechaPago: hoyStr
             };
