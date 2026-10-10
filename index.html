@@ -99,7 +99,7 @@
         .grid-perfiles .card-image {
             width: 100% !important;
             position: relative !important;
-            aspect-ratio: 3 / 4 !important; /* Proporción uniforme idéntica y responsiva */
+            aspect-ratio: 3 / 4 !important;
         }
         
         .grid-perfiles .card-image img {
@@ -108,12 +108,11 @@
             object-fit: cover !important;
         }
 
-        /* Por defecto la caja amplia está oculta */
         .prive-card-info-box {
             display: none;
         }
 
-        /* MODO TARJETA GRANDE: Fuerza diseño de columna y tarjetas amplias */
+        /* MODO TARJETA GRANDE */
         body.modo-tarjeta-alternativo .grid-perfiles {
             display: flex !important;
             flex-direction: column !important;
@@ -439,7 +438,6 @@
             }, 1200);
         });
 
-        // Función para dar "Me gusta" único por dispositivo (Estilo TikTok)
         window.darLikeIndice = function(docId, btnElement) {
             let likesDados = JSON.parse(localStorage.getItem('priveLikesDados') || '{}');
             
@@ -519,8 +517,11 @@
                     if (m.estado === 'pausado') return;
 
                     const fotoModelo = m.fotoPrincipal || m.foto || (m.fotosGaleria && m.fotosGaleria[0]) || 'img/monograma.png';
-                    const zonaModelo = m.zona || (m.traducciones && m.traducciones.es && m.traducciones.es.valorZona) || 'CABA';
-                    const modalidadModelo = m.modalidad || (m.traducciones && m.traducciones.es && m.traducciones.es.valorModalidad) || 'Gabinete propio';
+                    
+                    // TRADUCCIÓN DINÁMICA SEGÚN EL IDIOMA ACTUAL
+                    const tradL = (m.traducciones && m.traducciones[idiomaActual]) ? m.traducciones[idiomaActual] : (m.traducciones && m.traducciones.es ? m.traducciones.es : {});
+                    const zonaModelo = tradL.valorZona || m.zona || 'CABA';
+                    const modalidadModelo = tradL.valorModalidad || m.modalidad || 'Gabinete propio';
 
                     const telefonoWs = m.whatsapp || m.telefono || "5491131774848";
                     const linkWs = `https://wa.me/${telefonoWs}?text=Hola,%20vi%20tu%20perfil%20en%20Masajistas%20Privé%20y%20quiero%20consultar.`;
@@ -540,13 +541,15 @@
                     const yaDioLike = likesDados[docId] === true;
                     const totalLikes = m.likes || 0;
 
+                    const badgeVerificadoTexto = (traducciones[idiomaActual] && traducciones[idiomaActual].badgeVerificado) || '✓ Verificado';
+
                     const cardHTML = `
                         <div class="card-link" data-categoria="${catLimpia}">
                             <article class="card">
                                 <a href="perfil.html?id=${docId}" style="text-decoration: none; color: inherit; display: block;">
                                     <div class="card-image">
                                         <img src="${fotoModelo}" alt="Masajista ${m.nombre} en ${zonaModelo} - Masajistas Privé" loading="lazy">
-                                        <span class="badge-verificado">✓ Verificado</span>
+                                        <span class="badge-verificado">${badgeVerificadoTexto}</span>
                                         <div class="card-gradient-overlay">
                                             <h3>${m.nombre}</h3>
                                             <span class="zona">📍 ${zonaModelo.toUpperCase()}</span>
@@ -555,7 +558,6 @@
                                     </div>
                                 </a>
                                 
-                                <!-- BARRA CLÁSICA FIJA (SOLO MODO NORMAL) -->
                                 <div class="prive-barra-clasica" onclick="event.preventDefault(); event.stopPropagation();" style="height: 44px; padding: 0 12px; background: #0d0d0d; border-top: 1px solid rgba(223, 194, 133, 0.2); display: flex; align-items: center; justify-content: space-between; box-sizing: border-box; flex-shrink: 0;">
                                     <button onclick="window.darLikeIndice('${docId}', this)" style="background: ${yaDioLike ? 'rgba(223,194,133,0.3)' : 'transparent'}; border: 1px solid #dfc285; color: #dfc285; padding: 4px 10px; border-radius: 15px; cursor: pointer; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 4px; font-family: 'Montserrat', sans-serif;">
                                         ❤️ <span class="like-count-${docId}">${totalLikes}</span>
@@ -565,7 +567,6 @@
                                     </a>
                                 </div>
 
-                                <!-- CAJA AMPLIA (SOLO MODO TARJETA GRANDE) -->
                                 <div class="prive-card-info-box">
                                     <div class="prive-card-nombre">${m.nombre}</div>
                                     <div class="prive-card-detalles">📍 ${zonaModelo.toUpperCase()} • ${modalidadModelo.toUpperCase()}</div>
@@ -739,7 +740,7 @@
                 filtroFantasias: "Fantasies",
                 seccionTerapeuticas: "Masseuses Thérapeutiques",
                 seccionSensuales: "Masseuses Sensuelles",
-                seccionFantasias: "Fantasies",
+                seccionFantasias: "Masseuses Fantasies",
                 badgeVerificado: "✓ Vérifié",
                 espacioDisponible: "Espace Disponible",
                 publicaPerfil: "Publiez votre profil ici",
@@ -821,6 +822,7 @@
             cargarArticulosDelDia();
             obtenerClimaCABA();
             obtenerDolar();
+            cargarPerfilesDesdeFirebase(); // Recarga los perfiles para reflejar el idioma al instante
         }
 
         function cambiarIdioma() {
@@ -877,7 +879,6 @@
             aplicarIdioma(idiomaActual);
             obtenerClimaCABA();
             obtenerDolar();
-            cargarPerfilesDesdeFirebase();
         });
 
         const modalEdad = document.getElementById('modal-edad');
