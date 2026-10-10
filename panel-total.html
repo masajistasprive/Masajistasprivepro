@@ -371,6 +371,10 @@
             pointer-events: none;
         }
 
+        .thumb-item.dragging {
+            opacity: 0.4;
+        }
+
         .thumb-badge {
             position: absolute;
             top: 2px; left: 2px;
@@ -394,7 +398,7 @@
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* VISTA PREVIA IDÉNTICA A LA TARJETA PÚBLICA */
+        /* VISTA PREVIA IDÉNTICA AL PERFIL PÚBLICO */
         .preview-container {
             background: #0b0b0b;
             border: 1px dashed var(--gold);
@@ -841,7 +845,7 @@
                             <div class="preview-nombre" id="prevNombre">NOMBRE</div>
                             <div class="preview-zona" id="prevZona">📍 ZONA</div>
                             <div class="preview-desc" id="prevDesc">La descripción aparecerá aquí en tiempo real...</div>
-                            <a href="#" id="prevWaBtn" class="preview-wa-btn" target="_blank">💬 Enviar WhatsApp</a>
+                            <a href="#" id="prevWaBtn" class="preview-wa-btn" target="_blank" style="display:none;">💬 Enviar WhatsApp</a>
                         </div>
                     </div>
                 </div>
@@ -1129,7 +1133,7 @@
             renderizarPanel();
         };
 
-        // Cargar todos los datos y fotos exactamente al editar
+        // Rellenar TODOS los campos al editar y cargar su galería real
         window.cargarFichaParaEditar = function(index) {
             const reg = registros[index];
             document.getElementById('editIndex').value = index;
@@ -1141,7 +1145,8 @@
             document.getElementById('monto').value = reg.monto || 0;
             document.getElementById('vencimiento').value = reg.vencimiento || new Date().toISOString().split('T')[0];
             
-            galeriaTemporal = reg.fotosGaleria ? [...reg.fotosGaleria] : (reg.fotoPrincipal ? [reg.fotoPrincipal] : []);
+            // Cargar galería de fotos real guardada en el perfil
+            galeriaTemporal = reg.fotosGaleria && reg.fotosGaleria.length > 0 ? [...reg.fotosGaleria] : (reg.fotoPrincipal ? [reg.fotoPrincipal] : []);
             renderizarMiniaturas();
             actualizarPreview();
 
