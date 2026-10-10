@@ -827,7 +827,7 @@
                         <div class="preview-info">
                             <div class="preview-nombre" id="prevNombre">NOMBRE</div>
                             <div class="preview-zona" id="prevZona">📍 ZONA</div>
-                            <div class="preview-desc" id="prevDesc">La descripción del perfil aparecerá aquí en tiempo real...</div>
+                            <div class="preview-desc" id="prevDesc">La descripción aparecerá aquí en tiempo real...</div>
                         </div>
                     </div>
                 </div>
@@ -965,6 +965,7 @@
             { fecha: "2026-10-02", nombre: "LUPITA", monto: 50000 }
         ];
 
+        // Respetamos las anunciantes guardadas si ya existen, sino cargamos el set completo
         if (!localStorage.getItem('prive_control_modelos')) {
             localStorage.setItem('prive_control_modelos', JSON.stringify(datosInicialesCompletos));
         }
@@ -1124,7 +1125,7 @@
             renderizarPanel();
         };
 
-        // Cargar datos exactos en el formulario para editar
+        // Cargar datos exactos en el formulario y mostrar fotos en vista previa
         window.cargarFichaParaEditar = function(index) {
             const reg = registros[index];
             document.getElementById('editIndex').value = index;
