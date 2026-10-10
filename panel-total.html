@@ -869,7 +869,6 @@
             btnElement.classList.add('active');
         };
 
-        // Procesamiento de fotos (Creación y Edición Unificadas)
         window.procesarFotosCelular = function(event) {
             const files = event.target.files;
             if (!files.length) return;
@@ -937,18 +936,37 @@
             }
         };
 
-        const datosInicialesExcel = [
-            { vencimiento: "2026-11-01", monto: 50000, nombre: "PRADA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-10-01", whatsapp: "5491131774848", fotosGaleria: [], descripcion: "Masajes profesionales en gabinete propio." },
-            { vencimiento: "2026-11-01", monto: 50000, nombre: "LUPITA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-10-01", whatsapp: "5491131774848", fotosGaleria: [], descripcion: "Atención especializada." }
+        const datosInicialesCompletos = [
+            { vencimiento: "2026-11-01", monto: 50000, nombre: "PRADA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-10-01", whatsapp: "5491131774848", fotosGaleria: [], fotoPrincipal: "", descripcion: "Masajes profesionales en gabinete propio." },
+            { vencimiento: "2026-11-01", monto: 50000, nombre: "LUPITA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-10-01", whatsapp: "5491131774848", fotosGaleria: [], fotoPrincipal: "", descripcion: "Atención especializada." },
+            { vencimiento: "2026-10-01", monto: 0, nombre: "JENNYFER", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: false, fechaPago: "", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
+            { vencimiento: "2026-10-01", monto: 0, nombre: "DEBY", zona: "CABALLITO", categoria: "SENSUALES", pagado: false, fechaPago: "", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
+            { vencimiento: "2026-10-15", monto: 0, nombre: "PAMELA", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: false, fechaPago: "", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
+            { vencimiento: "2026-10-02", monto: 0, nombre: "SOL", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: false, fechaPago: "", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
+            { vencimiento: "2026-10-01", monto: 0, nombre: "MATIAS", zona: "RECOLETA", categoria: "MASCULINOS", pagado: false, fechaPago: "", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
+            { vencimiento: "2026-10-02", monto: 0, nombre: "DANIELA", zona: "MICROCENTRO", categoria: "TERAPEUTICAS", pagado: false, fechaPago: "", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
+            { vencimiento: "2026-10-02", monto: 0, nombre: "ZARIA", zona: "CABALLITO", categoria: "TERAPEUTICAS", pagado: false, fechaPago: "", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
+            { vencimiento: "2026-10-03", monto: 0, nombre: "DONATELLA", zona: "CABA", categoria: "SENSUALES", pagado: false, fechaPago: "", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
+            { vencimiento: "2026-10-04", monto: 0, nombre: "MARIELA", zona: "CONGRESO", categoria: "TERAPEUTICAS", pagado: false, fechaPago: "", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
+            { vencimiento: "2026-10-04", monto: 0, nombre: "MIA", zona: "CONGRESO", categoria: "SENSUALES", pagado: false, fechaPago: "", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
+            { vencimiento: "2026-10-08", monto: 0, nombre: "CELESTE", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: false, fechaPago: "", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
+            { vencimiento: "2026-10-22", monto: 0, nombre: "LULY S", zona: "CABA", categoria: "SENSUALES", pagado: false, fechaPago: "", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
+            { vencimiento: "2026-10-22", monto: 0, nombre: "LULY", zona: "CABA", categoria: "TERAPEUTICAS", pagado: false, fechaPago: "", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
+            { vencimiento: "2026-10-23", monto: 50000, nombre: "MORA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-09-23", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
+            { vencimiento: "2026-10-23", monto: 50000, nombre: "MORA S", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: true, fechaPago: "2026-09-23", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
+            { vencimiento: "2026-10-26", monto: 50000, nombre: "RENATA", zona: "PTO MADERO", categoria: "SENSUALES", pagado: true, fechaPago: "2026-09-26", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" }
         ];
 
         let historialPrecargado = [
             { fecha: "2026-09-01", nombre: "MORA", monto: 50000 },
-            { fecha: "2026-10-02", nombre: "PRADA", monto: 50000 }
+            { fecha: "2026-09-01", nombre: "MORA S", monto: 50000 },
+            { fecha: "2026-09-01", nombre: "RENATA", monto: 50000 },
+            { fecha: "2026-10-02", nombre: "PRADA", monto: 50000 },
+            { fecha: "2026-10-02", nombre: "LUPITA", monto: 50000 }
         ];
 
         if (!localStorage.getItem('prive_control_modelos')) {
-            localStorage.setItem('prive_control_modelos', JSON.stringify(datosInicialesExcel));
+            localStorage.setItem('prive_control_modelos', JSON.stringify(datosInicialesCompletos));
         }
         if (!localStorage.getItem('prive_historial_pagos')) {
             localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPrecargado));
@@ -1122,12 +1140,10 @@
             renderizarMiniaturas();
             actualizarPreview();
 
-            // Cambiar textos y botones del formulario a modo edición
             document.getElementById('tituloFormulario').textContent = `Editando a: ${reg.nombre}`;
             document.getElementById('btnSubmitForm').textContent = "Guardar Cambios de la Ficha";
             document.getElementById('btnCancelarEdicion').style.display = "block";
 
-            // Cambiar a la pestaña de creación/edición automáticamente
             document.getElementById('tabCrear').click();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
