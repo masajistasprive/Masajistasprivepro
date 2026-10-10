@@ -1136,7 +1136,7 @@
             document.getElementById('monto').value = reg.monto || 0;
             document.getElementById('vencimiento').value = reg.vencimiento || new Date().toISOString().split('T')[0];
             
-            // Cargar fotos guardadas y mostrarlas en miniatura y vista previa
+            // Cargar galería de fotos correctamente
             galeriaTemporal = reg.fotosGaleria ? [...reg.fotosGaleria] : (reg.fotoPrincipal ? [reg.fotoPrincipal] : []);
             renderizarMiniaturas();
             actualizarPreview();
