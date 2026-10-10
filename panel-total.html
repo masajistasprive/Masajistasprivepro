@@ -1124,7 +1124,7 @@
             renderizarPanel();
         };
 
-        // Cargar datos exactos en el formulario para editar y activar vista previa en vivo
+        // Cargar datos exactos y completos en el formulario para editar
         window.cargarFichaParaEditar = function(index) {
             const reg = registros[index];
             document.getElementById('editIndex').value = index;
@@ -1134,19 +1134,17 @@
             document.getElementById('whatsapp').value = reg.whatsapp || '';
             document.getElementById('descripcion').value = reg.descripcion || '';
             document.getElementById('monto').value = reg.monto || 0;
-            document.getElementById('vencimiento').value = reg.vencimiento || '';
+            document.getElementById('vencimiento').value = reg.vencimiento || new Date().toISOString().split('T')[0];
             
-            // Cargar galería existente o foto principal
+            // Cargar galería de fotos correctamente
             galeriaTemporal = reg.fotosGaleria ? [...reg.fotosGaleria] : (reg.fotoPrincipal ? [reg.fotoPrincipal] : []);
             renderizarMiniaturas();
             actualizarPreview();
 
-            // Cambiar textos y botones del formulario a modo edición clara
             document.getElementById('tituloFormulario').textContent = `Editando a: ${reg.nombre}`;
             document.getElementById('btnSubmitForm').textContent = "Guardar Cambios de la Ficha";
             document.getElementById('btnCancelarEdicion').style.display = "block";
 
-            // Cambiar a la pestaña de creación/edición automáticamente
             document.getElementById('tabCrear').click();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
