@@ -923,7 +923,7 @@
         let galeriaTemporal = [];
         let registrosCloud = [];
 
-        // Historial actualizado con Olivia el 05/10/2026 correctamente
+        // Historial con las fechas reales exactas del banco
         let historialPrecargado = [
             { fecha: "2026-09-23", nombre: "MORA & MORA SENSUAL", monto: 100000 },
             { fecha: "2026-09-26", nombre: "RENATA", monto: 50000 },
@@ -937,9 +937,8 @@
             { fecha: "2026-10-09", nombre: "LUPITA", monto: 70000 }
         ];
 
-        if (!localStorage.getItem('prive_historial_pagos')) {
-            localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPrecargado));
-        }
+        // Forzamos la actualización del historial con las fechas reales correctas
+        localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPrecargado));
         let historialPagos = JSON.parse(localStorage.getItem('prive_historial_pagos'));
 
         const firebaseConfig = {
@@ -1150,7 +1149,7 @@
             }
 
             registrosCloud.forEach((reg, realIndex) => {
-                // Entrecruzamiento automático: buscamos el último pago registrado de este perfil en el historial para calcular su vencimiento a 30 días
+                // Entrecruzamiento automático con las fechas reales del banco
                 let pagosPerfil = historialPagos.filter(p => p.nombre.includes(reg.nombre.toUpperCase()));
                 if (pagosPerfil.length > 0) {
                     let ultimoPago = pagosPerfil[pagosPerfil.length - 1];
