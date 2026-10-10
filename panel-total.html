@@ -241,17 +241,24 @@
             margin-top: 10px;
             border-top: 1px solid rgba(255,255,255,0.06);
             padding-top: 10px;
-            max-height: 180px;
+            max-height: 240px;
             overflow-y: auto;
         }
 
-        .mes-row {
+        .pago-item-row {
             display: flex;
             justify-content: space-between;
-            font-size: 0.78rem;
-            padding: 7px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-            color: #ccc;
+            align-items: center;
+            font-size: 0.76rem;
+            padding: 8px 4px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            color: #ddd;
+        }
+
+        .pago-item-row span.nombre-modelo-pago {
+            color: var(--gold);
+            font-weight: 600;
+            text-transform: uppercase;
         }
 
         /* Estructura Formulario + Vista Previa */
@@ -764,7 +771,7 @@
 
             <div class="historial-box">
                 <button class="historial-toggle" onclick="toggleHistorial()">
-                    <span>📊 Desglose Anual por Meses</span>
+                    <span>📊 Detalle de Pagos por Anunciante</span>
                     <span id="flechaHistorial">▼</span>
                 </button>
                 <div class="historial-content" id="historialContent"></div>
@@ -1060,7 +1067,7 @@
             totalMesAnterior.textContent = `$${sumaMesAnterior.toLocaleString('es-AR')}`;
             totalHistorico.textContent = `$${sumaHistorico.toLocaleString('es-AR')}`;
 
-            renderizarHistorialAnual();
+            renderizarHistorialDetallado();
 
             if (registrosCloud.length === 0) {
                 tarjetasContainer.innerHTML = `<div class="empty-state">No hay perfiles registrados en la nube todavía.</div>`;
@@ -1179,37 +1186,25 @@
             document.getElementById('btnCancelarEdicion').style.display = "none";
         };
 
-        function renderizarHistorialAnual() {
+        function renderizarHistorialDetallado() {
             historialContent.innerHTML = '';
-            let agrupadoMeses = {};
-
-            historialPagos.forEach(p => {
-                if (!p.fecha) return;
-                const mesAnio = p.fecha.slice(0, 7);
-                if (!agrupadoMeses[mesAnio]) agrupadoMeses[mesAnio] = 0;
-                agrupadoMeses[mesAnio] += Number(p.monto || 0);
-            });
-
-            const mesesKeys = Object.keys(agrupadoMeses).sort().reverse();
-            if (mesesKeys.length === 0) {
+            if (historialPagos.length === 0) {
                 historialContent.innerHTML = `<div style="font-size:0.8rem; color:#888; text-align:center; padding:5px;">Sin pagos registrados aún.</div>`;
                 return;
             }
 
-            const nombresMeses = {
-                "01": "Enero", "02": "Febrero", "03": "Marzo", "04": "Abril",
-                "05": "Mayo", "06": "Junio", "07": "Julio", "08": "Agosto",
-                "09": "Septiembre", "10": "Octubre", "11": "Noviembre", "12": "Diciembre"
-            };
+            // Ordenar de más reciente a más antiguo
+            let pagosOrdenados = [...historialPagos].reverse();
 
-            mesesKeys.forEach(m => {
-                const [anio, mesNum] = m.split('-');
-                const nombreMesFormateado = `${nombresMeses[mesNum] || mesNum} ${anio}`;
+            pagosOrdenados.forEach((p) => {
                 const row = document.createElement('div');
-                row.className = 'mes-row';
+                row.className = 'pago-item-row';
                 row.innerHTML = `
-                    <span>${nombreMesFormateado}</span>
-                    <strong style="color:var(--success);">+$${agrupadoMeses[m].toLocaleString('es-AR')}</strong>
+                    <div>
+                        <span class="nombre-modelo-pago">${p.nombre || 'Anunciante'}</span>
+                        <div style="font-size: 0.65rem; color: #888;">${p.fecha || 'Fecha no registrada'}</div>
+                    </div>
+                    <strong style="color:var(--success);">+$${Number(p.monto || 0).toLocaleString('es-AR')}</strong>
                 `;
                 historialContent.appendChild(row);
             });
