@@ -105,11 +105,11 @@
             color: var(--gold);
         }
 
-        /* Tabs de Navegación */
+        /* Tabs de Navegación (4 pestañas ahora) */
         .nav-tabs {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 6px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
             margin-bottom: 18px;
             background: #0b0b0b;
             padding: 5px;
@@ -121,10 +121,10 @@
             background: transparent;
             border: none;
             color: var(--text-muted);
-            padding: 10px 4px;
-            font-size: 0.68rem;
+            padding: 10px 2px;
+            font-size: 0.60rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             font-weight: 700;
             border-radius: 10px;
             cursor: pointer;
@@ -717,6 +717,43 @@
             font-style: italic;
             font-size: 0.85rem;
         }
+
+        /* Estilos de la Pestaña de Moderación */
+        .mod-comentario-card {
+            background: #141414;
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .mod-acciones {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .btn-aprobar {
+            background: rgba(0, 230, 118, 0.15);
+            border: 1px solid var(--success);
+            color: var(--success);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+        .btn-rechazar {
+            background: var(--danger-bg);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body>
@@ -745,9 +782,10 @@
 
         <!-- Navegación por Pestañas -->
         <div class="nav-tabs">
-            <button class="tab-btn active" onclick="cambiarTab('cajaTab', this)">📊 Caja & Finanzas</button>
-            <button class="tab-btn" onclick="cambiarTab('anunciantesTab', this)">👥 Gestión de Fichas</button>
-            <button class="tab-btn" id="tabCrear" onclick="cambiarTab('nuevoTab', this)">➕ Crear Nueva</button>
+            <button class="tab-btn active" onclick="cambiarTab('cajaTab', this)">📊 Caja</button>
+            <button class="tab-btn" onclick="cambiarTab('anunciantesTab', this)">👥 Fichas</button>
+            <button class="tab-btn" id="tabCrear" onclick="cambiarTab('nuevoTab', this)">➕ Crear</button>
+            <button class="tab-btn" onclick="cambiarTab('moderacionTab', this)">💬 Moderación</button>
         </div>
 
         <!-- PESTAÑA 1: CAJA & FINANZAS -->
@@ -858,6 +896,14 @@
                 </div>
             </div>
         </div>
+
+        <!-- PESTAÑA 4: MODERACIÓN DE COMENTARIOS -->
+        <div id="moderacionTab" class="panel-section">
+            <h2 style="font-size:0.85rem; color: var(--gold); text-transform: uppercase; letter-spacing:1px; margin-bottom: 12px;">Comentarios Pendientes de Aprobación</h2>
+            <div id="listaModeracionContainer">
+                <div class="empty-state">Buscando comentarios pendientes...</div>
+            </div>
+        </div>
     </div>
 
     <!-- Firebase SDKs -->
@@ -869,7 +915,6 @@
         let galeriaTemporal = [];
         let registrosCloud = [];
 
-        // Inicializamos el historial con los pagos exactos requeridos
         let historialPrecargado = [
             { fecha: "2026-09-01", nombre: "MORA", monto: 50000 },
             { fecha: "2026-09-01", nombre: "MORA S", monto: 50000 },
@@ -909,6 +954,7 @@
             loginOverlay.style.display = 'none';
             mainContent.style.display = 'block';
             cargarPerfilesDesdeFirebase();
+            cargarComentariosParaModerar();
         }
 
         loginForm.addEventListener('submit', (e) => {
@@ -918,6 +964,7 @@
                 loginOverlay.style.display = 'none';
                 mainContent.style.display = 'block';
                 cargarPerfilesDesdeFirebase();
+                cargarComentariosParaModerar();
             } else {
                 errorMsg.style.display = 'block';
                 passwordInput.value = '';
@@ -929,6 +976,7 @@
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             btnElement.classList.add('active');
+            if(tabId === 'moderacionTab') cargarComentariosParaModerar();
         };
 
         window.procesarFotosCelular = function(event) {
@@ -1163,7 +1211,6 @@
             });
         };
 
-        // Cargar absolutamente todos los datos de la ficha al editar
         window.cargarFichaParaEditar = function(index) {
             const reg = registrosCloud[index];
             document.getElementById('editDocId').value = reg.id;
@@ -1249,6 +1296,75 @@
             }
         };
 
+        // Función para cargar comentarios pendientes de moderación desde todas las colecciones de perfiles
+        function cargarComentariosParaModerar() {
+            const container = document.getElementById('listaModeracionContainer');
+            if(!container) return;
+            container.innerHTML = `<div class="empty-state">Buscando comentarios...</div>`;
+
+            db.collection("modelos_prive").get().then((modeloSnap) => {
+                let promesas = [];
+                modeloSnap.forEach((mDoc) => {
+                    const mId = mDoc.id;
+                    const mNombre = mDoc.data().nombre || mId;
+                    let p = db.collection("perfiles_comentarios").doc(mId).collection("mensajes").get().then((msgSnap) => {
+                        let pendientes = [];
+                        msgSnap.forEach((msgDoc) => {
+                            let data = msgDoc.data();
+                            // Si 'aprobado' es falso o no existe, está pendiente
+                            if (data.aprobado === false || data.aprobado === undefined) {
+                                pendientes.push({ id: msgDoc.id, perfilId: mId, perfilNombre: mNombre, ...data });
+                            }
+                        });
+                        return pendientes;
+                    });
+                    promesas.push(p);
+                });
+
+                Promise.all(promesas).then((resultados) => {
+                    let todosPendientes = [].concat(...resultados);
+                    container.innerHTML = "";
+
+                    if (todosPendientes.length === 0) {
+                        container.innerHTML = `<div class="empty-state">No hay comentarios pendientes de moderación.</div>`;
+                        return;
+                    }
+
+                    todosPendientes.forEach((item) => {
+                        const div = document.createElement('div');
+                        div.className = 'mod-comentario-card';
+                        div.innerHTML = `
+                            <div style="font-size: 0.75rem; color: var(--gold); margin-bottom: 4px; font-weight: 700;">PERFIL: ${item.perfilNombre}</div>
+                            <div style="font-size: 0.85rem; font-weight: bold; color: #fff; margin-bottom: 4px;">${item.autor || 'Anónimo'} (${item.rating || 5}★)</div>
+                            <div style="font-size: 0.78rem; color: #ccc; margin-bottom: 8px;">"${item.contenido}"</div>
+                            ${item.image ? `<img src="${item.image}" style="max-width: 100px; max-height: 80px; border-radius: 4px; display: block; margin-bottom: 8px; object-fit: cover;">` : ''}
+                            <div class="mod-acciones">
+                                <button class="btn-aprobar" onclick="window.aprobarComentario('${item.perfilId}', '${item.id}')">✓ Aprobar</button>
+                                <button class="btn-rechazar" onclick="window.rechazarComentario('${item.perfilId}', '${item.id}')">✕ Eliminar</button>
+                            </div>
+                        `;
+                        container.appendChild(div);
+                    });
+                });
+            });
+        }
+
+        window.aprobarComentario = function(perfilId, msgId) {
+            db.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").doc(msgId).update({
+                aprobado: true
+            }).then(() => {
+                cargarComentariosParaModerar();
+            });
+        };
+
+        window.rechazarComentario = function(perfilId, msgId) {
+            if(confirm("¿Eliminar este comentario permanentemente?")) {
+                db.collection("perfiles_comentarios").doc(perfilId).collection("mensajes").doc(msgId).delete().then(() => {
+                    cargarComentariosParaModerar();
+                });
+            }
+        };
+
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             const docId = document.getElementById('editDocId').value;
@@ -1265,7 +1381,6 @@
             const fotosGaleriaVal = [...galeriaTemporal];
 
             if (docId) {
-                // MODO EDICIÓN EN FIREBASE
                 db.collection("modelos_prive").doc(docId).update({
                     nombre,
                     zona,
@@ -1283,7 +1398,6 @@
                     document.querySelectorAll('.tab-btn')[1].click();
                 });
             } else {
-                // MODO CREACIÓN NUEVA EN FIREBASE
                 const nuevoId = nombre.toLowerCase().replace(/[^a-z0-9]/g, '');
                 const nuevoReg = {
                     nombre,
