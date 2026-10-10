@@ -965,7 +965,6 @@
             { fecha: "2026-10-02", nombre: "LUPITA", monto: 50000 }
         ];
 
-        // Respetamos las anunciantes guardadas si ya existen, sino cargamos el set completo
         if (!localStorage.getItem('prive_control_modelos')) {
             localStorage.setItem('prive_control_modelos', JSON.stringify(datosInicialesCompletos));
         }
