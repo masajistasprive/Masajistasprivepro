@@ -434,7 +434,36 @@
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* VISTA PREVIA CON SELECTOR DE IDIOMAS */
+        /* Botón Traductor Automático */
+        .btn-traducir {
+            background: rgba(223, 194, 133, 0.15);
+            border: 1px solid #dfc285;
+            color: #dfc285;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            margin-bottom: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            width: 100%;
+            justify-content: center;
+        }
+        .btn-traducir:hover { background: #dfc285; color: #0d0d0d; }
+
+        /* Pestañas de Idiomas en el Formulario */
+        .lang-tabs { display: flex; gap: 4px; margin-bottom: 12px; border-bottom: 1px solid #222; padding-bottom: 8px; overflow-x: auto; }
+        .lang-tab { background: #161616; border: 1px solid #333; color: #888; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
+        .lang-tab.active { background: var(--gold); color: #000; border-color: var(--gold); }
+        .lang-section { display: none; }
+        .lang-section.active { display: block; }
+
+        /* VISTA PREVIA */
         .preview-container {
             background: #0b0b0b;
             border: 1px dashed var(--gold);
@@ -457,20 +486,6 @@
             letter-spacing: 2px;
             margin-bottom: 10px;
             font-weight: 700;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .lang-selector-panel {
-            background: #111;
-            border: 1px solid var(--card-border);
-            color: var(--gold);
-            font-size: 0.65rem;
-            padding: 3px 6px;
-            border-radius: 4px;
-            cursor: pointer;
-            text-transform: uppercase;
         }
 
         .preview-card-mock {
@@ -875,7 +890,7 @@
             <div class="cards-container" id="tarjetasContainer"></div>
         </div>
 
-        <!-- PESTAÑA 3: CREAR / EDITAR FICHA CON VISTA PREVIA Y TRADUCTOR DE 4 IDIOMAS -->
+        <!-- PESTAÑA 3: CREAR / EDITAR FICHA CON TRADUCTOR MULTIIDIOMA Y FOTOS -->
         <div id="nuevoTab" class="panel-section">
             <div class="layout-editor-grid">
                 <!-- Formulario -->
@@ -888,41 +903,71 @@
                             <input type="text" id="nombre" placeholder="Ej: Jennyfer" oninput="actualizarPreview()" required>
                         </div>
                         <div class="form-group">
-                            <label for="zona">Barrio / Zona</label>
-                            <input type="text" id="zona" placeholder="Ej: Tribunales" oninput="actualizarPreview()" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="modalidad">Modalidad de Atención</label>
-                            <select id="modalidad" onchange="actualizarPreview()" required>
-                                <option value="Gabinete Propio">Gabinete Propio</option>
-                                <option value="Domicilio / Hotel">Domicilio / Hotel</option>
-                                <option value="Gabinete y Domicilio">Gabinete y Domicilio</option>
-                            </select>
+                            <label for="whatsapp">WhatsApp / Teléfono</label>
+                            <input type="text" id="whatsapp" placeholder="Ej: 5491131774848" oninput="actualizarPreview()">
                         </div>
                         <div class="form-group">
                             <label for="categoria">Categoría</label>
                             <select id="categoria" onchange="actualizarPreview()" required>
-                                <option value="TERAPEUTICAS">Terapéuticas ($50k)</option>
-                                <option value="SENSUALES">Sensuales ($70k)</option>
-                                <option value="FANTASIAS">Fantasías ($100k)</option>
-                                <option value="MASCULINOS">Masculinos ($50k)</option>
+                                <option value="terapeuticas">Terapéuticas ($50k)</option>
+                                <option value="sensuales">Sensuales ($70k)</option>
+                                <option value="fantasias">Fantasías ($100k)</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label for="whatsapp">WhatsApp / Teléfono</label>
-                            <input type="text" id="whatsapp" placeholder="Ej: 5491131774848" oninput="actualizarPreview()">
+
+                        <!-- Botón Traductor Automático IDÉNTICO al Admin -->
+                        <div style="margin-top: 15px;">
+                            <button type="button" class="btn-traducir" onclick="traducirAutomaticamenteAdmin()">✨ Traducir automáticamente campos a Inglés, Portugués y Francés</button>
+                            <div id="tradStatusAdmin" style="font-size: 11px; color: var(--gold); margin-bottom: 10px; text-align: center;"></div>
                         </div>
+
+                        <!-- Pestañas de Idiomas -->
+                        <div class="lang-tabs">
+                            <div class="lang-tab active" onclick="cambiarTabAdmin('es', event)">🇪🇸 Español</div>
+                            <div class="lang-tab" onclick="cambiarTabAdmin('en', event)">🇺🇸 Inglés</div>
+                            <div class="lang-tab" onclick="cambiarTabAdmin('pt', event)">🇧🇷 Portugués</div>
+                            <div class="lang-tab" onclick="cambiarTabAdmin('fr', event)">🇫🇷 Francés</div>
+                        </div>
+
+                        <!-- Sección Español -->
+                        <div id="admin-lang-es" class="lang-section active">
+                            <div class="form-group"><label>Zona (ES):</label><input type="text" id="zona_es" placeholder="Ej: Tribunales" oninput="actualizarPreview()"></div>
+                            <div class="form-group"><label>Modalidad (ES):</label><input type="text" id="modalidad_es" placeholder="Ej: Gabinete Propio" oninput="actualizarPreview()"></div>
+                            <div class="form-group"><label>Descripción / Párrafo 1 (ES):</label><textarea id="desc1_es" placeholder="Detalles de masajes..." oninput="actualizarPreview()"></textarea></div>
+                            <div class="form-group"><label>Párrafo 2 (ES):</label><textarea id="desc2_es" placeholder="Más detalles..." oninput="actualizarPreview()"></textarea></div>
+                        </div>
+
+                        <!-- Sección Inglés -->
+                        <div id="admin-lang-en" class="lang-section">
+                            <div class="form-group"><label>Area (EN):</label><input type="text" id="zona_en"></div>
+                            <div class="form-group"><label>Modality (EN):</label><input type="text" id="modalidad_en"></div>
+                            <div class="form-group"><label>Paragraph 1 (EN):</label><textarea id="desc1_en"></textarea></div>
+                            <div class="form-group"><label>Paragraph 2 (EN):</label><textarea id="desc2_en"></textarea></div>
+                        </div>
+
+                        <!-- Sección Portugués -->
+                        <div id="admin-lang-pt" class="lang-section">
+                            <div class="form-group"><label>Zona (PT):</label><input type="text" id="zona_pt"></div>
+                            <div class="form-group"><label>Modalidade (PT):</label><input type="text" id="modalidad_pt"></div>
+                            <div class="form-group"><label>Parágrafo 1 (PT):</label><textarea id="desc1_pt"></textarea></div>
+                            <div class="form-group"><label>Parágrafo 2 (PT):</label><textarea id="desc2_pt"></textarea></div>
+                        </div>
+
+                        <!-- Sección Francés -->
+                        <div id="admin-lang-fr" class="lang-section">
+                            <div class="form-group"><label>Zone (FR):</label><input type="text" id="zona_fr"></div>
+                            <div class="form-group"><label>Modalité (FR):</label><input type="text" id="modalidad_fr"></div>
+                            <div class="form-group"><label>Paragraphe 1 (FR):</label><textarea id="desc1_fr"></textarea></div>
+                            <div class="form-group"><label>Paragraphe 2 (FR):</label><textarea id="desc2_fr"></textarea></div>
+                        </div>
+
                         <div class="form-group">
                             <label>Fotos (Seleccioná varias desde el celular)</label>
                             <label for="fileFotos" class="file-upload-btn">📁 Agregar Fotos a la Galería</label>
                             <input type="file" id="fileFotos" accept="image/*" multiple style="display: none;" onchange="procesarFotosCelular(event)">
                             <div class="thumbnails-grid" id="thumbnailsGrid"></div>
-                            <span style="font-size:0.6rem; color:#888; display:block; margin-top:4px;">* La primera miniatura es la foto principal que se ve en la tarjeta. Arrastrá para ordenar o tocá la ✕ para borrar.</span>
                         </div>
-                        <div class="form-group">
-                            <label for="descripcion">Descripción / Perfil</label>
-                            <textarea id="descripcion" placeholder="Detalles de masajes y atención..." oninput="actualizarPreview()"></textarea>
-                        </div>
+
                         <div class="form-group">
                             <label for="monto">Monto Pagado ($)</label>
                             <input type="number" id="monto" placeholder="50000" required>
@@ -936,21 +981,13 @@
                     </form>
                 </div>
 
-                <!-- Vista Previa con Traductor de Ficha en Vivo (4 Idiomas) -->
+                <!-- Vista Previa IDÉNTICA al perfil público -->
                 <div class="preview-container">
-                    <div class="preview-title">
-                        <span>👁️ Vista Previa en Vivo</span>
-                        <select id="langSelector" class="lang-selector-panel" onchange="actualizarPreview()">
-                            <option value="es">🇪🇸 Español</option>
-                            <option value="en">🇺🇸 English</option>
-                            <option value="pt">🇧🇷 Português</option>
-                            <option value="fr">🇫🇷 Français</option>
-                        </select>
-                    </div>
+                    <div class="preview-title">👁️ Vista Previa del Perfil en Vivo</div>
                     <div class="preview-card-mock">
                         <div class="preview-img-box" id="prevImgBox">
                             <span>Sin Imagen</span>
-                            <span class="preview-badge" id="prevBadgeTxt">✓ Perfil Verificado</span>
+                            <span class="preview-badge">✓ Perfil Verificado</span>
                         </div>
                         <div class="preview-info">
                             <div class="preview-nombre" id="prevNombre">NOMBRE</div>
@@ -1049,6 +1086,41 @@
             if(tabId === 'moderacionTab') cargarComentariosParaModerar();
         };
 
+        window.cambiarTabAdmin = function(lang, event) {
+            document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.lang-section').forEach(s => s.classList.remove('active'));
+            if(event) event.currentTarget.classList.add('active');
+            const sec = document.getElementById(`admin-lang-${lang}`);
+            if(sec) sec.classList.add('active');
+        };
+
+        // Función de traducción automática idéntica a admin.html
+        async function traducirAutomaticamenteAdmin() {
+            const status = document.getElementById('tradStatusAdmin');
+            if(status) status.textContent = "⏳ Traduciendo textos...";
+            const campos = ['zona', 'modalidad', 'desc1', 'desc2'];
+            const destinos = [{ code: 'en', suf: 'en' }, { code: 'pt', suf: 'pt' }, { code: 'fr', suf: 'fr' }];
+
+            try {
+                for (let dest of destinos) {
+                    for (let campo of campos) {
+                        const elEs = document.getElementById(`${campo}_es`);
+                        if (elEs && elEs.value.trim()) {
+                            let res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(elEs.value)}&langpair=es|${dest.code}`);
+                            let data = await res.json();
+                            if (data && data.responseData) {
+                                const elDest = document.getElementById(`${campo}_${dest.suf}`);
+                                if(elDest) elDest.value = data.responseData.translatedText;
+                            }
+                        }
+                    }
+                }
+                if(status) status.textContent = "✅ ¡Traducción completada!";
+            } catch (e) {
+                if(status) status.textContent = "❌ Error al traducir.";
+            }
+        }
+
         window.procesarFotosCelular = function(event) {
             const files = event.target.files;
             if (!files.length) return;
@@ -1099,56 +1171,19 @@
             actualizarPreview();
         };
 
-        // Diccionario de Traducción Automática para la Vista Previa (4 Idiomas)
-        const traduccionesPanel = {
-            en: {
-                verificado: "✓ Verified Profile",
-                zona: "📍 ZONE: ",
-                modalidad: { "Gabinete Propio": "Own Cabinet", "Domicilio / Hotel": "Outcall / Hotel", "Gabinete y Domicilio": "Cabinet & Outcall" },
-                desc: "Description will appear here in real time...",
-                btnWa: "💬 Send WhatsApp"
-            },
-            pt: {
-                verificado: "✓ Perfil Verificado",
-                zona: "📍 ZONA: ",
-                modalidad: { "Gabinete Propio": "Gabinete Próprio", "Domicilio / Hotel": "Domicílio / Hotel", "Gabinete y Domicilio": "Gabinete e Domicílio" },
-                desc: "A descrição aparecerá aqui em tempo real...",
-                btnWa: "💬 Enviar WhatsApp"
-            },
-            fr: {
-                verificado: "✓ Profil Vérifié",
-                zona: "📍 ZONE : ",
-                modalidad: { "Gabinete Propio": "Cabinet Privé", "Domicilio / Hotel": "À Domicile / Hôtel", "Gabinete y Domicilio": "Cabinet & Domicile" },
-                desc: "La description apparaîtra ici en temps réel...",
-                btnWa: "💬 Envoyer WhatsApp"
-            },
-            es: {
-                verificado: "✓ Perfil Verificado",
-                zona: "📍 ZONA: ",
-                modalidad: { "Gabinete Propio": "Gabinete Propio", "Domicilio / Hotel": "Domicilio / Hotel", "Gabinete y Domicilio": "Gabinete y Domicilio" },
-                desc: "La descripción aparecerá aquí en tiempo real...",
-                btnWa: "💬 Enviar WhatsApp"
-            }
-        };
-
         window.actualizarPreview = function() {
-            const lang = document.getElementById('langSelector').value;
-            const t = traduccionesPanel[lang] || traduccionesPanel.es;
-
             const nombre = document.getElementById('nombre').value.trim();
-            const zona = document.getElementById('zona').value.trim();
-            const modalidad = document.getElementById('modalidad').value;
-            const desc = document.getElementById('descripcion').value.trim();
+            const zona = document.getElementById('zona_es').value.trim();
+            const modalidad = document.getElementById('modalidad_es').value.trim();
+            const desc = document.getElementById('desc1_es').value.trim();
             const wa = document.getElementById('whatsapp').value.trim();
 
             document.getElementById('prevNombre').textContent = nombre || 'NOMBRE';
             document.getElementById('prevZona').textContent = zona ? `📍 ${zona.toUpperCase()}` : '📍 ZONA';
-            document.getElementById('prevModalidad').textContent = t.modalidad[modalidad] || modalidad;
-            document.getElementById('prevDesc').textContent = desc || t.desc;
-            document.getElementById('prevBadgeTxt').textContent = t.verificado;
+            document.getElementById('prevModalidad').textContent = modalidad || 'Gabinete Propio';
+            document.getElementById('prevDesc').textContent = desc || 'La descripción aparecerá aquí en tiempo real...';
 
             const waBtn = document.getElementById('prevWaBtn');
-            waBtn.textContent = t.btnWa;
             if (wa) {
                 waBtn.href = `https://wa.me/${wa}?text=Hola%20${encodeURIComponent(nombre)}`;
                 waBtn.style.display = 'block';
@@ -1158,9 +1193,9 @@
 
             const imgBox = document.getElementById('prevImgBox');
             if (galeriaTemporal.length > 0) {
-                imgBox.innerHTML = `<img src="${galeriaTemporal[0]}" alt="Preview"><span class="preview-badge" id="prevBadgeTxt">${t.verificado}</span>`;
+                imgBox.innerHTML = `<img src="${galeriaTemporal[0]}" alt="Preview"><span class="preview-badge">✓ Perfil Verificado</span>`;
             } else {
-                imgBox.innerHTML = `<span>Sin Imagen</span><span class="preview-badge" id="prevBadgeTxt">${t.verificado}</span>`;
+                imgBox.innerHTML = `<span>Sin Imagen</span><span class="preview-badge">✓ Perfil Verificado</span>`;
             }
         };
 
@@ -1182,9 +1217,9 @@
         const inputMonto = document.getElementById('monto');
         
         selectCat.addEventListener('change', () => {
-            if(selectCat.value === 'TERAPEUTICAS' || selectCat.value === 'MASCULINOS') inputMonto.value = '50000';
-            else if(selectCat.value === 'SENSUALES') inputMonto.value = '70000';
-            else if(selectCat.value === 'FANTASIAS') inputMonto.value = '100000';
+            if(selectCat.value === 'terapeuticas') inputMonto.value = '50000';
+            else if(selectCat.value === 'sensuales') inputMonto.value = '70000';
+            else if(selectCat.value === 'fantasias') inputMonto.value = '100000';
         });
 
         const form = document.getElementById('cajaForm');
@@ -1294,7 +1329,7 @@
                             <button class="${btnCheckClass}" onclick="togglePagado(${realIndex})" title="Marcar como pagado">✓</button>
                             <div>
                                 <div class="modelo-nombre">${reg.nombre}</div>
-                                <div class="modelo-zona-cat">${reg.zona || 'CABA'} • <span style="color:#dfc285;">${reg.categoria || 'TERAPEUTICAS'}</span> (${reg.modalidad || 'Gabinete Propio'})</div>
+                                <div class="modelo-zona-cat">${reg.zona || 'CABA'} • <span style="color:#dfc285;">${reg.categoria || 'terapeuticas'}</span></div>
                             </div>
                         </div>
                         <div>${badgeHtml}</div>
@@ -1358,14 +1393,21 @@
             const reg = registrosCloud[index];
             document.getElementById('editDocId').value = reg.id;
             document.getElementById('nombre').value = reg.nombre || '';
-            document.getElementById('zona').value = reg.zona || '';
-            document.getElementById('modalidad').value = reg.modalidad || 'Gabinete Propio';
-            document.getElementById('categoria').value = reg.categoria || 'TERAPEUTICAS';
             document.getElementById('whatsapp').value = reg.whatsapp || '';
-            document.getElementById('descripcion').value = reg.descripcion || '';
+            document.getElementById('categoria').value = reg.categoria || 'terapeuticas';
             document.getElementById('monto').value = reg.monto || 0;
             document.getElementById('vencimiento').value = reg.vencimiento || new Date().toISOString().split('T')[0];
             
+            const trad = reg.traducciones || {};
+            ['es', 'en', 'pt', 'fr'].forEach(l => {
+                const tLang = trad[l] || {};
+                const setVal = (id, val) => { const el = document.getElementById(id); if(el) el.value = val || ''; };
+                setVal(`zona_${l}`, tLang.valorZona || reg.zona || '');
+                setVal(`modalidad_${l}`, tLang.valorModalidad || reg.modalidad || '');
+                setVal(`desc1_${l}`, tLang.descPerfil1 || reg.descripcion || '');
+                setVal(`desc2_${l}`, tLang.descPerfil2 || '');
+            });
+
             galeriaTemporal = reg.fotosGaleria && reg.fotosGaleria.length > 0 ? [...reg.fotosGaleria] : (reg.fotoPrincipal ? [reg.fotoPrincipal] : []);
             renderizarMiniaturas();
             actualizarPreview();
@@ -1522,26 +1564,41 @@
             e.preventDefault();
             const docId = document.getElementById('editDocId').value;
             const nombre = document.getElementById('nombre').value.trim().toUpperCase();
-            const zona = document.getElementById('zona').value.trim().toUpperCase();
-            const modalidad = document.getElementById('modalidad').value;
             const categoria = document.getElementById('categoria').value;
             const whatsapp = document.getElementById('whatsapp').value.trim();
-            const descripcion = document.getElementById('descripcion').value.trim();
             const monto = parseFloat(document.getElementById('monto').value) || 0;
             let vencimiento = document.getElementById('vencimiento').value;
             const hoyStr = new Date().toISOString().split('T')[0];
 
-            const fotoPrincipalVal = galeriaTemporal.length > 0 ? galeriaTemporal[0] : '';
-            const fotosGaleriaVal = [...galeriaTemporal];
+            let traducciones = { es: {}, en: {}, pt: {}, fr: {} };
+            ['es', 'en', 'pt', 'fr'].forEach(l => {
+                const getVal = (id) => document.getElementById(id)?.value.trim() || '';
+                traducciones[l] = {
+                    perfilTitle: `${nombre} | Masajistas Privé`,
+                    btnVolver: '← Volver',
+                    badgeVerificado: '✓ Privé Verificado',
+                    labelZona: 'Zona:',
+                    valorZona: getVal(`zona_${l}`),
+                    labelModalidad: 'Modalidad:',
+                    valorModalidad: getVal(`modalidad_${l}`),
+                    descPerfil1: getVal(`desc1_${l}`),
+                    descPerfil2: getVal(`desc2_${l}`)
+                };
+            });
+
+            const fotoPrincipalVal = galeriaTemporal.length > 0 ? galeriaTemporal[0] : 'img/monograma.png';
+            const fotosGaleriaVal = galeriaTemporal.length > 0 ? [...galeriaTemporal] : [fotoPrincipalVal];
 
             if (docId) {
                 db.collection("modelos_prive").doc(docId).update({
                     nombre,
-                    zona,
-                    modalidad,
                     categoria,
                     whatsapp,
-                    descripcion,
+                    whatsappLink: `https://wa.me/${whatsapp}?text=Hola%20${encodeURIComponent(nombre)},%20vi%20tu%20perfil%20en%20Masajistas%20Privé`,
+                    zona: traducciones.es.valorZona,
+                    modalidad: traducciones.es.valorModalidad,
+                    descripcion: traducciones.es.descPerfil1,
+                    traducciones,
                     monto,
                     vencimiento,
                     fotoPrincipal: fotoPrincipalVal,
@@ -1565,14 +1622,17 @@
                 let dia = String(fechaVen.getDate()).padStart(2, '0');
                 let vencimientoFinal = `${anio}-${mes}-${dia}`;
 
-                const nuevoId = nombre.toLowerCase().replace(/[^a-z0-9]/g, '');
+                const nuevoId = nombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '');
                 const nuevoReg = {
                     nombre,
-                    zona,
-                    modalidad,
+                    idSlug: nuevoId,
                     categoria,
                     whatsapp,
-                    descripcion,
+                    whatsappLink: `https://wa.me/${whatsapp}?text=Hola%20${encodeURIComponent(nombre)},%20vi%20tu%20perfil%20en%20Masajistas%20Privé`,
+                    zona: traducciones.es.valorZona,
+                    modalidad: traducciones.es.valorModalidad,
+                    descripcion: traducciones.es.descPerfil1,
+                    traducciones,
                     monto,
                     vencimiento: vencimientoFinal,
                     fotoPrincipal: fotoPrincipalVal,
@@ -1580,7 +1640,9 @@
                     pagado: true,
                     fechaPago: hoyStr,
                     visitas: 0,
-                    visitasDiarias: 0
+                    visitasDiarias: 0,
+                    estado: 'activa',
+                    destacada: false
                 };
 
                 db.collection("modelos_prive").doc(nuevoId).set(nuevoReg).then(() => {
