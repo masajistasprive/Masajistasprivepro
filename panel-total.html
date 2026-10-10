@@ -371,10 +371,6 @@
             pointer-events: none;
         }
 
-        .thumb-item.dragging {
-            opacity: 0.4;
-        }
-
         .thumb-badge {
             position: absolute;
             top: 2px; left: 2px;
@@ -398,7 +394,7 @@
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* VISTA PREVIA EN VIVO */
+        /* VISTA PREVIA IDÉNTICA A LA TARJETA PÚBLICA */
         .preview-container {
             background: #0b0b0b;
             border: 1px dashed var(--gold);
@@ -425,10 +421,10 @@
 
         .preview-card-mock {
             width: 100%;
-            max-width: 260px;
+            max-width: 280px;
             margin: 0 auto;
-            background: #141414;
-            border: 1px solid rgba(223, 194, 133, 0.4);
+            background: #121212;
+            border: 1px solid #222;
             border-radius: 12px;
             overflow: hidden;
             text-align: left;
@@ -437,7 +433,7 @@
 
         .preview-img-box {
             width: 100%;
-            height: 220px;
+            height: 280px;
             background: #1a1a1a;
             position: relative;
             display: flex;
@@ -456,21 +452,23 @@
 
         .preview-badge {
             position: absolute;
-            top: 8px; left: 8px;
+            top: 10px; left: 10px;
             background: rgba(0,0,0,0.8);
-            border: 1px solid var(--gold);
-            color: var(--gold);
+            border: 1px solid #00d26a;
+            color: #00d26a;
             font-size: 9px;
-            padding: 3px 8px;
+            font-weight: 700;
+            padding: 4px 8px;
             border-radius: 4px;
+            text-transform: uppercase;
         }
 
         .preview-info {
-            padding: 12px;
+            padding: 15px;
         }
 
         .preview-nombre {
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: #fff;
             font-family: 'Cormorant Garamond', serif;
             font-weight: 700;
@@ -478,21 +476,36 @@
         }
 
         .preview-zona {
-            font-size: 0.68rem;
+            font-size: 0.72rem;
             color: var(--gold);
             text-transform: uppercase;
-            margin-top: 2px;
-            margin-bottom: 8px;
+            margin-top: 3px;
+            margin-bottom: 10px;
+            font-weight: 600;
         }
 
         .preview-desc {
-            font-size: 0.7rem;
-            color: #aaa;
-            line-height: 1.3;
+            font-size: 0.75rem;
+            color: #ccc;
+            line-height: 1.4;
             display: -webkit-box;
-            -webkit-line-clamp: 2;
+            -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .preview-wa-btn {
+            display: block;
+            background: #25d366;
+            color: #000;
+            text-align: center;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-decoration: none;
+            text-transform: uppercase;
         }
 
         .btn-submit {
@@ -602,7 +615,7 @@
         .status-vencido {
             background-color: var(--danger-bg);
             color: var(--danger);
-            border: 1px solid rgba(255, 77, 77, 0.3);
+            border: 1px solid rgba(231, 76, 60, 0.3);
         }
 
         .monto-input {
@@ -790,14 +803,14 @@
                         </div>
                         <div class="form-group">
                             <label for="whatsapp">WhatsApp / Teléfono</label>
-                            <input type="text" id="whatsapp" placeholder="Ej: 5491131774848">
+                            <input type="text" id="whatsapp" placeholder="Ej: 5491131774848" oninput="actualizarPreview()">
                         </div>
                         <div class="form-group">
                             <label>Fotos (Seleccioná varias desde el celular)</label>
                             <label for="fileFotos" class="file-upload-btn">📁 Agregar Fotos a la Galería</label>
                             <input type="file" id="fileFotos" accept="image/*" multiple style="display: none;" onchange="procesarFotosCelular(event)">
                             <div class="thumbnails-grid" id="thumbnailsGrid"></div>
-                            <span style="font-size:0.6rem; color:#888; display:block; margin-top:4px;">* La primera foto es la principal. Arrastrá las miniaturas para ordenar o tocá la ✕ para borrar.</span>
+                            <span style="font-size:0.6rem; color:#888; display:block; margin-top:4px;">* La primera miniatura es la foto principal que se ve en la tarjeta. Arrastrá para ordenar o tocá la ✕ para borrar.</span>
                         </div>
                         <div class="form-group">
                             <label for="descripcion">Descripción / Perfil</label>
@@ -816,18 +829,19 @@
                     </form>
                 </div>
 
-                <!-- Vista Previa en Vivo Interactiva -->
+                <!-- Vista Previa IDÉNTICA al perfil público -->
                 <div class="preview-container">
-                    <div class="preview-title">👁️ Vista Previa en Vivo (Tarjeta)</div>
+                    <div class="preview-title">👁️ Vista Previa del Perfil en Vivo</div>
                     <div class="preview-card-mock">
                         <div class="preview-img-box" id="prevImgBox">
                             <span>Sin Imagen</span>
-                            <span class="preview-badge">✓ Verificado</span>
+                            <span class="preview-badge">✓ Perfil Verificado</span>
                         </div>
                         <div class="preview-info">
                             <div class="preview-nombre" id="prevNombre">NOMBRE</div>
                             <div class="preview-zona" id="prevZona">📍 ZONA</div>
                             <div class="preview-desc" id="prevDesc">La descripción aparecerá aquí en tiempo real...</div>
+                            <a href="#" id="prevWaBtn" class="preview-wa-btn" target="_blank">💬 Enviar WhatsApp</a>
                         </div>
                     </div>
                 </div>
@@ -923,46 +937,37 @@
             const nombre = document.getElementById('nombre').value.trim();
             const zona = document.getElementById('zona').value.trim();
             const desc = document.getElementById('descripcion').value.trim();
+            const wa = document.getElementById('whatsapp').value.trim();
 
             document.getElementById('prevNombre').textContent = nombre || 'NOMBRE';
             document.getElementById('prevZona').textContent = zona ? `📍 ${zona.toUpperCase()}` : '📍 ZONA';
-            document.getElementById('prevDesc').textContent = desc || 'La descripción aparecerá aquí...';
+            document.getElementById('prevDesc').textContent = desc || 'La descripción aparecerá aquí en tiempo real...';
+
+            const waBtn = document.getElementById('prevWaBtn');
+            if (wa) {
+                waBtn.href = `https://wa.me/${wa}?text=Hola%20${encodeURIComponent(nombre)}`;
+                waBtn.style.display = 'block';
+            } else {
+                waBtn.style.display = 'none';
+            }
 
             const imgBox = document.getElementById('prevImgBox');
             if (galeriaTemporal.length > 0) {
-                imgBox.innerHTML = `<img src="${galeriaTemporal[0]}" alt="Preview"><span class="preview-badge">✓ Verificado</span>`;
+                imgBox.innerHTML = `<img src="${galeriaTemporal[0]}" alt="Preview"><span class="preview-badge">✓ Perfil Verificado</span>`;
             } else {
-                imgBox.innerHTML = `<span>Sin Imagen</span><span class="preview-badge">✓ Verificado</span>`;
+                imgBox.innerHTML = `<span>Sin Imagen</span><span class="preview-badge">✓ Perfil Verificado</span>`;
             }
         };
 
         const datosInicialesCompletos = [
             { vencimiento: "2026-11-01", monto: 50000, nombre: "PRADA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-10-01", whatsapp: "5491131774848", fotosGaleria: [], fotoPrincipal: "", descripcion: "Masajes profesionales en gabinete propio." },
-            { vencimiento: "2026-11-01", monto: 50000, nombre: "LUPITA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-10-01", whatsapp: "5491131774848", fotosGaleria: [], fotoPrincipal: "", descripcion: "Atención especializada." },
-            { vencimiento: "2026-10-01", monto: 0, nombre: "JENNYFER", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: false, fechaPago: "", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
-            { vencimiento: "2026-10-01", monto: 0, nombre: "DEBY", zona: "CABALLITO", categoria: "SENSUALES", pagado: false, fechaPago: "", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
-            { vencimiento: "2026-10-15", monto: 0, nombre: "PAMELA", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: false, fechaPago: "", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
-            { vencimiento: "2026-10-02", monto: 0, nombre: "SOL", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: false, fechaPago: "", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
-            { vencimiento: "2026-10-01", monto: 0, nombre: "MATIAS", zona: "RECOLETA", categoria: "MASCULINOS", pagado: false, fechaPago: "", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
-            { vencimiento: "2026-10-02", monto: 0, nombre: "DANIELA", zona: "MICROCENTRO", categoria: "TERAPEUTICAS", pagado: false, fechaPago: "", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
-            { vencimiento: "2026-10-02", monto: 0, nombre: "ZARIA", zona: "CABALLITO", categoria: "TERAPEUTICAS", pagado: false, fechaPago: "", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
-            { vencimiento: "2026-10-03", monto: 0, nombre: "DONATELLA", zona: "CABA", categoria: "SENSUALES", pagado: false, fechaPago: "", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
-            { vencimiento: "2026-10-04", monto: 0, nombre: "MARIELA", zona: "CONGRESO", categoria: "TERAPEUTICAS", pagado: false, fechaPago: "", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
-            { vencimiento: "2026-10-04", monto: 0, nombre: "MIA", zona: "CONGRESO", categoria: "SENSUALES", pagado: false, fechaPago: "", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
-            { vencimiento: "2026-10-08", monto: 0, nombre: "CELESTE", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: false, fechaPago: "", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
-            { vencimiento: "2026-10-22", monto: 0, nombre: "LULY S", zona: "CABA", categoria: "SENSUALES", pagado: false, fechaPago: "", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
-            { vencimiento: "2026-10-22", monto: 0, nombre: "LULY", zona: "CABA", categoria: "TERAPEUTICAS", pagado: false, fechaPago: "", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
-            { vencimiento: "2026-10-23", monto: 50000, nombre: "MORA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-09-23", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
-            { vencimiento: "2026-10-23", monto: 50000, nombre: "MORA S", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: true, fechaPago: "2026-09-23", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" },
-            { vencimiento: "2026-10-26", monto: 50000, nombre: "RENATA", zona: "PTO MADERO", categoria: "SENSUALES", pagado: true, fechaPago: "2026-09-26", whatsapp: "", fotosGaleria: [], fotoPrincipal: "", descripcion: "" }
+            { vencimiento: "2026-11-01", monto: 50000, nombre: "LUPITA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-10-01", whatsapp: "5491128816913", fotosGaleria: [], fotoPrincipal: "", descripcion: "Atención en departamento propio en Tribunales." },
+            { vencimiento: "2026-10-15", monto: 0, nombre: "PAMELA", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: false, fechaPago: "", whatsapp: "5491131774848", fotosGaleria: [], fotoPrincipal: "", descripcion: "Atención exclusiva y personalizada." }
         ];
 
         let historialPrecargado = [
             { fecha: "2026-09-01", nombre: "MORA", monto: 50000 },
-            { fecha: "2026-09-01", nombre: "MORA S", monto: 50000 },
-            { fecha: "2026-09-01", nombre: "RENATA", monto: 50000 },
-            { fecha: "2026-10-02", nombre: "PRADA", monto: 50000 },
-            { fecha: "2026-10-02", nombre: "LUPITA", monto: 50000 }
+            { fecha: "2026-10-02", nombre: "PRADA", monto: 50000 }
         ];
 
         if (!localStorage.getItem('prive_control_modelos')) {
@@ -1124,7 +1129,7 @@
             renderizarPanel();
         };
 
-        // Cargar absolutamente todos los datos de la ficha al editar
+        // Cargar todos los datos y fotos exactamente al editar
         window.cargarFichaParaEditar = function(index) {
             const reg = registros[index];
             document.getElementById('editIndex').value = index;
@@ -1136,7 +1141,6 @@
             document.getElementById('monto').value = reg.monto || 0;
             document.getElementById('vencimiento').value = reg.vencimiento || new Date().toISOString().split('T')[0];
             
-            // Cargar galería de fotos correctamente
             galeriaTemporal = reg.fotosGaleria ? [...reg.fotosGaleria] : (reg.fotoPrincipal ? [reg.fotoPrincipal] : []);
             renderizarMiniaturas();
             actualizarPreview();
