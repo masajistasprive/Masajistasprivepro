@@ -269,6 +269,27 @@
             background: rgba(223, 194, 133, 0.2);
         }
 
+        /* Filtros de Anunciantes */
+        .filters-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            background: #0b0b0b;
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--card-border);
+        }
+
+        .filters-bar select {
+            width: auto;
+            padding: 6px 10px;
+            font-size: 0.7rem;
+            background: #000;
+            color: var(--gold);
+            border-color: var(--card-border);
+        }
+
         /* Estructura Formulario + Vista Previa */
         .layout-editor-grid {
             display: flex;
@@ -826,9 +847,16 @@
 
         <!-- PESTAÑA 2: GESTIÓN DE FICHAS -->
         <div id="anunciantesTab" class="panel-section">
+            <div class="filters-bar">
+                <span style="font-size: 0.75rem; color: var(--gold); font-weight: 700; text-transform: uppercase;">Filtrar Anunciantes:</span>
+                <select id="selectFiltroOrden" onchange="renderizarPanel()">
+                    <option value="vencimiento">📅 Por Vencimiento (Próximos)</option>
+                    <option value="alfabetico">🔤 Orden Alfabético (A-Z)</option>
+                </select>
+            </div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                 <h2 style="font-size:0.85rem; color: var(--gold); text-transform: uppercase; letter-spacing:1px;">Listado de Anunciantes</h2>
-                <button class="btn-reset" onclick="cargarPerfilesDesdeFirebase()">🔄 Recargar desde la Nube</button>
+                <button class="btn-reset" onclick="cargarPerfilesDesdeFirebase()">🔄 Recargar</button>
             </div>
             <div class="cards-container" id="tarjetasContainer"></div>
         </div>
@@ -923,11 +951,11 @@
         let galeriaTemporal = [];
         let registrosCloud = [];
 
-        // Historial con las fechas reales exactas del banco
+        // Historial actualizado con Prada en lugar de Pamela y las fechas reales exactas del banco
         let historialPrecargado = [
             { fecha: "2026-09-23", nombre: "MORA & MORA SENSUAL", monto: 100000 },
             { fecha: "2026-09-26", nombre: "RENATA", monto: 50000 },
-            { fecha: "2026-10-01", nombre: "PAMELA", monto: 50000 },
+            { fecha: "2026-10-01", nombre: "PRADA", monto: 50000 },
             { fecha: "2026-10-01", nombre: "LUPITA", monto: 50000 },
             { fecha: "2026-10-05", nombre: "MARIELA", monto: 50000 },
             { fecha: "2026-10-05", nombre: "OLIVIA", monto: 50000 },
@@ -937,7 +965,6 @@
             { fecha: "2026-10-09", nombre: "LUPITA", monto: 70000 }
         ];
 
-        // Forzamos la actualización del historial con las fechas reales correctas
         localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPrecargado));
         let historialPagos = JSON.parse(localStorage.getItem('prive_historial_pagos'));
 
@@ -1148,8 +1175,8 @@
                 return;
             }
 
-            registrosCloud.forEach((reg, realIndex) => {
-                // Entrecruzamiento automático con las fechas reales del banco
+            // Entrecruzamiento automático de pagos con los perfiles
+            registrosCloud.forEach((reg) => {
                 let pagosPerfil = historialPagos.filter(p => p.nombre.includes(reg.nombre.toUpperCase()));
                 if (pagosPerfil.length > 0) {
                     let ultimoPago = pagosPerfil[pagosPerfil.length - 1];
@@ -1162,7 +1189,21 @@
                     reg.vencimiento = `${anioV}-${mesV}-${diaV}`;
                     reg.pagado = true;
                 }
+            });
 
+            // Obtener tipo de filtro seleccionado
+            const tipoFiltro = document.getElementById('selectFiltroOrden').value;
+            let registrosOrdenados = [...registrosCloud];
+
+            if (tipoFiltro === 'alfabetico') {
+                registrosOrdenados.sort((a, b) => (a.nombre || '').localeCompare(b.nombre || ''));
+            } else {
+                // Por vencimiento (del más próximo al más lejano)
+                registrosOrdenados.sort((a, b) => new Date(a.vencimiento || '2026-10-01') - new Date(b.vencimiento || '2026-10-01'));
+            }
+
+            registrosOrdenados.forEach((reg) => {
+                const realIndex = registrosCloud.findIndex(r => r.id === reg.id);
                 const fechaVen = new Date((reg.vencimiento || '2026-10-01') + 'T00:00:00');
                 const estaVencidoPorFecha = fechaVen < hoy;
                 const estaAlDia = reg.pagado || !estaVencidoPorFecha;
