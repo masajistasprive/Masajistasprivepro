@@ -868,7 +868,22 @@
         const CLASE_PASSWORD = "081101";
         let galeriaTemporal = [];
         let registrosCloud = [];
-        let historialPagos = JSON.parse(localStorage.getItem('prive_historial_pagos') || '[]');
+
+        // Inicializamos el historial con los pagos exactos requeridos
+        let historialPrecargado = [
+            { fecha: "2026-09-01", nombre: "MORA", monto: 50000 },
+            { fecha: "2026-09-01", nombre: "MORA S", monto: 50000 },
+            { fecha: "2026-09-01", nombre: "RENATA", monto: 50000 },
+            { fecha: "2026-10-02", nombre: "PRADA", monto: 50000 },
+            { fecha: "2026-10-02", nombre: "LUPITA", monto: 50000 },
+            { fecha: "2026-10-06", nombre: "MAGA", monto: 100000 },
+            { fecha: "2026-10-08", nombre: "CELESTE", monto: 100000 }
+        ];
+
+        if (!localStorage.getItem('prive_historial_pagos')) {
+            localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPrecargado));
+        }
+        let historialPagos = JSON.parse(localStorage.getItem('prive_historial_pagos'));
 
         const firebaseConfig = {
             apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
@@ -1193,7 +1208,6 @@
                 return;
             }
 
-            // Ordenar de más reciente a más antiguo
             let pagosOrdenados = [...historialPagos].reverse();
 
             pagosOrdenados.forEach((p) => {
