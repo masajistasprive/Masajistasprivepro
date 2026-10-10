@@ -706,7 +706,7 @@
             color: #fff;
             padding: 5px 8px;
             border-radius: 6px;
-            font-size: 0.8rem;
+            font-size: 0.80rem;
             width: 100%;
         }
 
@@ -806,7 +806,11 @@
     <div class="container main-content" id="mainContent">
         <header>
             <h1>Master Panel Profesional</h1>
-            <a href="admin.html" class="back-link">&larr; Menú Principal</a>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <!-- Widget Traductor Google -->
+                <div id="google_translate_element" style="transform: scale(0.85); transform-origin: right center;"></div>
+                <a href="admin.html" class="back-link">&larr; Menú Principal</a>
+            </div>
         </header>
 
         <!-- Navegación por Pestañas -->
@@ -878,6 +882,14 @@
                             <input type="text" id="zona" placeholder="Ej: Tribunales" oninput="actualizarPreview()" required>
                         </div>
                         <div class="form-group">
+                            <label for="modalidad">Modalidad de Atención</label>
+                            <select id="modalidad" onchange="actualizarPreview()" required>
+                                <option value="Gabinete Propio">Gabinete Propio</option>
+                                <option value="Domicilio / Hotel">Domicilio / Hotel</option>
+                                <option value="Gabinete y Domicilio">Gabinete y Domicilio</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label for="categoria">Categoría</label>
                             <select id="categoria" onchange="actualizarPreview()" required>
                                 <option value="TERAPEUTICAS">Terapéuticas ($50k)</option>
@@ -945,13 +957,21 @@
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    
+    <!-- Script de Google Translate -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'es', includedLanguages: 'es,en,pt,fr,it', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <script>
         const CLASE_PASSWORD = "081101";
         let galeriaTemporal = [];
         let registrosCloud = [];
 
-        // Historial actualizado con Prada en lugar de Pamela y las fechas reales exactas del banco
+        // Historial completo con los pagos reales del banco
         let historialPrecargado = [
             { fecha: "2026-09-23", nombre: "MORA & MORA SENSUAL", monto: 100000 },
             { fecha: "2026-09-26", nombre: "RENATA", monto: 50000 },
@@ -965,7 +985,9 @@
             { fecha: "2026-10-09", nombre: "LUPITA", monto: 70000 }
         ];
 
-        localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPrecargado));
+        if (!localStorage.getItem('prive_historial_pagos')) {
+            localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPrecargado));
+        }
         let historialPagos = JSON.parse(localStorage.getItem('prive_historial_pagos'));
 
         const firebaseConfig = {
@@ -1191,14 +1213,12 @@
                 }
             });
 
-            // Obtener tipo de filtro seleccionado
             const tipoFiltro = document.getElementById('selectFiltroOrden').value;
             let registrosOrdenados = [...registrosCloud];
 
             if (tipoFiltro === 'alfabetico') {
                 registrosOrdenados.sort((a, b) => (a.nombre || '').localeCompare(b.nombre || ''));
             } else {
-                // Por vencimiento (del más próximo al más lejano)
                 registrosOrdenados.sort((a, b) => new Date(a.vencimiento || '2026-10-01') - new Date(b.vencimiento || '2026-10-01'));
             }
 
@@ -1226,7 +1246,7 @@
                             <button class="${btnCheckClass}" onclick="togglePagado(${realIndex})" title="Marcar como pagado">✓</button>
                             <div>
                                 <div class="modelo-nombre">${reg.nombre}</div>
-                                <div class="modelo-zona-cat">${reg.zona || 'CABA'} • <span style="color:#dfc285;">${reg.categoria || 'TERAPEUTICAS'}</span></div>
+                                <div class="modelo-zona-cat">${reg.zona || 'CABA'} • <span style="color:#dfc285;">${reg.categoria || 'TERAPEUTICAS'}</span> (${reg.modalidad || 'Gabinete Propio'})</div>
                             </div>
                         </div>
                         <div>${badgeHtml}</div>
@@ -1291,6 +1311,7 @@
             document.getElementById('editDocId').value = reg.id;
             document.getElementById('nombre').value = reg.nombre || '';
             document.getElementById('zona').value = reg.zona || '';
+            document.getElementById('modalidad').value = reg.modalidad || 'Gabinete Propio';
             document.getElementById('categoria').value = reg.categoria || 'TERAPEUTICAS';
             document.getElementById('whatsapp').value = reg.whatsapp || '';
             document.getElementById('descripcion').value = reg.descripcion || '';
@@ -1454,6 +1475,7 @@
             const docId = document.getElementById('editDocId').value;
             const nombre = document.getElementById('nombre').value.trim().toUpperCase();
             const zona = document.getElementById('zona').value.trim().toUpperCase();
+            const modalidad = document.getElementById('modalidad').value;
             const categoria = document.getElementById('categoria').value;
             const whatsapp = document.getElementById('whatsapp').value.trim();
             const descripcion = document.getElementById('descripcion').value.trim();
@@ -1468,6 +1490,7 @@
                 db.collection("modelos_prive").doc(docId).update({
                     nombre,
                     zona,
+                    modalidad,
                     categoria,
                     whatsapp,
                     descripcion,
@@ -1476,6 +1499,10 @@
                     fotoPrincipal: fotoPrincipalVal,
                     fotosGaleria: fotosGaleriaVal
                 }).then(() => {
+                    if (monto > 0) {
+                        historialPagos.push({ fecha: hoyStr, nombre, monto });
+                        localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
+                    }
                     alert("¡Perfil actualizado con éxito en la nube!");
                     cancelarEdicion();
                     cargarPerfilesDesdeFirebase();
@@ -1494,6 +1521,7 @@
                 const nuevoReg = {
                     nombre,
                     zona,
+                    modalidad,
                     categoria,
                     whatsapp,
                     descripcion,
