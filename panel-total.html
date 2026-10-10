@@ -1133,7 +1133,7 @@
             renderizarPanel();
         };
 
-        // Rellenar TODOS los campos al editar y cargar su galería real
+        // Cargar absolutamente todos los datos de la ficha al editar
         window.cargarFichaParaEditar = function(index) {
             const reg = registros[index];
             document.getElementById('editIndex').value = index;
@@ -1145,7 +1145,7 @@
             document.getElementById('monto').value = reg.monto || 0;
             document.getElementById('vencimiento').value = reg.vencimiento || new Date().toISOString().split('T')[0];
             
-            // Cargar galería de fotos real guardada en el perfil
+            // Cargar galería de fotos real
             galeriaTemporal = reg.fotosGaleria && reg.fotosGaleria.length > 0 ? [...reg.fotosGaleria] : (reg.fotoPrincipal ? [reg.fotoPrincipal] : []);
             renderizarMiniaturas();
             actualizarPreview();
