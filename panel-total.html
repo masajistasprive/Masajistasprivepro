@@ -923,18 +923,18 @@
         let galeriaTemporal = [];
         let registrosCloud = [];
 
-        // Historial con Mariela y Olivia separadas el 05/10/2026
+        // Historial actualizado con Olivia el 05/10/2026 correctamente
         let historialPrecargado = [
             { fecha: "2026-09-23", nombre: "MORA & MORA SENSUAL", monto: 100000 },
             { fecha: "2026-09-26", nombre: "RENATA", monto: 50000 },
             { fecha: "2026-10-01", nombre: "PAMELA", monto: 50000 },
-            { fecha: "2026-10-01", nombre: "LUPITA (TERAPÉUTICAS)", monto: 50000 },
+            { fecha: "2026-10-01", nombre: "LUPITA", monto: 50000 },
             { fecha: "2026-10-05", nombre: "MARIELA", monto: 50000 },
             { fecha: "2026-10-05", nombre: "OLIVIA", monto: 50000 },
             { fecha: "2026-10-06", nombre: "MAGA", monto: 100000 },
-            { fecha: "2026-10-07", nombre: "CELESTE (FANTASÍAS)", monto: 100000 },
+            { fecha: "2026-10-07", nombre: "CELESTE", monto: 100000 },
             { fecha: "2026-10-08", nombre: "SOL", monto: 70000 },
-            { fecha: "2026-10-09", nombre: "LUPITA (SENSUALES)", monto: 70000 }
+            { fecha: "2026-10-09", nombre: "LUPITA", monto: 70000 }
         ];
 
         if (!localStorage.getItem('prive_historial_pagos')) {
@@ -1150,6 +1150,20 @@
             }
 
             registrosCloud.forEach((reg, realIndex) => {
+                // Entrecruzamiento automático: buscamos el último pago registrado de este perfil en el historial para calcular su vencimiento a 30 días
+                let pagosPerfil = historialPagos.filter(p => p.nombre.includes(reg.nombre.toUpperCase()));
+                if (pagosPerfil.length > 0) {
+                    let ultimoPago = pagosPerfil[pagosPerfil.length - 1];
+                    let partesF = ultimoPago.fecha.split('-');
+                    let fPago = new Date(partesF[0], partesF[1] - 1, partesF[2]);
+                    fPago.setDate(fPago.getDate() + 30);
+                    let anioV = fPago.getFullYear();
+                    let mesV = String(fPago.getMonth() + 1).padStart(2, '0');
+                    let diaV = String(fPago.getDate()).padStart(2, '0');
+                    reg.vencimiento = `${anioV}-${mesV}-${diaV}`;
+                    reg.pagado = true;
+                }
+
                 const fechaVen = new Date((reg.vencimiento || '2026-10-01') + 'T00:00:00');
                 const estaVencidoPorFecha = fechaVen < hoy;
                 const estaAlDia = reg.pagado || !estaVencidoPorFecha;
@@ -1428,9 +1442,9 @@
                     document.querySelectorAll('.tab-btn')[1].click();
                 });
             } else {
-                // Si es nuevo o se publica, calculamos 30 días desde la fecha de vencimiento ingresada o el día de hoy
                 let partesVen = vencimiento.split('-');
                 let fechaVen = new Date(partesVen[0], partesVen[1] - 1, partesVen[2]);
+                fechaVen.setDate(fechaVen.getDate() + 30);
                 let anio = fechaVen.getFullYear();
                 let mes = String(fechaVen.getMonth() + 1).padStart(2, '0');
                 let dia = String(fechaVen.getDate()).padStart(2, '0');
@@ -1473,7 +1487,6 @@
             }
         });
 
-        // Al tildar "Pagado", calcula automáticamente el vencimiento sumando 30 días exactos
         window.togglePagado = function(index) {
             const reg = registrosCloud[index];
             const nuevoEstado = !reg.pagado;
