@@ -686,40 +686,6 @@
             text-transform: uppercase;
         }
 
-        /* Modal de Edición Completo con Vista Previa */
-        #modalEditar {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            backdrop-filter: blur(10px);
-            z-index: 100000;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
-        }
-
-        .modal-content-full {
-            background: var(--card-bg);
-            border: 1px solid var(--gold);
-            border-radius: 16px;
-            width: 100%;
-            max-width: 650px;
-            padding: 20px;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.9);
-            max-height: 95vh;
-            overflow-y: auto;
-        }
-
-        .modal-content-full h3 {
-            color: var(--gold);
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-        }
-
         .empty-state {
             text-align: center;
             padding: 30px;
@@ -757,7 +723,7 @@
         <div class="nav-tabs">
             <button class="tab-btn active" onclick="cambiarTab('cajaTab', this)">📊 Caja & Finanzas</button>
             <button class="tab-btn" onclick="cambiarTab('anunciantesTab', this)">👥 Gestión de Fichas</button>
-            <button class="tab-btn" onclick="cambiarTab('nuevoTab', this)">➕ Crear & Preview</button>
+            <button class="tab-btn" id="tabCrear" onclick="cambiarTab('nuevoTab', this)">➕ Crear Nueva</button>
         </div>
 
         <!-- PESTAÑA 1: CAJA & FINANZAS -->
@@ -797,13 +763,14 @@
             <div class="cards-container" id="tarjetasContainer"></div>
         </div>
 
-        <!-- PESTAÑA 3: CREAR FICHA CON VISTA PREVIA Y FOTOS ORDENABLES -->
+        <!-- PESTAÑA 3: CREAR / EDITAR FICHA CON VISTA PREVIA Y FOTOS ORDENABLES -->
         <div id="nuevoTab" class="panel-section">
             <div class="layout-editor-grid">
-                <!-- Formulario de Creación -->
+                <!-- Formulario -->
                 <div class="form-card">
-                    <h2>Nueva Ficha & Perfil</h2>
+                    <h2 id="tituloFormulario">Nueva Ficha & Perfil</h2>
                     <form id="cajaForm">
+                        <input type="hidden" id="editIndex" value="-1">
                         <div class="form-group">
                             <label for="nombre">Nombre de la Modelo</label>
                             <input type="text" id="nombre" placeholder="Ej: Jennyfer" oninput="actualizarPreview()" required>
@@ -830,7 +797,7 @@
                             <label for="fileFotos" class="file-upload-btn">📁 Agregar Fotos a la Galería</label>
                             <input type="file" id="fileFotos" accept="image/*" multiple style="display: none;" onchange="procesarFotosCelular(event)">
                             <div class="thumbnails-grid" id="thumbnailsGrid"></div>
-                            <span style="font-size:0.6rem; color:#888; display:block; margin-top:4px;">* La primera foto es la principal. Arrastrá las miniaturas para ordenar.</span>
+                            <span style="font-size:0.6rem; color:#888; display:block; margin-top:4px;">* La primera foto es la principal. Arrastrá las miniaturas para ordenar o tocá la ✕ para borrar.</span>
                         </div>
                         <div class="form-group">
                             <label for="descripcion">Descripción / Perfil</label>
@@ -844,7 +811,8 @@
                             <label for="vencimiento">Fecha de Vencimiento</label>
                             <input type="date" id="vencimiento" required>
                         </div>
-                        <button type="submit" class="btn-submit">Guardar y Publicar Ficha</button>
+                        <button type="submit" class="btn-submit" id="btnSubmitForm">Guardar y Publicar Ficha</button>
+                        <button type="button" id="btnCancelarEdicion" style="display:none; background:#222; color:#fff; border:1px solid #444; width:100%; padding:10px; margin-top:8px; border-radius:8px; font-size:0.75rem; text-transform:uppercase; font-weight:700; cursor:pointer;" onclick="cancelarEdicion()">Cancelar Edición</button>
                     </form>
                 </div>
 
@@ -867,83 +835,9 @@
         </div>
     </div>
 
-    <!-- MODAL DE EDICIÓN COMPLETA CON VISTA PREVIA IDÉNTICA -->
-    <div id="modalEditar">
-        <div class="modal-content-full">
-            <h3>Editar Ficha & Perfil</h3>
-            <div class="layout-editor-grid">
-                <div class="form-card" style="box-shadow:none; padding:0; background:transparent;">
-                    <form id="formEditarFicha">
-                        <input type="hidden" id="editIndex">
-                        <div class="form-group">
-                            <label>Nombre de la Modelo</label>
-                            <input type="text" id="editNombre" oninput="actualizarPreviewEdit()" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Barrio / Zona</label>
-                            <input type="text" id="editZona" oninput="actualizarPreviewEdit()" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Categoría</label>
-                            <select id="editCategoria" onchange="actualizarPreviewEdit()">
-                                <option value="TERAPEUTICAS">Terapéuticas</option>
-                                <option value="SENSUALES">Sensuales</option>
-                                <option value="FANTASIAS">Fantasías</option>
-                                <option value="MASCULINOS">Masculinos</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>WhatsApp / Teléfono</label>
-                            <input type="text" id="editWhatsapp">
-                        </div>
-                        <div class="form-group">
-                            <label>Fotos de la Galería</label>
-                            <label for="editFileFotos" class="file-upload-btn">📁 Agregar Más Fotos</label>
-                            <input type="file" id="editFileFotos" accept="image/*" multiple style="display: none;" onchange="procesarFotosEdicion(event)">
-                            <div class="thumbnails-grid" id="editThumbnailsGrid"></div>
-                        </div>
-                        <div class="form-group">
-                            <label>Descripción / Perfil</label>
-                            <textarea id="editDescripcion" oninput="actualizarPreviewEdit()"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Monto Actual ($)</label>
-                            <input type="number" id="editMonto">
-                        </div>
-                        <div class="form-group">
-                            <label>Fecha de Vencimiento</label>
-                            <input type="date" id="editVencimiento">
-                        </div>
-                        <div class="modal-buttons" style="margin-top:20px;">
-                            <button type="button" class="btn-cancelar" onclick="cerrarModalEditar()">Cancelar</button>
-                            <button type="submit" class="btn-submit" style="margin-top:0;">Guardar Cambios</button>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Vista Previa en Vivo (Edición) -->
-                <div class="preview-container">
-                    <div class="preview-title">👁️ Vista Previa en Vivo</div>
-                    <div class="preview-card-mock">
-                        <div class="preview-img-box" id="prevEditImgBox">
-                            <span>Sin Imagen</span>
-                            <span class="preview-badge">✓ Verificado</span>
-                        </div>
-                        <div class="preview-info">
-                            <div class="preview-nombre" id="prevEditNombre">NOMBRE</div>
-                            <div class="preview-zona" id="prevEditZona">📍 ZONA</div>
-                            <div class="preview-desc" id="prevEditDesc">Descripción...</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script>
         const CLASE_PASSWORD = "081101";
         let galeriaTemporal = [];
-        let galeriaEditTemporal = [];
 
         const loginForm = document.getElementById('loginForm');
         const passwordInput = document.getElementById('passwordInput');
@@ -975,7 +869,7 @@
             btnElement.classList.add('active');
         };
 
-        // Procesamiento de fotos (Creación)
+        // Procesamiento de fotos (Creación y Edición Unificadas)
         window.procesarFotosCelular = function(event) {
             const files = event.target.files;
             if (!files.length) return;
@@ -986,7 +880,7 @@
                     galeriaTemporal.push(e.target.result);
                     loadedCount++;
                     if (loadedCount === files.length) {
-                        renderizarMiniaturasNuevo();
+                        renderizarMiniaturas();
                         actualizarPreview();
                     }
                 };
@@ -994,7 +888,7 @@
             });
         };
 
-        function renderizarMiniaturasNuevo() {
+        function renderizarMiniaturas() {
             const grid = document.getElementById('thumbnailsGrid');
             grid.innerHTML = '';
             galeriaTemporal.forEach((foto, idx) => {
@@ -1004,7 +898,7 @@
                 div.innerHTML = `
                     <img src="${foto}" alt="Miniatura">
                     <span class="thumb-badge">${idx === 0 ? 'Principal' : idx + 1}</span>
-                    <button type="button" class="thumb-delete" onclick="eliminarFotoNueva(${idx})">&times;</button>
+                    <button type="button" class="thumb-delete" onclick="eliminarFoto(${idx})">&times;</button>
                 `;
                 div.addEventListener('dragstart', (e) => e.dataTransfer.setData('text/plain', idx));
                 div.addEventListener('dragover', (e) => e.preventDefault());
@@ -1013,16 +907,16 @@
                     const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
                     const moved = galeriaTemporal.splice(fromIdx, 1)[0];
                     galeriaTemporal.splice(idx, 0, moved);
-                    renderizarMiniaturasNuevo();
+                    renderizarMiniaturas();
                     actualizarPreview();
                 });
                 grid.appendChild(div);
             });
         }
 
-        window.eliminarFotoNueva = function(idx) {
+        window.eliminarFoto = function(idx) {
             galeriaTemporal.splice(idx, 1);
-            renderizarMiniaturasNuevo();
+            renderizarMiniaturas();
             actualizarPreview();
         };
 
@@ -1038,74 +932,6 @@
             const imgBox = document.getElementById('prevImgBox');
             if (galeriaTemporal.length > 0) {
                 imgBox.innerHTML = `<img src="${galeriaTemporal[0]}" alt="Preview"><span class="preview-badge">✓ Verificado</span>`;
-            } else {
-                imgBox.innerHTML = `<span>Sin Imagen</span><span class="preview-badge">✓ Verificado</span>`;
-            }
-        };
-
-        // Procesamiento de fotos (Edición)
-        window.procesarFotosEdicion = function(event) {
-            const files = event.target.files;
-            if (!files.length) return;
-            let loadedCount = 0;
-            Array.from(files).forEach(file => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    galeriaEditTemporal.push(e.target.result);
-                    loadedCount++;
-                    if (loadedCount === files.length) {
-                        renderizarMiniaturasEdicion();
-                        actualizarPreviewEdit();
-                    }
-                };
-                reader.readAsDataURL(file);
-            });
-        };
-
-        function renderizarMiniaturasEdicion() {
-            const grid = document.getElementById('editThumbnailsGrid');
-            grid.innerHTML = '';
-            galeriaEditTemporal.forEach((foto, idx) => {
-                const div = document.createElement('div');
-                div.className = 'thumb-item';
-                div.draggable = true;
-                div.innerHTML = `
-                    <img src="${foto}" alt="Miniatura">
-                    <span class="thumb-badge">${idx === 0 ? 'Principal' : idx + 1}</span>
-                    <button type="button" class="thumb-delete" onclick="eliminarFotoEdicion(${idx})">&times;</button>
-                `;
-                div.addEventListener('dragstart', (e) => e.dataTransfer.setData('text/plain', idx));
-                div.addEventListener('dragover', (e) => e.preventDefault());
-                div.addEventListener('drop', (e) => {
-                    e.preventDefault();
-                    const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
-                    const moved = galeriaEditTemporal.splice(fromIdx, 1)[0];
-                    galeriaEditTemporal.splice(idx, 0, moved);
-                    renderizarMiniaturasEdicion();
-                    actualizarPreviewEdit();
-                });
-                grid.appendChild(div);
-            });
-        }
-
-        window.eliminarFotoEdicion = function(idx) {
-            galeriaEditTemporal.splice(idx, 1);
-            renderizarMiniaturasEdicion();
-            actualizarPreviewEdit();
-        };
-
-        window.actualizarPreviewEdit = function() {
-            const nombre = document.getElementById('editNombre').value.trim();
-            const zona = document.getElementById('editZona').value.trim();
-            const desc = document.getElementById('editDescripcion').value.trim();
-
-            document.getElementById('prevEditNombre').textContent = nombre || 'NOMBRE';
-            document.getElementById('prevEditZona').textContent = zona ? `📍 ${zona.toUpperCase()}` : '📍 ZONA';
-            document.getElementById('prevEditDesc').textContent = desc || 'Descripción...';
-
-            const imgBox = document.getElementById('prevEditImgBox');
-            if (galeriaEditTemporal.length > 0) {
-                imgBox.innerHTML = `<img src="${galeriaEditTemporal[0]}" alt="Preview"><span class="preview-badge">✓ Verificado</span>`;
             } else {
                 imgBox.innerHTML = `<span>Sin Imagen</span><span class="preview-badge">✓ Verificado</span>`;
             }
@@ -1141,7 +967,6 @@
             else if(selectCat.value === 'SENSUALES') inputMonto.value = '70000';
             else if(selectCat.value === 'FANTASIAS') inputMonto.value = '100000';
         });
-        selectCat.dispatchEvent(new Event('change'));
 
         const form = document.getElementById('cajaForm');
         const tarjetasContainer = document.getElementById('tarjetasContainer');
@@ -1247,7 +1072,7 @@
                     ${reg.descripcion ? `<div style="font-size:0.72rem; color:#aaa; font-style:italic; border-left:2px solid var(--gold); padding-left:6px;">"${reg.descripcion}"</div>` : ''}
                     <div class="modelo-footer">
                         <div class="actions-row">
-                            <button class="btn-accion-card" onclick="abrirModalEditar(${realIndex})">✏️ Editar Ficha Completa</button>
+                            <button class="btn-accion-card" onclick="cargarFichaParaEditar(${realIndex})">✏️ Editar Ficha</button>
                         </div>
                         <button class="btn-delete" onclick="eliminarRegistro(${realIndex})">Eliminar</button>
                     </div>
@@ -1281,45 +1106,45 @@
             renderizarPanel();
         };
 
-        window.abrirModalEditar = function(index) {
+        // Cargar datos exactos en el formulario para editar
+        window.cargarFichaParaEditar = function(index) {
             const reg = registros[index];
             document.getElementById('editIndex').value = index;
-            document.getElementById('editNombre').value = reg.nombre || '';
-            document.getElementById('editZona').value = reg.zona || '';
-            document.getElementById('editCategoria').value = reg.categoria || 'TERAPEUTICAS';
-            document.getElementById('editWhatsapp').value = reg.whatsapp || '';
-            document.getElementById('editDescripcion').value = reg.descripcion || '';
-            document.getElementById('editMonto').value = reg.monto || 0;
-            document.getElementById('editVencimiento').value = reg.vencimiento || '';
+            document.getElementById('nombre').value = reg.nombre || '';
+            document.getElementById('zona').value = reg.zona || '';
+            document.getElementById('categoria').value = reg.categoria || 'TERAPEUTICAS';
+            document.getElementById('whatsapp').value = reg.whatsapp || '';
+            document.getElementById('descripcion').value = reg.descripcion || '';
+            document.getElementById('monto').value = reg.monto || 0;
+            document.getElementById('vencimiento').value = reg.vencimiento || '';
             
-            galeriaEditTemporal = reg.fotosGaleria ? [...reg.fotosGaleria] : (reg.fotoPrincipal ? [reg.fotoPrincipal] : []);
-            renderizarMiniaturasEdicion();
-            actualizarPreviewEdit();
-            document.getElementById('modalEditar').style.display = 'flex';
+            galeriaTemporal = reg.fotosGaleria ? [...reg.fotosGaleria] : (reg.fotoPrincipal ? [reg.fotoPrincipal] : []);
+            renderizarMiniaturas();
+            actualizarPreview();
+
+            // Cambiar textos y botones del formulario a modo edición
+            document.getElementById('tituloFormulario').textContent = `Editando a: ${reg.nombre}`;
+            document.getElementById('btnSubmitForm').textContent = "Guardar Cambios de la Ficha";
+            document.getElementById('btnCancelarEdicion').style.display = "block";
+
+            // Cambiar a la pestaña de creación/edición automáticamente
+            document.getElementById('tabCrear').click();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
-        window.cerrarModalEditar = function() {
-            document.getElementById('modalEditar').style.display = 'none';
+        window.cancelarEdicion = function() {
+            document.getElementById('cajaForm').reset();
+            document.getElementById('editIndex').value = "-1";
+            galeriaTemporal = [];
+            document.getElementById('thumbnailsGrid').innerHTML = '';
+            selectCat.dispatchEvent(new Event('change'));
+            document.getElementById('vencimiento').valueAsDate = new Date();
+            actualizarPreview();
+
+            document.getElementById('tituloFormulario').textContent = "Nueva Ficha & Perfil";
+            document.getElementById('btnSubmitForm').textContent = "Guardar y Publicar Ficha";
+            document.getElementById('btnCancelarEdicion').style.display = "none";
         };
-
-        document.getElementById('formEditarFicha').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const index = parseInt(document.getElementById('editIndex').value);
-            
-            registros[index].nombre = document.getElementById('editNombre').value.trim().toUpperCase();
-            registros[index].zona = document.getElementById('editZona').value.trim().toUpperCase();
-            registros[index].categoria = document.getElementById('editCategoria').value;
-            registros[index].whatsapp = document.getElementById('editWhatsapp').value.trim();
-            registros[index].fotosGaleria = [...galeriaEditTemporal];
-            registros[index].fotoPrincipal = galeriaEditTemporal.length > 0 ? galeriaEditTemporal[0] : '';
-            registros[index].descripcion = document.getElementById('editDescripcion').value.trim();
-            registros[index].monto = parseFloat(document.getElementById('editMonto').value) || 0;
-            registros[index].vencimiento = document.getElementById('editVencimiento').value;
-
-            localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
-            cerrarModalEditar();
-            renderizarPanel();
-        });
 
         function renderizarHistorialAnual() {
             historialContent.innerHTML = '';
@@ -1384,42 +1209,62 @@
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
+            const editIndex = parseInt(document.getElementById('editIndex').value);
             const nombre = document.getElementById('nombre').value.trim().toUpperCase();
             const monto = parseFloat(document.getElementById('monto').value) || 0;
             const vencimiento = document.getElementById('vencimiento').value;
             const hoyStr = new Date().toISOString().split('T')[0];
 
-            const nuevoReg = {
-                vencimiento,
-                monto,
-                nombre,
-                zona: document.getElementById('zona').value.trim().toUpperCase(),
-                categoria: document.getElementById('categoria').value,
-                whatsapp: document.getElementById('whatsapp').value.trim(),
-                fotosGaleria: [...galeriaTemporal],
-                fotoPrincipal: galeriaTemporal.length > 0 ? galeriaTemporal[0] : '',
-                descripcion: document.getElementById('descripcion').value.trim(),
-                pagado: true,
-                fechaPago: hoyStr
-            };
+            if (editIndex >= 0) {
+                // MODO EDICIÓN
+                registros[editIndex].nombre = nombre;
+                registros[editIndex].zona = document.getElementById('zona').value.trim().toUpperCase();
+                registros[editIndex].categoria = document.getElementById('categoria').value;
+                registros[editIndex].whatsapp = document.getElementById('whatsapp').value.trim();
+                registros[editIndex].fotosGaleria = [...galeriaTemporal];
+                registros[editIndex].fotoPrincipal = galeriaTemporal.length > 0 ? galeriaTemporal[0] : '';
+                registros[editIndex].descripcion = document.getElementById('descripcion').value.trim();
+                registros[editIndex].monto = monto;
+                registros[editIndex].vencimiento = vencimiento;
 
-            registros.unshift(nuevoReg);
-            localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
+                localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
+                cancelarEdicion();
+                document.querySelectorAll('.tab-btn')[1].click();
+                renderizarPanel();
+            } else {
+                // MODO CREACIÓN NUEVA
+                const nuevoReg = {
+                    vencimiento,
+                    monto,
+                    nombre,
+                    zona: document.getElementById('zona').value.trim().toUpperCase(),
+                    categoria: document.getElementById('categoria').value,
+                    whatsapp: document.getElementById('whatsapp').value.trim(),
+                    fotosGaleria: [...galeriaTemporal],
+                    fotoPrincipal: galeriaTemporal.length > 0 ? galeriaTemporal[0] : '',
+                    descripcion: document.getElementById('descripcion').value.trim(),
+                    pagado: true,
+                    fechaPago: hoyStr
+                };
 
-            if (monto > 0) {
-                historialPagos.push({ fecha: hoyStr, nombre, monto });
-                localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
+                registros.unshift(nuevoReg);
+                localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
+
+                if (monto > 0) {
+                    historialPagos.push({ fecha: hoyStr, nombre, monto });
+                    localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
+                }
+
+                form.reset();
+                galeriaTemporal = [];
+                document.getElementById('thumbnailsGrid').innerHTML = '';
+                selectCat.dispatchEvent(new Event('change'));
+                document.getElementById('vencimiento').valueAsDate = new Date();
+                actualizarPreview();
+                
+                document.querySelectorAll('.tab-btn')[1].click();
+                renderizarPanel();
             }
-
-            form.reset();
-            galeriaTemporal = [];
-            document.getElementById('thumbnailsGrid').innerHTML = '';
-            selectCat.dispatchEvent(new Event('change'));
-            document.getElementById('vencimiento').valueAsDate = new Date();
-            actualizarPreview();
-            
-            document.querySelectorAll('.tab-btn')[1].click();
-            renderizarPanel();
         });
 
         window.togglePagado = function(index) {
