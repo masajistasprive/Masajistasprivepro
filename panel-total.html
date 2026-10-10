@@ -434,7 +434,7 @@
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* VISTA PREVIA IDÉNTICA AL PERFIL PÚBLICO */
+        /* VISTA PREVIA CON SELECTOR DE IDIOMAS */
         .preview-container {
             background: #0b0b0b;
             border: 1px dashed var(--gold);
@@ -457,6 +457,20 @@
             letter-spacing: 2px;
             margin-bottom: 10px;
             font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .lang-selector-panel {
+            background: #111;
+            border: 1px solid var(--card-border);
+            color: var(--gold);
+            font-size: 0.65rem;
+            padding: 3px 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-transform: uppercase;
         }
 
         .preview-card-mock {
@@ -706,7 +720,7 @@
             color: #fff;
             padding: 5px 8px;
             border-radius: 6px;
-            font-size: 0.80rem;
+            font-size: 0.8rem;
             width: 100%;
         }
 
@@ -806,11 +820,7 @@
     <div class="container main-content" id="mainContent">
         <header>
             <h1>Master Panel Profesional</h1>
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <!-- Widget Traductor Google -->
-                <div id="google_translate_element" style="transform: scale(0.85); transform-origin: right center;"></div>
-                <a href="admin.html" class="back-link">&larr; Menú Principal</a>
-            </div>
+            <a href="admin.html" class="back-link">&larr; Menú Principal</a>
         </header>
 
         <!-- Navegación por Pestañas -->
@@ -865,7 +875,7 @@
             <div class="cards-container" id="tarjetasContainer"></div>
         </div>
 
-        <!-- PESTAÑA 3: CREAR / EDITAR FICHA CON VISTA PREVIA Y FOTOS ORDENABLES -->
+        <!-- PESTAÑA 3: CREAR / EDITAR FICHA CON VISTA PREVIA Y TRADUCTOR DE 4 IDIOMAS -->
         <div id="nuevoTab" class="panel-section">
             <div class="layout-editor-grid">
                 <!-- Formulario -->
@@ -926,17 +936,26 @@
                     </form>
                 </div>
 
-                <!-- Vista Previa IDÉNTICA al perfil público -->
+                <!-- Vista Previa con Traductor de Ficha en Vivo (4 Idiomas) -->
                 <div class="preview-container">
-                    <div class="preview-title">👁️ Vista Previa del Perfil en Vivo</div>
+                    <div class="preview-title">
+                        <span>👁️ Vista Previa en Vivo</span>
+                        <select id="langSelector" class="lang-selector-panel" onchange="actualizarPreview()">
+                            <option value="es">🇪🇸 Español</option>
+                            <option value="en">🇺🇸 English</option>
+                            <option value="pt">🇧🇷 Português</option>
+                            <option value="fr">🇫🇷 Français</option>
+                        </select>
+                    </div>
                     <div class="preview-card-mock">
                         <div class="preview-img-box" id="prevImgBox">
                             <span>Sin Imagen</span>
-                            <span class="preview-badge">✓ Perfil Verificado</span>
+                            <span class="preview-badge" id="prevBadgeTxt">✓ Perfil Verificado</span>
                         </div>
                         <div class="preview-info">
                             <div class="preview-nombre" id="prevNombre">NOMBRE</div>
                             <div class="preview-zona" id="prevZona">📍 ZONA</div>
+                            <div style="font-size: 0.68rem; color: #dfc285; margin-bottom: 6px;" id="prevModalidad">Gabinete Propio</div>
                             <div class="preview-desc" id="prevDesc">La descripción aparecerá aquí en tiempo real...</div>
                             <a href="#" id="prevWaBtn" class="preview-wa-btn" target="_blank" style="display:none;">💬 Enviar WhatsApp</a>
                         </div>
@@ -957,21 +976,12 @@
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    
-    <!-- Script de Google Translate -->
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage: 'es', includedLanguages: 'es,en,pt,fr,it', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
-        }
-    </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <script>
         const CLASE_PASSWORD = "081101";
         let galeriaTemporal = [];
         let registrosCloud = [];
 
-        // Historial completo con los pagos reales del banco
         let historialPrecargado = [
             { fecha: "2026-09-23", nombre: "MORA & MORA SENSUAL", monto: 100000 },
             { fecha: "2026-09-26", nombre: "RENATA", monto: 50000 },
@@ -1089,17 +1099,56 @@
             actualizarPreview();
         };
 
+        // Diccionario de Traducción Automática para la Vista Previa (4 Idiomas)
+        const traduccionesPanel = {
+            en: {
+                verificado: "✓ Verified Profile",
+                zona: "📍 ZONE: ",
+                modalidad: { "Gabinete Propio": "Own Cabinet", "Domicilio / Hotel": "Outcall / Hotel", "Gabinete y Domicilio": "Cabinet & Outcall" },
+                desc: "Description will appear here in real time...",
+                btnWa: "💬 Send WhatsApp"
+            },
+            pt: {
+                verificado: "✓ Perfil Verificado",
+                zona: "📍 ZONA: ",
+                modalidad: { "Gabinete Propio": "Gabinete Próprio", "Domicilio / Hotel": "Domicílio / Hotel", "Gabinete y Domicilio": "Gabinete e Domicílio" },
+                desc: "A descrição aparecerá aqui em tempo real...",
+                btnWa: "💬 Enviar WhatsApp"
+            },
+            fr: {
+                verificado: "✓ Profil Vérifié",
+                zona: "📍 ZONE : ",
+                modalidad: { "Gabinete Propio": "Cabinet Privé", "Domicilio / Hotel": "À Domicile / Hôtel", "Gabinete y Domicilio": "Cabinet & Domicile" },
+                desc: "La description apparaîtra ici en temps réel...",
+                btnWa: "💬 Envoyer WhatsApp"
+            },
+            es: {
+                verificado: "✓ Perfil Verificado",
+                zona: "📍 ZONA: ",
+                modalidad: { "Gabinete Propio": "Gabinete Propio", "Domicilio / Hotel": "Domicilio / Hotel", "Gabinete y Domicilio": "Gabinete y Domicilio" },
+                desc: "La descripción aparecerá aquí en tiempo real...",
+                btnWa: "💬 Enviar WhatsApp"
+            }
+        };
+
         window.actualizarPreview = function() {
+            const lang = document.getElementById('langSelector').value;
+            const t = traduccionesPanel[lang] || traduccionesPanel.es;
+
             const nombre = document.getElementById('nombre').value.trim();
             const zona = document.getElementById('zona').value.trim();
+            const modalidad = document.getElementById('modalidad').value;
             const desc = document.getElementById('descripcion').value.trim();
             const wa = document.getElementById('whatsapp').value.trim();
 
             document.getElementById('prevNombre').textContent = nombre || 'NOMBRE';
             document.getElementById('prevZona').textContent = zona ? `📍 ${zona.toUpperCase()}` : '📍 ZONA';
-            document.getElementById('prevDesc').textContent = desc || 'La descripción aparecerá aquí en tiempo real...';
+            document.getElementById('prevModalidad').textContent = t.modalidad[modalidad] || modalidad;
+            document.getElementById('prevDesc').textContent = desc || t.desc;
+            document.getElementById('prevBadgeTxt').textContent = t.verificado;
 
             const waBtn = document.getElementById('prevWaBtn');
+            waBtn.textContent = t.btnWa;
             if (wa) {
                 waBtn.href = `https://wa.me/${wa}?text=Hola%20${encodeURIComponent(nombre)}`;
                 waBtn.style.display = 'block';
@@ -1109,9 +1158,9 @@
 
             const imgBox = document.getElementById('prevImgBox');
             if (galeriaTemporal.length > 0) {
-                imgBox.innerHTML = `<img src="${galeriaTemporal[0]}" alt="Preview"><span class="preview-badge">✓ Perfil Verificado</span>`;
+                imgBox.innerHTML = `<img src="${galeriaTemporal[0]}" alt="Preview"><span class="preview-badge" id="prevBadgeTxt">${t.verificado}</span>`;
             } else {
-                imgBox.innerHTML = `<span>Sin Imagen</span><span class="preview-badge">✓ Perfil Verificado</span>`;
+                imgBox.innerHTML = `<span>Sin Imagen</span><span class="preview-badge" id="prevBadgeTxt">${t.verificado}</span>`;
             }
         };
 
@@ -1197,7 +1246,6 @@
                 return;
             }
 
-            // Entrecruzamiento automático de pagos con los perfiles
             registrosCloud.forEach((reg) => {
                 let pagosPerfil = historialPagos.filter(p => p.nombre.includes(reg.nombre.toUpperCase()));
                 if (pagosPerfil.length > 0) {
