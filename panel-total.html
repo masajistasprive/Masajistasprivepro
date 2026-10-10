@@ -775,7 +775,7 @@
         <div id="anunciantesTab" class="panel-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                 <h2 style="font-size:0.85rem; color: var(--gold); text-transform: uppercase; letter-spacing:1px;">Listado de Anunciantes</h2>
-                <button class="btn-reset" onclick="restaurarDatosExcel()">Restaurar Originales</button>
+                <button class="btn-reset" onclick="cargarPerfilesDesdeFirebase()">🔄 Recargar desde la Nube</button>
             </div>
             <div class="cards-container" id="tarjetasContainer"></div>
         </div>
@@ -787,7 +787,7 @@
                 <div class="form-card">
                     <h2 id="tituloFormulario">Nueva Ficha & Perfil</h2>
                     <form id="cajaForm">
-                        <input type="hidden" id="editIndex" value="-1">
+                        <input type="hidden" id="editDocId" value="">
                         <div class="form-group">
                             <label for="nombre">Nombre de la Modelo</label>
                             <input type="text" id="nombre" placeholder="Ej: Jennyfer" oninput="actualizarPreview()" required>
@@ -828,7 +828,7 @@
                             <label for="vencimiento">Fecha de Vencimiento</label>
                             <input type="date" id="vencimiento" required>
                         </div>
-                        <button type="submit" class="btn-submit" id="btnSubmitForm">Guardar y Publicar Ficha</button>
+                        <button type="submit" class="btn-submit" id="btnSubmitForm">Guardar y Publicar en Firebase</button>
                         <button type="button" id="btnCancelarEdicion" style="display:none; background:#222; color:#fff; border:1px solid #444; width:100%; padding:10px; margin-top:8px; border-radius:8px; font-size:0.75rem; text-transform:uppercase; font-weight:700; cursor:pointer;" onclick="cancelarEdicion()">Cancelar Edición</button>
                     </form>
                 </div>
@@ -853,9 +853,29 @@
         </div>
     </div>
 
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
     <script>
         const CLASE_PASSWORD = "081101";
         let galeriaTemporal = [];
+        let registrosCloud = [];
+        let historialPagos = JSON.parse(localStorage.getItem('prive_historial_pagos') || '[]');
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
+            authDomain: "masajistasprivepro.firebaseapp.com",
+            projectId: "masajistasprivepro",
+            storageBucket: "masajistasprivepro.firebasestorage.app",
+            messagingSenderId: "768677270509",
+            appId: "1:768677270509:web:f4409c2f9c0bbb42ebcde4",
+            measurementId: "G-SBN70C32JF"
+        };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
 
         const loginForm = document.getElementById('loginForm');
         const passwordInput = document.getElementById('passwordInput');
@@ -866,6 +886,7 @@
         if (sessionStorage.getItem('master_panel_auth') === 'true') {
             loginOverlay.style.display = 'none';
             mainContent.style.display = 'block';
+            cargarPerfilesDesdeFirebase();
         }
 
         loginForm.addEventListener('submit', (e) => {
@@ -874,6 +895,7 @@
                 sessionStorage.setItem('master_panel_auth', 'true');
                 loginOverlay.style.display = 'none';
                 mainContent.style.display = 'block';
+                cargarPerfilesDesdeFirebase();
             } else {
                 errorMsg.style.display = 'block';
                 passwordInput.value = '';
@@ -963,26 +985,17 @@
             }
         };
 
-        const datosInicialesCompletos = [
-            { vencimiento: "2026-11-01", monto: 50000, nombre: "PRADA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-10-01", whatsapp: "5491131774848", fotosGaleria: [], fotoPrincipal: "", descripcion: "Masajes profesionales en gabinete propio." },
-            { vencimiento: "2026-11-01", monto: 50000, nombre: "LUPITA", zona: "TRIBUNALES", categoria: "TERAPEUTICAS", pagado: true, fechaPago: "2026-10-01", whatsapp: "5491128816913", fotosGaleria: [], fotoPrincipal: "", descripcion: "Atención en departamento propio en Tribunales." },
-            { vencimiento: "2026-10-15", monto: 0, nombre: "PAMELA", zona: "TRIBUNALES", categoria: "SENSUALES", pagado: false, fechaPago: "", whatsapp: "5491131774848", fotosGaleria: [], fotoPrincipal: "", descripcion: "Atención exclusiva y personalizada." }
-        ];
-
-        let historialPrecargado = [
-            { fecha: "2026-09-01", nombre: "MORA", monto: 50000 },
-            { fecha: "2026-10-02", nombre: "PRADA", monto: 50000 }
-        ];
-
-        if (!localStorage.getItem('prive_control_modelos')) {
-            localStorage.setItem('prive_control_modelos', JSON.stringify(datosInicialesCompletos));
+        function cargarPerfilesDesdeFirebase() {
+            db.collection("modelos_prive").get().then((querySnapshot) => {
+                registrosCloud = [];
+                querySnapshot.forEach((doc) => {
+                    registrosCloud.push({ id: doc.id, ...doc.data() });
+                });
+                renderizarPanel();
+            }).catch((err) => {
+                console.error("Error al cargar desde Firebase:", err);
+            });
         }
-        if (!localStorage.getItem('prive_historial_pagos')) {
-            localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPrecargado));
-        }
-
-        let registros = JSON.parse(localStorage.getItem('prive_control_modelos'));
-        let historialPagos = JSON.parse(localStorage.getItem('prive_historial_pagos'));
 
         document.getElementById('vencimiento').valueAsDate = new Date();
 
@@ -1049,20 +1062,13 @@
 
             renderizarHistorialAnual();
 
-            if (registros.length === 0) {
-                tarjetasContainer.innerHTML = `<div class="empty-state">No hay perfiles registrados todavía.</div>`;
+            if (registrosCloud.length === 0) {
+                tarjetasContainer.innerHTML = `<div class="empty-state">No hay perfiles registrados en la nube todavía.</div>`;
                 return;
             }
 
-            let registrosOrdenados = [...registros];
-            registrosOrdenados.sort((a, b) => {
-                if (a.pagado !== b.pagado) return a.pagado ? 1 : -1;
-                return new Date(a.vencimiento + 'T00:00:00') - new Date(b.vencimiento + 'T00:00:00');
-            });
-
-            registrosOrdenados.forEach((reg) => {
-                const realIndex = registros.findIndex(r => r.nombre === reg.nombre);
-                const fechaVen = new Date(reg.vencimiento + 'T00:00:00');
+            registrosCloud.forEach((reg, realIndex) => {
+                const fechaVen = new Date((reg.vencimiento || '2026-10-01') + 'T00:00:00');
                 const estaVencidoPorFecha = fechaVen < hoy;
                 const estaAlDia = reg.pagado || !estaVencidoPorFecha;
 
@@ -1081,7 +1087,7 @@
                             <button class="${btnCheckClass}" onclick="togglePagado(${realIndex})" title="Marcar como pagado">✓</button>
                             <div>
                                 <div class="modelo-nombre">${reg.nombre}</div>
-                                <div class="modelo-zona-cat">${reg.zona} • <span style="color:#dfc285;">${reg.categoria}</span></div>
+                                <div class="modelo-zona-cat">${reg.zona || 'CABA'} • <span style="color:#dfc285;">${reg.categoria || 'TERAPEUTICAS'}</span></div>
                             </div>
                         </div>
                         <div>${badgeHtml}</div>
@@ -1089,7 +1095,7 @@
                     <div class="modelo-body">
                         <div>
                             <span style="font-size:0.6rem; color:#888; display:block; margin-bottom:2px;">VENCIMIENTO</span>
-                            <input type="date" value="${reg.vencimiento}" onchange="actualizarFecha(${realIndex}, this.value)" class="fecha-input">
+                            <input type="date" value="${reg.vencimiento || '2026-10-01'}" onchange="actualizarFecha(${realIndex}, this.value)" class="fecha-input">
                         </div>
                         <div>
                             <span style="font-size:0.6rem; color:#888; display:block; margin-bottom:2px;">MONTO ($)</span>
@@ -1109,34 +1115,36 @@
         }
 
         window.actualizarFecha = function(index, nuevaFecha) {
-            registros[index].vencimiento = nuevaFecha;
-            localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
-            renderizarPanel();
+            const reg = registrosCloud[index];
+            reg.vencimiento = nuevaFecha;
+            db.collection("modelos_prive").doc(reg.id).update({ vencimiento: nuevaFecha }).then(() => {
+                renderizarPanel();
+            });
         };
 
         window.actualizarMonto = function(index, nuevoMontoStr) {
             const nuevoMonto = parseFloat(nuevoMontoStr) || 0;
-            const reg = registros[index];
+            const reg = registrosCloud[index];
             reg.monto = nuevoMonto;
             
-            if (reg.pagado && reg.fechaPago) {
-                const histIdx = historialPagos.findIndex(p => p.nombre === reg.nombre && p.fecha === reg.fechaPago);
-                if (histIdx !== -1) {
-                    historialPagos[histIdx].monto = nuevoMonto;
-                } else {
-                    historialPagos.push({ fecha: reg.fechaPago, nombre: reg.nombre, monto: nuevoMonto });
+            db.collection("modelos_prive").doc(reg.id).update({ monto: nuevoMonto }).then(() => {
+                if (reg.pagado && reg.fechaPago) {
+                    const histIdx = historialPagos.findIndex(p => p.nombre === reg.nombre && p.fecha === reg.fechaPago);
+                    if (histIdx !== -1) {
+                        historialPagos[histIdx].monto = nuevoMonto;
+                    } else {
+                        historialPagos.push({ fecha: reg.fechaPago, nombre: reg.nombre, monto: nuevoMonto });
+                    }
+                    localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
                 }
-                localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
-            }
-
-            localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
-            renderizarPanel();
+                renderizarPanel();
+            });
         };
 
         // Cargar absolutamente todos los datos de la ficha al editar
         window.cargarFichaParaEditar = function(index) {
-            const reg = registros[index];
-            document.getElementById('editIndex').value = index;
+            const reg = registrosCloud[index];
+            document.getElementById('editDocId').value = reg.id;
             document.getElementById('nombre').value = reg.nombre || '';
             document.getElementById('zona').value = reg.zona || '';
             document.getElementById('categoria').value = reg.categoria || 'TERAPEUTICAS';
@@ -1145,13 +1153,12 @@
             document.getElementById('monto').value = reg.monto || 0;
             document.getElementById('vencimiento').value = reg.vencimiento || new Date().toISOString().split('T')[0];
             
-            // Cargar galería de fotos real
             galeriaTemporal = reg.fotosGaleria && reg.fotosGaleria.length > 0 ? [...reg.fotosGaleria] : (reg.fotoPrincipal ? [reg.fotoPrincipal] : []);
             renderizarMiniaturas();
             actualizarPreview();
 
             document.getElementById('tituloFormulario').textContent = `Editando a: ${reg.nombre}`;
-            document.getElementById('btnSubmitForm').textContent = "Guardar Cambios de la Ficha";
+            document.getElementById('btnSubmitForm').textContent = "Guardar Cambios en Firebase";
             document.getElementById('btnCancelarEdicion').style.display = "block";
 
             document.getElementById('tabCrear').click();
@@ -1160,7 +1167,7 @@
 
         window.cancelarEdicion = function() {
             document.getElementById('cajaForm').reset();
-            document.getElementById('editIndex').value = "-1";
+            document.getElementById('editDocId').value = "";
             galeriaTemporal = [];
             document.getElementById('thumbnailsGrid').innerHTML = '';
             selectCat.dispatchEvent(new Event('change'));
@@ -1168,7 +1175,7 @@
             actualizarPreview();
 
             document.getElementById('tituloFormulario').textContent = "Nueva Ficha & Perfil";
-            document.getElementById('btnSubmitForm').textContent = "Guardar y Publicar Ficha";
+            document.getElementById('btnSubmitForm').textContent = "Guardar y Publicar en Firebase";
             document.getElementById('btnCancelarEdicion').style.display = "none";
         };
 
@@ -1235,116 +1242,117 @@
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
-            const editIndex = parseInt(document.getElementById('editIndex').value);
+            const docId = document.getElementById('editDocId').value;
             const nombre = document.getElementById('nombre').value.trim().toUpperCase();
+            const zona = document.getElementById('zona').value.trim().toUpperCase();
+            const categoria = document.getElementById('categoria').value;
+            const whatsapp = document.getElementById('whatsapp').value.trim();
+            const descripcion = document.getElementById('descripcion').value.trim();
             const monto = parseFloat(document.getElementById('monto').value) || 0;
             const vencimiento = document.getElementById('vencimiento').value;
             const hoyStr = new Date().toISOString().split('T')[0];
 
-            if (editIndex >= 0) {
-                // MODO EDICIÓN
-                registros[editIndex].nombre = nombre;
-                registros[editIndex].zona = document.getElementById('zona').value.trim().toUpperCase();
-                registros[editIndex].categoria = document.getElementById('categoria').value;
-                registros[editIndex].whatsapp = document.getElementById('whatsapp').value.trim();
-                registros[editIndex].fotosGaleria = [...galeriaTemporal];
-                registros[editIndex].fotoPrincipal = galeriaTemporal.length > 0 ? galeriaTemporal[0] : '';
-                registros[editIndex].descripcion = document.getElementById('descripcion').value.trim();
-                registros[editIndex].monto = monto;
-                registros[editIndex].vencimiento = vencimiento;
+            const fotoPrincipalVal = galeriaTemporal.length > 0 ? galeriaTemporal[0] : '';
+            const fotosGaleriaVal = [...galeriaTemporal];
 
-                localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
-                cancelarEdicion();
-                document.querySelectorAll('.tab-btn')[1].click();
-                renderizarPanel();
-            } else {
-                // MODO CREACIÓN NUEVA
-                const nuevoReg = {
-                    vencimiento,
-                    monto,
+            if (docId) {
+                // MODO EDICIÓN EN FIREBASE
+                db.collection("modelos_prive").doc(docId).update({
                     nombre,
-                    zona: document.getElementById('zona').value.trim().toUpperCase(),
-                    categoria: document.getElementById('categoria').value,
-                    whatsapp: document.getElementById('whatsapp').value.trim(),
-                    fotosGaleria: [...galeriaTemporal],
-                    fotoPrincipal: galeriaTemporal.length > 0 ? galeriaTemporal[0] : '',
-                    descripcion: document.getElementById('descripcion').value.trim(),
+                    zona,
+                    categoria,
+                    whatsapp,
+                    descripcion,
+                    monto,
+                    vencimiento,
+                    fotoPrincipal: fotoPrincipalVal,
+                    fotosGaleria: fotosGaleriaVal
+                }).then(() => {
+                    alert("¡Perfil actualizado con éxito en la nube!");
+                    cancelarEdicion();
+                    cargarPerfilesDesdeFirebase();
+                    document.querySelectorAll('.tab-btn')[1].click();
+                });
+            } else {
+                // MODO CREACIÓN NUEVA EN FIREBASE
+                const nuevoId = nombre.toLowerCase().replace(/[^a-z0-9]/g, '');
+                const nuevoReg = {
+                    nombre,
+                    zona,
+                    categoria,
+                    whatsapp,
+                    descripcion,
+                    monto,
+                    vencimiento,
+                    fotoPrincipal: fotoPrincipalVal,
+                    fotosGaleria: fotosGaleriaVal,
                     pagado: true,
-                    fechaPago: hoyStr
+                    fechaPago: hoyStr,
+                    visitas: 0
                 };
 
-                registros.unshift(nuevoReg);
-                localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
+                db.collection("modelos_prive").doc(nuevoId).set(nuevoReg).then(() => {
+                    if (monto > 0) {
+                        historialPagos.push({ fecha: hoyStr, nombre, monto });
+                        localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
+                    }
 
-                if (monto > 0) {
-                    historialPagos.push({ fecha: hoyStr, nombre, monto });
-                    localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
-                }
-
-                form.reset();
-                galeriaTemporal = [];
-                document.getElementById('thumbnailsGrid').innerHTML = '';
-                selectCat.dispatchEvent(new Event('change'));
-                document.getElementById('vencimiento').valueAsDate = new Date();
-                actualizarPreview();
-                
-                document.querySelectorAll('.tab-btn')[1].click();
-                renderizarPanel();
+                    alert("¡Nueva ficha creada y publicada con éxito!");
+                    form.reset();
+                    galeriaTemporal = [];
+                    document.getElementById('thumbnailsGrid').innerHTML = '';
+                    selectCat.dispatchEvent(new Event('change'));
+                    document.getElementById('vencimiento').valueAsDate = new Date();
+                    actualizarPreview();
+                    
+                    cargarPerfilesDesdeFirebase();
+                    document.querySelectorAll('.tab-btn')[1].click();
+                });
             }
         });
 
         window.togglePagado = function(index) {
-            const reg = registros[index];
-            reg.pagado = !reg.pagado;
+            const reg = registrosCloud[index];
+            const nuevoEstado = !reg.pagado;
             const hoyStr = new Date().toISOString().split('T')[0];
             
-            if (reg.pagado) {
-                reg.fechaPago = hoyStr;
+            let nuevaFechaVen = reg.vencimiento;
+            if (nuevoEstado) {
+                let partesFecha = reg.vencimiento.split('-');
+                let fechaVen = new Date(partesFecha[0], partesFecha[1] - 1, partesFecha[2]);
+                fechaVen.setDate(fechaVen.getDate() + 30);
+                nuevaFechaVen = `${fechaVen.getFullYear()}-${String(fechaVen.getMonth() + 1).padStart(2, '0')}-${String(fechaVen.getDate()).padStart(2, '0')}`;
+                
                 const montoActual = Number(reg.monto || 0);
                 if (montoActual > 0) {
                     historialPagos.push({ fecha: hoyStr, nombre: reg.nombre, monto: montoActual });
                     localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
                 }
-
-                let partesFecha = reg.vencimiento.split('-');
-                let fechaVen = new Date(partesFecha[0], partesFecha[1] - 1, partesFecha[2]);
-                fechaVen.setDate(fechaVen.getDate() + 30);
-                
-                let anio = fechaVen.getFullYear();
-                let mes = String(fechaVen.getMonth() + 1).padStart(2, '0');
-                let dia = String(fechaVen.getDate()).padStart(2, '0');
-                reg.vencimiento = `${anio}-${mes}-${dia}`;
-            } else {
-                const histIdx = historialPagos.map(p => p.nombre).lastIndexOf(reg.nombre);
-                if (histIdx !== -1) {
-                    historialPagos.splice(histIdx, 1);
-                    localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
-                }
-                reg.fechaPago = "";
             }
 
-            localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
-            renderizarPanel();
+            db.collection("modelos_prive").doc(reg.id).update({
+                pagado: nuevoEstado,
+                vencimiento: nuevaFechaVen,
+                fechaPago: nuevoEstado ? hoyStr : ""
+            }).then(() => {
+                cargarPerfilesDesdeFirebase();
+            });
         };
 
         window.eliminarRegistro = function(index) {
-            const reg = registros[index];
-            if (confirm(`¿Estás seguro de eliminar el registro de ${reg.nombre}?`)) {
-                registros.splice(index, 1);
-                localStorage.setItem('prive_control_modelos', JSON.stringify(registros));
-                renderizarPanel();
+            const reg = registrosCloud[index];
+            if (confirm(`¿Estás seguro de eliminar el registro de ${reg.nombre} permanentemente de la nube?`)) {
+                db.collection("modelos_prive").doc(reg.id).delete().then(() => {
+                    cargarPerfilesDesdeFirebase();
+                });
             }
         };
 
         window.restaurarDatosExcel = function() {
-            if (confirm('¿Restaurar los datos originales de la planilla? Se perderán los cambios recientes.')) {
-                localStorage.removeItem('prive_control_modelos');
-                localStorage.removeItem('prive_historial_pagos');
-                location.reload();
-            }
+            alert("Los perfiles ahora se gestionan directamente desde la base de datos en la nube de Firebase.");
         };
 
-        renderizarPanel();
+        cargarPerfilesDesdeFirebase();
         actualizarPreview();
     </script>
 </body>
