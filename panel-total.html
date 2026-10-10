@@ -1124,7 +1124,7 @@
             renderizarPanel();
         };
 
-        // Cargar datos exactos y completos en el formulario para editar
+        // Cargar absolutamente todos los datos de la ficha al editar
         window.cargarFichaParaEditar = function(index) {
             const reg = registros[index];
             document.getElementById('editIndex').value = index;
@@ -1136,7 +1136,7 @@
             document.getElementById('monto').value = reg.monto || 0;
             document.getElementById('vencimiento').value = reg.vencimiento || new Date().toISOString().split('T')[0];
             
-            // Cargar galería de fotos correctamente
+            // Cargar fotos guardadas y mostrarlas en miniatura y vista previa
             galeriaTemporal = reg.fotosGaleria ? [...reg.fotosGaleria] : (reg.fotoPrincipal ? [reg.fotoPrincipal] : []);
             renderizarMiniaturas();
             actualizarPreview();
