@@ -105,7 +105,7 @@
             color: var(--gold);
         }
 
-        /* Tabs de Navegación (4 pestañas ahora) */
+        /* Tabs de Navegación */
         .nav-tabs {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -259,6 +259,14 @@
             color: var(--gold);
             font-weight: 600;
             text-transform: uppercase;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(223, 194, 133, 0.08);
+            border: 1px dashed rgba(223, 194, 133, 0.3);
+        }
+        .pago-item-row span.nombre-modelo-pago:hover {
+            background: rgba(223, 194, 133, 0.2);
         }
 
         /* Estructura Formulario + Vista Previa */
@@ -809,7 +817,7 @@
 
             <div class="historial-box">
                 <button class="historial-toggle" onclick="toggleHistorial()">
-                    <span>📊 Detalle de Pagos por Anunciante</span>
+                    <span>📊 Detalle de Pagos por Anunciante (Tocá un nombre para editarlo)</span>
                     <span id="flechaHistorial">▼</span>
                 </button>
                 <div class="historial-content" id="historialContent"></div>
@@ -915,14 +923,17 @@
         let galeriaTemporal = [];
         let registrosCloud = [];
 
+        // Historial actualizado con nombres de fantasía exactos y Pamela en lugar de Prada
         let historialPrecargado = [
-            { fecha: "2026-09-01", nombre: "MORA", monto: 50000 },
-            { fecha: "2026-09-01", nombre: "MORA S", monto: 50000 },
-            { fecha: "2026-09-01", nombre: "RENATA", monto: 50000 },
-            { fecha: "2026-10-02", nombre: "PRADA", monto: 50000 },
-            { fecha: "2026-10-02", nombre: "LUPITA", monto: 50000 },
+            { fecha: "2026-09-23", nombre: "MORA & MORA SENSUAL", monto: 100000 },
+            { fecha: "2026-09-26", nombre: "RENATA", monto: 50000 },
+            { fecha: "2026-10-01", nombre: "PAMELA", monto: 50000 },
+            { fecha: "2026-10-01", nombre: "LUPITA (TERAPÉUTICAS)", monto: 50000 },
+            { fecha: "2026-10-05", nombre: "MARIELA", monto: 100000 },
             { fecha: "2026-10-06", nombre: "MAGA", monto: 100000 },
-            { fecha: "2026-10-08", nombre: "CELESTE", monto: 100000 }
+            { fecha: "2026-10-07", nombre: "CELESTE (FANTASÍAS)", monto: 100000 },
+            { fecha: "2026-10-08", nombre: "SOL", monto: 70000 },
+            { fecha: "2026-10-09", nombre: "LUPITA (SENSUALES)", monto: 70000 }
         ];
 
         if (!localStorage.getItem('prive_historial_pagos')) {
@@ -1257,12 +1268,13 @@
 
             let pagosOrdenados = [...historialPagos].reverse();
 
-            pagosOrdenados.forEach((p) => {
+            pagosOrdenados.forEach((p, idxReal) => {
+                const indiceReal = historialPagos.length - 1 - idxReal;
                 const row = document.createElement('div');
                 row.className = 'pago-item-row';
                 row.innerHTML = `
                     <div>
-                        <span class="nombre-modelo-pago">${p.nombre || 'Anunciante'}</span>
+                        <span class="nombre-modelo-pago" onclick="editarNombrePago(${indiceReal})" title="Tocar para editar nombre">${p.nombre || 'ANUNCIANTE'}</span>
                         <div style="font-size: 0.65rem; color: #888;">${p.fecha || 'Fecha no registrada'}</div>
                     </div>
                     <strong style="color:var(--success);">+$${Number(p.monto || 0).toLocaleString('es-AR')}</strong>
@@ -1270,6 +1282,16 @@
                 historialContent.appendChild(row);
             });
         }
+
+        window.editarNombrePago = function(index) {
+            const pagoActual = historialPagos[index];
+            const nuevoNombre = prompt(`Editar nombre del pago (${pagoActual.fecha}):`, pagoActual.nombre);
+            if (nuevoNombre !== null && nuevoNombre.trim() !== "") {
+                historialPagos[index].nombre = nuevoNombre.trim().toUpperCase();
+                localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
+                renderizarPanel();
+            }
+        };
 
         window.toggleHistorial = function() {
             const content = document.getElementById('historialContent');
@@ -1296,7 +1318,6 @@
             }
         };
 
-        // Función para cargar comentarios pendientes de moderación desde todas las colecciones de perfiles
         function cargarComentariosParaModerar() {
             const container = document.getElementById('listaModeracionContainer');
             if(!container) return;
@@ -1311,7 +1332,6 @@
                         let pendientes = [];
                         msgSnap.forEach((msgDoc) => {
                             let data = msgDoc.data();
-                            // Si 'aprobado' es falso o no existe, está pendiente
                             if (data.aprobado === false || data.aprobado === undefined) {
                                 pendientes.push({ id: msgDoc.id, perfilId: mId, perfilNombre: mNombre, ...data });
                             }
