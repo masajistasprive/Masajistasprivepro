@@ -923,13 +923,14 @@
         let galeriaTemporal = [];
         let registrosCloud = [];
 
-        // Historial actualizado con "MARIELA Y OLIVIA" el 05/10/2026
+        // Historial con Mariela y Olivia separadas el 05/10/2026
         let historialPrecargado = [
             { fecha: "2026-09-23", nombre: "MORA & MORA SENSUAL", monto: 100000 },
             { fecha: "2026-09-26", nombre: "RENATA", monto: 50000 },
             { fecha: "2026-10-01", nombre: "PAMELA", monto: 50000 },
             { fecha: "2026-10-01", nombre: "LUPITA (TERAPÉUTICAS)", monto: 50000 },
-            { fecha: "2026-10-05", nombre: "MARIELA Y OLIVIA", monto: 100000 },
+            { fecha: "2026-10-05", nombre: "MARIELA", monto: 50000 },
+            { fecha: "2026-10-05", nombre: "OLIVIA", monto: 50000 },
             { fecha: "2026-10-06", nombre: "MAGA", monto: 100000 },
             { fecha: "2026-10-07", nombre: "CELESTE (FANTASÍAS)", monto: 100000 },
             { fecha: "2026-10-08", nombre: "SOL", monto: 70000 },
@@ -1160,6 +1161,9 @@
                 const btnCheckClass = reg.pagado ? 'btn-check pagado' : 'btn-check';
                 const cardClass = reg.pagado ? 'modelo-card pagado-card' : 'modelo-card';
 
+                const visitasHist = reg.visitas || 0;
+                const visitasDia = reg.visitasDiarias || 0;
+
                 const card = document.createElement('div');
                 card.className = cardClass;
                 card.innerHTML = `
@@ -1173,9 +1177,15 @@
                         </div>
                         <div>${badgeHtml}</div>
                     </div>
+                    <!-- Métricas de Visitas -->
+                    <div style="display: flex; gap: 10px; font-size: 0.7rem; color: #dfc285; background: #080808; padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(223,194,133,0.15);">
+                        <span>👁️ Visitas Históricas: <strong>${visitasHist}</strong></span>
+                        <span>•</span>
+                        <span>📈 Visitas Hoy: <strong>${visitasDia}</strong></span>
+                    </div>
                     <div class="modelo-body">
                         <div>
-                            <span style="font-size:0.6rem; color:#888; display:block; margin-bottom:2px;">VENCIMIENTO</span>
+                            <span style="font-size:0.6rem; color:#888; display:block; margin-bottom:2px;">VENCIMIENTO (+30 DÍAS)</span>
                             <input type="date" value="${reg.vencimiento || '2026-10-01'}" onchange="actualizarFecha(${realIndex}, this.value)" class="fecha-input">
                         </div>
                         <div>
@@ -1394,7 +1404,7 @@
             const whatsapp = document.getElementById('whatsapp').value.trim();
             const descripcion = document.getElementById('descripcion').value.trim();
             const monto = parseFloat(document.getElementById('monto').value) || 0;
-            const vencimiento = document.getElementById('vencimiento').value;
+            let vencimiento = document.getElementById('vencimiento').value;
             const hoyStr = new Date().toISOString().split('T')[0];
 
             const fotoPrincipalVal = galeriaTemporal.length > 0 ? galeriaTemporal[0] : '';
@@ -1418,6 +1428,14 @@
                     document.querySelectorAll('.tab-btn')[1].click();
                 });
             } else {
+                // Si es nuevo o se publica, calculamos 30 días desde la fecha de vencimiento ingresada o el día de hoy
+                let partesVen = vencimiento.split('-');
+                let fechaVen = new Date(partesVen[0], partesVen[1] - 1, partesVen[2]);
+                let anio = fechaVen.getFullYear();
+                let mes = String(fechaVen.getMonth() + 1).padStart(2, '0');
+                let dia = String(fechaVen.getDate()).padStart(2, '0');
+                let vencimientoFinal = `${anio}-${mes}-${dia}`;
+
                 const nuevoId = nombre.toLowerCase().replace(/[^a-z0-9]/g, '');
                 const nuevoReg = {
                     nombre,
@@ -1426,12 +1444,13 @@
                     whatsapp,
                     descripcion,
                     monto,
-                    vencimiento,
+                    vencimiento: vencimientoFinal,
                     fotoPrincipal: fotoPrincipalVal,
                     fotosGaleria: fotosGaleriaVal,
                     pagado: true,
                     fechaPago: hoyStr,
-                    visitas: 0
+                    visitas: 0,
+                    visitasDiarias: 0
                 };
 
                 db.collection("modelos_prive").doc(nuevoId).set(nuevoReg).then(() => {
@@ -1454,17 +1473,21 @@
             }
         });
 
+        // Al tildar "Pagado", calcula automáticamente el vencimiento sumando 30 días exactos
         window.togglePagado = function(index) {
             const reg = registrosCloud[index];
             const nuevoEstado = !reg.pagado;
             const hoyStr = new Date().toISOString().split('T')[0];
             
-            let nuevaFechaVen = reg.vencimiento;
+            let nuevaFechaVen = reg.vencimiento || hoyStr;
             if (nuevoEstado) {
-                let partesFecha = reg.vencimiento.split('-');
-                let fechaVen = new Date(partesFecha[0], partesFecha[1] - 1, partesFecha[2]);
-                fechaVen.setDate(fechaVen.getDate() + 30);
-                nuevaFechaVen = `${fechaVen.getFullYear()}-${String(fechaVen.getMonth() + 1).padStart(2, '0')}-${String(fechaVen.getDate()).padStart(2, '0')}`;
+                let baseFecha = reg.vencimiento ? new Date(reg.vencimiento + 'T00:00:00') : new Date();
+                baseFecha.setDate(baseFecha.getDate() + 30);
+                
+                let anio = baseFecha.getFullYear();
+                let mes = String(baseFecha.getMonth() + 1).padStart(2, '0');
+                let dia = String(baseFecha.getDate()).padStart(2, '0');
+                nuevaFechaVen = `${anio}-${mes}-${dia}`;
                 
                 const montoActual = Number(reg.monto || 0);
                 if (montoActual > 0) {
