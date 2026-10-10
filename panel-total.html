@@ -742,6 +742,7 @@
         .actions-row {
             display: flex;
             gap: 6px;
+            align-items: center;
         }
 
         .btn-accion-card {
@@ -766,6 +767,19 @@
             font-weight: 700;
             cursor: pointer;
             text-transform: uppercase;
+        }
+
+        /* Estrellita de Destacada / Favorita */
+        .switch-destacada {
+            cursor: pointer;
+            color: #555;
+            font-size: 18px;
+            transition: all 0.2s;
+            padding: 0 4px;
+        }
+        .switch-destacada.active {
+            color: var(--gold);
+            text-shadow: 0 0 10px rgba(223, 194, 133, 0.8);
         }
 
         .empty-state {
@@ -890,7 +904,7 @@
             <div class="cards-container" id="tarjetasContainer"></div>
         </div>
 
-        <!-- PESTAÑA 3: CREAR / EDITAR FICHA CON TRADUCTOR MULTIIDIOMA Y FOTOS -->
+        <!-- PESTAÑA 3: CREAR / EDITAR FICHA -->
         <div id="nuevoTab" class="panel-section">
             <div class="layout-editor-grid">
                 <!-- Formulario -->
@@ -915,7 +929,7 @@
                             </select>
                         </div>
 
-                        <!-- Botón Traductor Automático IDÉNTICO al Admin -->
+                        <!-- Botón Traductor Automático -->
                         <div style="margin-top: 15px;">
                             <button type="button" class="btn-traducir" onclick="traducirAutomaticamenteAdmin()">✨ Traducir automáticamente campos a Inglés, Portugués y Francés</button>
                             <div id="tradStatusAdmin" style="font-size: 11px; color: var(--gold); margin-bottom: 10px; text-align: center;"></div>
@@ -981,9 +995,9 @@
                     </form>
                 </div>
 
-                <!-- Vista Previa IDÉNTICA al perfil público -->
+                <!-- Vista Previa -->
                 <div class="preview-container">
-                    <div class="preview-title">👁️ Vista Previa del Perfil en Vivo</div>
+                    <div class="preview-title">👁️ Vista Previa en Vivo</div>
                     <div class="preview-card-mock">
                         <div class="preview-img-box" id="prevImgBox">
                             <span>Sin Imagen</span>
@@ -992,7 +1006,6 @@
                         <div class="preview-info">
                             <div class="preview-nombre" id="prevNombre">NOMBRE</div>
                             <div class="preview-zona" id="prevZona">📍 ZONA</div>
-                            <div style="font-size: 0.68rem; color: #dfc285; margin-bottom: 6px;" id="prevModalidad">Gabinete Propio</div>
                             <div class="preview-desc" id="prevDesc">La descripción aparecerá aquí en tiempo real...</div>
                             <a href="#" id="prevWaBtn" class="preview-wa-btn" target="_blank" style="display:none;">💬 Enviar WhatsApp</a>
                         </div>
@@ -1094,7 +1107,6 @@
             if(sec) sec.classList.add('active');
         };
 
-        // Función de traducción automática idéntica a admin.html
         async function traducirAutomaticamenteAdmin() {
             const status = document.getElementById('tradStatusAdmin');
             if(status) status.textContent = "⏳ Traduciendo textos...";
@@ -1174,13 +1186,11 @@
         window.actualizarPreview = function() {
             const nombre = document.getElementById('nombre').value.trim();
             const zona = document.getElementById('zona_es').value.trim();
-            const modalidad = document.getElementById('modalidad_es').value.trim();
             const desc = document.getElementById('desc1_es').value.trim();
             const wa = document.getElementById('whatsapp').value.trim();
 
             document.getElementById('prevNombre').textContent = nombre || 'NOMBRE';
             document.getElementById('prevZona').textContent = zona ? `📍 ${zona.toUpperCase()}` : '📍 ZONA';
-            document.getElementById('prevModalidad').textContent = modalidad || 'Gabinete Propio';
             document.getElementById('prevDesc').textContent = desc || 'La descripción aparecerá aquí en tiempo real...';
 
             const waBtn = document.getElementById('prevWaBtn');
@@ -1320,6 +1330,7 @@
 
                 const visitasHist = reg.visitas || 0;
                 const visitasDia = reg.visitasDiarias || 0;
+                const esDestacada = reg.destacada === true;
 
                 const card = document.createElement('div');
                 card.className = cardClass;
@@ -1353,6 +1364,7 @@
                     ${reg.descripcion ? `<div style="font-size:0.72rem; color:#aaa; font-style:italic; border-left:2px solid var(--gold); padding-left:6px;">"${reg.descripcion}"</div>` : ''}
                     <div class="modelo-footer">
                         <div class="actions-row">
+                            <span class="switch-destacada ${esDestacada ? 'active' : ''}" onclick="toggleDestacada('${reg.id}', ${!esDestacada})" title="Destacar / Favorita">★</span>
                             <button class="btn-accion-card" onclick="cargarFichaParaEditar(${realIndex})">✏️ Editar Ficha</button>
                         </div>
                         <button class="btn-delete" onclick="eliminarRegistro(${realIndex})">Eliminar</button>
@@ -1361,6 +1373,12 @@
                 tarjetasContainer.appendChild(card);
             });
         }
+
+        window.toggleDestacada = function(docId, nuevoValor) {
+            db.collection("modelos_prive").doc(docId).update({ destacada: nuevoValor }).then(() => {
+                cargarPerfilesDesdeFirebase();
+            });
+        };
 
         window.actualizarFecha = function(index, nuevaFecha) {
             const reg = registrosCloud[index];
