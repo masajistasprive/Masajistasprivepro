@@ -1160,7 +1160,7 @@
                     <div class="filtros-grid">
                         <button type="button" class="filtro-btn active" onclick="aplicarFiltroEditor('normal', this)">Normal</button>
                         <button type="button" class="filtro-btn" onclick="aplicarFiltroEditor('cine', this)">Cine Dark</button>
-                        <button type="button" class="filtro-btn" onclick="aplicarFiltro('calido', this)">Cálido Privé</button>
+                        <button type="button" class="filtro-btn" onclick="aplicarFiltroEditor('calido', this)">Cálido Privé</button>
                     </div>
                 </div>
 
@@ -1234,7 +1234,7 @@
             mainContent.style.display = 'block';
             cargarPerfilesDesdeFirebase();
             cargarComentariosParaModerar();
-            renderizarHistorialDetallado();
+            renderizarPanel();
             inicializarEditorCanvas();
             inicializarPlacasCanvas();
         }
@@ -1262,7 +1262,7 @@
             if(tabId === 'moderacionTab') cargarComentariosParaModerar();
             if(tabId === 'editorTab') { setTimeout(() => redibujarEditorCanvas(), 100); }
             if(tabId === 'placasTab') { setTimeout(() => actualizarPlacaPreview(), 100); }
-            if(tabId === 'cajaTab') { renderizarHistorialDetallado(); }
+            if(tabId === 'cajaTab') { renderizarPanel(); }
         };
 
         window.cambiarTabAdmin = function(lang, event) {
@@ -1319,6 +1319,7 @@
 
         function renderizarMiniaturas() {
             const grid = document.getElementById('thumbnailsGrid');
+            if(!grid) return;
             grid.innerHTML = '';
             galeriaTemporal.forEach((foto, idx) => {
                 const div = document.createElement('div');
@@ -1350,7 +1351,9 @@
         };
 
         window.actualizarPreview = function() {
-            const nombre = document.getElementById('nombre').value.trim();
+            const nombreEl = document.getElementById('nombre');
+            if(!nombreEl) return;
+            const nombre = nombreEl.value.trim();
             const zona = document.getElementById('zona_es').value.trim();
             const desc = document.getElementById('desc1_es').value.trim();
             const wa = document.getElementById('whatsapp').value.trim();
@@ -1913,7 +1916,7 @@
             actualizarPlacaPreview();
         }
 
-        function cargarFotoPlaca(event) {
+        window.cargarFotoPlaca = function(event) {
             const file = event.target.files[0];
             if (!file) return;
             const reader = new FileReader();
@@ -1923,7 +1926,7 @@
             reader.readAsDataURL(file);
         }
 
-        function actualizarPlacaPreview() {
+        window.actualizarPlacaPreview = function() {
             if(!ctxPlaca) return;
             const formato = document.getElementById('placaFormato').value;
             if (formato === 'feed') {
@@ -1971,7 +1974,7 @@
             ctxPlaca.fillText(txtSub, canvasPlaca.width / 2, canvasPlaca.height - 85);
         }
 
-        function descargarPlacaPro() {
+        window.descargarPlacaPro = function() {
             actualizarPlacaPreview();
             const enlace = document.createElement('a');
             enlace.download = `prive-placa-${Date.now()}.png`;
@@ -2019,7 +2022,7 @@
             actualizarPanelControlesEditor();
         }
 
-        function cargarImagenEditor(event) {
+        window.cargarImagenEditor = function(event) {
             const file = event.target.files[0];
             if (!file) return;
             const reader = new FileReader();
