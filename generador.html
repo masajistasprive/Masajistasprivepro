@@ -1,338 +1,415 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Generador Profesional de Placas | Masajistas Privé</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-:root {
---bg-color: #050505;
---card-bg: #111111;
---card-border: rgba(223, 194, 133, 0.3);
---gold: #dfc285;
---gold-light: #f3e5ab;
---text-main: #f5f5f5;
---text-muted: #888888;
---radius: 14px;
-}
-​* {
-box-sizing: border-box;
-margin: 0;
-padding: 0;
-font-family: 'Montserrat', sans-serif;
-}
-​body {
-background-color: var(--bg-color);
-color: var(--text-main);
-padding: 20px;
-padding-bottom: 100px;
-}
-​.container {
-max-width: 650px;
-margin: 0 auto;
-}
-​header {
-display: flex;
-justify-content: space-between;
-align-items: center;
-margin-bottom: 25px;
-border-bottom: 1px solid var(--card-border);
-padding-bottom: 15px;
-}
-​h1 {
-color: var(--gold);
-font-size: 1.2rem;
-text-transform: uppercase;
-letter-spacing: 2px;
-font-family: 'Cormorant Garamond', serif;
-}
-​.back-link {
-color: var(--text-muted);
-text-decoration: none;
-font-size: 0.75rem;
-text-transform: uppercase;
-letter-spacing: 1px;
-}
-.back-link:hover { color: var(--gold); }
-​.form-card {
-background-color: var(--card-bg);
-border: 1px solid var(--card-border);
-border-radius: var(--radius);
-padding: 20px;
-margin-bottom: 25px;
-box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-}
-​.form-group {
-margin-bottom: 15px;
-}
-​label {
-display: block;
-font-size: 0.7rem;
-color: var(--text-muted);
-margin-bottom: 6px;
-text-transform: uppercase;
-letter-spacing: 1px;
-font-weight: 700;
-}
-​input, select, textarea {
-width: 100%;
-padding: 12px;
-background-color: #060606;
-border: 1px solid #222;
-border-radius: 8px;
-color: var(--text-main);
-font-size: 0.9rem;
-}
-​input:focus, select:focus, textarea:focus {
-outline: none;
-border-color: var(--gold);
-}
-​.tipo-selector, .formato-selector {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 10px;
-margin-bottom: 15px;
-}
-​.tipo-btn, .formato-btn {
-background: #1a1a1a;
-border: 1px solid #333;
-color: var(--text-muted);
-padding: 10px;
-border-radius: 8px;
-font-size: 0.72rem;
-text-transform: uppercase;
-font-weight: 700;
-cursor: pointer;
-text-align: center;
-}
-​.tipo-btn.active, .formato-btn.active {
-background: rgba(223, 194, 133, 0.15);
-border-color: var(--gold);
-color: var(--gold);
-}
-​.preview-container {
-width: 100%;
-display: flex;
-justify-content: center;
-margin-bottom: 20px;
-overflow-x: auto;
-padding: 10px 0;
-}
-​.preview-placa-wrapper {
-background: linear-gradient(145deg, #0d0d0d, #030303);
-border: 2px solid var(--gold);
-border-radius: 12px;
-position: relative;
-box-shadow: 0 15px 40px rgba(0,0,0,0.8);
-display: flex;
-flex-direction: column;
-justify-content: space-between;
-padding: 25px;
-text-align: center;
-transition: all 0.3s ease;
-}
-​.formato-cuadrado { width: 400px; height: 400px; }
-.formato-story { width: 300px; height: 533px; }
-​.placa-modelo-content {
-display: flex;
-flex-direction: column;
-align-items: center;
-height: 100%;
-justify-content: space-between;
-}
-​.placa-logo-membrete {
-width: 90px;
-height: auto;
-display: block;
-margin: 0 auto;
-opacity: 0.95;
-}
-​/* Contenedor de la foto con recorte automático limpio */
-.placa-foto-container {
-width: 130px;
-height: 130px;
-border-radius: 50%;
-border: 2px solid var(--gold);
-overflow: hidden;
-margin: 4px auto;
-background: #1a1a1a;
-position: relative;
-}
-​.placa-foto-container img {
-width: 100%;
-height: 100%;
-object-fit: cover;
-object-position: center top;
-}
-​.placa-nombre {
-font-size: 1.4rem;
-color: #fff;
-font-family: 'Cormorant Garamond', serif;
-font-weight: 700;
-text-transform: uppercase;
-letter-spacing: 1px;
-margin-top: 2px;
-}
-​.placa-detalles {
-font-size: 0.72rem;
-color: var(--gold);
-text-transform: uppercase;
-letter-spacing: 2px;
-margin-top: 2px;
-}
-​.placa-frase-box {
-font-size: 0.82rem;
-color: #ddd;
-font-style: italic;
-line-height: 1.5;
-max-width: 95%;
-margin: 0 auto;
-}
-​.placa-footer-url {
-font-size: 0.65rem;
-color: #777;
-text-transform: uppercase;
-letter-spacing: 2px;
-}
-​.btn-descargar {
-background: linear-gradient(135deg, var(--gold), #b89751);
-color: #000;
-border: none;
-width: 100%;
-padding: 14px;
-font-weight: 700;
-border-radius: 8px;
-cursor: pointer;
-font-size: 0.8rem;
-text-transform: uppercase;
-letter-spacing: 1.5px;
-box-shadow: 0 4px 15px rgba(223, 194, 133, 0.3);
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador Profesional de Placas | Masajistas Privé</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050505;
+            --card-bg: #111111;
+            --card-border: rgba(223, 194, 133, 0.3);
+            --gold: #dfc285;
+            --gold-light: #f3e5ab;
+            --text-main: #f5f5f5;
+            --text-muted: #888888;
+            --radius: 14px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 15px;
+        }
+
+        h1 {
+            color: var(--gold);
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .back-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .back-link:hover { color: var(--gold); }
+
+        .form-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            background-color: #060606;
+            border: 1px solid #222;
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.9rem;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .tipo-selector, .formato-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .tipo-btn, .formato-btn {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: var(--text-muted);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .tipo-btn.active, .formato-btn.active {
+            background: rgba(223, 194, 133, 0.15);
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        /* Contenedor de Vista Previa */
+        .preview-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            overflow: hidden;
+            padding: 10px 0;
+        }
+
+        .preview-placa-wrapper {
+            background: linear-gradient(145deg, #0d0d0d, #030303);
+            border: 2px solid var(--gold);
+            border-radius: 12px;
+            position: relative;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 25px;
+            text-align: center;
+            width: 380px;
+            height: 380px;
+            flex-shrink: 0;
+        }
+
+        .preview-placa-wrapper.formato-story {
+            width: 320px;
+            height: 568px;
+        }
+
+        .placa-modelo-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        /* Membrete con Logo Controlado */
+        .placa-logo-membrete {
+            width: 65px !important;
+            height: auto !important;
+            max-height: 45px !important;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .placa-foto-container {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 2px solid var(--gold);
+            overflow: hidden;
+            margin: 0 auto;
+            background: #1a1a1a;
+        }
+
+        .placa-foto-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .placa-nombre {
+            font-size: 1.3rem;
+            color: #fff;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        .placa-detalles {
+            font-size: 0.7rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 2px;
+        }
+
+        .placa-frase-box {
+            font-size: 0.8rem;
+            color: #ddd;
+            font-style: italic;
+            line-height: 1.4;
+            max-width: 95%;
+            margin: 0 auto;
+        }
+
+        .placa-footer-url {
+            font-size: 0.6rem;
+            color: #777;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .btn-descargar {
+            background: linear-gradient(135deg, var(--gold), #b89751);
+            color: #000;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            box-shadow: 0 4px 15px rgba(223, 194, 133, 0.3);
+        }
+    </style>
 </head>
 <body>
-​<div class="container">
-<header>
-<h1>Generador Profesional</h1>
-<a href="panel_total.html" class="back-link">← Volver al Panel</a>
-</header>
-​<div class="form-card">
-<div class="tipo-selector">
-<button type="button" class="tipo-btn active" id="btnTipoModelo" onclick="cambiarTipoPlaca('modelo')">⭐ Modelo / Perfil</button>
-<button type="button" class="tipo-btn" id="btnTipoFrase" onclick="cambiarTipoPlaca('frase')">💬 Frase / Cuaderno</button>
-</div>
-​<div class="formato-selector">
-<button type="button" class="formato-btn active" id="btnFmtCuadrado" onclick="cambiarFormato('cuadrado')">📱 Feed (1:1)</button>
-<button type="button" class="formato-btn" id="btnFmtStory" onclick="cambiarFormato('story')">📸 Story / Reels (9:16)</button>
-</div>
-​<div id="camposModelo">
-<div class="form-group">
-<label for="inputNombre">Nombre de la Modelo</label>
-<input type="text" id="inputNombre" placeholder="Ej: Maga" oninput="actualizarPlaca()">
-</div>
-<div class="form-group">
-<label for="inputZona">Zona / Barrio</label>
-<input type="text" id="inputZona" placeholder="Ej: Recoleta / CABA" oninput="actualizarPlaca()">
-</div>
-<div class="form-group">
-<label for="inputFoto">Foto Principal</label>
-<input type="file" id="inputFotoFile" accept="image/*" onchange="cargarImagenLocal(event)">
-</div>
-</div>
-​<div id="camposFrase" style="display: none;">
-<div class="form-group">
-<label for="inputTituloFrase">Título / Categoría</label>
-<input type="text" id="inputTituloFrase" value="Cuaderno Privé" oninput="actualizarPlaca()">
-</div>
-<div class="form-group">
-<label for="inputTextoFrase">Frase o Artículo (Dirigido a Hombres / Bienestar)</label>
-<textarea id="inputTextoFrase" style="height: 90px;" oninput="actualizarPlaca()">"Entrenar duro, levantar peso o competir exige un precio físico que los músculos cobran en silencio..."</textarea>
-</div>
-</div>
-​<div class="form-group" style="margin-top: 15px;">
-<label for="inputEnlaceFooter">Enlace o Dominio (Visible en la placa)</label>
-<input type="text" id="inputEnlaceFooter" value="masajistasprive.com" oninput="actualizarPlaca()">
-</div>
-</div>
-​<div style="text-align: center; margin-bottom: 10px; font-size: 0.72rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px;">Vista Previa con Membrete Oficial</div>
-​<div class="preview-container">
-<div class="preview-placa-wrapper formato-cuadrado" id="placaPreviewBox">
-<div class="placa-modelo-content">
-<img src="img/logo.png" alt="Masajistas Privé" class="placa-logo-membrete" crossorigin="anonymous">
-<div>
-<div class="placa-foto-container">
-<img id="placaImgPreview" src="img/monograma.png" alt="Foto" crossorigin="anonymous">
-</div>
-<div class="placa-nombre" id="placaNombrePreview">Maga</div>
-<div class="placa-detalles" id="placaZonaPreview">📍 Recoleta</div>
-</div>
-<div class="placa-footer-url" id="placaFooterPreview">masajistasprive.com</div>
-</div>
-</div>
-</div>
-​<button type="button" class="btn-descargar" onclick="descargarPlacaPNG()">📥 Descargar Imagen Directa (Alta Calidad)</button>
-</div>
-​<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-​<script>
-let tipoActual = 'modelo';
-let formatoActual = 'cuadrado';
-let imagenSrcTemporal = 'img/monograma.png';
-​function cambiarTipoPlaca(tipo) {
-tipoActual = tipo;
-document.getElementById('btnTipoModelo').classList.toggle('active', tipo === 'modelo');
-document.getElementById('btnTipoFrase').classList.toggle('active', tipo === 'frase');
-document.getElementById('camposModelo').style.display = tipo === 'modelo' ? 'block' : 'none';
-document.getElementById('camposFrase').style.display = tipo === 'frase' ? 'block' : 'none';
-actualizarPlaca();
-}
-​function cambiarFormato(fmt) {
-formatoActual = fmt;
-document.getElementById('btnFmtCuadrado').classList.toggle('active', fmt === 'cuadrado');
-document.getElementById('btnFmtStory').classList.toggle('active', fmt === 'story');
-​const box = document.getElementById('placaPreviewBox');
-box.className = preview-placa-wrapper formato-${fmt};
-actualizarPlaca();
-}
-​function cargarImagenLocal(event) {
-const file = event.target.files[0];
-if (!file) return;
-const reader = new FileReader();
-reader.onload = function(e) {
-imagenSrcTemporal = e.target.result;
-actualizarPlaca();
-};
-reader.readAsDataURL(file);
-}
-​function actualizarPlaca() {
-const box = document.getElementById('placaPreviewBox');
-const footerUrl = document.getElementById('inputEnlaceFooter').value.trim() || 'masajistasprive.com';
-​if (tipoActual === 'modelo') {
-const nombre = document.getElementById('inputNombre').value.trim() || 'MODELO';
-const zona = document.getElementById('inputZona').value.trim() || 'CABA';
-​box.innerHTML = <div class="placa-modelo-content"> <img src="img/logo.png" alt="Masajistas Privé" class="placa-logo-membrete" crossorigin="anonymous"> <div> <div class="placa-foto-container"> <img src="${imagenSrcTemporal}" crossorigin="anonymous" alt="Foto"> </div> <div class="placa-nombre">${nombre}</div> <div class="placa-detalles">📍 ${zona.toUpperCase()}</div> </div> <div class="placa-footer-url">${footerUrl}</div> </div>;
-} else {
-const titulo = document.getElementById('inputTituloFrase').value.trim() || 'Cuaderno Privé';
-const texto = document.getElementById('inputTextoFrase').value.trim() || 'Texto...';
-​box.innerHTML = <div class="placa-modelo-content"> <img src="img/logo.png" alt="Masajistas Privé" class="placa-logo-membrete" crossorigin="anonymous"> <div style="display: flex; flex-direction: column; justify-content: center; height: 100%;"> <div style="font-size: 1.1rem; color: #dfc285; font-family: 'Cormorant Garamond', serif; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 2px;">${titulo}</div> <div class="placa-frase-box">${texto}</div> </div> <div class="placa-footer-url">${footerUrl}</div> </div>;
-}
-}
-​function descargarPlacaPNG() {
-const elemento = document.getElementById('placaPreviewBox');
-const escalaDeseada = formatoActual === 'cuadrado' ? (1080 / 400) : (1080 / 300);
-​html2canvas(elemento, {
-scale: escalaDeseada,
-useCORS: true,
-backgroundColor: '#050505'
-}).then(canvas => {
-const enlace = document.createElement('a');
-enlace.download = prive-placa-${tipoActual}-${Date.now()}.png;
-enlace.href = canvas.toDataURL('image/png');
-enlace.click();
-}).catch(err => {
-alert("Error al generar la imagen de descarga directa.");
-});
-}
-</script>
+
+    <div class="container">
+        <header>
+            <h1>Generador Profesional</h1>
+            <a href="panel_total.html" class="back-link">&larr; Volver al Panel</a>
+        </header>
+
+        <div class="form-card">
+            <div class="tipo-selector">
+                <button type="button" class="tipo-btn active" id="btnTipoModelo" onclick="cambiarTipoPlaca('modelo')">⭐ Modelo / Perfil</button>
+                <button type="button" class="tipo-btn" id="btnTipoFrase" onclick="cambiarTipoPlaca('frase')">💬 Frase / Cuaderno</button>
+            </div>
+
+            <div class="formato-selector">
+                <button type="button" class="formato-btn active" id="btnFmtCuadrado" onclick="cambiarFormato('cuadrado')">📱 Feed (1:1)</button>
+                <button type="button" class="formato-btn" id="btnFmtStory" onclick="cambiarFormato('story')">📸 Story / Reels (9:16)</button>
+            </div>
+
+            <div id="camposModelo">
+                <div class="form-group">
+                    <label for="inputNombre">Nombre de la Modelo</label>
+                    <input type="text" id="inputNombre" placeholder="Ej: Maga" oninput="actualizarPlaca()">
+                </div>
+                <div class="form-group">
+                    <label for="inputZona">Zona / Barrio</label>
+                    <input type="text" id="inputZona" placeholder="Ej: Recoleta / CABA" oninput="actualizarPlaca()">
+                </div>
+                <div class="form-group">
+                    <label for="inputFoto">Foto Principal</label>
+                    <input type="file" id="inputFotoFile" accept="image/*" onchange="cargarImagenLocal(event)">
+                </div>
+            </div>
+
+            <div id="camposFrase" style="display: none;">
+                <div class="form-group">
+                    <label for="inputTituloFrase">Título / Categoría</label>
+                    <input type="text" id="inputTituloFrase" value="Cuaderno Privé" oninput="actualizarPlaca()">
+                </div>
+                <div class="form-group">
+                    <label for="inputTextoFrase">Frase o Artículo (Dirigido a Hombres / Bienestar)</label>
+                    <textarea id="inputTextoFrase" style="height: 90px;" oninput="actualizarPlaca()">"Entrenar duro, levantar peso o competir exige un precio físico que los músculos cobran en silencio..."</textarea>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 15px;">
+                <label for="inputEnlaceFooter">Enlace o Dominio (Visible en la placa)</label>
+                <input type="text" id="inputEnlaceFooter" value="masajistasprive.com" oninput="actualizarPlaca()">
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 10px; font-size: 0.72rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px;">Vista Previa Corregida</div>
+        
+        <div class="preview-container">
+            <div class="preview-placa-wrapper" id="placaPreviewBox">
+                <div class="placa-modelo-content">
+                    <img src="img/logo.png" alt="Masajistas Privé" class="placa-logo-membrete" crossorigin="anonymous">
+                    <div>
+                        <div class="placa-foto-container">
+                            <img id="placaImgPreview" src="img/monograma.png" alt="Foto" style="width:100%; height:100%; object-fit:cover;">
+                        </div>
+                        <div class="placa-nombre" id="placaNombrePreview">Maga</div>
+                        <div class="placa-detalles" id="placaZonaPreview">📍 Recoleta</div>
+                    </div>
+                    <div class="placa-footer-url" id="placaFooterPreview">masajistasprive.com</div>
+                </div>
+            </div>
+        </div>
+
+        <button type="button" class="btn-descargar" onclick="descargarPlacaPNG()">📥 Descargar Imagen Directa (Alta Calidad)</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script>
+        let tipoActual = 'modelo';
+        let formatoActual = 'cuadrado';
+        let imagenSrcTemporal = 'img/monograma.png';
+
+        function cambiarTipoPlaca(tipo) {
+            tipoActual = tipo;
+            document.getElementById('btnTipoModelo').classList.toggle('active', tipo === 'modelo');
+            document.getElementById('btnTipoFrase').classList.toggle('active', tipo === 'frase');
+            document.getElementById('camposModelo').style.display = tipo === 'modelo' ? 'block' : 'none';
+            document.getElementById('camposFrase').style.display = tipo === 'frase' ? 'block' : 'none';
+            actualizarPlaca();
+        }
+
+        function cambiarFormato(fmt) {
+            formatoActual = fmt;
+            document.getElementById('btnFmtCuadrado').classList.toggle('active', fmt === 'cuadrado');
+            document.getElementById('btnFmtStory').classList.toggle('active', fmt === 'story');
+            
+            const box = document.getElementById('placaPreviewBox');
+            if (fmt === 'story') {
+                box.classList.add('formato-story');
+            } else {
+                box.classList.remove('formato-story');
+            }
+            actualizarPlaca();
+        }
+
+        function cargarImagenLocal(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imagenSrcTemporal = e.target.result;
+                actualizarPlaca();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function actualizarPlaca() {
+            const box = document.getElementById('placaPreviewBox');
+            const footerUrl = document.getElementById('inputEnlaceFooter').value.trim() || 'masajistasprive.com';
+            
+            if (tipoActual === 'modelo') {
+                const nombre = document.getElementById('inputNombre').value.trim() || 'MODELO';
+                const zona = document.getElementById('inputZona').value.trim() || 'CABA';
+
+                box.innerHTML = `
+                    <div class="placa-modelo-content">
+                        <img src="img/logo.png" alt="Masajistas Privé" class="placa-logo-membrete" crossorigin="anonymous">
+                        <div>
+                            <div class="placa-foto-container">
+                                <img src="${imagenSrcTemporal}" crossorigin="anonymous" alt="Foto" style="width:100%; height:100%; object-fit:cover;">
+                            </div>
+                            <div class="placa-nombre">${nombre}</div>
+                            <div class="placa-detalles">📍 ${zona.toUpperCase()}</div>
+                        </div>
+                        <div class="placa-footer-url">${footerUrl}</div>
+                    </div>
+                `;
+            } else {
+                const titulo = document.getElementById('inputTituloFrase').value.trim() || 'Cuaderno Privé';
+                const texto = document.getElementById('inputTextoFrase').value.trim() || 'Texto...';
+
+                box.innerHTML = `
+                    <div class="placa-modelo-content">
+                        <img src="img/logo.png" alt="Masajistas Privé" class="placa-logo-membrete" crossorigin="anonymous">
+                        <div style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
+                            <div style="font-size: 1.05rem; color: #dfc285; font-family: 'Cormorant Garamond', serif; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 2px;">${titulo}</div>
+                            <div class="placa-frase-box">${texto}</div>
+                        </div>
+                        <div class="placa-footer-url">${footerUrl}</div>
+                    </div>
+                `;
+            }
+        }
+
+        function descargarPlacaPNG() {
+            const elemento = document.getElementById('placaPreviewBox');
+            const escalaDeseada = formatoActual === 'cuadrado' ? (1080 / 380) : (1080 / 320);
+
+            html2canvas(elemento, {
+                scale: escalaDeseada,
+                useCORS: true,
+                backgroundColor: '#050505'
+            }).then(canvas => {
+                const enlace = document.createElement('a');
+                enlace.download = `prive-placa-${tipoActual}-${Date.now()}.png`;
+                enlace.href = canvas.toDataURL('image/png');
+                enlace.click();
+            }).catch(err => {
+                alert("Error al generar la imagen de descarga directa.");
+            });
+        }
+    </script>
 </body>
 </html>
