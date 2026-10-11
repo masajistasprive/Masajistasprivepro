@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador Profesional de Placas | Masajistas Privé</title>
+    <title>Generador Profesional & IA | Masajistas Privé</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -165,9 +165,9 @@
             height: 100%;
             justify-content: space-between;
             width: 100%;
+            position: relative;
         }
 
-        /* Membrete con Logo Ajustado */
         .placa-logo-membrete {
             width: 55px !important;
             height: auto !important;
@@ -177,7 +177,6 @@
             margin: 0 auto;
         }
 
-        /* Foto Central con mejor proporción y tamaño */
         .placa-foto-container {
             width: 175px;
             height: 175px;
@@ -187,6 +186,7 @@
             margin: 0 auto;
             background: #1a1a1a;
             box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+            position: relative;
         }
 
         .preview-placa-wrapper.formato-story .placa-foto-container {
@@ -199,6 +199,17 @@
             height: 100%;
             object-fit: cover;
         }
+
+        .blur-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background: rgba(0, 0, 0, 0.25);
+            display: none;
+            pointer-events: none;
+        }
+        .blur-overlay.activo { display: block; }
 
         .placa-nombre {
             font-size: 1.5rem;
@@ -235,7 +246,7 @@
             font-weight: 600;
         }
 
-        .btn-descargar {
+        .btn-accion-prive {
             background: linear-gradient(135deg, var(--gold), #b89751);
             color: #000;
             border: none;
@@ -248,6 +259,65 @@
             text-transform: uppercase;
             letter-spacing: 1.5px;
             box-shadow: 0 4px 15px rgba(223, 194, 133, 0.3);
+            margin-top: 10px;
+        }
+
+        /* Estilos de las Casillas IA */
+        .ai-box {
+            background: #141414;
+            border: 1px dashed var(--gold);
+            border-radius: var(--radius);
+            padding: 18px;
+            margin-top: 25px;
+        }
+
+        .red-card {
+            background: #080808;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+        }
+
+        .red-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .red-title {
+            font-size: 0.72rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .btn-copiar {
+            background: rgba(223, 194, 133, 0.1);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+        .btn-copiar:hover { background: var(--gold); color: #000; }
+
+        .red-textarea {
+            width: 100%;
+            height: 75px;
+            background: #030303;
+            border: 1px solid #222;
+            color: #ccc;
+            font-size: 0.78rem;
+            padding: 8px;
+            border-radius: 6px;
+            resize: vertical;
         }
     </style>
 </head>
@@ -255,7 +325,7 @@
 
     <div class="container">
         <header>
-            <h1>Generador Profesional</h1>
+            <h1>Generador Profesional & IA</h1>
             <a href="panel_total.html" class="back-link">&larr; Volver al Panel</a>
         </header>
 
@@ -273,7 +343,7 @@
             <div id="camposModelo">
                 <div class="form-group">
                     <label for="inputNombre">Nombre de la Modelo</label>
-                    <input type="text" id="inputNombre" placeholder="Ej: Maga" oninput="actualizarPlaca()">
+                    <input type="text" id="inputNombre" placeholder="Ej: Camila" oninput="actualizarPlaca()">
                 </div>
                 <div class="form-group">
                     <label for="inputZona">Zona / Barrio</label>
@@ -283,6 +353,12 @@
                     <label for="inputFoto">Foto Principal</label>
                     <input type="file" id="inputFotoFile" accept="image/*" onchange="cargarImagenLocal(event)">
                 </div>
+                
+                <!-- CHECKBOX PRIVACIDAD / DESENFOQUE DE ROSTRO -->
+                <div class="form-group" style="display: flex; align-items: center; gap: 10px; background: #080808; padding: 10px; border-radius: 8px; border: 1px solid #222;">
+                    <input type="checkbox" id="checkBlur" onchange="actualizarPlaca()" style="width: 18px; height: 18px; accent-color: var(--gold); cursor: pointer;">
+                    <label for="checkBlur" style="margin: 0; color: var(--gold); cursor: pointer; font-size: 0.75rem;">🔒 Modo Discreto / Difuminar Rostro (Privacidad)</label>
+                </div>
             </div>
 
             <div id="camposFrase" style="display: none;">
@@ -291,7 +367,7 @@
                     <input type="text" id="inputTituloFrase" value="Cuaderno Privé" oninput="actualizarPlaca()">
                 </div>
                 <div class="form-group">
-                    <label for="inputTextoFrase">Frase o Artículo (Dirigido a Hombres / Bienestar)</label>
+                    <label for="inputTextoFrase">Frase o Artículo (Bienestar / Descarga)</label>
                     <textarea id="inputTextoFrase" style="height: 90px;" oninput="actualizarPlaca()">"Entrenar duro, levantar peso o competir exige un precio físico que los músculos cobran en silencio..."</textarea>
                 </div>
             </div>
@@ -302,7 +378,7 @@
             </div>
         </div>
 
-        <div style="text-align: center; margin-bottom: 10px; font-size: 0.72rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px;">Vista Previa Rediseñada</div>
+        <div style="text-align: center; margin-bottom: 10px; font-size: 0.72rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px;">Vista Previa de la Placa</div>
         
         <div class="preview-container">
             <div class="preview-placa-wrapper" id="placaPreviewBox">
@@ -311,6 +387,7 @@
                     <div>
                         <div class="placa-foto-container">
                             <img id="placaImgPreview" src="img/monograma.png" alt="Foto" style="width:100%; height:100%; object-fit:cover;">
+                            <div class="blur-overlay" id="blurOverlayElement"></div>
                         </div>
                         <div class="placa-nombre" id="placaNombrePreview">CAMILA</div>
                         <div class="placa-detalles" id="placaZonaPreview">📍 RECOLETA</div>
@@ -320,7 +397,51 @@
             </div>
         </div>
 
-        <button type="button" class="btn-descargar" onclick="descargarPlacaPNG()">📥 Descargar Imagen Directa (Alta Calidad)</button>
+        <button type="button" class="btn-accion-prive" onclick="descargarPlacaPNG()">📥 Descargar Imagen Directa (Alta Calidad)</button>
+
+        <!-- SECCIÓN DE ASISTENTE IA CON CASILLAS SEPARADAS -->
+        <div class="ai-box">
+            <h3 style="color: var(--gold); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1.5px; font-family: 'Cormorant Garamond', serif; margin-bottom: 6px;">✨ Asistente IA: Textos por Red Social</h3>
+            <p style="font-size: 0.75rem; color: #888; margin-bottom: 12px;">Generá y copiá al instante los copies exactos optimizados para cada plataforma.</p>
+            
+            <div class="form-group">
+                <label>Tono del Mensaje</label>
+                <select id="aiTono" onchange="generarTextosSeparados()">
+                    <option value="elegante">Elegante & Discreto (Alto standing)</option>
+                    <option value="directo">Directo al grano (Ideal turnos rápidos)</option>
+                    <option value="bienestar">Enfoque Bienestar / Alivio de estrés</option>
+                </select>
+            </div>
+            
+            <button type="button" class="btn-accion-prive" style="margin-top: 0; background: rgba(223,194,133,0.15); border: 1px solid var(--gold); color: var(--gold);" onclick="generarTextosSeparados()">🤖 Actualizar Textos Inteligentes</button>
+            
+            <!-- Casilla Instagram / Facebook -->
+            <div class="red-card">
+                <div class="red-header">
+                    <span class="red-title">📸 Instagram / Facebook</span>
+                    <button class="btn-copiar" onclick="copiarCasilla('textIg')">Copiar 📋</button>
+                </div>
+                <textarea class="red-textarea" id="textIg" readonly></textarea>
+            </div>
+
+            <!-- Casilla WhatsApp / Telegram -->
+            <div class="red-card">
+                <div class="red-header">
+                    <span class="red-title">💬 Canal WhatsApp / Telegram</span>
+                    <button class="btn-copiar" onclick="copiarCasilla('textWp')">Copiar 📋</button>
+                </div>
+                <textarea class="red-textarea" id="textWp" readonly></textarea>
+            </div>
+
+            <!-- Casilla X (Twitter) -->
+            <div class="red-card">
+                <div class="red-header">
+                    <span class="red-title">🗲 X (Twitter)</span>
+                    <button class="btn-copiar" onclick="copiarCasilla('textX')">Copiar 📋</button>
+                </div>
+                <textarea class="red-textarea" id="textX" readonly style="height: 60px;"></textarea>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -367,6 +488,7 @@
         function actualizarPlaca() {
             const box = document.getElementById('placaPreviewBox');
             const footerUrl = (document.getElementById('inputEnlaceFooter').value.trim() || 'masajistasprive.com').toUpperCase();
+            const isBlurActive = document.getElementById('checkBlur').checked;
             
             if (tipoActual === 'modelo') {
                 const nombre = (document.getElementById('inputNombre').value.trim() || 'MODELO').toUpperCase();
@@ -378,6 +500,7 @@
                         <div>
                             <div class="placa-foto-container">
                                 <img src="${imagenSrcTemporal}" crossorigin="anonymous" alt="Foto" style="width:100%; height:100%; object-fit:cover;">
+                                <div class="blur-overlay ${isBlurActive ? 'activo' : ''}"></div>
                             </div>
                             <div class="placa-nombre">${nombre}</div>
                             <div class="placa-detalles">📍 ${zona}</div>
@@ -400,6 +523,61 @@
                     </div>
                 `;
             }
+            generarTextosSeparados();
+        }
+
+        function generarTextosSeparados() {
+            const nombre = document.getElementById('inputNombre').value.trim() || 'la profesional';
+            const zona = document.getElementById('inputZona').value.trim() || 'CABA';
+            const tono = document.getElementById('aiTono').value;
+            const hashtagZona = '#' + zona.replace(/[^a-zA-Z0-9]/g, '');
+
+            let copyIg = "";
+            let copyWp = "";
+            let copyX = "";
+
+            if (tono === 'elegante') {
+                copyIg = `✨ Nueva incorporación exclusiva en ${zona}.\n\n${nombre} se suma a Masajistas Privé bajo rigurosos estándares de discreción, categoría y bienestar absoluto. Un espacio diseñado para detener el tiempo en Buenos Aires.\n\n📲 Consultas formales y reservas directas en masajistasprive.com\n\n#MasajistasPrive ${hashtagZona} #RelaxExclusivo #BuenosAires`;
+                
+                copyWp = `✨ Nueva profesional verificada en ${zona}: ${nombre}.\n\nGabinetes propios, discreción absoluta y atención de categoría en Masajistas Privé.\n\n🔗 Conocé su perfil completo en masajistasprive.com`;
+                
+                copyX = `Exclusividad y relax en ${zona}. ${nombre} se suma a Masajistas Privé. Conectá directo en masajistasprive.com ${hashtagZona} #RelaxCABA`;
+            } else if (tono === 'directo') {
+                copyIg = `⚡ Turnos y disponibilidad en ${zona} — ${nombre}.\n\nAtención personalizada, gabinetes propios y máxima discreción. Coordiná tu sesión de forma directa sin intermediarios.\n\n💬 Escribinos o ingresá a masajistasprive.com\n\n#MasajistasPrive ${hashtagZona} #MasajesCABA #TurnosHoy`;
+                
+                copyWp = `⚡ Turnos disponibles hoy con ${nombre} en ${zona}. Discreción y atención directa. \n\n🔗 Reservas en masajistasprive.com`;
+                
+                copyX = `Turnos disponibles con ${nombre} en ${zona}. Atención directa y discreción. Info en masajistasprive.com ${hashtagZona}`;
+            } else {
+                copyIg = `🌿 La descarga muscular que tu cuerpo necesita en ${zona}.\n\nEl estrés de la semana se acumula en cervicales y lumbares. ${nombre} te espera en su espacio privado para un reseteo físico y mental total.\n\n🔗 Toda la info en masajistasprive.com\n\n#MasajistasPrive ${hashtagZona} #Descontracturante #BienestarCABA`;
+                
+                copyWp = `🌿 Alivio y descarga en ${zona}. ${nombre} especialista en relax y masajes descontracturantes.\n\n🔗 Ver más en masajistasprive.com`;
+                
+                copyX = `Liberá tensiones en ${zona} con ${nombre}. Masajes y relax profesional. Info en masajistasprive.com ${hashtagZona}`;
+            }
+
+            document.getElementById('textIg').value = copyIg;
+            document.getElementById('textWp').value = copyWp;
+            document.getElementById('textX').value = copyX;
+        }
+
+        function copiarCasilla(idElemento) {
+            const textarea = document.getElementById(idElemento);
+            textarea.select();
+            textarea.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(textarea.value);
+            
+            // Efecto visual rápido en el botón
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = "¡Copiado! ✓";
+            btn.style.background = "var(--gold)";
+            btn.style.color = "#000";
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = "rgba(223, 194, 133, 0.1)";
+                btn.style.color = "var(--gold)";
+            }, 1500);
         }
 
         function descargarPlacaPNG() {
@@ -419,6 +597,11 @@
                 alert("Error al generar la imagen de descarga directa.");
             });
         }
+
+        // Ejecutar al cargar para rellenar textos iniciales
+        window.addEventListener('load', () => {
+            generarTextosSeparados();
+        });
     </script>
 </body>
 </html>
