@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Editor Pro Mobile | Masajistas Privé</title>
+    <title>Editor Pro Canvas | Masajistas Privé</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -110,10 +110,10 @@
             overflow: hidden;
         }
 
+        /* Lienzo Canvas Nativo para rendimiento fluido en Celular */
         .editor-canvas-wrapper {
             width: 100%;
             max-width: 400px;
-            min-height: 420px;
             background: #000;
             border: 2px solid var(--gold);
             border-radius: 12px;
@@ -123,41 +123,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            touch-action: none;
+            touch-action: none; /* Bloquea el scroll del celular al arrastrar sobre el canvas */
         }
 
-        .editor-canvas-wrapper img {
+        canvas {
             width: 100%;
             height: auto;
-            max-height: 600px;
-            object-fit: contain;
             display: block;
-            pointer-events: none;
-        }
-
-        /* Rectángulo difuminado con agarre táctil libre */
-        .blur-spot {
-            position: absolute;
-            width: 100px;
-            height: 40px;
-            border-radius: 8px;
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            background: rgba(30, 30, 30, 0.4);
-            z-index: 10;
-            cursor: grab;
-            touch-action: none;
-            -webkit-user-select: none;
-            user-select: none;
-            -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%);
-            mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%);
-        }
-        .blur-spot:active { cursor: grabbing; }
-        .blur-spot.circulo { border-radius: 50%; }
-        .blur-spot.cuadrado { border-radius: 14px; }
-        .blur-spot.seleccionado {
-            box-shadow: 0 0 20px rgba(223, 194, 133, 0.8);
-            outline: 1.5px solid var(--gold);
+            cursor: move;
         }
 
         .btn-accion {
@@ -219,13 +192,13 @@
 
     <div class="container">
         <header>
-            <h1>Editor Pro Mobile</h1>
+            <h1>Editor Pro Canvas</h1>
             <a href="panel_total.html" class="back-link">&larr; Volver</a>
         </header>
 
         <div class="form-card">
             <div class="form-group">
-                <label>1. Seleccionar Fotografía</label>
+                <label>1. Seleccionar Fotografía (Tamaño Real)</label>
                 <input type="file" id="inputFotoEditor" accept="image/*" onchange="cargarImagenEditor(event)">
             </div>
 
@@ -239,23 +212,23 @@
                 
                 <div class="form-group">
                     <label>Forma</label>
-                    <select id="selForma" onchange="actualizarZonaActivaProp()">
+                    <select id="selForma" onchange="actualizarPropiedadesZona()">
                         <option value="franja">Franja / Rectángulo (Ideal Ojos)</option>
                         <option value="circulo">Círculo</option>
                         <option value="cuadrado">Bloque Cuadrado</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Ancho (<span id="lblAncho">100</span>px)</label>
-                    <input type="range" id="rngAncho" min="30" max="250" value="100" class="range-slider" oninput="actualizarZonaActivaProp()">
+                    <label>Ancho (<span id="lblAncho">120</span>px)</label>
+                    <input type="range" id="rngAncho" min="40" max="300" value="120" class="range-slider" oninput="actualizarPropiedadesZona()">
                 </div>
                 <div class="form-group">
-                    <label>Alto (<span id="lblAlto">40</span>px)</label>
-                    <input type="range" id="rngAlto" min="15" max="150" value="40" class="range-slider" oninput="actualizarZonaActivaProp()">
+                    <label>Alto (<span id="lblAlto">45</span>px)</label>
+                    <input type="range" id="rngAlto" min="20" max="200" value="45" class="range-slider" oninput="actualizarPropiedadesZona()">
                 </div>
                 <div class="form-group" style="margin-bottom: 0;">
-                    <label>Intensidad de Desenfoque (<span id="lblInt">14</span>px)</label>
-                    <input type="range" id="rngInt" min="4" max="25" value="14" class="range-slider" oninput="actualizarZonaActivaProp()">
+                    <label>Intensidad de Desenfoque (<span id="lblInt">12</span>px)</label>
+                    <input type="range" id="rngInt" min="2" max="25" value="12" class="range-slider" oninput="actualizarPropiedadesZona()">
                 </div>
                 <button type="button" class="btn-secundario" style="background: rgba(255,80,80,0.15); border-color: #ff5050; color: #ff8080; margin-top: 8px;" onclick="eliminarZonaActiva()">🗑️ Eliminar Zona</button>
             </div>
@@ -271,215 +244,268 @@
 
             <div class="form-group">
                 <label>Luminosidad (<span id="valBrillo">100</span>%)</label>
-                <input type="range" id="rangeBrillo" min="70" max="150" value="100" class="range-slider" oninput="actualizarFiltrosCSS()">
+                <input type="range" id="rangeBrillo" min="70" max="150" value="100" class="range-slider" oninput="redibujarCanvas()">
             </div>
         </div>
 
-        <div style="text-align: center; margin-bottom: 8px; font-size: 0.68rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px;">👆 Arrastrá el rectángulo directamente con el dedo por la foto</div>
+        <div style="text-align: center; margin-bottom: 8px; font-size: 0.68rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px;">👉 Tocá y arrastrá el cuadro directamente con el dedo por la foto</div>
         
         <div class="preview-container">
             <div class="editor-canvas-wrapper" id="editorCanvasBox">
-                <img id="imagenEditada" src="img/monograma.png" alt="Foto" crossorigin="anonymous">
+                <canvas id="priveCanvas"></canvas>
             </div>
         </div>
 
         <button type="button" class="btn-accion" onclick="descargarFotoEditada()">📥 Descargar Imagen Pro (PNG)</button>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
     <script>
-        let filtroActual = 'normal';
+        let canvas = document.getElementById('priveCanvas');
+        let ctx = canvas.getContext('2d');
+        let imgOriginal = new Image();
+        let imagenCargada = false;
+
         let zonasBlur = [];
-        let idZonaActiva = null;
+        let indexZonaActiva = null;
+        let isDragging = false;
+        let dragOffsetX = 0;
+        let dragOffsetY = 0;
+
+        // Imagen por defecto inicial (monograma)
+        imgOriginal.crossOrigin = "anonymous";
+        imgOriginal.src = "img/monograma.png";
+        imgOriginal.onload = function() {
+            inicializarCanvas();
+        };
+
+        function inicializarCanvas() {
+            canvas.width = imgOriginal.width;
+            canvas.height = imgOriginal.height;
+            
+            // Si no hay zonas creadas, crear una por defecto arriba (zona de ojos)
+            if (zonasBlur.length === 0) {
+                zonasBlur.push({
+                    x: (canvas.width / 2) - 60,
+                    y: (canvas.height / 3) - 22,
+                    width: 120,
+                    height: 45,
+                    blur: 12,
+                    shape: 'franja'
+                });
+                indexZonaActiva = 0;
+            }
+            redibujarCanvas();
+            actualizarPanelControles();
+        }
 
         function cargarImagenEditor(event) {
             const file = event.target.files[0];
             if (!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
-                document.getElementById('imagenEditada').src = e.target.result;
+                imgOriginal.src = e.target.result;
             };
             reader.readAsDataURL(file);
         }
 
-        function aplicarFiltro(tipo, btn) {
-            filtroActual = tipo;
-            document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+        function redibujarCanvas() {
+            if (!imgOriginal.complete) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            const img = document.getElementById('imagenEditada');
-            if (tipo === 'cine') {
-                img.style.filter = `brightness(95%) contrast(120%) saturate(90%)`;
-            } else if (tipo === 'calido') {
-                img.style.filter = `brightness(105%) contrast(105%) sepia(15%)`;
+            // 1. Aplicar filtros de luz/color globales
+            let brillo = document.getElementById('rangeBrillo').value;
+            let filtroBtnActivo = document.querySelector('.filtro-btn.active').textContent;
+            
+            if (filtroBtnActivo.includes('Cine')) {
+                ctx.filter = `brightness(95%) contrast(120%) saturate(90%)`;
+            } else if (filtroBtnActivo.includes('Cálido')) {
+                ctx.filter = `brightness(105%) contrast(105%) sepia(15%)`;
             } else {
-                actualizarFiltrosCSS();
+                ctx.filter = `brightness(${brillo}%)`;
             }
+
+            // Dibujar imagen completa original en tamaño real
+            ctx.drawImage(imgOriginal, 0, 0, canvas.width, canvas.height);
+            ctx.filter = 'none'; // Resetear filtros para los recortes
+
+            // 2. Dibujar y aplicar el difuminado real (blur) en cada zona de privacidad
+            zonasBlur.forEach((z, index) => {
+                ctx.save();
+                ctx.beginPath();
+
+                if (z.shape === 'circulo') {
+                    let radio = Math.min(z.width, z.height) / 2;
+                    ctx.arc(z.x + radio, z.y + radio, radio, 0, Math.PI * 2);
+                } else if (z.shape === 'cuadrado') {
+                    ctx.roundRect(z.x, z.y, z.width, z.height, 15);
+                } else {
+                    // Franja rectangular suave
+                    ctx.roundRect(z.x, z.y, z.width, z.height, 6);
+                }
+                
+                ctx.clip();
+
+                // Aplicar desenfoque real recortando la sección de la imagen
+                ctx.filter = `blur(${z.blur}px)`;
+                ctx.drawImage(imgOriginal, 0, 0, canvas.width, canvas.height);
+                ctx.restore();
+
+                // Si es la zona activa, dibujarle un sutil borde guía dorado elegante
+                if (index === indexZonaActiva) {
+                    ctx.save();
+                    ctx.strokeStyle = '#dfc285';
+                    ctx.lineWidth = 3;
+                    ctx.setLineDash([6, 4]);
+                    if (z.shape === 'circulo') {
+                        let radio = Math.min(z.width, z.height) / 2;
+                        ctx.beginPath();
+                        ctx.arc(z.x + radio, z.y + radio, radio, 0, Math.PI * 2);
+                        ctx.stroke();
+                    } else {
+                        ctx.strokeRect(z.x, z.y, z.width, z.height);
+                    }
+                    ctx.restore();
+                }
+            });
         }
 
-        function actualizarFiltrosCSS() {
-            if (filtroActual !== 'normal') return;
-            const b = document.getElementById('rangeBrillo').value;
-            document.getElementById('valBrillo').textContent = b;
-            document.getElementById('imagenEditada').style.filter = `brightness(${b}%)`;
+        function aplicarFiltro(tipo, btn) {
+            document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            redibujarCanvas();
         }
 
         function agregarZonaBlur() {
-            const container = document.getElementById('editorCanvasBox');
-            const id = 'blur_' + Date.now();
-            
-            const nuevaZona = {
-                id: id,
-                x: (container.clientWidth / 2) - 50,
-                y: (container.clientHeight / 3) - 20,
-                width: 100,
-                height: 40,
-                intensity: 14,
+            zonasBlur.push({
+                x: (canvas.width / 2) - 60,
+                y: (canvas.height / 2) - 22,
+                width: 120,
+                height: 45,
+                blur: 12,
                 shape: 'franja'
-            };
-
-            zonasBlur.push(nuevaZona);
-            renderizarZonas();
-            seleccionarZona(id);
-        }
-
-        function renderizarZonas() {
-            const container = document.getElementById('editorCanvasBox');
-            container.querySelectorAll('.blur-spot').forEach(el => el.remove());
-
-            zonasBlur.forEach(z => {
-                const div = document.createElement('div');
-                let shapeClass = 'franja';
-                if (z.shape === 'circulo') shapeClass = 'circulo';
-                if (z.shape === 'cuadrado') shapeClass = 'cuadrado';
-
-                div.className = `blur-spot ${shapeClass} ${z.id === idZonaActiva ? 'seleccionado' : ''}`;
-                div.id = z.id;
-                div.style.left = z.x + 'px';
-                div.style.top = z.y + 'px';
-                div.style.width = z.width + 'px';
-                div.style.height = z.height + 'px';
-                div.style.backdropFilter = `blur(${z.intensity}px)`;
-                div.style.webkitBackdropFilter = `blur(${z.intensity}px)`;
-
-                activarArrastreLibre(div, z.id);
-                container.appendChild(div);
             });
+            indexZonaActiva = zonasBlur.length - 1;
+            redibujarCanvas();
+            actualizarPanelControles();
         }
 
-        function seleccionarZona(id) {
-            idZonaActiva = id;
-            const zona = zonasBlur.find(z => z.id === id);
-            if (!zona) return;
-
-            document.getElementById('controlesZonaActiva').style.display = 'block';
-            document.getElementById('selForma').value = zona.shape;
-            document.getElementById('rngAncho').value = zona.width;
-            document.getElementById('lblAncho').textContent = zona.width;
-            document.getElementById('rngAlto').value = zona.height;
-            document.getElementById('lblAlto').textContent = zona.height;
-            document.getElementById('rngInt').value = zona.intensity;
-            document.getElementById('lblInt').textContent = zona.intensity;
-
-            renderizarZonas();
+        function actualizarPanelControles() {
+            if (indexZonaActiva !== null && zonasBlur[indexZonaActiva]) {
+                document.getElementById('controlesZonaActiva').style.display = 'block';
+                let z = zonasBlur[indexZonaActiva];
+                document.getElementById('selForma').value = z.shape;
+                document.getElementById('rngAncho').value = z.width;
+                document.getElementById('lblAncho').textContent = z.width;
+                document.getElementById('rngAlto').value = z.height;
+                document.getElementById('lblAlto').textContent = z.height;
+                document.getElementById('rngInt').value = z.blur;
+                document.getElementById('lblInt').textContent = z.blur;
+            } else {
+                document.getElementById('controlesZonaActiva').style.display = 'none';
+            }
         }
 
-        function actualizarZonaActivaProp() {
-            if (!idZonaActiva) return;
-            const zona = zonasBlur.find(z => z.id === idZonaActiva);
-            if (!zona) return;
+        function actualizarPropiedadesZona() {
+            if (indexZonaActiva === null || !zonasBlur[indexZonaActiva]) return;
+            let z = zonasBlur[indexZonaActiva];
+            z.shape = document.getElementById('selForma').value;
+            z.width = parseInt(document.getElementById('rngAncho').value);
+            document.getElementById('lblAncho').textContent = z.width;
+            z.height = parseInt(document.getElementById('rngAlto').value);
+            document.getElementById('lblAlto').textContent = z.height;
+            z.blur = parseInt(document.getElementById('rngInt').value);
+            document.getElementById('lblInt').textContent = z.blur;
 
-            zona.shape = document.getElementById('selForma').value;
-            zona.width = parseInt(document.getElementById('rngAncho').value);
-            document.getElementById('lblAncho').textContent = zona.width;
-
-            zona.height = parseInt(document.getElementById('rngAlto').value);
-            document.getElementById('lblAlto').textContent = zona.height;
-            
-            zona.intensity = parseInt(document.getElementById('rngInt').value);
-            document.getElementById('lblInt').textContent = zona.intensity;
-
-            renderizarZonas();
+            redibujarCanvas();
         }
 
         function eliminarZonaActiva() {
-            if (!idZonaActiva) return;
-            zonasBlur = zonasBlur.filter(z => z.id !== idZonaActiva);
-            idZonaActiva = null;
-            document.getElementById('controlesZonaActiva').style.display = 'none';
-            renderizarZonas();
+            if (indexZonaActiva === null) return;
+            zonasBlur.splice(indexZonaActiva, 1);
+            indexZonaActiva = zonasBlur.length > 0 ? 0 : null;
+            redibujarCanvas();
+            actualizarPanelControles();
         }
 
-        // Sistema de arrastre libre optimizado con Pointer Events para celular
-        function activarArrastreLibre(elemento, id) {
-            const container = document.getElementById('editorCanvasBox');
-            let startX, startY;
+        // --- SISTEMA DE ARRASTRE FLUIDO DIRECTO SOBRE EL CANVAS ---
+        function obtenerCoordenadasCanvas(e) {
+            let rect = canvas.getBoundingClientRect();
+            let clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            let clientY = e.clientY || (e.touches && e.touches[0].clientY);
+            
+            let scaleX = canvas.width / rect.width;
+            let scaleY = canvas.height / rect.height;
 
-            function pointerDown(e) {
-                seleccionarZona(id);
-                const zona = zonasBlur.find(z => z.id === id);
-                
-                // Obtener coordenadas táctiles o de mouse de manera unificada
-                const clientX = e.clientX;
-                const clientY = e.clientY;
-
-                startX = clientX - zona.x;
-                startY = clientY - zona.y;
-
-                elemento.setPointerCapture(e.pointerId);
-                elemento.onpointermove = pointerMove;
-                elemento.onpointerup = pointerUp;
-                e.stopPropagation();
-            }
-
-            function pointerMove(e) {
-                const zona = zonasBlur.find(z => z.id === id);
-                const rect = container.getBoundingClientRect();
-
-                let x = e.clientX - startX;
-                let y = e.clientY - startY;
-
-                // Limitar para que no salga del cuadro de la foto
-                x = Math.max(0, Math.min(x, rect.width - zona.width));
-                y = Math.max(0, Math.min(y, rect.height - zona.height));
-
-                zona.x = x;
-                zona.y = y;
-
-                elemento.style.left = x + 'px';
-                elemento.style.top = y + 'px';
-            }
-
-            function pointerUp(e) {
-                try {
-                    elemento.releasePointerCapture(e.pointerId);
-                } catch(err) {}
-                elemento.onpointermove = null;
-                elemento.onpointerup = null;
-            }
-
-            elemento.onpointerdown = pointerDown;
+            return {
+                x: (clientX - rect.left) * scaleX,
+                y: (clientY - rect.top) * scaleY
+            };
         }
+
+        function iniciarArrastre(e) {
+            let coords = obtenerCoordenadasCanvas(e);
+            
+            // Buscar si tocó alguna zona existente (empezando desde la última creada)
+            let encontrada = -1;
+            for (let i = zonasBlur.length - 1; i >= 0; i--) {
+                let z = zonasBlur[i];
+                if (coords.x >= z.x && coords.x <= z.x + z.width && coords.y >= z.y && coords.y <= z.y + z.height) {
+                    encontrada = i;
+                    break;
+                }
+            }
+
+            if (encontrada !== -1) {
+                indexZonaActiva = encontrada;
+                isDragging = true;
+                let z = zonasBlur[indexZonaActiva];
+                dragOffsetX = coords.x - z.x;
+                dragOffsetY = coords.y - z.y;
+                actualizarPanelControles();
+                redibujarCanvas();
+                e.preventDefault();
+            }
+        }
+
+        function moverArrastre(e) {
+            if (!isDragging || indexZonaActiva === null) return;
+            let coords = obtenerCoordenadasCanvas(e);
+            let z = zonasBlur[indexZonaActiva];
+
+            z.x = coords.x - dragOffsetX;
+            z.y = coords.y - dragOffsetY;
+
+            redibujarCanvas();
+            e.preventDefault();
+        }
+
+        function finalizarArrastre(e) {
+            isDragging = false;
+        }
+
+        // Eventos táctiles y de mouse unidos al canvas
+        canvas.addEventListener('mousedown', iniciarArrastre);
+        window.addEventListener('mousemove', moverArrastre);
+        window.addEventListener('mouseup', finalizarArrastre);
+
+        canvas.addEventListener('touchstart', iniciarArrastre, {passive: false});
+        window.addEventListener('touchmove', moverArrastre, {passive: false});
+        window.addEventListener('touchend', finalizarArrastre);
 
         function descargarFotoEditada() {
-            const elemento = document.getElementById('editorCanvasBox');
-            document.querySelectorAll('.blur-spot').forEach(el => el.classList.remove('seleccionado'));
+            // Ocultar bordes guías dorados antes de exportar la imagen limpia
+            let tempActiva = indexZonaActiva;
+            indexZonaActiva = null;
+            redibujarCanvas();
 
-            html2canvas(elemento, {
-                scale: 2,
-                useCORS: true,
-                backgroundColor: '#000000'
-            }).then(canvas => {
-                const enlace = document.createElement('a');
-                enlace.download = `prive-foto-pro-${Date.now()}.png`;
-                enlace.href = canvas.toDataURL('image/png');
-                enlace.click();
-                renderizarZonas();
-            }).catch(err => {
-                alert("Error al procesar la imagen.");
-                renderizarZonas();
-            });
+            const enlace = document.createElement('a');
+            enlace.download = `prive-foto-pro-${Date.now()}.png`;
+            enlace.href = canvas.toDataURL('image/png');
+            enlace.click();
+
+            // Restaurar selección
+            indexZonaActiva = tempActiva;
+            redibujarCanvas();
         }
     </script>
 </body>
