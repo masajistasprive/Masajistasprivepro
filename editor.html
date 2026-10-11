@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Editor Pro Mobile (Zonas Libres) | Masajistas Privé</title>
+    <title>Editor Pro Mobile | Masajistas Privé</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -123,7 +123,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            touch-action: none;
+            touch-action: none; /* Bloquea el scroll del celu al tocar el lienzo */
         }
 
         .editor-canvas-wrapper img {
@@ -135,7 +135,7 @@
             display: block;
         }
 
-        /* Zonas de difuminado personalizadas (Círculo, Cuadrado o Franja Libre) */
+        /* Zonas de difuminado flotantes optimizadas */
         .blur-spot {
             position: absolute;
             width: 90px;
@@ -143,21 +143,19 @@
             border-radius: 6px;
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
-            background: rgba(15, 15, 15, 0.4);
-            cursor: move;
+            background: rgba(20, 20, 20, 0.45);
+            cursor: grab;
             z-index: 10;
-            box-shadow: 0 0 15px rgba(0,0,0,0.4);
-            border: 1px dashed rgba(223, 194, 133, 0.6);
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            border: 1px dashed rgba(223, 194, 133, 0.8);
+            user-select: none;
+            touch-action: none;
         }
-        .blur-spot.circulo {
-            border-radius: 50%;
-        }
-        .blur-spot.cuadrado {
-            border-radius: 12px;
-        }
+        .blur-spot.circulo { border-radius: 50%; }
+        .blur-spot.cuadrado { border-radius: 12px; }
         .blur-spot.seleccionado {
             border: 2px solid var(--gold);
-            box-shadow: 0 0 20px rgba(223, 194, 133, 0.8);
+            box-shadow: 0 0 25px rgba(223, 194, 133, 0.9);
         }
 
         .btn-accion {
@@ -230,7 +228,7 @@
             </div>
 
             <div class="form-group" style="border-top: 1px solid #222; padding-top: 10px;">
-                <label style="color: var(--gold);">🔒 Zonas de Privacidad (Ojos, Tatuajes, etc.)</label>
+                <label style="color: var(--gold);">🔒 Zonas de Privacidad (Ojos, Tatuajes)</label>
                 <button type="button" class="btn-secundario" onclick="agregarZonaBlur()">➕ Agregar Zona de Difuminado</button>
             </div>
 
@@ -274,7 +272,7 @@
             </div>
         </div>
 
-        <div style="text-align: center; margin-bottom: 8px; font-size: 0.68rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px;">Vista Previa (Tocá para mover o ajustar)</div>
+        <div style="text-align: center; margin-bottom: 8px; font-size: 0.68rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px;">Vista Previa (Tocá y arrastrá con el dedo)</div>
         
         <div class="preview-container">
             <div class="editor-canvas-wrapper" id="editorCanvasBox">
@@ -330,12 +328,12 @@
             
             const nuevaZona = {
                 id: id,
-                x: container.clientWidth / 2 - 45,
-                y: container.clientHeight / 2 - 18,
+                x: (container.clientWidth / 2) - 45,
+                y: (container.clientHeight / 2) - 18,
                 width: 90,
                 height: 35,
                 intensity: 14,
-                shape: 'franja' // por defecto franja para ojos
+                shape: 'franja'
             };
 
             zonasBlur.push(nuevaZona);
@@ -362,7 +360,7 @@
                 div.style.backdropFilter = `blur(${z.intensity}px)`;
                 div.style.webkitBackdropFilter = `blur(${z.intensity}px)`;
 
-                activarArrastreZona(div, z.id);
+                activarArrastreTáctil(div, z.id);
                 container.appendChild(div);
             });
         }
@@ -410,34 +408,40 @@
             renderizarZonas();
         }
 
-        function activarArrastreZona(elemento, id) {
+        // Sistema de arrastre táctil ultra preciso para Chrome Mobile
+        function activarArrastreTáctil(elemento, id) {
             const container = document.getElementById('editorCanvasBox');
-            let isDragging = false;
-            let startX, startY;
+            let initialX, initialY;
 
-            function iniciar(e) {
-                isDragging = true;
+            function startDrag(e) {
                 seleccionarZona(id);
                 const clientX = e.touches ? e.touches[0].clientX : e.clientX;
                 const clientY = e.touches ? e.touches[0].clientY : e.clientY;
                 
                 const zona = zonasBlur.find(z => z.id === id);
-                startX = clientX - zona.x;
-                startY = clientY - zona.y;
-                e.stopPropagation();
+                initialX = clientX - zona.x;
+                initialY = clientY - zona.y;
+
+                if (e.type === 'touchstart') {
+                    window.addEventListener('touchmove', drag, {passive: false});
+                    window.addEventListener('touchend', stopDrag);
+                } else {
+                    window.addEventListener('mousemove', drag);
+                    window.addEventListener('mouseup', stopDrag);
+                }
+                e.preventDefault();
             }
 
-            function mover(e) {
-                if (!isDragging) return;
+            function drag(e) {
                 const clientX = e.touches ? e.touches[0].clientX : e.clientX;
                 const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
-                let x = clientX - startX;
-                let y = clientY - startY;
+                let x = clientX - initialX;
+                let y = clientY - initialY;
 
                 const zona = zonasBlur.find(z => z.id === id);
                 const rect = container.getBoundingClientRect();
-                
+
                 x = Math.max(0, Math.min(x, rect.width - zona.width));
                 y = Math.max(0, Math.min(y, rect.height - zona.height));
 
@@ -446,20 +450,18 @@
 
                 elemento.style.left = x + 'px';
                 elemento.style.top = y + 'px';
+                e.preventDefault();
             }
 
-            function finalizar() {
-                isDragging = false;
+            function stopDrag(e) {
+                window.removeEventListener('touchmove', drag);
+                window.removeEventListener('touchend', stopDrag);
+                window.removeEventListener('mousemove', drag);
+                window.removeEventListener('mouseup', stopDrag);
             }
 
-            elemento.addEventListener('mousedown', iniciar);
-            elemento.addEventListener('touchstart', iniciar, {passive: true});
-
-            window.addEventListener('mousemove', mover);
-            window.addEventListener('touchmove', mover, {passive: true});
-
-            window.addEventListener('mouseup', finalizar);
-            window.addEventListener('touchend', finalizar);
+            elemento.addEventListener('touchstart', startDrag, {passive: false});
+            elemento.addEventListener('mousedown', startDrag);
         }
 
         function descargarFotoEditada() {
