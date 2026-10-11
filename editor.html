@@ -123,7 +123,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            touch-action: none; /* Bloquea el scroll del celu al tocar el lienzo */
         }
 
         .editor-canvas-wrapper img {
@@ -131,11 +130,10 @@
             height: auto;
             max-height: 600px;
             object-fit: contain;
-            pointer-events: none;
             display: block;
         }
 
-        /* Zonas de difuminado flotantes optimizadas */
+        /* Zona difuminada interactiva */
         .blur-spot {
             position: absolute;
             width: 90px;
@@ -143,20 +141,34 @@
             border-radius: 6px;
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
-            background: rgba(20, 20, 20, 0.45);
-            cursor: grab;
+            background: rgba(20, 20, 20, 0.5);
             z-index: 10;
-            box-shadow: 0 0 15px rgba(0,0,0,0.5);
-            border: 1px dashed rgba(223, 194, 133, 0.8);
-            user-select: none;
-            touch-action: none;
+            box-shadow: 0 0 15px rgba(0,0,0,0.6);
+            border: 2px solid var(--gold);
         }
         .blur-spot.circulo { border-radius: 50%; }
         .blur-spot.cuadrado { border-radius: 12px; }
-        .blur-spot.seleccionado {
-            border: 2px solid var(--gold);
-            box-shadow: 0 0 25px rgba(223, 194, 133, 0.9);
+
+        /* Panel de control de movimiento táctil por botones (Cero fallos en A52s) */
+        .dpad-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 5px;
+            max-width: 180px;
+            margin: 10px auto 0 auto;
         }
+        .dpad-btn {
+            background: #1a1a1a;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-align: center;
+            cursor: pointer;
+        }
+        .dpad-btn:active { background: var(--gold); color: #000; }
 
         .btn-accion {
             background: linear-gradient(135deg, var(--gold), #b89751);
@@ -233,8 +245,22 @@
             </div>
 
             <div id="controlesZonaActiva" style="display: none; background: #080808; padding: 10px; border-radius: 8px; border: 1px solid #222; margin-bottom: 12px;">
-                <div style="font-size: 0.65rem; color: var(--gold); margin-bottom: 8px; font-weight: 700;">⚙️ Configurando zona seleccionada:</div>
-                <div class="form-group">
+                <div style="font-size: 0.65rem; color: var(--gold); margin-bottom: 8px; font-weight: 700; text-align: center;">⚙️ Mover y Ajustar Zona Activa:</div>
+                
+                <!-- PAD DE DIRECCIONES TÁCTIL (Cero fallos en celu) -->
+                <div class="dpad-container">
+                    <div></div>
+                    <div class="dpad-btn" onclick="moverZona('arriba')">⬆️</div>
+                    <div></div>
+                    <div class="dpad-btn" onclick="moverZona('izquierda')">⬅️</div>
+                    <div class="dpad-btn" style="background: rgba(223,194,133,0.2); font-size: 0.6rem; display: flex; align-items: center; justify-content: center;">MOVER</div>
+                    <div class="dpad-btn" onclick="moverZona('derecha')">➡️</div>
+                    <div></div>
+                    <div class="dpad-btn" onclick="moverZona('abajo')">⬇️</div>
+                    <div></div>
+                </div>
+
+                <div class="form-group" style="margin-top: 12px;">
                     <label>Forma</label>
                     <select id="selForma" onchange="actualizarZonaActivaProp()">
                         <option value="franja">Franja / Rectángulo (Ideal Ojos)</option>
@@ -247,14 +273,14 @@
                     <input type="range" id="rngAncho" min="30" max="250" value="90" class="range-slider" oninput="actualizarZonaActivaProp()">
                 </div>
                 <div class="form-group">
-                    <label>Alto / Altura (<span id="lblAlto">35</span>px)</label>
+                    <label>Alto (<span id="lblAlto">35</span>px)</label>
                     <input type="range" id="rngAlto" min="15" max="150" value="35" class="range-slider" oninput="actualizarZonaActivaProp()">
                 </div>
                 <div class="form-group" style="margin-bottom: 0;">
                     <label>Intensidad de Desenfoque (<span id="lblInt">14</span>px)</label>
                     <input type="range" id="rngInt" min="4" max="25" value="14" class="range-slider" oninput="actualizarZonaActivaProp()">
                 </div>
-                <button type="button" class="btn-secundario" style="background: rgba(255,80,80,0.15); border-color: #ff5050; color: #ff8080; margin-top: 8px;" onclick="eliminarZonaActiva()">🗑️ Eliminar Zona Seleccionada</button>
+                <button type="button" class="btn-secundario" style="background: rgba(255,80,80,0.15); border-color: #ff5050; color: #ff8080; margin-top: 8px;" onclick="eliminarZonaActiva()">🗑️ Eliminar Zona</button>
             </div>
 
             <div class="form-group" style="border-top: 1px solid #222; padding-top: 10px;">
@@ -272,7 +298,7 @@
             </div>
         </div>
 
-        <div style="text-align: center; margin-bottom: 8px; font-size: 0.68rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px;">Vista Previa (Tocá y arrastrá con el dedo)</div>
+        <div style="text-align: center; margin-bottom: 8px; font-size: 0.68rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px;">Vista Previa Interactiva</div>
         
         <div class="preview-container">
             <div class="editor-canvas-wrapper" id="editorCanvasBox">
@@ -329,7 +355,7 @@
             const nuevaZona = {
                 id: id,
                 x: (container.clientWidth / 2) - 45,
-                y: (container.clientHeight / 2) - 18,
+                y: (container.clientHeight / 3) - 18, // Ubicado más arriba para facilitar ojos
                 width: 90,
                 height: 35,
                 intensity: 14,
@@ -351,7 +377,7 @@
                 if (z.shape === 'circulo') shapeClass = 'circulo';
                 if (z.shape === 'cuadrado') shapeClass = 'cuadrado';
 
-                div.className = `blur-spot ${shapeClass} ${z.id === idZonaActiva ? 'seleccionado' : ''}`;
+                div.className = `blur-spot ${shapeClass}`;
                 div.id = z.id;
                 div.style.left = z.x + 'px';
                 div.style.top = z.y + 'px';
@@ -360,7 +386,12 @@
                 div.style.backdropFilter = `blur(${z.intensity}px)`;
                 div.style.webkitBackdropFilter = `blur(${z.intensity}px)`;
 
-                activarArrastreTáctil(div, z.id);
+                // Al tocar directamente el rectángulo en pantalla también lo selecciona
+                div.onclick = (e) => {
+                    e.stopPropagation();
+                    seleccionarZona(z.id);
+                };
+
                 container.appendChild(div);
             });
         }
@@ -378,6 +409,18 @@
             document.getElementById('lblAlto').textContent = zona.height;
             document.getElementById('rngInt').value = zona.intensity;
             document.getElementById('lblInt').textContent = zona.intensity;
+        }
+
+        function moverZona(direccion) {
+            if (!idZonaActiva) return;
+            const zona = zonasBlur.find(z => z.id === idZonaActiva);
+            const container = document.getElementById('editorCanvasBox');
+            const paso = 10; // Pixeles de movimiento por toque
+
+            if (direccion === 'arriba') zona.y = Math.max(0, zona.y - paso);
+            if (direccion === 'abajo') zona.y = Math.min(container.clientHeight - zona.height, zona.y + paso);
+            if (direccion === 'izquierda') zona.x = Math.max(0, zona.x - paso);
+            if (direccion === 'derecha') zona.x = Math.min(container.clientWidth - zona.width, zona.x + paso);
 
             renderizarZonas();
         }
@@ -408,65 +451,8 @@
             renderizarZonas();
         }
 
-        // Sistema de arrastre táctil ultra preciso para Chrome Mobile
-        function activarArrastreTáctil(elemento, id) {
-            const container = document.getElementById('editorCanvasBox');
-            let initialX, initialY;
-
-            function startDrag(e) {
-                seleccionarZona(id);
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                
-                const zona = zonasBlur.find(z => z.id === id);
-                initialX = clientX - zona.x;
-                initialY = clientY - zona.y;
-
-                if (e.type === 'touchstart') {
-                    window.addEventListener('touchmove', drag, {passive: false});
-                    window.addEventListener('touchend', stopDrag);
-                } else {
-                    window.addEventListener('mousemove', drag);
-                    window.addEventListener('mouseup', stopDrag);
-                }
-                e.preventDefault();
-            }
-
-            function drag(e) {
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-
-                let x = clientX - initialX;
-                let y = clientY - initialY;
-
-                const zona = zonasBlur.find(z => z.id === id);
-                const rect = container.getBoundingClientRect();
-
-                x = Math.max(0, Math.min(x, rect.width - zona.width));
-                y = Math.max(0, Math.min(y, rect.height - zona.height));
-
-                zona.x = x;
-                zona.y = y;
-
-                elemento.style.left = x + 'px';
-                elemento.style.top = y + 'px';
-                e.preventDefault();
-            }
-
-            function stopDrag(e) {
-                window.removeEventListener('touchmove', drag);
-                window.removeEventListener('touchend', stopDrag);
-                window.removeEventListener('mousemove', drag);
-                window.removeEventListener('mouseup', stopDrag);
-            }
-
-            elemento.addEventListener('touchstart', startDrag, {passive: false});
-            elemento.addEventListener('mousedown', startDrag);
-        }
-
         function descargarFotoEditada() {
             const elemento = document.getElementById('editorCanvasBox');
-            document.querySelectorAll('.blur-spot').forEach(el => el.classList.remove('seleccionado'));
 
             html2canvas(elemento, {
                 scale: 2,
