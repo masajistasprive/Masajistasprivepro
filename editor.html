@@ -123,6 +123,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            touch-action: none;
         }
 
         .editor-canvas-wrapper img {
@@ -131,9 +132,10 @@
             max-height: 600px;
             object-fit: contain;
             display: block;
+            pointer-events: none;
         }
 
-        /* Zona difuminada interactiva */
+        /* Zonas de difuminado con Pointer Events optimizados */
         .blur-spot {
             position: absolute;
             width: 90px;
@@ -141,34 +143,20 @@
             border-radius: 6px;
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
-            background: rgba(20, 20, 20, 0.5);
+            background: rgba(20, 20, 20, 0.45);
+            cursor: grab;
             z-index: 10;
-            box-shadow: 0 0 15px rgba(0,0,0,0.6);
-            border: 2px solid var(--gold);
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            border: 2px dashed rgba(223, 194, 133, 0.9);
+            touch-action: none;
         }
+        .blur-spot:active { cursor: grabbing; }
         .blur-spot.circulo { border-radius: 50%; }
         .blur-spot.cuadrado { border-radius: 12px; }
-
-        /* Panel de control de movimiento táctil por botones (Cero fallos en A52s) */
-        .dpad-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 5px;
-            max-width: 180px;
-            margin: 10px auto 0 auto;
+        .blur-spot.seleccionado {
+            border: 2px solid var(--gold);
+            box-shadow: 0 0 25px rgba(223, 194, 133, 0.9);
         }
-        .dpad-btn {
-            background: #1a1a1a;
-            border: 1px solid var(--gold);
-            color: var(--gold);
-            padding: 12px;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            text-align: center;
-            cursor: pointer;
-        }
-        .dpad-btn:active { background: var(--gold); color: #000; }
 
         .btn-accion {
             background: linear-gradient(135deg, var(--gold), #b89751);
@@ -240,27 +228,14 @@
             </div>
 
             <div class="form-group" style="border-top: 1px solid #222; padding-top: 10px;">
-                <label style="color: var(--gold);">🔒 Zonas de Privacidad (Ojos, Tatuajes)</label>
+                <label style="color: var(--gold);">🔒 Zonas de Privacidad</label>
                 <button type="button" class="btn-secundario" onclick="agregarZonaBlur()">➕ Agregar Zona de Difuminado</button>
             </div>
 
             <div id="controlesZonaActiva" style="display: none; background: #080808; padding: 10px; border-radius: 8px; border: 1px solid #222; margin-bottom: 12px;">
-                <div style="font-size: 0.65rem; color: var(--gold); margin-bottom: 8px; font-weight: 700; text-align: center;">⚙️ Mover y Ajustar Zona Activa:</div>
+                <div style="font-size: 0.65rem; color: var(--gold); margin-bottom: 8px; font-weight: 700; text-align: center;">⚙️ Ajustar Zona Seleccionada:</div>
                 
-                <!-- PAD DE DIRECCIONES TÁCTIL (Cero fallos en celu) -->
-                <div class="dpad-container">
-                    <div></div>
-                    <div class="dpad-btn" onclick="moverZona('arriba')">⬆️</div>
-                    <div></div>
-                    <div class="dpad-btn" onclick="moverZona('izquierda')">⬅️</div>
-                    <div class="dpad-btn" style="background: rgba(223,194,133,0.2); font-size: 0.6rem; display: flex; align-items: center; justify-content: center;">MOVER</div>
-                    <div class="dpad-btn" onclick="moverZona('derecha')">➡️</div>
-                    <div></div>
-                    <div class="dpad-btn" onclick="moverZona('abajo')">⬇️</div>
-                    <div></div>
-                </div>
-
-                <div class="form-group" style="margin-top: 12px;">
+                <div class="form-group">
                     <label>Forma</label>
                     <select id="selForma" onchange="actualizarZonaActivaProp()">
                         <option value="franja">Franja / Rectángulo (Ideal Ojos)</option>
@@ -298,10 +273,10 @@
             </div>
         </div>
 
-        <div style="text-align: center; margin-bottom: 8px; font-size: 0.68rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px;">Vista Previa Interactiva</div>
+        <div style="text-align: center; margin-bottom: 8px; font-size: 0.68rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px;">💡 Tip: Tocá la foto para mover la zona o arrastrala libremente</div>
         
         <div class="preview-container">
-            <div class="editor-canvas-wrapper" id="editorCanvasBox">
+            <div class="editor-canvas-wrapper" id="editorCanvasBox" onclick="teleportarZona(event)">
                 <img id="imagenEditada" src="img/monograma.png" alt="Foto" crossorigin="anonymous">
             </div>
         </div>
@@ -355,7 +330,7 @@
             const nuevaZona = {
                 id: id,
                 x: (container.clientWidth / 2) - 45,
-                y: (container.clientHeight / 3) - 18, // Ubicado más arriba para facilitar ojos
+                y: (container.clientHeight / 3) - 18,
                 width: 90,
                 height: 35,
                 intensity: 14,
@@ -377,7 +352,7 @@
                 if (z.shape === 'circulo') shapeClass = 'circulo';
                 if (z.shape === 'cuadrado') shapeClass = 'cuadrado';
 
-                div.className = `blur-spot ${shapeClass}`;
+                div.className = `blur-spot ${shapeClass} ${z.id === idZonaActiva ? 'seleccionado' : ''}`;
                 div.id = z.id;
                 div.style.left = z.x + 'px';
                 div.style.top = z.y + 'px';
@@ -386,12 +361,7 @@
                 div.style.backdropFilter = `blur(${z.intensity}px)`;
                 div.style.webkitBackdropFilter = `blur(${z.intensity}px)`;
 
-                // Al tocar directamente el rectángulo en pantalla también lo selecciona
-                div.onclick = (e) => {
-                    e.stopPropagation();
-                    seleccionarZona(z.id);
-                };
-
+                activarPointerDrag(div, z.id);
                 container.appendChild(div);
             });
         }
@@ -409,18 +379,26 @@
             document.getElementById('lblAlto').textContent = zona.height;
             document.getElementById('rngInt').value = zona.intensity;
             document.getElementById('lblInt').textContent = zona.intensity;
+
+            renderizarZonas();
         }
 
-        function moverZona(direccion) {
+        // Permitir hacer clic/toque en la foto para mover la zona activa de golpe al lugar exacto
+        function teleportarZona(e) {
             if (!idZonaActiva) return;
-            const zona = zonasBlur.find(z => z.id === idZonaActiva);
-            const container = document.getElementById('editorCanvasBox');
-            const paso = 10; // Pixeles de movimiento por toque
+            // Si tocó directamente una zona, dejamos que actúe el drag
+            if (e.target.classList.contains('blur-spot')) return;
 
-            if (direccion === 'arriba') zona.y = Math.max(0, zona.y - paso);
-            if (direccion === 'abajo') zona.y = Math.min(container.clientHeight - zona.height, zona.y + paso);
-            if (direccion === 'izquierda') zona.x = Math.max(0, zona.x - paso);
-            if (direccion === 'derecha') zona.x = Math.min(container.clientWidth - zona.width, zona.x + paso);
+            const container = document.getElementById('editorCanvasBox');
+            const rect = container.getBoundingClientRect();
+            const zona = zonasBlur.find(z => z.id === idZonaActiva);
+            if (!zona) return;
+
+            const x = (e.clientX - rect.left) - (zona.width / 2);
+            const y = (e.clientY - rect.top) - (zona.height / 2);
+
+            zona.x = Math.max(0, Math.min(x, rect.width - zona.width));
+            zona.y = Math.max(0, Math.min(y, rect.height - zona.height));
 
             renderizarZonas();
         }
@@ -451,8 +429,52 @@
             renderizarZonas();
         }
 
+        // Sistema de arrastre universal con Pointer Events (Optimizado 100% para Android / Chrome Mobile)
+        function activarPointerDrag(elemento, id) {
+            const container = document.getElementById('editorCanvasBox');
+            let startX, startY;
+
+            function onPointerDown(e) {
+                seleccionarZona(id);
+                const zona = zonasBlur.find(z => z.id === id);
+                startX = e.clientX - zona.x;
+                startY = e.clientY - zona.y;
+
+                elemento.setPointerCapture(e.pointerId);
+                elemento.onpointermove = onPointerMove;
+                elemento.onpointerup = onPointerUp;
+                e.stopPropagation();
+            }
+
+            function onPointerMove(e) {
+                const zona = zonasBlur.find(z => z.id === id);
+                const rect = container.getBoundingClientRect();
+
+                let x = e.clientX - startX;
+                let y = e.clientY - startY;
+
+                x = Math.max(0, Math.min(x, rect.width - zona.width));
+                y = Math.max(0, Math.min(y, rect.height - zona.height));
+
+                zona.x = x;
+                zona.y = y;
+
+                elemento.style.left = x + 'px';
+                elemento.style.top = y + 'px';
+            }
+
+            function onPointerUp(e) {
+                elemento.releasePointerCapture(e.pointerId);
+                elemento.onpointermove = null;
+                elemento.onpointerup = null;
+            }
+
+            elemento.onpointerdown = onPointerDown;
+        }
+
         function descargarFotoEditada() {
             const elemento = document.getElementById('editorCanvasBox');
+            document.querySelectorAll('.blur-spot').forEach(el => el.classList.remove('seleccionado'));
 
             html2canvas(elemento, {
                 scale: 2,
