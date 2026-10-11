@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor Estético & Privacidad | Masajistas Privé</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050505;
+            --card-bg: #111111;
+            --card-border: rgba(223, 194, 133, 0.3);
+            --gold: #dfc285;
+            --gold-light: #f3e5ab;
+            --text-main: #f5f5f5;
+            --text-muted: #888888;
+            --radius: 14px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 15px;
+        }
+
+        h1 {
+            color: var(--gold);
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .back-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .back-link:hover { color: var(--gold); }
+
+        .form-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        input[type="file"], select {
+            width: 100%;
+            padding: 12px;
+            background-color: #060606;
+            border: 1px solid #222;
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.9rem;
+        }
+
+        .range-slider {
+            width: 100%;
+            accent-color: var(--gold);
+            cursor: pointer;
+        }
+
+        /* Lienzo / Vista previa del Editor */
+        .preview-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            overflow: hidden;
+            padding: 10px 0;
+        }
+
+        .editor-canvas-wrapper {
+            width: 350px;
+            height: 350px;
+            background: #000;
+            border: 2px solid var(--gold);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+        }
+
+        .editor-canvas-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: filter 0.1s ease;
+        }
+
+        /* Círculo difuminador móvil y escalable */
+        .blur-spot {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(223, 194, 133, 0.4);
+            cursor: grab;
+            display: none;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            z-index: 10;
+            top: 50px;
+            left: 140px;
+        }
+        .blur-spot.activo { display: block; }
+        .blur-spot:active { cursor: grabbing; }
+
+        .btn-accion {
+            background: linear-gradient(135deg, var(--gold), #b89751);
+            color: #000;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            box-shadow: 0 4px 15px rgba(223, 194, 133, 0.3);
+            margin-top: 10px;
+        }
+
+        .filtros-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .filtro-btn {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: var(--text-muted);
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+        }
+        .filtro-btn.active {
+            background: rgba(223, 194, 133, 0.15);
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Editor Estético Pro</h1>
+            <a href="panel_total.html" class="back-link">&larr; Volver al Panel</a>
+        </header>
+
+        <div class="form-card">
+            <div class="form-group">
+                <label for="inputFotoEditor">Subir Foto de la Modelo</label>
+                <input type="file" id="inputFotoEditor" accept="image/*" onchange="cargarImagenEditor(event)">
+            </div>
+
+            <!-- Filtros Rápidos -->
+            <div class="form-group">
+                <label>Filtro de Luz / Estilo</label>
+                <div class="filtros-grid">
+                    <button type="button" class="filtro-btn active" onclick="aplicarFiltro('normal', this)">Normal</button>
+                    <button type="button" class="filtro-btn" onclick="aplicarFiltro('cine', this)">Cine Dark</button>
+                    <button type="button" class="filtro-btn" onclick="aplicarFiltro('calido', this)">Cálido Privé</button>
+                </div>
+            </div>
+
+            <!-- Controles de Ajuste Fino -->
+            <div class="form-group">
+                <label>Luminosidad (<span id="valBrillo">100</span>%)</label>
+                <input type="range" id="rangeBrillo" min="70" max="150" value="100" class="range-slider" oninput="actualizarFiltrosCSS()">
+            </div>
+
+            <div class="form-group">
+                <label>Contraste (<span id="valContraste">100</span>%)</label>
+                <input type="range" id="rangeContraste" min="80" max="150" value="100" class="range-slider" oninput="actualizarFiltrosCSS()">
+            </div>
+
+            <!-- Privacidad / Desenfoque de Rostro -->
+            <div class="form-group" style="border-top: 1px solid #222; padding-top: 15px; margin-top: 15px;">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--gold);">
+                    <input type="checkbox" id="checkBlurEditor" onchange="toggleBlurEditor()" style="width: 16px; height: 16px; accent-color: var(--gold);">
+                    🔒 Activar Círculo de Privacidad (Rostro)
+                </label>
+            </div>
+            <div id="panelBlurEditor" style="display: none;">
+                <div class="form-group">
+                    <label>Tamaño del Círculo</label>
+                    <input type="range" id="rangeBlurSize" min="40" max="120" value="70" class="range-slider" oninput="actualizarTamanoBlurEditor()">
+                </div>
+                <div style="font-size: 0.65rem; color: #888; text-align: center;">👆 Mantené presionado y arrastrá el círculo sobre el rostro.</div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 10px; font-size: 0.72rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px;">Vista Previa del Retoque</div>
+        
+        <div class="preview-container">
+            <div class="editor-canvas-wrapper" id="editorCanvasBox">
+                <img id="imagenEditada" src="img/monograma.png" alt="Foto para editar" crossorigin="anonymous">
+                <div class="blur-spot" id="blurSpotEditor"></div>
+            </div>
+        </div>
+
+        <button type="button" class="btn-accion" onclick="descargarFotoEditada()">📥 Descargar Imagen Retocada (Alta Calidad)</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script>
+        let blurPos = { x: 140, y: 50, size: 70 };
+        let filtroActual = 'normal';
+
+        function cargarImagenEditor(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('imagenEditada').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function aplicarFiltro(tipo, btn) {
+            filtroActual = tipo;
+            document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const img = document.getElementById('imagenEditada');
+            if (tipo === 'cine') {
+                img.style.filter = `brightness(95%) contrast(120%) saturate(90%)`;
+            } else if (tipo === 'calido') {
+                img.style.filter = `brightness(105%) contrast(105%) sepia(15%)`;
+            } else {
+                actualizarFiltrosCSS();
+            }
+        }
+
+        function actualizarFiltrosCSS() {
+            if (filtroActual !== 'normal') return;
+            const b = document.getElementById('rangeBrillo').value;
+            const c = document.getElementById('rangeContraste').value;
+            document.getElementById('valBrillo').textContent = b;
+            document.getElementById('valContraste').textContent = c;
+
+            const img = document.getElementById('imagenEditada');
+            img.style.filter = `brightness(${b}%) contrast(${c}%)`;
+        }
+
+        function toggleBlurEditor() {
+            const activo = document.getElementById('checkBlurEditor').checked;
+            document.getElementById('panelBlurEditor').style.display = activo ? 'block' : 'none';
+            document.getElementById('blurSpotEditor').classList.toggle('activo', activo);
+        }
+
+        function actualizarTamanoBlurEditor() {
+            const val = document.getElementById('rangeBlurSize').value;
+            blurPos.size = parseInt(val);
+            const spot = document.getElementById('blurSpotEditor');
+            spot.style.width = blurPos.size + 'px';
+            spot.style.height = blurPos.size + 'px';
+        }
+
+        // Lógica de arrastre para el círculo de privacidad en el editor
+        function activarArrastreEditor() {
+            const spot = document.getElementById('blurSpotEditor');
+            const container = document.getElementById('editorCanvasBox');
+
+            let isDragging = false;
+            let startX, startY;
+
+            spot.addEventListener('mousedown', iniciar);
+            spot.addEventListener('touchstart', iniciar, {passive: true});
+
+            window.addEventListener('mousemove', mover);
+            window.addEventListener('touchmove', mover, {passive: true});
+
+            window.addEventListener('mouseup', finalizar);
+            window.addEventListener('touchend', finalizar);
+
+            function iniciar(e) {
+                isDragging = true;
+                startX = (e.touches ? e.touches[0].clientX : e.clientX) - blurPos.x;
+                startY = (e.touches ? e.touches[0].clientY : e.clientY) - blurPos.y;
+                e.stopPropagation();
+            }
+
+            function mover(e) {
+                if (!isDragging) return;
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+                let x = clientX - startX;
+                let y = clientY - startY;
+
+                const rect = container.getBoundingClientRect();
+                x = Math.max(0, Math.min(x, rect.width - spot.offsetWidth));
+                y = Math.max(0, Math.min(y, rect.height - spot.offsetHeight));
+
+                blurPos.x = x;
+                blurPos.y = y;
+
+                spot.style.left = x + 'px';
+                spot.style.top = y + 'px';
+            }
+
+            function finalizar() {
+                isDragging = false;
+            }
+        }
+
+        function descargarFotoEditada() {
+            const elemento = document.getElementById('editorCanvasBox');
+            
+            html2canvas(elemento, {
+                scale: (1080 / 350), // Exportar en alta resolución (1080px)
+                useCORS: true,
+                backgroundColor: '#000000'
+            }).then(canvas => {
+                const enlace = document.createElement('a');
+                enlace.download = `prive-foto-editada-${Date.now()}.png`;
+                enlace.href = canvas.toDataURL('image/png');
+                enlace.click();
+            }).catch(err => {
+                alert("Error al procesar la imagen.");
+            });
+        }
+
+        window.addEventListener('load', () => {
+            activarArrastreEditor();
+        });
+    </script>
+</body>
+</html>
