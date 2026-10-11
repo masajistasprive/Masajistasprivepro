@@ -187,7 +187,6 @@
             background: #1a1a1a;
             box-shadow: 0 8px 25px rgba(0,0,0,0.6);
             position: relative;
-            cursor: pointer;
         }
 
         .preview-placa-wrapper.formato-story .placa-foto-container {
@@ -201,24 +200,21 @@
             object-fit: cover;
         }
 
-        /* Círculo Difuminador Flotante y Movible (Solo sobre el rostro) */
+        /* Círculo Difuminador Sofisticado (Sin bordes grotescos, con blur suave y elegante) */
         .blur-spot {
             position: absolute;
-            width: 65px;
-            height: 65px;
             border-radius: 50%;
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            background: rgba(0, 0, 0, 0.35);
-            border: 1px dashed rgba(223, 194, 133, 0.6);
-            top: 25px;
-            left: 55px;
-            cursor: move;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(223, 194, 133, 0.4);
+            cursor: grab;
             display: none;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            box-shadow: inset 0 0 12px rgba(0,0,0,0.6);
             z-index: 10;
         }
         .blur-spot.activo { display: block; }
+        .blur-spot:active { cursor: grabbing; }
 
         .placa-nombre {
             font-size: 1.5rem;
@@ -271,7 +267,23 @@
             margin-top: 10px;
         }
 
-        /* Estilos de las Casillas IA */
+        /* Controles de Privacidad Finos */
+        .controles-privacidad {
+            background: #080808;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 10px;
+        }
+
+        .range-slider {
+            width: 100%;
+            accent-color: var(--gold);
+            cursor: pointer;
+            margin-top: 6px;
+        }
+
+        /* Casillas IA */
         .ai-box {
             background: #141414;
             border: 1px dashed var(--gold);
@@ -363,10 +375,19 @@
                     <input type="file" id="inputFotoFile" accept="image/*" onchange="cargarImagenLocal(event)">
                 </div>
                 
-                <!-- CHECKBOX PRIVACIDAD / CÍRCULO DIFUMINADOR DE ROSTRO -->
-                <div class="form-group" style="display: flex; align-items: center; gap: 10px; background: #080808; padding: 10px; border-radius: 8px; border: 1px solid #222;">
-                    <input type="checkbox" id="checkBlur" onchange="actualizarPlaca()" style="width: 18px; height: 18px; accent-color: var(--gold); cursor: pointer;">
-                    <label for="checkBlur" style="margin: 0; color: var(--gold); cursor: pointer; font-size: 0.75rem;">🔒 Activar Círculo de Privacidad (Arrastralo sobre el rostro)</label>
+                <!-- CONTROLES DE PRIVACIDAD SOFISTICADOS -->
+                <div class="form-group" style="margin-bottom: 5px;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--gold);">
+                        <input type="checkbox" id="checkBlur" onchange="actualizarPlaca()" style="width: 16px; height: 16px; accent-color: var(--gold);">
+                        🔒 Activar Difuminado de Rostro Discreto
+                    </label>
+                </div>
+                <div class="controles-privacidad" id="panelControlesBlur" style="display: none;">
+                    <div class="form-group" style="margin-bottom: 8px;">
+                        <label style="font-size: 0.65rem;">Ajustar Tamaño del Círculo</label>
+                        <input type="range" id="rangeSize" min="35" max="110" value="60" class="range-slider" oninput="actualizarTamanoBlur()">
+                    </div>
+                    <div style="font-size: 0.65rem; color: #888; text-align: center;">👆 Mantené presionado y arrastrá el círculo difusor directo sobre el rostro.</div>
                 </div>
             </div>
 
@@ -387,8 +408,7 @@
             </div>
         </div>
 
-        <div style="text-align: center; margin-bottom: 5px; font-size: 0.72rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px;">Vista Previa de la Placa</div>
-        <p style="text-align: center; font-size: 0.65rem; color: #888; margin-bottom: 10px;">(💡 Tip: Si activás la privacidad, arrastrá el círculo difuminador con el dedo o el mouse directo sobre el rostro)</p>
+        <div style="text-align: center; margin-bottom: 10px; font-size: 0.72rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px;">Vista Previa de la Placa</div>
         
         <div class="preview-container">
             <div class="preview-placa-wrapper" id="placaPreviewBox">
@@ -409,7 +429,7 @@
 
         <button type="button" class="btn-accion-prive" onclick="descargarPlacaPNG()">📥 Descargar Imagen Directa (Alta Calidad)</button>
 
-        <!-- SECCIÓN DE ASISTENTE IA CON CASILLAS SEPARADAS -->
+        <!-- ASISTENTE IA CON CASILLAS SEPARADAS -->
         <div class="ai-box">
             <h3 style="color: var(--gold); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1.5px; font-family: 'Cormorant Garamond', serif; margin-bottom: 6px;">✨ Asistente IA: Textos por Red Social</h3>
             <p style="font-size: 0.75rem; color: #888; margin-bottom: 12px;">Generá y copiá al instante los copies exactos optimizados para cada plataforma.</p>
@@ -425,7 +445,6 @@
             
             <button type="button" class="btn-accion-prive" style="margin-top: 0; background: rgba(223,194,133,0.15); border: 1px solid var(--gold); color: var(--gold);" onclick="generarTextosSeparados()">🤖 Actualizar Textos Inteligentes</button>
             
-            <!-- Casilla Instagram / Facebook -->
             <div class="red-card">
                 <div class="red-header">
                     <span class="red-title">📸 Instagram / Facebook</span>
@@ -434,7 +453,6 @@
                 <textarea class="red-textarea" id="textIg" readonly></textarea>
             </div>
 
-            <!-- Casilla WhatsApp / Telegram -->
             <div class="red-card">
                 <div class="red-header">
                     <span class="red-title">💬 Canal WhatsApp / Telegram</span>
@@ -443,7 +461,6 @@
                 <textarea class="red-textarea" id="textWp" readonly></textarea>
             </div>
 
-            <!-- Casilla X (Twitter) -->
             <div class="red-card">
                 <div class="red-header">
                     <span class="red-title">🗲 X (Twitter)</span>
@@ -460,7 +477,7 @@
         let tipoActual = 'modelo';
         let formatoActual = 'cuadrado';
         let imagenSrcTemporal = 'img/monograma.png';
-        let blurPos = { x: 55, y: 25 }; // Posición inicial del círculo difuminador
+        let blurPos = { x: 55, y: 25, size: 60 };
 
         function cambiarTipoPlaca(tipo) {
             tipoActual = tipo;
@@ -496,10 +513,22 @@
             reader.readAsDataURL(file);
         }
 
+        function actualizarTamanoBlur() {
+            const val = document.getElementById('rangeSize').value;
+            blurPos.size = parseInt(val);
+            const spot = document.getElementById('blurSpotElement');
+            if (spot) {
+                spot.style.width = blurPos.size + 'px';
+                spot.style.height = blurPos.size + 'px';
+            }
+        }
+
         function actualizarPlaca() {
             const box = document.getElementById('placaPreviewBox');
             const footerUrl = (document.getElementById('inputEnlaceFooter').value.trim() || 'masajistasprive.com').toUpperCase();
             const isBlurActive = document.getElementById('checkBlur').checked;
+            
+            document.getElementById('panelControlesBlur').style.display = isBlurActive ? 'block' : 'none';
             
             if (tipoActual === 'modelo') {
                 const nombre = (document.getElementById('inputNombre').value.trim() || 'MODELO').toUpperCase();
@@ -511,7 +540,7 @@
                         <div>
                             <div class="placa-foto-container" id="fotoContainerBox">
                                 <img src="${imagenSrcTemporal}" crossorigin="anonymous" alt="Foto" style="width:100%; height:100%; object-fit:cover;">
-                                <div class="blur-spot ${isBlurActive ? 'activo' : ''}" id="blurSpotElement" style="top: ${blurPos.y}px; left: ${blurPos.x}px;"></div>
+                                <div class="blur-spot ${isBlurActive ? 'activo' : ''}" id="blurSpotElement" style="top: ${blurPos.y}px; left: ${blurPos.x}px; width: ${blurPos.size}px; height: ${blurPos.size}px;"></div>
                             </div>
                             <div class="placa-nombre">${nombre}</div>
                             <div class="placa-detalles">📍 ${zona}</div>
@@ -538,13 +567,13 @@
             generarTextosSeparados();
         }
 
-        // Lógica para arrastrar el círculo de difuminado con el mouse o dedo
         function activarArrastreBlur() {
             const spot = document.getElementById('blurSpotElement');
             const container = document.getElementById('fotoContainerBox');
             if (!spot || !container) return;
 
             let isDragging = false;
+            let startX, startY;
 
             spot.addEventListener('mousedown', iniciarArrastre);
             spot.addEventListener('touchstart', iniciarArrastre, {passive: true});
@@ -557,19 +586,20 @@
 
             function iniciarArrastre(e) {
                 isDragging = true;
+                startX = (e.touches ? e.touches[0].clientX : e.clientX) - blurPos.x;
+                startY = (e.touches ? e.touches[0].clientY : e.clientY) - blurPos.y;
                 e.stopPropagation();
             }
 
             function duranteArrastre(e) {
                 if (!isDragging) return;
-                const rect = container.getBoundingClientRect();
                 const clientX = e.touches ? e.touches[0].clientX : e.clientX;
                 const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
-                let x = clientX - rect.left - (spot.offsetWidth / 2);
-                let y = clientY - rect.top - (spot.offsetHeight / 2);
+                let x = clientX - startX;
+                let y = clientY - startY;
 
-                // Limitar dentro del círculo contenedor de la foto
+                const rect = container.getBoundingClientRect();
                 x = Math.max(0, Math.min(x, rect.width - spot.offsetWidth));
                 y = Math.max(0, Math.min(y, rect.height - spot.offsetHeight));
 
@@ -597,21 +627,15 @@
 
             if (tono === 'elegante') {
                 copyIg = `✨ Nueva incorporación exclusiva en ${zona}.\n\n${nombre} se suma a Masajistas Privé bajo rigurosos estándares de discreción, categoría y bienestar absoluto. Un espacio diseñado para detener el tiempo en Buenos Aires.\n\n📲 Consultas formales y reservas directas en masajistasprive.com\n\n#MasajistasPrive ${hashtagZona} #RelaxExclusivo #BuenosAires`;
-                
                 copyWp = `✨ Nueva profesional verificada en ${zona}: ${nombre}.\n\nGabinetes propios, discreción absoluta y atención de categoría en Masajistas Privé.\n\n🔗 Conocé su perfil completo en masajistasprive.com`;
-                
                 copyX = `Exclusividad y relax en ${zona}. ${nombre} se suma a Masajistas Privé. Conectá directo en masajistasprive.com ${hashtagZona} #RelaxCABA`;
             } else if (tono === 'directo') {
                 copyIg = `⚡ Turnos y disponibilidad en ${zona} — ${nombre}.\n\nAtención personalizada, gabinetes propios y máxima discreción. Coordiná tu sesión de forma directa sin intermediarios.\n\n💬 Escribinos o ingresá a masajistasprive.com\n\n#MasajistasPrive ${hashtagZona} #MasajesCABA #TurnosHoy`;
-                
-                copyWp = `⚡ Turnos disponibles hoy con ${nombre} en ${zona}. Discreción y atención directa. \n\n🔗 Reservas en masajistasprive.com`;
-                
+                copyWp = `⚡ Turnos disponibles hoy con ${nombre} en ${zona}. Discreción y atención directa.\n\n🔗 Reservas en masajistasprive.com`;
                 copyX = `Turnos disponibles con ${nombre} en ${zona}. Atención directa y discreción. Info en masajistasprive.com ${hashtagZona}`;
             } else {
                 copyIg = `🌿 La descarga muscular que tu cuerpo necesita en ${zona}.\n\nEl estrés de la semana se acumula en cervicales y lumbares. ${nombre} te espera en su espacio privado para un reseteo físico y mental total.\n\n🔗 Toda la info en masajistasprive.com\n\n#MasajistasPrive ${hashtagZona} #Descontracturante #BienestarCABA`;
-                
                 copyWp = `🌿 Alivio y descarga en ${zona}. ${nombre} especialista en relax y masajes descontracturantes.\n\n🔗 Ver más en masajistasprive.com`;
-                
                 copyX = `Liberá tensiones en ${zona} con ${nombre}. Masajes y relax profesional. Info en masajistasprive.com ${hashtagZona}`;
             }
 
