@@ -145,7 +145,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 25px;
+            padding: 20px 25px;
             text-align: center;
             width: 380px;
             height: 380px;
@@ -155,6 +155,7 @@
         .preview-placa-wrapper.formato-story {
             width: 320px;
             height: 568px;
+            padding: 25px 20px;
         }
 
         .placa-modelo-content {
@@ -166,24 +167,31 @@
             width: 100%;
         }
 
-        /* Membrete con Logo Controlado */
+        /* Membrete con Logo Ajustado */
         .placa-logo-membrete {
-            width: 65px !important;
+            width: 55px !important;
             height: auto !important;
-            max-height: 45px !important;
+            max-height: 35px !important;
             object-fit: contain;
             display: block;
             margin: 0 auto;
         }
 
+        /* Foto Central con mejor proporción y tamaño */
         .placa-foto-container {
-            width: 110px;
-            height: 110px;
+            width: 175px;
+            height: 175px;
             border-radius: 50%;
-            border: 2px solid var(--gold);
+            border: 2.5px solid var(--gold);
             overflow: hidden;
             margin: 0 auto;
             background: #1a1a1a;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+        }
+
+        .preview-placa-wrapper.formato-story .placa-foto-container {
+            width: 210px;
+            height: 210px;
         }
 
         .placa-foto-container img {
@@ -193,17 +201,17 @@
         }
 
         .placa-nombre {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             color: #fff;
             font-family: 'Cormorant Garamond', serif;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 4px;
+            letter-spacing: 1.5px;
+            margin-top: 6px;
         }
 
         .placa-detalles {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: var(--gold);
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -211,19 +219,20 @@
         }
 
         .placa-frase-box {
-            font-size: 0.8rem;
+            font-size: 0.88rem;
             color: #ddd;
             font-style: italic;
-            line-height: 1.4;
+            line-height: 1.5;
             max-width: 95%;
             margin: 0 auto;
         }
 
         .placa-footer-url {
-            font-size: 0.6rem;
-            color: #777;
+            font-size: 0.65rem;
+            color: #888;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 2.5px;
+            font-weight: 600;
         }
 
         .btn-descargar {
@@ -293,7 +302,7 @@
             </div>
         </div>
 
-        <div style="text-align: center; margin-bottom: 10px; font-size: 0.72rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px;">Vista Previa Corregida</div>
+        <div style="text-align: center; margin-bottom: 10px; font-size: 0.72rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px;">Vista Previa Rediseñada</div>
         
         <div class="preview-container">
             <div class="preview-placa-wrapper" id="placaPreviewBox">
@@ -303,10 +312,10 @@
                         <div class="placa-foto-container">
                             <img id="placaImgPreview" src="img/monograma.png" alt="Foto" style="width:100%; height:100%; object-fit:cover;">
                         </div>
-                        <div class="placa-nombre" id="placaNombrePreview">Maga</div>
-                        <div class="placa-detalles" id="placaZonaPreview">📍 Recoleta</div>
+                        <div class="placa-nombre" id="placaNombrePreview">CAMILA</div>
+                        <div class="placa-detalles" id="placaZonaPreview">📍 RECOLETA</div>
                     </div>
-                    <div class="placa-footer-url" id="placaFooterPreview">masajistasprive.com</div>
+                    <div class="placa-footer-url" id="placaFooterPreview">MASAJISTASPRIVE.COM</div>
                 </div>
             </div>
         </div>
@@ -357,11 +366,11 @@
 
         function actualizarPlaca() {
             const box = document.getElementById('placaPreviewBox');
-            const footerUrl = document.getElementById('inputEnlaceFooter').value.trim() || 'masajistasprive.com';
+            const footerUrl = (document.getElementById('inputEnlaceFooter').value.trim() || 'masajistasprive.com').toUpperCase();
             
             if (tipoActual === 'modelo') {
-                const nombre = document.getElementById('inputNombre').value.trim() || 'MODELO';
-                const zona = document.getElementById('inputZona').value.trim() || 'CABA';
+                const nombre = (document.getElementById('inputNombre').value.trim() || 'MODELO').toUpperCase();
+                const zona = (document.getElementById('inputZona').value.trim() || 'CABA').toUpperCase();
 
                 box.innerHTML = `
                     <div class="placa-modelo-content">
@@ -371,20 +380,20 @@
                                 <img src="${imagenSrcTemporal}" crossorigin="anonymous" alt="Foto" style="width:100%; height:100%; object-fit:cover;">
                             </div>
                             <div class="placa-nombre">${nombre}</div>
-                            <div class="placa-detalles">📍 ${zona.toUpperCase()}</div>
+                            <div class="placa-detalles">📍 ${zona}</div>
                         </div>
                         <div class="placa-footer-url">${footerUrl}</div>
                     </div>
                 `;
             } else {
-                const titulo = document.getElementById('inputTituloFrase').value.trim() || 'Cuaderno Privé';
+                const titulo = (document.getElementById('inputTituloFrase').value.trim() || 'CUADERNO PRIVÉ').toUpperCase();
                 const texto = document.getElementById('inputTextoFrase').value.trim() || 'Texto...';
 
                 box.innerHTML = `
                     <div class="placa-modelo-content">
                         <img src="img/logo.png" alt="Masajistas Privé" class="placa-logo-membrete" crossorigin="anonymous">
                         <div style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
-                            <div style="font-size: 1.05rem; color: #dfc285; font-family: 'Cormorant Garamond', serif; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 2px;">${titulo}</div>
+                            <div style="font-size: 1.1rem; color: #dfc285; font-family: 'Cormorant Garamond', serif; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 2px;">${titulo}</div>
                             <div class="placa-frase-box">${texto}</div>
                         </div>
                         <div class="placa-footer-url">${footerUrl}</div>
