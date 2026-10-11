@@ -106,7 +106,7 @@
             color: var(--gold);
         }
 
-        /* Tabs de Navegación Master (Optimizadas para múltiples secciones) */
+        /* Tabs de Navegación Master */
         .nav-tabs {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
@@ -291,7 +291,6 @@
             border-color: var(--card-border);
         }
 
-        /* Estructura Formulario + Vista Previa */
         .layout-editor-grid {
             display: flex;
             flex-direction: column-reverse;
@@ -358,7 +357,6 @@
             box-shadow: 0 0 10px rgba(223, 194, 133, 0.15);
         }
 
-        /* Subida de Fotos y Galería Ordenable */
         .file-upload-btn {
             background: #1a1a1a;
             border: 1px dashed var(--gold);
@@ -408,10 +406,6 @@
             pointer-events: none;
         }
 
-        .thumb-item.dragging {
-            opacity: 0.4;
-        }
-
         .thumb-badge {
             position: absolute;
             top: 2px; left: 2px;
@@ -435,7 +429,6 @@
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* Botón Traductor Automático */
         .btn-traducir {
             background: rgba(223, 194, 133, 0.15);
             border: 1px solid #dfc285;
@@ -457,14 +450,12 @@
         }
         .btn-traducir:hover { background: #dfc285; color: #0d0d0d; }
 
-        /* Pestañas de Idiomas en el Formulario */
         .lang-tabs { display: flex; gap: 4px; margin-bottom: 12px; border-bottom: 1px solid #222; padding-bottom: 8px; overflow-x: auto; }
         .lang-tab { background: #161616; border: 1px solid #333; color: #888; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
         .lang-tab.active { background: var(--gold); color: #000; border-color: var(--gold); }
         .lang-section { display: none; }
         .lang-section.active { display: block; }
 
-        /* VISTA PREVIA */
         .preview-container {
             background: #0b0b0b;
             border: 1px dashed var(--gold);
@@ -606,12 +597,6 @@
             letter-spacing: 1px;
         }
 
-        .btn-reset:hover {
-            border-color: var(--gold);
-            color: var(--gold);
-        }
-
-        /* Listado de Tarjetas */
         .cards-container {
             display: flex;
             flex-direction: column;
@@ -826,7 +811,7 @@
             text-transform: uppercase;
         }
 
-        /* ESTILOS PARA LAS HERRAMIENTAS ADICIONALES (PLACAS & EDITOR CANVAS) */
+        /* Estilos de herramientas adicionales */
         .tool-card {
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -1129,7 +1114,7 @@
             </div>
         </div>
 
-        <!-- PESTAÑA 6: EDITOR PRO CANVAS (BORDES SUAVES & BLUR MÚLTIPLE) -->
+        <!-- PESTAÑA 6: EDITOR PRO CANVAS -->
         <div id="editorTab" class="panel-section">
             <div class="tool-card">
                 <h2 style="font-size:1rem; color: var(--gold); margin-bottom:15px; text-transform:uppercase; font-family:'Cormorant Garamond',serif;">Editor Pro & Privacidad</h2>
@@ -1175,7 +1160,7 @@
                     <div class="filtros-grid">
                         <button type="button" class="filtro-btn active" onclick="aplicarFiltroEditor('normal', this)">Normal</button>
                         <button type="button" class="filtro-btn" onclick="aplicarFiltroEditor('cine', this)">Cine Dark</button>
-                        <button type="button" class="filtro-btn" onclick="aplicarFiltroEditor('calido', this)">Cálido Privé</button>
+                        <button type="button" class="filtro-btn" onclick="aplicarFiltro('calido', this)">Cálido Privé</button>
                     </div>
                 </div>
 
@@ -1244,25 +1229,25 @@
         const mainContent = document.getElementById('mainContent');
         const errorMsg = document.getElementById('errorMsg');
 
-        if (sessionStorage.getItem('master_panel_auth') === 'true') {
+        function inicializarSistemaMaster() {
             loginOverlay.style.display = 'none';
             mainContent.style.display = 'block';
             cargarPerfilesDesdeFirebase();
             cargarComentariosParaModerar();
+            renderizarHistorialDetallado();
             inicializarEditorCanvas();
             inicializarPlacasCanvas();
+        }
+
+        if (sessionStorage.getItem('master_panel_auth') === 'true') {
+            inicializarSistemaMaster();
         }
 
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
             if (passwordInput.value === CLASE_PASSWORD) {
                 sessionStorage.setItem('master_panel_auth', 'true');
-                loginOverlay.style.display = 'none';
-                mainContent.style.display = 'block';
-                cargarPerfilesDesdeFirebase();
-                cargarComentariosParaModerar();
-                inicializarEditorCanvas();
-                inicializarPlacasCanvas();
+                inicializarSistemaMaster();
             } else {
                 errorMsg.style.display = 'block';
                 passwordInput.value = '';
@@ -1277,6 +1262,7 @@
             if(tabId === 'moderacionTab') cargarComentariosParaModerar();
             if(tabId === 'editorTab') { setTimeout(() => redibujarEditorCanvas(), 100); }
             if(tabId === 'placasTab') { setTimeout(() => actualizarPlacaPreview(), 100); }
+            if(tabId === 'cajaTab') { renderizarHistorialDetallado(); }
         };
 
         window.cambiarTabAdmin = function(lang, event) {
@@ -1401,16 +1387,19 @@
             });
         }
 
-        document.getElementById('vencimiento').valueAsDate = new Date();
+        const fechaVencInput = document.getElementById('vencimiento');
+        if(fechaVencInput) fechaVencInput.valueAsDate = new Date();
 
         const selectCat = document.getElementById('categoria');
         const inputMonto = document.getElementById('monto');
         
-        selectCat.addEventListener('change', () => {
-            if(selectCat.value === 'terapeuticas') inputMonto.value = '50000';
-            else if(selectCat.value === 'sensuales') inputMonto.value = '70000';
-            else if(selectCat.value === 'fantasias') inputMonto.value = '100000';
-        });
+        if(selectCat) {
+            selectCat.addEventListener('change', () => {
+                if(selectCat.value === 'terapeuticas') inputMonto.value = '50000';
+                else if(selectCat.value === 'sensuales') inputMonto.value = '70000';
+                else if(selectCat.value === 'fantasias') inputMonto.value = '100000';
+            });
+        }
 
         const form = document.getElementById('cajaForm');
         const tarjetasContainer = document.getElementById('tarjetasContainer');
@@ -1422,6 +1411,7 @@
         const historialContent = document.getElementById('historialContent');
 
         function renderizarPanel() {
+            if(!tarjetasContainer) return;
             tarjetasContainer.innerHTML = '';
             const hoy = new Date();
             hoy.setHours(0,0,0,0);
@@ -1441,8 +1431,8 @@
             const mesNumAnt = String(fechaAnterior.getMonth() + 1).padStart(2, '0');
             const mesAnteriorKey = `${anioAnt}-${mesNumAnt}`;
 
-            tituloMesActual.textContent = `${nombresMeses[mesNumActual]} ${anioActual}`;
-            tituloMesAnterior.textContent = `${nombresMeses[mesNumAnt]} ${anioAnt}`;
+            if(tituloMesActual) tituloMesActual.textContent = `${nombresMeses[mesNumActual]} ${anioActual}`;
+            if(tituloMesAnterior) tituloMesAnterior.textContent = `${nombresMeses[mesNumAnt]} ${anioAnt}`;
 
             let sumaMesActual = 0;
             let sumaMesAnterior = 0;
@@ -1460,9 +1450,9 @@
                 }
             });
 
-            totalMesActual.textContent = `$${sumaMesActual.toLocaleString('es-AR')}`;
-            totalMesAnterior.textContent = `$${sumaMesAnterior.toLocaleString('es-AR')}`;
-            totalHistorico.textContent = `$${sumaHistorico.toLocaleString('es-AR')}`;
+            if(totalMesActual) totalMesActual.textContent = `$${sumaMesActual.toLocaleString('es-AR')}`;
+            if(totalMesAnterior) totalMesAnterior.textContent = `$${sumaMesAnterior.toLocaleString('es-AR')}`;
+            if(totalHistorico) totalHistorico.textContent = `$${sumaHistorico.toLocaleString('es-AR')}`;
 
             renderizarHistorialDetallado();
 
@@ -1486,7 +1476,8 @@
                 }
             });
 
-            const tipoFiltro = document.getElementById('selectFiltroOrden').value;
+            const tipoFiltroEl = document.getElementById('selectFiltroOrden');
+            const tipoFiltro = tipoFiltroEl ? tipoFiltroEl.value : 'vencimiento';
             let registrosOrdenados = [...registrosCloud];
 
             if (tipoFiltro === 'alfabetico') {
@@ -1622,8 +1613,8 @@
             document.getElementById('editDocId').value = "";
             galeriaTemporal = [];
             document.getElementById('thumbnailsGrid').innerHTML = '';
-            selectCat.dispatchEvent(new Event('change'));
-            document.getElementById('vencimiento').valueAsDate = new Date();
+            if(selectCat) selectCat.dispatchEvent(new Event('change'));
+            if(fechaVencInput) fechaVencInput.valueAsDate = new Date();
             actualizarPreview();
 
             document.getElementById('tituloFormulario').textContent = "Nueva Ficha & Perfil";
@@ -1632,6 +1623,7 @@
         };
 
         function renderizarHistorialDetallado() {
+            if(!historialContent) return;
             historialContent.innerHTML = '';
             if (historialPagos.length === 0) {
                 historialContent.innerHTML = `<div style="font-size:0.8rem; color:#888; text-align:center; padding:5px;">Sin pagos registrados aún.</div>`;
@@ -1757,110 +1749,112 @@
             }
         };
 
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const docId = document.getElementById('editDocId').value;
-            const nombre = document.getElementById('nombre').value.trim().toUpperCase();
-            const categoria = document.getElementById('categoria').value;
-            const whatsapp = document.getElementById('whatsapp').value.trim();
-            const monto = parseFloat(document.getElementById('monto').value) || 0;
-            let vencimiento = document.getElementById('vencimiento').value;
-            const hoyStr = new Date().toISOString().split('T')[0];
+        if(form) {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const docId = document.getElementById('editDocId').value;
+                const nombre = document.getElementById('nombre').value.trim().toUpperCase();
+                const categoria = document.getElementById('categoria').value;
+                const whatsapp = document.getElementById('whatsapp').value.trim();
+                const monto = parseFloat(document.getElementById('monto').value) || 0;
+                let vencimiento = document.getElementById('vencimiento').value;
+                const hoyStr = new Date().toISOString().split('T')[0];
 
-            let traducciones = { es: {}, en: {}, pt: {}, fr: {} };
-            ['es', 'en', 'pt', 'fr'].forEach(l => {
-                const getVal = (id) => document.getElementById(id)?.value.trim() || '';
-                traducciones[l] = {
-                    perfilTitle: `${nombre} | Masajistas Privé`,
-                    btnVolver: '← Volver',
-                    badgeVerificado: '✓ Privé Verificado',
-                    labelZona: 'Zona:',
-                    valorZona: getVal(`zona_${l}`),
-                    labelModalidad: 'Modalidad:',
-                    valorModalidad: getVal(`modalidad_${l}`),
-                    descPerfil1: getVal(`desc1_${l}`),
-                    descPerfil2: getVal(`desc2_${l}`)
-                };
+                let traducciones = { es: {}, en: {}, pt: {}, fr: {} };
+                ['es', 'en', 'pt', 'fr'].forEach(l => {
+                    const getVal = (id) => document.getElementById(id)?.value.trim() || '';
+                    traducciones[l] = {
+                        perfilTitle: `${nombre} | Masajistas Privé`,
+                        btnVolver: '← Volver',
+                        badgeVerificado: '✓ Privé Verificado',
+                        labelZona: 'Zona:',
+                        valorZona: getVal(`zona_${l}`),
+                        labelModalidad: 'Modalidad:',
+                        valorModalidad: getVal(`modalidad_${l}`),
+                        descPerfil1: getVal(`desc1_${l}`),
+                        descPerfil2: getVal(`desc2_${l}`)
+                    };
+                });
+
+                const fotoPrincipalVal = galeriaTemporal.length > 0 ? galeriaTemporal[0] : 'img/monograma.png';
+                const fotosGaleriaVal = galeriaTemporal.length > 0 ? [...galeriaTemporal] : [fotoPrincipalVal];
+
+                if (docId) {
+                    db.collection("modelos_prive").doc(docId).update({
+                        nombre,
+                        categoria,
+                        whatsapp,
+                        whatsappLink: `https://wa.me/${whatsapp}?text=Hola%20${encodeURIComponent(nombre)},%20vi%20tu%20perfil%20en%20Masajistas%20Privé`,
+                        zona: traducciones.es.valorZona,
+                        modalidad: traducciones.es.valorModalidad,
+                        descripcion: traducciones.es.descPerfil1,
+                        traducciones,
+                        monto,
+                        vencimiento,
+                        fotoPrincipal: fotoPrincipalVal,
+                        fotosGaleria: fotosGaleriaVal
+                    }).then(() => {
+                        if (monto > 0) {
+                            historialPagos.push({ fecha: hoyStr, nombre, monto });
+                            localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
+                        }
+                        alert("¡Perfil actualizado con éxito en la nube!");
+                        cancelarEdicion();
+                        cargarPerfilesDesdeFirebase();
+                        document.querySelectorAll('.tab-btn')[1].click();
+                    });
+                } else {
+                    let partesVen = vencimiento.split('-');
+                    let fechaVen = new Date(partesVen[0], partesVen[1] - 1, partesVen[2]);
+                    fechaVen.setDate(fechaVen.getDate() + 30);
+                    let anio = fechaVen.getFullYear();
+                    let mes = String(fechaVen.getMonth() + 1).padStart(2, '0');
+                    let dia = String(fechaVen.getDate()).padStart(2, '0');
+                    let vencimientoFinal = `${anio}-${mes}-${dia}`;
+
+                    const nuevoId = nombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '');
+                    const nuevoReg = {
+                        nombre,
+                        idSlug: nuevoId,
+                        categoria,
+                        whatsapp,
+                        whatsappLink: `https://wa.me/${whatsapp}?text=Hola%20${encodeURIComponent(nombre)},%20vi%20tu%20perfil%20en%20Masajistas%20Privé`,
+                        zona: traducciones.es.valorZona,
+                        modalidad: traducciones.es.valorModalidad,
+                        descripcion: traducciones.es.descPerfil1,
+                        traducciones,
+                        monto,
+                        vencimiento: vencimientoFinal,
+                        fotoPrincipal: fotoPrincipalVal,
+                        fotosGaleria: fotosGaleriaVal,
+                        pagado: true,
+                        fechaPago: hoyStr,
+                        visitas: 0,
+                        visitasDiarias: 0,
+                        estado: 'activa',
+                        destacada: false
+                    };
+
+                    db.collection("modelos_prive").doc(nuevoId).set(nuevoReg).then(() => {
+                        if (monto > 0) {
+                            historialPagos.push({ fecha: hoyStr, nombre, monto });
+                            localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
+                        }
+
+                        alert("¡Nueva ficha creada y publicada con éxito!");
+                        form.reset();
+                        galeriaTemporal = [];
+                        document.getElementById('thumbnailsGrid').innerHTML = '';
+                        if(selectCat) selectCat.dispatchEvent(new Event('change'));
+                        if(fechaVencInput) fechaVencInput.valueAsDate = new Date();
+                        actualizarPreview();
+                        
+                        cargarPerfilesDesdeFirebase();
+                        document.querySelectorAll('.tab-btn')[1].click();
+                    });
+                }
             });
-
-            const fotoPrincipalVal = galeriaTemporal.length > 0 ? galeriaTemporal[0] : 'img/monograma.png';
-            const fotosGaleriaVal = galeriaTemporal.length > 0 ? [...galeriaTemporal] : [fotoPrincipalVal];
-
-            if (docId) {
-                db.collection("modelos_prive").doc(docId).update({
-                    nombre,
-                    categoria,
-                    whatsapp,
-                    whatsappLink: `https://wa.me/${whatsapp}?text=Hola%20${encodeURIComponent(nombre)},%20vi%20tu%20perfil%20en%20Masajistas%20Privé`,
-                    zona: traducciones.es.valorZona,
-                    modalidad: traducciones.es.valorModalidad,
-                    descripcion: traducciones.es.descPerfil1,
-                    traducciones,
-                    monto,
-                    vencimiento,
-                    fotoPrincipal: fotoPrincipalVal,
-                    fotosGaleria: fotosGaleriaVal
-                }).then(() => {
-                    if (monto > 0) {
-                        historialPagos.push({ fecha: hoyStr, nombre, monto });
-                        localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
-                    }
-                    alert("¡Perfil actualizado con éxito en la nube!");
-                    cancelarEdicion();
-                    cargarPerfilesDesdeFirebase();
-                    document.querySelectorAll('.tab-btn')[1].click();
-                });
-            } else {
-                let partesVen = vencimiento.split('-');
-                let fechaVen = new Date(partesVen[0], partesVen[1] - 1, partesVen[2]);
-                fechaVen.setDate(fechaVen.getDate() + 30);
-                let anio = fechaVen.getFullYear();
-                let mes = String(fechaVen.getMonth() + 1).padStart(2, '0');
-                let dia = String(fechaVen.getDate()).padStart(2, '0');
-                let vencimientoFinal = `${anio}-${mes}-${dia}`;
-
-                const nuevoId = nombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '');
-                const nuevoReg = {
-                    nombre,
-                    idSlug: nuevoId,
-                    categoria,
-                    whatsapp,
-                    whatsappLink: `https://wa.me/${whatsapp}?text=Hola%20${encodeURIComponent(nombre)},%20vi%20tu%20perfil%20en%20Masajistas%20Privé`,
-                    zona: traducciones.es.valorZona,
-                    modalidad: traducciones.es.valorModalidad,
-                    descripcion: traducciones.es.descPerfil1,
-                    traducciones,
-                    monto,
-                    vencimiento: vencimientoFinal,
-                    fotoPrincipal: fotoPrincipalVal,
-                    fotosGaleria: fotosGaleriaVal,
-                    pagado: true,
-                    fechaPago: hoyStr,
-                    visitas: 0,
-                    visitasDiarias: 0,
-                    estado: 'activa',
-                    destacada: false
-                };
-
-                db.collection("modelos_prive").doc(nuevoId).set(nuevoReg).then(() => {
-                    if (monto > 0) {
-                        historialPagos.push({ fecha: hoyStr, nombre, monto });
-                        localStorage.setItem('prive_historial_pagos', JSON.stringify(historialPagos));
-                    }
-
-                    alert("¡Nueva ficha creada y publicada con éxito!");
-                    form.reset();
-                    galeriaTemporal = [];
-                    document.getElementById('thumbnailsGrid').innerHTML = '';
-                    selectCat.dispatchEvent(new Event('change'));
-                    document.getElementById('vencimiento').valueAsDate = new Date();
-                    actualizarPreview();
-                    
-                    cargarPerfilesDesdeFirebase();
-                    document.querySelectorAll('.tab-btn')[1].click();
-                });
-            }
-        });
+        }
 
         window.togglePagado = function(index) {
             const reg = registrosCloud[index];
@@ -1906,14 +1900,12 @@
         // MOTOR CANVAS: GENERADOR DE PLACAS PRO
         // ==========================================
         let canvasPlaca = document.getElementById('canvasPlaca');
-        let ctxPlaca = canvasPlaca.getContext('2d');
+        let ctxPlaca = canvasPlaca ? canvasPlaca.getContext('2d') : null;
         let imgPlacaBase = new Image();
-        let placaBaseCargada = false;
 
         imgPlacaBase.crossOrigin = "anonymous";
         imgPlacaBase.src = "img/monograma.png";
         imgPlacaBase.onload = function() {
-            placaBaseCargada = true;
             actualizarPlacaPreview();
         };
 
@@ -1932,6 +1924,7 @@
         }
 
         function actualizarPlacaPreview() {
+            if(!ctxPlaca) return;
             const formato = document.getElementById('placaFormato').value;
             if (formato === 'feed') {
                 canvasPlaca.width = 1080;
@@ -1950,19 +1943,16 @@
                 ctxPlaca.drawImage(imgPlacaBase, 0, 0, w, h);
             }
 
-            // Degradado inferior para resaltar texto
             let grad = ctxPlaca.createLinearGradient(0, canvasPlaca.height - 500, 0, canvasPlaca.height);
             grad.addColorStop(0, 'rgba(5,5,5,0)');
             grad.addColorStop(1, 'rgba(5,5,5,0.92)');
             ctxPlaca.fillStyle = grad;
             ctxPlaca.fillRect(0, canvasPlaca.height - 500, canvasPlaca.width, 500);
 
-            // Marco dorado perimetral elegante
             ctxPlaca.strokeStyle = '#dfc285';
             ctxPlaca.lineWidth = 12;
             ctxPlaca.strokeRect(30, 30, canvasPlaca.width - 60, canvasPlaca.height - 60);
 
-            // Textos
             let txtSup = document.getElementById('placaTextoSup').value.toUpperCase();
             let txtNom = document.getElementById('placaTextoNom').value.toUpperCase();
             let txtSub = document.getElementById('placaTextoSub').value.toUpperCase();
@@ -1993,7 +1983,7 @@
         // MOTOR CANVAS: EDITOR PRO (BORDES SUAVES & BLUR MÚLTIPLE)
         // ==========================================
         let canvasEditor = document.getElementById('priveCanvasEditor');
-        let ctxEditor = canvasEditor.getContext('2d');
+        let ctxEditor = canvasEditor ? canvasEditor.getContext('2d') : null;
         let imgEditorOriginal = new Image();
 
         let zonasBlur = [];
@@ -2010,6 +2000,7 @@
         };
 
         function inicializarEditorCanvas() {
+            if(!canvasEditor) return;
             canvasEditor.width = imgEditorOriginal.width;
             canvasEditor.height = imgEditorOriginal.height;
             
@@ -2039,7 +2030,7 @@
         }
 
         function redibujarEditorCanvas() {
-            if (!imgEditorOriginal.complete) return;
+            if (!ctxEditor || !imgEditorOriginal.complete) return;
             ctxEditor.clearRect(0, 0, canvasEditor.width, canvasEditor.height);
 
             let brillo = document.getElementById('rangeBrillo').value;
@@ -2091,14 +2082,14 @@
             });
         }
 
-        function aplicarFiltroEditor(tipo, btn) {
+        window.aplicarFiltroEditor = function(tipo, btn) {
             filtroEditorActual = tipo;
             document.querySelectorAll('#editorTab .filtro-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             redibujarEditorCanvas();
         }
 
-        function agregarZonaBlur() {
+        window.agregarZonaBlur = function() {
             zonasBlur.push({
                 x: (canvasEditor.width / 2) - 60,
                 y: (canvasEditor.height / 2) - 22,
@@ -2128,7 +2119,7 @@
             }
         }
 
-        function actualizarPropiedadesZona() {
+        window.actualizarPropiedadesZona = function() {
             if (indexZonaActiva === null || !zonasBlur[indexZonaActiva]) return;
             let z = zonasBlur[indexZonaActiva];
             z.shape = document.getElementById('selForma').value;
@@ -2142,7 +2133,7 @@
             redibujarEditorCanvas();
         }
 
-        function eliminarZonaActiva() {
+        window.eliminarZonaActiva = function() {
             if (indexZonaActiva === null) return;
             zonasBlur.splice(indexZonaActiva, 1);
             indexZonaActiva = zonasBlur.length > 0 ? 0 : null;
@@ -2203,15 +2194,17 @@
             isDraggingEditor = false;
         }
 
-        canvasEditor.addEventListener('mousedown', iniciarArrastreEditor);
-        window.addEventListener('mousemove', moverArrastreEditor);
-        window.addEventListener('mouseup', finalizarArrastreEditor);
+        if(canvasEditor) {
+            canvasEditor.addEventListener('mousedown', iniciarArrastreEditor);
+            window.addEventListener('mousemove', moverArrastreEditor);
+            window.addEventListener('mouseup', finalizarArrastreEditor);
 
-        canvasEditor.addEventListener('touchstart', iniciarArrastreEditor, {passive: false});
-        window.addEventListener('touchmove', moverArrastreEditor, {passive: false});
-        window.addEventListener('touchend', finalizarArrastreEditor);
+            canvasEditor.addEventListener('touchstart', iniciarArrastreEditor, {passive: false});
+            window.addEventListener('touchmove', moverArrastreEditor, {passive: false});
+            window.addEventListener('touchend', finalizarArrastreEditor);
+        }
 
-        function descargarFotoEditada() {
+        window.descargarFotoEditada = function() {
             let tempActiva = indexZonaActiva;
             indexZonaActiva = null;
             redibujarEditorCanvas();
@@ -2225,7 +2218,6 @@
             redibujarEditorCanvas();
         }
 
-        cargarPerfilesDesdeFirebase();
         actualizarPreview();
     </script>
 </body>
