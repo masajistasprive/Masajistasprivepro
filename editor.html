@@ -2,8 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editor Pro, IA & Privacidad | Masajistas Privé</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Editor Pro Mobile | Masajistas Privé</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -22,17 +22,18 @@
             margin: 0;
             padding: 0;
             font-family: 'Montserrat', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            padding: 20px;
+            padding: 15px;
             padding-bottom: 100px;
         }
 
         .container {
-            max-width: 650px;
+            max-width: 600px;
             margin: 0 auto;
         }
 
@@ -40,14 +41,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             border-bottom: 1px solid var(--card-border);
-            padding-bottom: 15px;
+            padding-bottom: 12px;
         }
 
         h1 {
             color: var(--gold);
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             text-transform: uppercase;
             letter-spacing: 2px;
             font-family: 'Cormorant Garamond', serif;
@@ -56,7 +57,7 @@
         .back-link {
             color: var(--text-muted);
             text-decoration: none;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -66,38 +67,33 @@
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: var(--radius);
-            padding: 20px;
-            margin-bottom: 25px;
+            padding: 15px;
+            margin-bottom: 20px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.5);
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         label {
             display: block;
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             color: var(--gold);
-            margin-bottom: 6px;
+            margin-bottom: 5px;
             text-transform: uppercase;
             letter-spacing: 1px;
             font-weight: 700;
         }
 
-        input[type="file"], input[type="text"], select {
+        input[type="file"], select {
             width: 100%;
             padding: 12px;
             background-color: #060606;
             border: 1px solid #222;
             border-radius: 8px;
             color: var(--text-main);
-            font-size: 0.9rem;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--gold);
+            font-size: 0.85rem;
         }
 
         .range-slider {
@@ -106,20 +102,19 @@
             cursor: pointer;
         }
 
-        /* Contenedor de la Foto Completa sin cortes forzados */
+        /* Lienzo optimizado para pantallas táctiles */
         .preview-container {
             width: 100%;
             display: flex;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             overflow: hidden;
-            padding: 10px 0;
         }
 
         .editor-canvas-wrapper {
             width: 100%;
-            max-width: 420px;
-            height: 480px;
+            max-width: 380px;
+            height: 440px;
             background: #000;
             border: 2px solid var(--gold);
             border-radius: 12px;
@@ -129,34 +124,34 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            touch-action: none; /* Crucial para evitar scroll no deseado al mover el dedo en Chrome Mobile */
         }
 
         .editor-canvas-wrapper img {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Muestra la foto completa sin recortar cabezas ni cuerpos */
-            transition: filter 0.1s ease;
+            object-fit: contain;
+            pointer-events: none;
         }
 
-        /* Círculo de Privacidad Difuminado Suave (Preserva tono de piel y textura real) */
+        /* Difuminador táctil (Sin bordes molestos, fusión suave) */
         .blur-spot {
             position: absolute;
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.12); /* Mezcla sutil con el tono real de la piel */
-            border: 1px solid rgba(223, 194, 133, 0.3);
-            cursor: grab;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            background: rgba(10, 10, 10, 0.25);
+            cursor: move;
             display: none;
-            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
             z-index: 10;
-            top: 60px;
-            left: 170px;
+            top: 50px;
+            left: 140px;
         }
+        .blur-spot.cuadrado { border-radius: 12px; }
         .blur-spot.activo { display: block; }
-        .blur-spot:active { cursor: grabbing; }
 
         .btn-accion {
             background: linear-gradient(135deg, var(--gold), #b89751);
@@ -177,8 +172,7 @@
         .filtros-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-top: 5px;
+            gap: 6px;
         }
 
         .filtro-btn {
@@ -187,7 +181,7 @@
             color: var(--text-muted);
             padding: 8px;
             border-radius: 6px;
-            font-size: 0.65rem;
+            font-size: 0.62rem;
             text-transform: uppercase;
             font-weight: 700;
             cursor: pointer;
@@ -198,63 +192,48 @@
             border-color: var(--gold);
             color: var(--gold);
         }
-
-        .loading-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: var(--gold);
-            font-size: 0.85rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            display: none;
-            z-index: 20;
-        }
     </style>
 </head>
 <body>
 
     <div class="container">
         <header>
-            <h1>Editor Pro, IA & Privacidad</h1>
-            <a href="panel_total.html" class="back-link">&larr; Volver al Panel</a>
+            <h1>Editor Pro Mobile</h1>
+            <a href="panel_total.html" class="back-link">&larr; Volver</a>
         </header>
 
         <div class="form-card">
             <div class="form-group">
-                <label>1. Subir Fotografía Completa</label>
+                <label>1. Seleccionar Fotografía</label>
                 <input type="file" id="inputFotoEditor" accept="image/*" onchange="cargarImagenEditor(event)">
             </div>
 
-            <!-- Privacidad Suave del Rostro -->
-            <div class="form-group" style="border-top: 1px solid #222; padding-top: 15px; margin-top: 15px;">
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--gold);">
+            <!-- Privacidad Táctil sin Bordes -->
+            <div class="form-group" style="border-top: 1px solid #222; padding-top: 10px;">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
                     <input type="checkbox" id="checkBlurEditor" onchange="toggleBlurEditor()" style="width: 16px; height: 16px; accent-color: var(--gold);">
-                    🔒 Activar Privacidad Facial Suave (Mantiene tono de piel)
+                    🔒 Activar Difuminado Táctil de Rostro
                 </label>
             </div>
+
             <div id="panelBlurEditor" style="display: none;">
                 <div class="form-group">
-                    <label>Ajustar Tamaño del Círculo Difuminador</label>
+                    <label>Forma del Área</label>
+                    <select id="selectFormaBlur" onchange="cambiarFormaBlur()">
+                        <option value="circulo">Círculo Difuminado</option>
+                        <option value="cuadrado">Bloque / Rectángulo Suave</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Tamaño (<span id="valTamanoBlur">80</span>px)</label>
                     <input type="range" id="rangeBlurSize" min="40" max="150" value="80" class="range-slider" oninput="actualizarTamanoBlurEditor()">
                 </div>
-                <div style="font-size: 0.65rem; color: #888; text-align: center; margin-bottom: 10px;">👆 Arrastrá el círculo difusor directo sobre el rostro en la foto.</div>
+                <div style="font-size: 0.62rem; color: #888; text-align: center; margin-bottom: 5px;">👉 Tocá y arrastrá con el dedo la zona difuminada directamente sobre la cara.</div>
             </div>
 
-            <!-- Opciones de IA y Fondos -->
-            <div class="form-group" style="border-top: 1px solid #222; padding-top: 15px; margin-top: 15px;">
-                <label>2. IA: Generación o Cambio de Fondo Realista</label>
-                <input type="text" id="promptFondoIa" placeholder="Ej: Gabinete de lujo oscuro, iluminación cálida tenue minimalista">
-                <button type="button" class="btn-ia" style="margin-top: 8px; background: rgba(223,194,133,0.15); border: 1px solid var(--gold); color: var(--gold);" onclick="procesarFondoIA()">✨ Aplicar Fondo IA Realista</button>
-            </div>
-
-            <!-- Filtros y Ajustes de Luz -->
-            <div class="form-group" style="border-top: 1px solid #222; padding-top: 15px; margin-top: 15px;">
-                <label>Filtros Estéticos de Luz</label>
+            <!-- Filtros y Luz -->
+            <div class="form-group" style="border-top: 1px solid #222; padding-top: 10px;">
+                <label>Filtros Estéticos</label>
                 <div class="filtros-grid">
                     <button type="button" class="filtro-btn active" onclick="aplicarFiltro('normal', this)">Normal</button>
                     <button type="button" class="filtro-btn" onclick="aplicarFiltro('cine', this)">Cine Dark</button>
@@ -266,33 +245,24 @@
                 <label>Luminosidad (<span id="valBrillo">100</span>%)</label>
                 <input type="range" id="rangeBrillo" min="70" max="150" value="100" class="range-slider" oninput="actualizarFiltrosCSS()">
             </div>
-
-            <div class="form-group">
-                <label>Contraste (<span id="valContraste">100</span>%)</label>
-                <input type="range" id="rangeContraste" min="80" max="150" value="100" class="range-slider" oninput="actualizarFiltrosCSS()">
-            </div>
         </div>
 
-        <div style="text-align: center; margin-bottom: 10px; font-size: 0.72rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px;">Vista Previa Completa</div>
+        <div style="text-align: center; margin-bottom: 8px; font-size: 0.68rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px;">Vista Previa Interactiva</div>
         
         <div class="preview-container">
             <div class="editor-canvas-wrapper" id="editorCanvasBox">
-                <img id="imagenEditada" src="img/monograma.png" alt="Foto para editar" crossorigin="anonymous">
+                <img id="imagenEditada" src="img/monograma.png" alt="Foto" crossorigin="anonymous">
                 <div class="blur-spot" id="blurSpotEditor"></div>
-                <div class="loading-overlay" id="loadingOverlay">
-                    <div style="margin-bottom: 10px;">⚡ Procesando IA...</div>
-                    <div style="font-size: 0.65rem; color: #888;">Generando entorno realista...</div>
-                </div>
             </div>
         </div>
 
-        <button type="button" class="btn-accion" onclick="descargarFotoEditada()">📥 Descargar Imagen Retocada (Alta Calidad)</button>
+        <button type="button" class="btn-accion" onclick="descargarFotoEditada()">📥 Descargar Imagen Pro (PNG)</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <script>
-        let blurPos = { x: 170, y: 60, size: 80 };
+        let blurPos = { x: 140, y: 60, size: 80 };
         let filtroActual = 'normal';
 
         function cargarImagenEditor(event) {
@@ -323,12 +293,8 @@
         function actualizarFiltrosCSS() {
             if (filtroActual !== 'normal') return;
             const b = document.getElementById('rangeBrillo').value;
-            const c = document.getElementById('rangeContraste').value;
             document.getElementById('valBrillo').textContent = b;
-            document.getElementById('valContraste').textContent = c;
-
-            const img = document.getElementById('imagenEditada');
-            img.style.filter = `brightness(${b}%) contrast(${c}%)`;
+            document.getElementById('imagenEditada').style.filter = `brightness(${b}%)`;
         }
 
         function toggleBlurEditor() {
@@ -337,52 +303,39 @@
             document.getElementById('blurSpotEditor').classList.toggle('activo', activo);
         }
 
+        function cambiarFormaBlur() {
+            const forma = document.getElementById('selectFormaBlur').value;
+            const spot = document.getElementById('blurSpotEditor');
+            if (forma === 'cuadrado') {
+                spot.classList.add('cuadrado');
+            } else {
+                spot.classList.remove('cuadrado');
+            }
+        }
+
         function actualizarTamanoBlurEditor() {
             const val = document.getElementById('rangeBlurSize').value;
             blurPos.size = parseInt(val);
+            document.getElementById('valTamanoBlur').textContent = val;
             const spot = document.getElementById('blurSpotEditor');
             spot.style.width = blurPos.size + 'px';
             spot.style.height = blurPos.size + 'px';
         }
 
-        function procesarFondoIA() {
-            const prompt = document.getElementById('promptFondoIa').value.trim();
-            if (!prompt) {
-                alert("Por favor, escribí una descripción para el fondo IA.");
-                return;
-            }
-
-            const overlay = document.getElementById('loadingOverlay');
-            overlay.style.display = 'flex';
-
-            // Simulación de procesamiento de fondo realista con IA en la nube
-            setTimeout(() => {
-                overlay.style.display = 'none';
-                alert("¡Fondo generado y fusionado con éxito manteniendo los rasgos faciales!");
-            }, 3000);
-        }
-
-        // Lógica de arrastre suave para el círculo de privacidad
-        function activarArrastreEditor() {
+        // Control táctil ultra fluido optimizado para Google Chrome Mobile (A52s)
+        function activarArrastreTáctilMobile() {
             const spot = document.getElementById('blurSpotEditor');
             const container = document.getElementById('editorCanvasBox');
 
             let isDragging = false;
             let startX, startY;
 
-            spot.addEventListener('mousedown', iniciar);
-            spot.addEventListener('touchstart', iniciar, {passive: true});
-
-            window.addEventListener('mousemove', mover);
-            window.addEventListener('touchmove', mover, {passive: true});
-
-            window.addEventListener('mouseup', finalizar);
-            window.addEventListener('touchend', finalizar);
-
             function iniciar(e) {
                 isDragging = true;
-                startX = (e.touches ? e.touches[0].clientX : e.clientX) - blurPos.x;
-                startY = (e.touches ? e.touches[0].clientY : e.clientY) - blurPos.y;
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                startX = clientX - blurPos.x;
+                startY = clientY - blurPos.y;
                 e.stopPropagation();
             }
 
@@ -408,18 +361,27 @@
             function finalizar() {
                 isDragging = false;
             }
+
+            spot.addEventListener('mousedown', iniciar);
+            spot.addEventListener('touchstart', iniciar, {passive: true});
+
+            window.addEventListener('mousemove', mover);
+            window.addEventListener('touchmove', mover, {passive: true});
+
+            window.addEventListener('mouseup', finalizar);
+            window.addEventListener('touchend', finalizar);
         }
 
         function descargarFotoEditada() {
             const elemento = document.getElementById('editorCanvasBox');
             
             html2canvas(elemento, {
-                scale: 2, // Alta resolución
+                scale: 2,
                 useCORS: true,
                 backgroundColor: '#000000'
             }).then(canvas => {
                 const enlace = document.createElement('a');
-                enlace.download = `prive-foto-pro-${Date.now()}.png`;
+                enlace.download = `prive-foto-mobile-${Date.now()}.png`;
                 enlace.href = canvas.toDataURL('image/png');
                 enlace.click();
             }).catch(err => {
@@ -428,7 +390,7 @@
         }
 
         window.addEventListener('load', () => {
-            activarArrastreEditor();
+            activarArrastreTáctilMobile();
         });
     </script>
 </body>
