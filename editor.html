@@ -123,7 +123,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            touch-action: none;
+            touch-action: none; /* Crucial para evitar que el celu mueva la página al arrastrar */
         }
 
         .editor-canvas-wrapper img {
@@ -135,9 +135,7 @@
             pointer-events: none;
         }
 
-        /* ----------------------------------------------------
-           ZONA DIFUMINADA LIMPIA (SIN BORDES FEOS NI LÍNEAS)
-           ---------------------------------------------------- */
+        /* Zonas de difuminado limpias y listas para arrastrar */
         .blur-spot {
             position: absolute;
             width: 90px;
@@ -145,24 +143,18 @@
             border-radius: 8px;
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
-            background: rgba(30, 30, 30, 0.25); /* Tono neutro sutil */
+            background: rgba(30, 30, 30, 0.3);
             z-index: 10;
             cursor: move;
             touch-action: none;
-            /* CERO BORDES. Desvanecimiento suave en los extremos */
             -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%);
             mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%);
         }
-        .blur-spot.circulo {
-            border-radius: 50%;
-        }
-        .blur-spot.cuadrado {
-            border-radius: 14px;
-        }
-        /* Cuando está seleccionada solo muestra un brillo dorado ultra fino, sin puntos */
+        .blur-spot.circulo { border-radius: 50%; }
+        .blur-spot.cuadrado { border-radius: 14px; }
         .blur-spot.seleccionado {
-            box-shadow: 0 0 15px rgba(223, 194, 133, 0.5);
-            outline: 1px solid rgba(223, 194, 133, 0.6);
+            box-shadow: 0 0 15px rgba(223, 194, 133, 0.7);
+            outline: 1.5px solid rgba(223, 194, 133, 0.8);
         }
 
         .btn-accion {
@@ -280,7 +272,7 @@
             </div>
         </div>
 
-        <div style="text-align: center; margin-bottom: 8px; font-size: 0.68rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px;">👆 Mantené presionado y arrastrá el difuminado con total libertad</div>
+        <div style="text-align: center; margin-bottom: 8px; font-size: 0.68rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px;">👆 Tocá y arrastrá el difuminado con total libertad</div>
         
         <div class="preview-container">
             <div class="editor-canvas-wrapper" id="editorCanvasBox">
@@ -368,7 +360,7 @@
                 div.style.backdropFilter = `blur(${z.intensity}px)`;
                 div.style.webkitBackdropFilter = `blur(${z.intensity}px)`;
 
-                activarArrastreSuave(div, z.id);
+                activarArrastreMovilDirecto(div, z.id);
                 container.appendChild(div);
             });
         }
@@ -416,29 +408,27 @@
             renderizarZonas();
         }
 
-        // Sistema de arrastre táctil ultra fluido por Pointer Events nativo de Android / Chrome
-        function activarArrastreSuave(elemento, id) {
+        // Sistema de arrastre táctil ultra fluido optimizado para Android / Chrome Mobile
+        function activarArrastreMovilDirecto(elemento, id) {
             const container = document.getElementById('editorCanvasBox');
             let startX, startY;
 
-            function pointerDown(e) {
+            function onTouchStart(e) {
                 seleccionarZona(id);
+                const touch = e.touches[0];
                 const zona = zonasBlur.find(z => z.id === id);
-                startX = e.clientX - zona.x;
-                startY = e.clientY - zona.y;
-
-                elemento.setPointerCapture(e.pointerId);
-                elemento.onpointermove = pointerMove;
-                elemento.onpointerup = pointerUp;
+                startX = touch.clientX - zona.x;
+                startY = touch.clientY - zona.y;
                 e.stopPropagation();
             }
 
-            function pointerMove(e) {
+            function onTouchMove(e) {
+                const touch = e.touches[0];
                 const zona = zonasBlur.find(z => z.id === id);
                 const rect = container.getBoundingClientRect();
 
-                let x = e.clientX - startX;
-                let y = e.clientY - startY;
+                let x = touch.clientX - startX;
+                let y = touch.clientY - startY;
 
                 x = Math.max(0, Math.min(x, rect.width - zona.width));
                 y = Math.max(0, Math.min(y, rect.height - zona.height));
@@ -448,15 +438,41 @@
 
                 elemento.style.left = x + 'px';
                 elemento.style.top = y + 'px';
+                e.preventDefault(); // Evita que la pantalla se mueva por detrás
             }
 
-            function pointerUp(e) {
-                elemento.releasePointerCapture(e.pointerId);
-                elemento.onpointermove = null;
-                elemento.onpointerup = null;
+            // Soporte también para mouse por si lo probás en compu
+            function onMouseDown(e) {
+                seleccionarZona(id);
+                const zona = zonasBlur.find(z => z.id === id);
+                startX = e.clientX - zona.x;
+                startY = e.clientY - zona.y;
+
+                function onMouseMove(ev) {
+                    const rect = container.getBoundingClientRect();
+                    let x = ev.clientX - startX;
+                    let y = ev.clientY - startY;
+                    x = Math.max(0, Math.min(x, rect.width - zona.width));
+                    y = Math.max(0, Math.min(y, rect.height - zona.height));
+                    zona.x = x;
+                    zona.y = y;
+                    elemento.style.left = x + 'px';
+                    elemento.style.top = y + 'px';
+                }
+
+                function onMouseUp() {
+                    window.removeEventListener('mousemove', onMouseMove);
+                    window.removeEventListener('mouseup', onMouseUp);
+                }
+
+                window.addEventListener('mousemove', onMouseMove);
+                window.addEventListener('mouseup', onMouseUp);
+                e.stopPropagation();
             }
 
-            elemento.onpointerdown = pointerDown;
+            elemento.addEventListener('touchstart', onTouchStart, {passive: false});
+            elemento.addEventListener('touchmove', onTouchMove, {passive: false});
+            elemento.addEventListener('mousedown', onMouseDown);
         }
 
         function descargarFotoEditada() {
