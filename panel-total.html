@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Master Panel Profesional | Masajistas Privé</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -26,6 +26,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Montserrat', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -105,14 +106,14 @@
             color: var(--gold);
         }
 
-        /* Tabs de Navegación */
+        /* Tabs de Navegación Master (Optimizadas para múltiples secciones) */
         .nav-tabs {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 4px;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 3px;
             margin-bottom: 18px;
             background: #0b0b0b;
-            padding: 5px;
+            padding: 4px;
             border-radius: 14px;
             border: 1px solid var(--card-border);
         }
@@ -121,10 +122,10 @@
             background: transparent;
             border: none;
             color: var(--text-muted);
-            padding: 10px 2px;
-            font-size: 0.60rem;
+            padding: 9px 1px;
+            font-size: 0.52rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.2px;
             font-weight: 700;
             border-radius: 10px;
             cursor: pointer;
@@ -769,7 +770,6 @@
             text-transform: uppercase;
         }
 
-        /* Estrellita de Destacada / Favorita */
         .switch-destacada {
             cursor: pointer;
             color: #555;
@@ -790,7 +790,6 @@
             font-size: 0.85rem;
         }
 
-        /* Estilos de la Pestaña de Moderación */
         .mod-comentario-card {
             background: #141414;
             border: 1px solid var(--card-border);
@@ -826,6 +825,74 @@
             cursor: pointer;
             text-transform: uppercase;
         }
+
+        /* ESTILOS PARA LAS HERRAMIENTAS ADICIONALES (PLACAS & EDITOR CANVAS) */
+        .tool-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+        }
+        .editor-canvas-wrapper {
+            width: 100%;
+            max-width: 380px;
+            margin: 0 auto;
+            background: #000;
+            border: 2px solid var(--gold);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            touch-action: none;
+        }
+        canvas {
+            width: 100%;
+            height: auto;
+            display: block;
+            cursor: move;
+        }
+        .filtros-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+        }
+        .filtro-btn {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: var(--text-muted);
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 0.62rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+        }
+        .filtro-btn.active {
+            background: rgba(223, 194, 133, 0.15);
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+        .btn-accion-tool {
+            background: linear-gradient(135deg, var(--gold), #b89751);
+            color: #000;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            box-shadow: 0 4px 15px rgba(223, 194, 133, 0.3);
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -852,12 +919,14 @@
             <a href="admin.html" class="back-link">&larr; Menú Principal</a>
         </header>
 
-        <!-- Navegación por Pestañas -->
+        <!-- Navegación por Pestañas Integrada -->
         <div class="nav-tabs">
             <button class="tab-btn active" onclick="cambiarTab('cajaTab', this)">📊 Caja</button>
             <button class="tab-btn" onclick="cambiarTab('anunciantesTab', this)">👥 Fichas</button>
             <button class="tab-btn" id="tabCrear" onclick="cambiarTab('nuevoTab', this)">➕ Crear</button>
-            <button class="tab-btn" onclick="cambiarTab('moderacionTab', this)">💬 Moderación</button>
+            <button class="tab-btn" onclick="cambiarTab('moderacionTab', this)">💬 Mod.</button>
+            <button class="tab-btn" onclick="cambiarTab('placasTab', this)">🖼️ Placas</button>
+            <button class="tab-btn" onclick="cambiarTab('editorTab', this)">🔒 Editor</button>
         </div>
 
         <!-- PESTAÑA 1: CAJA & FINANZAS -->
@@ -1021,6 +1090,111 @@
                 <div class="empty-state">Buscando comentarios pendientes...</div>
             </div>
         </div>
+
+        <!-- PESTAÑA 5: GENERADOR DE PLACAS PRO -->
+        <div id="placasTab" class="panel-section">
+            <div class="tool-card">
+                <h2 style="font-size:1rem; color: var(--gold); margin-bottom:15px; text-transform:uppercase; font-family:'Cormorant Garamond',serif;">Generador de Placas Promocionales</h2>
+                <div class="form-group">
+                    <label>Formato de Placa</label>
+                    <select id="placaFormato" onchange="actualizarPlacaPreview()">
+                        <option value="feed">Feed Cuadrado (1080 x 1080)</option>
+                        <option value="story">Historia / Reel (1080 x 1920)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Subir Imagen de Base</label>
+                    <input type="file" id="placaInputFoto" accept="image/*" onchange="cargarFotoPlaca(event)">
+                </div>
+                <div class="form-group">
+                    <label>Texto Superior (Ej: NUEVO INGRESO)</label>
+                    <input type="text" id="placaTextoSup" value="NUEVO INGRESO" oninput="actualizarPlacaPreview()">
+                </div>
+                <div class="form-group">
+                    <label>Título Principal (Nombre)</label>
+                    <input type="text" id="placaTextoNom" value="MARIELA" oninput="actualizarPlacaPreview()">
+                </div>
+                <div class="form-group">
+                    <label>Subtítulo (Zona / Detalle)</label>
+                    <input type="text" id="placaTextoSub" value="PALERMO • GABINETE" oninput="actualizarPlacaPreview()">
+                </div>
+
+                <div style="text-align: center; margin: 15px 0;">
+                    <div class="editor-canvas-wrapper" style="max-width: 300px; height: 350px;">
+                        <canvas id="canvasPlaca"></canvas>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-accion-tool" onclick="descargarPlacaPro()">📥 Descargar Placa Pro</button>
+            </div>
+        </div>
+
+        <!-- PESTAÑA 6: EDITOR PRO CANVAS (BORDES SUAVES & BLUR MÚLTIPLE) -->
+        <div id="editorTab" class="panel-section">
+            <div class="tool-card">
+                <h2 style="font-size:1rem; color: var(--gold); margin-bottom:15px; text-transform:uppercase; font-family:'Cormorant Garamond',serif;">Editor Pro & Privacidad</h2>
+                
+                <div class="form-group">
+                    <label>1. Seleccionar Fotografía</label>
+                    <input type="file" id="inputFotoEditor" accept="image/*" onchange="cargarImagenEditor(event)">
+                </div>
+
+                <div class="form-group" style="border-top: 1px solid #222; padding-top: 10px;">
+                    <label style="color: var(--gold);">🔒 Zonas de Privacidad (Ojos, Tatuajes)</label>
+                    <button type="button" class="btn-reset" style="width:100%; margin-top:5px; background:rgba(223,194,133,0.15); color:var(--gold); border:1px solid var(--gold);" onclick="agregarZonaBlur()">➕ Agregar Zona de Difuminado</button>
+                </div>
+
+                <div id="controlesZonaActiva" style="display: none; background: #080808; padding: 10px; border-radius: 8px; border: 1px solid #222; margin-bottom: 12px;">
+                    <div style="font-size: 0.65rem; color: var(--gold); margin-bottom: 8px; font-weight: 700; text-align: center;">⚙️ Ajustar Zona Seleccionada:</div>
+                    
+                    <div class="form-group">
+                        <label>Forma</label>
+                        <select id="selForma" onchange="actualizarPropiedadesZona()">
+                            <option value="franja">Franja / Rectángulo (Ideal Ojos)</option>
+                            <option value="circulo">Círculo</option>
+                            <option value="cuadrado">Bloque Cuadrado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Ancho (<span id="lblAncho">120</span>px)</label>
+                        <input type="range" id="rngAncho" min="40" max="300" value="120" class="range-slider" oninput="actualizarPropiedadesZona()">
+                    </div>
+                    <div class="form-group">
+                        <label>Alto (<span id="lblAlto">45</span>px)</label>
+                        <input type="range" id="rngAlto" min="20" max="200" value="45" class="range-slider" oninput="actualizarPropiedadesZona()">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Intensidad de Desenfoque (<span id="lblInt">12</span>px)</label>
+                        <input type="range" id="rngInt" min="2" max="25" value="12" class="range-slider" oninput="actualizarPropiedadesZona()">
+                    </div>
+                    <button type="button" class="btn-reset" style="background: rgba(255,80,80,0.15); border-color: #ff5050; color: #ff8080; width:100%; margin-top:8px;" onclick="eliminarZonaActiva()">🗑️ Eliminar Zona</button>
+                </div>
+
+                <div class="form-group" style="border-top: 1px solid #222; padding-top: 10px;">
+                    <label>Filtros Estéticos</label>
+                    <div class="filtros-grid">
+                        <button type="button" class="filtro-btn active" onclick="aplicarFiltroEditor('normal', this)">Normal</button>
+                        <button type="button" class="filtro-btn" onclick="aplicarFiltroEditor('cine', this)">Cine Dark</button>
+                        <button type="button" class="filtro-btn" onclick="aplicarFiltroEditor('calido', this)">Cálido Privé</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Luminosidad (<span id="valBrillo">100</span>%)</label>
+                    <input type="range" id="rangeBrillo" min="70" max="150" value="100" class="range-slider" oninput="redibujarEditorCanvas()">
+                </div>
+
+                <div style="text-align: center; margin-bottom: 8px; font-size: 0.68rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px;">👉 Arrastrá el cuadro directamente con el dedo por la foto</div>
+                
+                <div class="preview-container">
+                    <div class="editor-canvas-wrapper" id="editorCanvasBox">
+                        <canvas id="priveCanvasEditor"></canvas>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-accion-tool" onclick="descargarFotoEditada()">📥 Descargar Imagen Pro (PNG)</button>
+            </div>
+        </div>
     </div>
 
     <!-- Firebase SDKs -->
@@ -1075,6 +1249,8 @@
             mainContent.style.display = 'block';
             cargarPerfilesDesdeFirebase();
             cargarComentariosParaModerar();
+            inicializarEditorCanvas();
+            inicializarPlacasCanvas();
         }
 
         loginForm.addEventListener('submit', (e) => {
@@ -1085,6 +1261,8 @@
                 mainContent.style.display = 'block';
                 cargarPerfilesDesdeFirebase();
                 cargarComentariosParaModerar();
+                inicializarEditorCanvas();
+                inicializarPlacasCanvas();
             } else {
                 errorMsg.style.display = 'block';
                 passwordInput.value = '';
@@ -1097,6 +1275,8 @@
             document.getElementById(tabId).classList.add('active');
             btnElement.classList.add('active');
             if(tabId === 'moderacionTab') cargarComentariosParaModerar();
+            if(tabId === 'editorTab') { setTimeout(() => redibujarEditorCanvas(), 100); }
+            if(tabId === 'placasTab') { setTimeout(() => actualizarPlacaPreview(), 100); }
         };
 
         window.cambiarTabAdmin = function(lang, event) {
@@ -1345,7 +1525,6 @@
                         </div>
                         <div>${badgeHtml}</div>
                     </div>
-                    <!-- Métricas de Visitas -->
                     <div style="display: flex; gap: 10px; font-size: 0.7rem; color: #dfc285; background: #080808; padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(223,194,133,0.15);">
                         <span>👁️ Visitas Históricas: <strong>${visitasHist}</strong></span>
                         <span>•</span>
@@ -1723,9 +1902,328 @@
             }
         };
 
-        window.restaurarDatosExcel = function() {
-            alert("Los perfiles ahora se gestionan directamente desde la base de datos en la nube de Firebase.");
+        // ==========================================
+        // MOTOR CANVAS: GENERADOR DE PLACAS PRO
+        // ==========================================
+        let canvasPlaca = document.getElementById('canvasPlaca');
+        let ctxPlaca = canvasPlaca.getContext('2d');
+        let imgPlacaBase = new Image();
+        let placaBaseCargada = false;
+
+        imgPlacaBase.crossOrigin = "anonymous";
+        imgPlacaBase.src = "img/monograma.png";
+        imgPlacaBase.onload = function() {
+            placaBaseCargada = true;
+            actualizarPlacaPreview();
         };
+
+        function inicializarPlacasCanvas() {
+            actualizarPlacaPreview();
+        }
+
+        function cargarFotoPlaca(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imgPlacaBase.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function actualizarPlacaPreview() {
+            const formato = document.getElementById('placaFormato').value;
+            if (formato === 'feed') {
+                canvasPlaca.width = 1080;
+                canvasPlaca.height = 1080;
+            } else {
+                canvasPlaca.width = 1080;
+                canvasPlaca.height = 1920;
+            }
+
+            ctxPlaca.fillStyle = '#050505';
+            ctxPlaca.fillRect(0, 0, canvasPlaca.width, canvasPlaca.height);
+
+            if (imgPlacaBase.complete) {
+                let w = canvasPlaca.width;
+                let h = canvasPlaca.height;
+                ctxPlaca.drawImage(imgPlacaBase, 0, 0, w, h);
+            }
+
+            // Degradado inferior para resaltar texto
+            let grad = ctxPlaca.createLinearGradient(0, canvasPlaca.height - 500, 0, canvasPlaca.height);
+            grad.addColorStop(0, 'rgba(5,5,5,0)');
+            grad.addColorStop(1, 'rgba(5,5,5,0.92)');
+            ctxPlaca.fillStyle = grad;
+            ctxPlaca.fillRect(0, canvasPlaca.height - 500, canvasPlaca.width, 500);
+
+            // Marco dorado perimetral elegante
+            ctxPlaca.strokeStyle = '#dfc285';
+            ctxPlaca.lineWidth = 12;
+            ctxPlaca.strokeRect(30, 30, canvasPlaca.width - 60, canvasPlaca.height - 60);
+
+            // Textos
+            let txtSup = document.getElementById('placaTextoSup').value.toUpperCase();
+            let txtNom = document.getElementById('placaTextoNom').value.toUpperCase();
+            let txtSub = document.getElementById('placaTextoSub').value.toUpperCase();
+
+            ctxPlaca.textAlign = 'center';
+            ctxPlaca.fillStyle = '#dfc285';
+            ctxPlaca.font = '700 32px Montserrat, sans-serif';
+            ctxPlaca.fillText(txtSup, canvasPlaca.width / 2, canvasPlaca.height - 220);
+
+            ctxPlaca.fillStyle = '#ffffff';
+            ctxPlaca.font = '700 76px "Cormorant Garamond", serif';
+            ctxPlaca.fillText(txtNom, canvasPlaca.width / 2, canvasPlaca.height - 140);
+
+            ctxPlaca.fillStyle = '#f3e5ab';
+            ctxPlaca.font = '600 28px Montserrat, sans-serif';
+            ctxPlaca.fillText(txtSub, canvasPlaca.width / 2, canvasPlaca.height - 85);
+        }
+
+        function descargarPlacaPro() {
+            actualizarPlacaPreview();
+            const enlace = document.createElement('a');
+            enlace.download = `prive-placa-${Date.now()}.png`;
+            enlace.href = canvasPlaca.toDataURL('image/png');
+            enlace.click();
+        }
+
+        // ==========================================
+        // MOTOR CANVAS: EDITOR PRO (BORDES SUAVES & BLUR MÚLTIPLE)
+        // ==========================================
+        let canvasEditor = document.getElementById('priveCanvasEditor');
+        let ctxEditor = canvasEditor.getContext('2d');
+        let imgEditorOriginal = new Image();
+
+        let zonasBlur = [];
+        let indexZonaActiva = null;
+        let isDraggingEditor = false;
+        let dragOffsetXEditor = 0;
+        let dragOffsetYEditor = 0;
+        let filtroEditorActual = 'normal';
+
+        imgEditorOriginal.crossOrigin = "anonymous";
+        imgEditorOriginal.src = "img/monograma.png";
+        imgEditorOriginal.onload = function() {
+            inicializarEditorCanvas();
+        };
+
+        function inicializarEditorCanvas() {
+            canvasEditor.width = imgEditorOriginal.width;
+            canvasEditor.height = imgEditorOriginal.height;
+            
+            if (zonasBlur.length === 0) {
+                zonasBlur.push({
+                    x: (canvasEditor.width / 2) - 60,
+                    y: (canvasEditor.height / 3) - 22,
+                    width: 120,
+                    height: 45,
+                    blur: 12,
+                    shape: 'franja'
+                });
+                indexZonaActiva = 0;
+            }
+            redibujarEditorCanvas();
+            actualizarPanelControlesEditor();
+        }
+
+        function cargarImagenEditor(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imgEditorOriginal.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function redibujarEditorCanvas() {
+            if (!imgEditorOriginal.complete) return;
+            ctxEditor.clearRect(0, 0, canvasEditor.width, canvasEditor.height);
+
+            let brillo = document.getElementById('rangeBrillo').value;
+            
+            if (filtroEditorActual === 'cine') {
+                ctxEditor.filter = `brightness(95%) contrast(120%) saturate(90%)`;
+            } else if (filtroEditorActual === 'calido') {
+                ctxEditor.filter = `brightness(105%) contrast(105%) sepia(15%)`;
+            } else {
+                ctxEditor.filter = `brightness(${brillo}%)`;
+            }
+
+            ctxEditor.drawImage(imgEditorOriginal, 0, 0, canvasEditor.width, canvasEditor.height);
+            ctxEditor.filter = 'none';
+
+            zonasBlur.forEach((z, index) => {
+                ctxEditor.save();
+                ctxEditor.beginPath();
+
+                if (z.shape === 'circulo') {
+                    let radio = Math.min(z.width, z.height) / 2;
+                    ctxEditor.arc(z.x + radio, z.y + radio, radio, 0, Math.PI * 2);
+                } else if (z.shape === 'cuadrado') {
+                    ctxEditor.roundRect(z.x, z.y, z.width, z.height, 15);
+                } else {
+                    ctxEditor.roundRect(z.x, z.y, z.width, z.height, 6);
+                }
+                
+                ctxEditor.clip();
+                ctxEditor.filter = `blur(${z.blur}px)`;
+                ctxEditor.drawImage(imgEditorOriginal, 0, 0, canvasEditor.width, canvasEditor.height);
+                ctxEditor.restore();
+
+                if (index === indexZonaActiva) {
+                    ctxEditor.save();
+                    ctxEditor.strokeStyle = '#dfc285';
+                    ctxEditor.lineWidth = 3;
+                    ctxEditor.setLineDash([6, 4]);
+                    if (z.shape === 'circulo') {
+                        let radio = Math.min(z.width, z.height) / 2;
+                        ctxEditor.beginPath();
+                        ctxEditor.arc(z.x + radio, z.y + radio, radio, 0, Math.PI * 2);
+                        ctxEditor.stroke();
+                    } else {
+                        ctxEditor.strokeRect(z.x, z.y, z.width, z.height);
+                    }
+                    ctxEditor.restore();
+                }
+            });
+        }
+
+        function aplicarFiltroEditor(tipo, btn) {
+            filtroEditorActual = tipo;
+            document.querySelectorAll('#editorTab .filtro-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            redibujarEditorCanvas();
+        }
+
+        function agregarZonaBlur() {
+            zonasBlur.push({
+                x: (canvasEditor.width / 2) - 60,
+                y: (canvasEditor.height / 2) - 22,
+                width: 120,
+                height: 45,
+                blur: 12,
+                shape: 'franja'
+            });
+            indexZonaActiva = zonasBlur.length - 1;
+            redibujarEditorCanvas();
+            actualizarPanelControlesEditor();
+        }
+
+        function actualizarPanelControlesEditor() {
+            if (indexZonaActiva !== null && zonasBlur[indexZonaActiva]) {
+                document.getElementById('controlesZonaActiva').style.display = 'block';
+                let z = zonasBlur[indexZonaActiva];
+                document.getElementById('selForma').value = z.shape;
+                document.getElementById('rngAncho').value = z.width;
+                document.getElementById('lblAncho').textContent = z.width;
+                document.getElementById('rngAlto').value = z.height;
+                document.getElementById('lblAlto').textContent = z.height;
+                document.getElementById('rngInt').value = z.blur;
+                document.getElementById('lblInt').textContent = z.blur;
+            } else {
+                document.getElementById('controlesZonaActiva').style.display = 'none';
+            }
+        }
+
+        function actualizarPropiedadesZona() {
+            if (indexZonaActiva === null || !zonasBlur[indexZonaActiva]) return;
+            let z = zonasBlur[indexZonaActiva];
+            z.shape = document.getElementById('selForma').value;
+            z.width = parseInt(document.getElementById('rngAncho').value);
+            document.getElementById('lblAncho').textContent = z.width;
+            z.height = parseInt(document.getElementById('rngAlto').value);
+            document.getElementById('lblAlto').textContent = z.height;
+            z.blur = parseInt(document.getElementById('rngInt').value);
+            document.getElementById('lblInt').textContent = z.blur;
+
+            redibujarEditorCanvas();
+        }
+
+        function eliminarZonaActiva() {
+            if (indexZonaActiva === null) return;
+            zonasBlur.splice(indexZonaActiva, 1);
+            indexZonaActiva = zonasBlur.length > 0 ? 0 : null;
+            redibujarEditorCanvas();
+            actualizarPanelControlesEditor();
+        }
+
+        function obtenerCoordsEditor(e) {
+            let rect = canvasEditor.getBoundingClientRect();
+            let clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            let clientY = e.clientY || (e.touches && e.touches[0].clientY);
+            
+            let scaleX = canvasEditor.width / rect.width;
+            let scaleY = canvasEditor.height / rect.height;
+
+            return {
+                x: (clientX - rect.left) * scaleX,
+                y: (clientY - rect.top) * scaleY
+            };
+        }
+
+        function iniciarArrastreEditor(e) {
+            let coords = obtenerCoordsEditor(e);
+            let encontrada = -1;
+            for (let i = zonasBlur.length - 1; i >= 0; i--) {
+                let z = zonasBlur[i];
+                if (coords.x >= z.x && coords.x <= z.x + z.width && coords.y >= z.y && coords.y <= z.y + z.height) {
+                    encontrada = i;
+                    break;
+                }
+            }
+
+            if (encontrada !== -1) {
+                indexZonaActiva = encontrada;
+                isDraggingEditor = true;
+                let z = zonasBlur[indexZonaActiva];
+                dragOffsetXEditor = coords.x - z.x;
+                dragOffsetYEditor = coords.y - z.y;
+                actualizarPanelControlesEditor();
+                redibujarEditorCanvas();
+                e.preventDefault();
+            }
+        }
+
+        function moverArrastreEditor(e) {
+            if (!isDraggingEditor || indexZonaActiva === null) return;
+            let coords = obtenerCoordsEditor(e);
+            let z = zonasBlur[indexZonaActiva];
+
+            z.x = coords.x - dragOffsetXEditor;
+            z.y = coords.y - dragOffsetYEditor;
+
+            redibujarEditorCanvas();
+            e.preventDefault();
+        }
+
+        function finalizarArrastreEditor(e) {
+            isDraggingEditor = false;
+        }
+
+        canvasEditor.addEventListener('mousedown', iniciarArrastreEditor);
+        window.addEventListener('mousemove', moverArrastreEditor);
+        window.addEventListener('mouseup', finalizarArrastreEditor);
+
+        canvasEditor.addEventListener('touchstart', iniciarArrastreEditor, {passive: false});
+        window.addEventListener('touchmove', moverArrastreEditor, {passive: false});
+        window.addEventListener('touchend', finalizarArrastreEditor);
+
+        function descargarFotoEditada() {
+            let tempActiva = indexZonaActiva;
+            indexZonaActiva = null;
+            redibujarEditorCanvas();
+
+            const enlace = document.createElement('a');
+            enlace.download = `prive-foto-pro-${Date.now()}.png`;
+            enlace.href = canvasEditor.toDataURL('image/png');
+            enlace.click();
+
+            indexZonaActiva = tempActiva;
+            redibujarEditorCanvas();
+        }
 
         cargarPerfilesDesdeFirebase();
         actualizarPreview();
