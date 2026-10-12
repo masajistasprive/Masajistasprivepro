@@ -3,21 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#080808">
     <title>Editor Pro Canvas | Masajistas Privé</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --bg-color: #050505;
-            --card-bg: #111111;
-            --card-border: rgba(223, 194, 133, 0.3);
+            color-scheme: dark;
+
+            --bg-color: #080808;
+            --bg-soft: #0d0d0d;
+            --card-bg: #121212;
+            --card-bg-hover: #171717;
+            --input-bg: #0a0a0a;
+
+            --card-border: rgba(223, 194, 133, 0.20);
+            --border-soft: rgba(255, 255, 255, 0.075);
+
             --gold: #dfc285;
             --gold-light: #f3e5ab;
-            --text-main: #f5f5f5;
-            --text-muted: #888888;
-            --radius: 14px;
+            --gold-dark: #b89751;
+            --gold-glow: rgba(223, 194, 133, 0.12);
+
+            --text-main: #f5f3ed;
+            --text-muted: #99958c;
+            --text-subtle: #6f6b64;
+
+            --danger: #ff8585;
+            --danger-bg: rgba(255, 80, 80, 0.09);
+
+            --radius-sm: 10px;
+            --radius: 16px;
+            --radius-lg: 22px;
+
+            --shadow-card:
+                0 12px 32px rgba(0, 0, 0, 0.30),
+                inset 0 1px 0 rgba(255, 255, 255, 0.018);
+
+            --transition: 180ms ease;
         }
 
-        * {
+        /* RESET */
+
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
@@ -25,15 +56,56 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            padding: 15px;
-            padding-bottom: 100px;
+        html {
+            min-height: 100%;
+            background: var(--bg-color);
+            scroll-behavior: smooth;
         }
 
+        body {
+            min-height: 100vh;
+            padding: 22px 16px 50px;
+            color: var(--text-main);
+            background:
+                radial-gradient(
+                    ellipse at 50% -10%,
+                    rgba(223, 194, 133, 0.075),
+                    transparent 48%
+                ),
+                var(--bg-color);
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        button {
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        button:focus-visible,
+        a:focus-visible,
+        input:focus-visible,
+        select:focus-visible {
+            outline: 2px solid var(--gold-light);
+            outline-offset: 3px;
+        }
+
+        ::selection {
+            color: #080808;
+            background: var(--gold);
+        }
+
+        /* ESTRUCTURA PRINCIPAL */
+
         .container {
-            max-width: 600px;
+            width: 100%;
+            max-width: 680px;
             margin: 0 auto;
         }
 
@@ -41,153 +113,635 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            gap: 16px;
+            margin-bottom: 24px;
+            padding: 8px 2px 18px;
             border-bottom: 1px solid var(--card-border);
-            padding-bottom: 12px;
+            position: relative;
+        }
+
+        header::after {
+            content: "";
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 76px;
+            height: 2px;
+            background: linear-gradient(
+                90deg,
+                var(--gold),
+                transparent
+            );
         }
 
         h1 {
             color: var(--gold);
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
             font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.25rem, 4vw, 1.65rem);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
         }
 
         .back-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            flex-shrink: 0;
+            padding: 10px 12px;
+            border: 1px solid var(--border-soft);
+            border-radius: 999px;
             color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.025);
             text-decoration: none;
-            font-size: 0.7rem;
+            font-size: 0.66rem;
+            font-weight: 600;
+            letter-spacing: 0.7px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            transition:
+                color var(--transition),
+                border-color var(--transition),
+                background var(--transition),
+                transform var(--transition);
         }
-        .back-link:hover { color: var(--gold); }
+
+        .back-link:hover {
+            color: var(--gold-light);
+            border-color: var(--card-border);
+            background: var(--gold-glow);
+        }
+
+        .back-link:active {
+            transform: scale(0.97);
+        }
+
+        /* TARJETAS */
 
         .form-card {
-            background-color: var(--card-bg);
+            position: relative;
+            padding: 22px;
+            margin-bottom: 22px;
+            overflow: hidden;
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255, 255, 255, 0.025),
+                    transparent 38%
+                ),
+                var(--card-bg);
             border: 1px solid var(--card-border);
-            border-radius: var(--radius);
-            padding: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-card);
+        }
+
+        .form-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 24px;
+            right: 24px;
+            height: 1px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(243, 229, 171, 0.34),
+                transparent
+            );
+            pointer-events: none;
         }
 
         .form-group {
-            margin-bottom: 12px;
+            min-width: 0;
+            margin-bottom: 20px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
         }
 
         label {
             display: block;
-            font-size: 0.68rem;
+            margin-bottom: 9px;
             color: var(--gold);
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-size: 0.69rem;
             font-weight: 700;
+            line-height: 1.5;
+            letter-spacing: 0.85px;
+            text-transform: uppercase;
         }
 
-        input[type="file"], select {
+        /* CAMPOS */
+
+        input[type="file"],
+        select {
+            display: block;
             width: 100%;
-            padding: 12px;
-            background-color: #060606;
-            border: 1px solid #222;
-            border-radius: 8px;
+            min-height: 46px;
+            padding: 12px 13px;
             color: var(--text-main);
-            font-size: 0.85rem;
+            background-color: var(--input-bg);
+            border: 1px solid #303030;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            transition:
+                border-color var(--transition),
+                background var(--transition),
+                box-shadow var(--transition);
         }
 
-        .range-slider {
-            width: 100%;
-            accent-color: var(--gold);
+        select {
             cursor: pointer;
         }
 
-        .preview-container {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            margin-bottom: 15px;
-            overflow: hidden;
+        input[type="file"] {
+            padding: 8px;
+            cursor: pointer;
         }
 
-        /* Lienzo Canvas Nativo para rendimiento fluido en Celular */
-        .editor-canvas-wrapper {
+        input[type="file"]::file-selector-button {
+            margin-right: 12px;
+            padding: 9px 12px;
+            color: #101010;
+            background: linear-gradient(
+                135deg,
+                var(--gold-light),
+                var(--gold-dark)
+            );
+            border: none;
+            border-radius: 7px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: filter var(--transition);
+        }
+
+        input[type="file"]::file-selector-button:hover {
+            filter: brightness(1.1);
+        }
+
+        input[type="file"]:hover,
+        select:hover {
+            border-color: rgba(223, 194, 133, 0.45);
+        }
+
+        input[type="file"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(223, 194, 133, 0.09);
+        }
+
+        select option {
+            color: var(--text-main);
+            background: var(--card-bg);
+        }
+
+        /* SEPARADORES DE SECCIÓN */
+
+        .form-group[style*="border-top"] {
+            border-top: 1px solid rgba(223, 194, 133, 0.14) !important;
+            padding-top: 20px !important;
+        }
+
+        /* PANEL DE ZONA ACTIVA */
+
+        #controlesZonaActiva {
+            padding: 17px !important;
+            margin-bottom: 20px !important;
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(223, 194, 133, 0.045),
+                    transparent 65%
+                ),
+                #0a0a0a !important;
+            border: 1px solid rgba(223, 194, 133, 0.24) !important;
+            border-radius: var(--radius);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+        }
+
+        #controlesZonaActiva > div:first-child {
+            padding-bottom: 12px;
+            margin-bottom: 17px !important;
+            border-bottom: 1px solid var(--border-soft);
+            font-size: 0.7rem !important;
+            letter-spacing: 0.7px;
+        }
+
+        #controlesZonaActiva .form-group {
+            margin-bottom: 17px;
+        }
+
+        #controlesZonaActiva .form-group:last-of-type {
+            margin-bottom: 8px;
+        }
+
+        /* DESLIZADORES */
+
+        .range-slider {
+            display: block;
             width: 100%;
-            max-width: 400px;
-            background: #000;
-            border: 2px solid var(--gold);
-            border-radius: 12px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+            height: 24px;
+            margin: 3px 0;
+            accent-color: var(--gold);
+            cursor: pointer;
+            background: transparent;
+        }
+
+        .range-slider::-webkit-slider-runnable-track {
+            height: 5px;
+            background: #303030;
+            border-radius: 999px;
+        }
+
+        .range-slider::-webkit-slider-thumb {
+            width: 17px;
+            height: 17px;
+            margin-top: -6px;
+            appearance: none;
+            -webkit-appearance: none;
+            background: linear-gradient(
+                135deg,
+                var(--gold-light),
+                var(--gold-dark)
+            );
+            border: 2px solid #17130b;
+            border-radius: 50%;
+            box-shadow: 0 0 0 3px rgba(223, 194, 133, 0.11);
+        }
+
+        .range-slider::-moz-range-track {
+            height: 5px;
+            background: #303030;
+            border-radius: 999px;
+        }
+
+        .range-slider::-moz-range-thumb {
+            width: 13px;
+            height: 13px;
+            background: linear-gradient(
+                135deg,
+                var(--gold-light),
+                var(--gold-dark)
+            );
+            border: 2px solid #17130b;
+            border-radius: 50%;
+            box-shadow: 0 0 0 3px rgba(223, 194, 133, 0.11);
+        }
+
+        /* BOTONES */
+
+        .btn-accion,
+        .btn-secundario {
             display: flex;
             align-items: center;
             justify-content: center;
-            touch-action: none; /* Bloquea el scroll del celular al arrastrar sobre el canvas */
-        }
-
-        canvas {
+            gap: 8px;
             width: 100%;
-            height: auto;
-            display: block;
-            cursor: move;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            text-align: center;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition:
+                transform var(--transition),
+                filter var(--transition),
+                background var(--transition),
+                border-color var(--transition),
+                box-shadow var(--transition);
         }
 
         .btn-accion {
-            background: linear-gradient(135deg, var(--gold), #b89751);
-            color: #000;
-            border: none;
-            width: 100%;
-            padding: 14px;
-            font-weight: 700;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            box-shadow: 0 4px 15px rgba(223, 194, 133, 0.3);
-            margin-top: 10px;
+            min-height: 54px;
+            padding: 15px 18px;
+            margin-top: 12px;
+            color: #111;
+            background: linear-gradient(
+                135deg,
+                var(--gold-light) 0%,
+                var(--gold) 48%,
+                var(--gold-dark) 100%
+            );
+            border: 1px solid rgba(243, 229, 171, 0.65);
+            box-shadow:
+                0 8px 22px rgba(0, 0, 0, 0.25),
+                0 4px 16px rgba(223, 194, 133, 0.13);
+            font-size: 0.78rem;
+            letter-spacing: 1px;
+        }
+
+        .btn-accion:hover {
+            filter: brightness(1.08);
+            box-shadow:
+                0 10px 26px rgba(0, 0, 0, 0.32),
+                0 4px 20px rgba(223, 194, 133, 0.20);
         }
 
         .btn-secundario {
-            background: rgba(223, 194, 133, 0.15);
-            border: 1px solid var(--gold);
-            color: var(--gold);
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 0.72rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            cursor: pointer;
-            width: 100%;
+            min-height: 42px;
+            padding: 11px 13px;
             margin-top: 8px;
+            color: var(--gold-light);
+            background: rgba(223, 194, 133, 0.055);
+            border: 1px solid rgba(223, 194, 133, 0.42);
+            font-size: 0.69rem;
+            letter-spacing: 0.4px;
         }
+
+        .btn-secundario:hover {
+            background: rgba(223, 194, 133, 0.12);
+            border-color: var(--gold);
+        }
+
+        .btn-accion:active,
+        .btn-secundario:active {
+            transform: scale(0.985);
+        }
+
+        /* BOTÓN ELIMINAR: CONSERVA EL ESTILO DE PELIGRO */
+
+        #controlesZonaActiva .btn-secundario[onclick="eliminarZonaActiva()"] {
+            color: var(--danger) !important;
+            background: var(--danger-bg) !important;
+            border-color: rgba(255, 80, 80, 0.48) !important;
+        }
+
+        #controlesZonaActiva .btn-secundario[onclick="eliminarZonaActiva()"]:hover {
+            background: rgba(255, 80, 80, 0.15) !important;
+            border-color: var(--danger) !important;
+        }
+
+        /* FILTROS ESTÉTICOS */
 
         .filtros-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 6px;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 9px;
         }
 
         .filtro-btn {
-            background: #1a1a1a;
-            border: 1px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 42px;
+            padding: 10px 5px;
             color: var(--text-muted);
-            padding: 8px;
-            border-radius: 6px;
-            font-size: 0.62rem;
-            text-transform: uppercase;
+            background: #171717;
+            border: 1px solid #303030;
+            border-radius: 9px;
+            font-size: 0.63rem;
             font-weight: 700;
-            cursor: pointer;
+            line-height: 1.35;
             text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.35px;
+            cursor: pointer;
+            transition:
+                color var(--transition),
+                background var(--transition),
+                border-color var(--transition),
+                transform var(--transition),
+                box-shadow var(--transition);
         }
+
+        .filtro-btn:hover {
+            color: var(--gold-light);
+            border-color: rgba(223, 194, 133, 0.45);
+            background: #202020;
+        }
+
         .filtro-btn.active {
-            background: rgba(223, 194, 133, 0.15);
+            color: var(--gold-light);
+            background: linear-gradient(
+                135deg,
+                rgba(223, 194, 133, 0.16),
+                rgba(223, 194, 133, 0.055)
+            );
             border-color: var(--gold);
-            color: var(--gold);
+            box-shadow: inset 0 0 0 1px rgba(223, 194, 133, 0.07);
+        }
+
+        .filtro-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* INSTRUCCIONES DEL LIENZO */
+
+        .preview-container + button {
+            margin-top: 8px;
+        }
+
+        body > .container > div[style*="text-align: center"] {
+            max-width: 440px;
+            margin: 4px auto 14px !important;
+            padding: 0 8px;
+            color: var(--text-muted) !important;
+            font-size: 0.68rem !important;
+            font-weight: 500;
+            line-height: 1.7;
+            letter-spacing: 0.6px !important;
+        }
+
+        /* LIENZO */
+
+        .preview-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 17px;
+            overflow: hidden;
+        }
+
+        .editor-canvas-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 440px;
+            min-height: 120px;
+            overflow: hidden;
+            background:
+                radial-gradient(
+                    circle at center,
+                    #171717 0%,
+                    #080808 75%
+                );
+            border: 1px solid rgba(223, 194, 133, 0.75);
+            border-radius: var(--radius);
+            box-shadow:
+                0 18px 40px rgba(0, 0, 0, 0.45),
+                0 0 0 5px rgba(223, 194, 133, 0.035),
+                inset 0 0 30px rgba(0, 0, 0, 0.30);
+            touch-action: none;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            cursor: move;
+            touch-action: none;
+        }
+
+        /* VALORES Y ETIQUETAS */
+
+        #lblAncho,
+        #lblAlto,
+        #lblInt,
+        #valBrillo {
+            display: inline-block;
+            min-width: 20px;
+            color: var(--gold-light);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* RESPONSIVE: CELULARES */
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px 12px 34px;
+            }
+
+            header {
+                gap: 10px;
+                margin-bottom: 18px;
+                padding-bottom: 15px;
+            }
+
+            h1 {
+                font-size: 1.18rem;
+                letter-spacing: 1.2px;
+            }
+
+            .back-link {
+                padding: 9px 10px;
+                font-size: 0.60rem;
+                letter-spacing: 0.4px;
+            }
+
+            .form-card {
+                padding: 17px 14px;
+                margin-bottom: 18px;
+                border-radius: 17px;
+            }
+
+            .form-card::before {
+                left: 16px;
+                right: 16px;
+            }
+
+            .form-group {
+                margin-bottom: 18px;
+            }
+
+            label {
+                font-size: 0.65rem;
+                letter-spacing: 0.65px;
+            }
+
+            input[type="file"],
+            select {
+                font-size: 0.76rem;
+            }
+
+            input[type="file"]::file-selector-button {
+                padding: 9px 10px;
+                font-size: 0.66rem;
+            }
+
+            #controlesZonaActiva {
+                padding: 13px !important;
+            }
+
+            .filtros-grid {
+                gap: 6px;
+            }
+
+            .filtro-btn {
+                min-height: 40px;
+                padding: 8px 3px;
+                font-size: 0.58rem;
+                letter-spacing: 0;
+            }
+
+            .btn-secundario {
+                padding: 11px 8px;
+                font-size: 0.65rem;
+            }
+
+            .btn-accion {
+                min-height: 51px;
+                padding: 13px 10px;
+                font-size: 0.71rem;
+                letter-spacing: 0.7px;
+            }
+
+            .editor-canvas-wrapper {
+                border-radius: 12px;
+            }
+
+            body > .container > div[style*="text-align: center"] {
+                font-size: 0.64rem !important;
+                line-height: 1.65;
+            }
+        }
+
+        /* PANTALLAS MUY ANGOSTAS */
+
+        @media (max-width: 350px) {
+            body {
+                padding-right: 9px;
+                padding-left: 9px;
+            }
+
+            h1 {
+                font-size: 1.02rem;
+            }
+
+            .back-link {
+                font-size: 0.56rem;
+            }
+
+            .form-card {
+                padding: 14px 11px;
+            }
+
+            .filtro-btn {
+                font-size: 0.54rem;
+            }
+        }
+
+        /* PANTALLAS GRANDES */
+
+        @media (min-width: 700px) {
+            body {
+                padding-top: 32px;
+            }
+
+            .form-card {
+                padding: 25px;
+            }
+        }
+
+        /* REDUCIR ANIMACIONES SI EL USUARIO LO PREFIERE */
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <div class="container">
@@ -209,7 +763,7 @@
 
             <div id="controlesZonaActiva" style="display: none; background: #080808; padding: 10px; border-radius: 8px; border: 1px solid #222; margin-bottom: 12px;">
                 <div style="font-size: 0.65rem; color: var(--gold); margin-bottom: 8px; font-weight: 700; text-align: center;">⚙️ Ajustar Zona Seleccionada:</div>
-                
+
                 <div class="form-group">
                     <label>Forma</label>
                     <select id="selForma" onchange="actualizarPropiedadesZona()">
@@ -218,23 +772,28 @@
                         <option value="cuadrado">Bloque Cuadrado</option>
                     </select>
                 </div>
+
                 <div class="form-group">
                     <label>Ancho (<span id="lblAncho">120</span>px)</label>
                     <input type="range" id="rngAncho" min="40" max="300" value="120" class="range-slider" oninput="actualizarPropiedadesZona()">
                 </div>
+
                 <div class="form-group">
                     <label>Alto (<span id="lblAlto">45</span>px)</label>
                     <input type="range" id="rngAlto" min="20" max="200" value="45" class="range-slider" oninput="actualizarPropiedadesZona()">
                 </div>
+
                 <div class="form-group" style="margin-bottom: 0;">
                     <label>Intensidad de Desenfoque (<span id="lblInt">12</span>px)</label>
                     <input type="range" id="rngInt" min="2" max="25" value="12" class="range-slider" oninput="actualizarPropiedadesZona()">
                 </div>
+
                 <button type="button" class="btn-secundario" style="background: rgba(255,80,80,0.15); border-color: #ff5050; color: #ff8080; margin-top: 8px;" onclick="eliminarZonaActiva()">🗑️ Eliminar Zona</button>
             </div>
 
             <div class="form-group" style="border-top: 1px solid #222; padding-top: 10px;">
                 <label>Filtros Estéticos</label>
+
                 <div class="filtros-grid">
                     <button type="button" class="filtro-btn active" onclick="aplicarFiltro('normal', this)">Normal</button>
                     <button type="button" class="filtro-btn" onclick="aplicarFiltro('cine', this)">Cine Dark</button>
@@ -249,7 +808,7 @@
         </div>
 
         <div style="text-align: center; margin-bottom: 8px; font-size: 0.68rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px;">👉 Tocá y arrastrá el cuadro directamente con el dedo por la foto</div>
-        
+
         <div class="preview-container">
             <div class="editor-canvas-wrapper" id="editorCanvasBox">
                 <canvas id="priveCanvas"></canvas>
@@ -281,7 +840,7 @@
         function inicializarCanvas() {
             canvas.width = imgOriginal.width;
             canvas.height = imgOriginal.height;
-            
+
             // Si no hay zonas creadas, crear una por defecto arriba (zona de ojos)
             if (zonasBlur.length === 0) {
                 zonasBlur.push({
@@ -315,7 +874,7 @@
             // 1. Aplicar filtros de luz/color globales
             let brillo = document.getElementById('rangeBrillo').value;
             let filtroBtnActivo = document.querySelector('.filtro-btn.active').textContent;
-            
+
             if (filtroBtnActivo.includes('Cine')) {
                 ctx.filter = `brightness(95%) contrast(120%) saturate(90%)`;
             } else if (filtroBtnActivo.includes('Cálido')) {
@@ -342,7 +901,7 @@
                     // Franja rectangular suave
                     ctx.roundRect(z.x, z.y, z.width, z.height, 6);
                 }
-                
+
                 ctx.clip();
 
                 // Aplicar desenfoque real recortando la sección de la imagen
@@ -432,7 +991,7 @@
             let rect = canvas.getBoundingClientRect();
             let clientX = e.clientX || (e.touches && e.touches[0].clientX);
             let clientY = e.clientY || (e.touches && e.touches[0].clientY);
-            
+
             let scaleX = canvas.width / rect.width;
             let scaleY = canvas.height / rect.height;
 
@@ -444,7 +1003,7 @@
 
         function iniciarArrastre(e) {
             let coords = obtenerCoordenadasCanvas(e);
-            
+
             // Buscar si tocó alguna zona existente (empezando desde la última creada)
             let encontrada = -1;
             for (let i = zonasBlur.length - 1; i >= 0; i--) {
