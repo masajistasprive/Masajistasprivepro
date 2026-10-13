@@ -15,6 +15,15 @@
 <link rel="stylesheet" href="css/style.css">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 
+<!-- Analytics: mismo ID que index.html -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DXX740HP41"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag("js",new Date());
+gtag("config","G-DXX740HP41");
+</script>
+
 <style>
 :root {
   --gold:#dfc285;
@@ -385,6 +394,8 @@
 <script>
 'use strict';
 
+/* MASAJISTAS PRIVÉ · PERFIL + MÉTRICAS GA4 1.0 */
+
 const firebaseConfig = {
   apiKey:"AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
   authDomain:"masajistasprivepro.firebaseapp.com",
@@ -410,6 +421,40 @@ let unsubscribeReviews = null;
 let reviewItems = [];
 let fotos = [];
 let fotoIndex = 0;
+let visitaRegistrada = false;
+
+/* MÉTRICAS INDIVIDUALES */
+
+function registrarMetrica(nombre,datos = {}) {
+  if (!perfilId || typeof window.gtag !== "function") return;
+
+  try {
+    window.gtag("event",nombre,{
+      perfil_id:perfilId,
+      perfil_categoria:String(
+        modelo?.categoriaNormalizada ||
+        modelo?.categoria ||
+        "sin_categoria"
+      ).slice(0,80),
+      ...datos
+    });
+  } catch(error) {
+    console.warn("No se pudo enviar la métrica:",error);
+  }
+}
+
+function registrarVisitaPerfil() {
+  if (visitaRegistrada || !modelo) return;
+  visitaRegistrada = true;
+
+  registrarMetrica("perfil_visto");
+}
+
+function registrarClickWhatsApp(ubicacion) {
+  registrarMetrica("whatsapp_click",{
+    ubicacion_boton:ubicacion
+  });
+}
 
 const traducciones = {
   es:{
@@ -541,6 +586,7 @@ function safeUrl(value) {
 
 function ocultarTransicion() {
   const el = document.getElementById("priveTransitionScreen");
+  if (!el) return;
   el.style.opacity = "0";
   setTimeout(() => el.style.display = "none", 600);
 }
@@ -591,6 +637,7 @@ function toggleFavorito() {
   localStorage.setItem("priveFavoritos",JSON.stringify(f));
 
   const boton = document.getElementById("btnFavElement");
+  if (!boton) return;
   boton.classList.toggle("activo",index < 0);
   boton.textContent = "❤️ " + T().favorito;
 }
@@ -602,10 +649,16 @@ async function compartirPerfil() {
         title:modelo.nombre+" | Masajistas Privé",
         url:location.href
       });
+      registrarMetrica("perfil_compartido",{
+        metodo:"compartir_nativo"
+      });
     } catch(e) {}
   } else {
     try {
       await navigator.clipboard.writeText(location.href);
+      registrarMetrica("perfil_compartido",{
+        metodo:"copiar_enlace"
+      });
       alert("Enlace copiado");
     } catch(e) {
       prompt("Copiá este enlace:",location.href);
@@ -623,6 +676,10 @@ function abrirFoto(index) {
 
   document.getElementById("priveLightbox").style.display =
     "flex";
+
+  registrarMetrica("foto_abierta",{
+    foto_numero:fotoIndex+1
+  });
 }
 
 function moverFoto(delta) {
@@ -715,7 +772,8 @@ function renderizarPerfil() {
   wppFlotante.innerHTML = activo && linkWpp ?
     `<a class="btn-whatsapp-flotante"
         href="${esc(linkWpp)}"
-        target="_blank" rel="noopener noreferrer">
+        target="_blank" rel="noopener noreferrer"
+        data-metrica-whatsapp="flotante">
         ${wppSvg}<span>${esc(L.whatsapp)}</span>
      </a>` : "";
 
@@ -795,7 +853,8 @@ function renderizarPerfil() {
         ${activo && linkWpp ? `
           <a class="btn-accion-prive btn-accion-wpp"
              href="${esc(linkWpp)}"
-             target="_blank" rel="noopener noreferrer">
+             target="_blank" rel="noopener noreferrer"
+             data-metrica-whatsapp="principal">
             ${wppSvg} ${esc(L.enviar)}
           </a>` : ""}
 
@@ -901,6 +960,17 @@ function renderizarPerfil() {
       e.target.files[0]?.name || "";
   };
 }
+
+/* CLICS WHATSAPP: INCLUYE BOTÓN FLOTANTE */
+
+document.addEventListener("click",evento => {
+  const enlace = evento.target.closest("[data-metrica-whatsapp]");
+  if (!enlace) return;
+
+  registrarClickWhatsApp(
+    enlace.dataset.metricaWhatsapp || "desconocido"
+  );
+});
 
 /* EXPERIENCIAS APROBADAS */
 
@@ -1142,7 +1212,7 @@ async function enviarExperiencia() {
   }
 }
 
-/* CARGAR PERFIL */
+/* CARGAR PERFIL Y REGISTRAR VISITA */
 
 async function cargarPerfil() {
   const contenedor = document.getElementById("perfil-content-box");
@@ -1175,8 +1245,8 @@ async function cargarPerfil() {
     renderizarPerfil();
     escucharExperiencias();
 
-    // El contador de visitas se conectará
-    // a una función segura del servidor.
+    /* Una visita por carga correcta de la página */
+    registrarVisitaPerfil();
 
   } catch(error) {
     console.error("Error cargando perfil:",error);
