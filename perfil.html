@@ -13,7 +13,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 <!-- GA4: mismo identificador que el index público -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DXX740HP41"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-DXX740HP41');</script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-DXX740HP41',{send_page_view:false});</script>
 <style>
 :root{--gold:#dfc285;--dark:#0d0d0d}
 #priveTransitionScreen{position:fixed;inset:0;background:var(--dark);z-index:999999;display:flex;align-items:center;justify-content:center;transition:opacity .6s}
@@ -69,16 +69,51 @@ html,body{max-width:100%;overflow-x:clip}
 const firebaseConfig={apiKey:'AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ',authDomain:'masajistasprivepro.firebaseapp.com',projectId:'masajistasprivepro',storageBucket:'masajistasprivepro.firebasestorage.app',messagingSenderId:'768677270509',appId:'1:768677270509:web:f4409c2f9c0bbb42ebcde4',measurementId:'G-SBN70C32JF'};
 if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
 const db=firebase.firestore();
+// Métricas Privé 1.0: eventos inmutables; las lecturas quedan reservadas al administrador.
+// Un navegador registra como máximo una visita por perfil y día,
+// y un clic por perfil y hora. No equivale a personas únicas.
+function fechaMetrica(){return new Intl.DateTimeFormat('en-CA',{timeZone:'America/Argentina/Buenos_Aires',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date())}
+function horaMetrica(){return new Intl.DateTimeFormat('en-GB',{timeZone:'America/Argentina/Buenos_Aires',hour:'2-digit',hourCycle:'h23'}).format(new Date())}
+function visitanteMetrica(){
+ try{
+  const key='prive_visitor_metrics_v1';
+  let id=localStorage.getItem(key);
+  if(!id||!/^[a-f0-9]{32}$/.test(id)){
+   const bytes=new Uint8Array(16);crypto.getRandomValues(bytes);
+   id=Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('');
+   localStorage.setItem(key,id);
+  }
+  return id;
+ }catch{return null}
+}
+async function registrarMetricaPrivada(tipo){
+ if(!modelo||!perfilId||!['visita','whatsapp'].includes(tipo))return;
+ try{
+  const visitante=visitanteMetrica();if(!visitante)return;
+  const dia=fechaMetrica();
+  const franja=tipo==='whatsapp'?horaMetrica():'dia';
+  const id=`${tipo}_${dia}_${franja}_${visitante}_${encodeURIComponent(perfilId)}`;
+  if(id.length>400)return;
+  await db.collection('metricas_eventos').doc(id).set({tipo,perfilId,dia,franja,visitante,creado:firebase.firestore.FieldValue.serverTimestamp()});
+ }catch(error){
+  // "already-exists" o "permission-denied" no debe afectar la navegación pública.
+  console.warn('Métrica Privé no registrada:',error.code||error.message);
+ }
+}
+function registrarPaginaGA(){
+ if(!modelo||typeof window.gtag!=='function')return;
+ window.gtag('event','page_view',{page_title:`${modelo.nombre||'Perfil'} | Masajistas Privé`,page_location:location.href,perfil_id:perfilId});
+}
 let visitaRegistrada=false;
 function registrarMetrica(nombre,datos={}){
  if(!perfilId||typeof window.gtag!=='function')return;
  try{window.gtag('event',nombre,{perfil_id:perfilId,perfil_categoria:String(modelo?.categoriaNormalizada||modelo?.categoria||'sin_categoria').slice(0,80),...datos})}
  catch(error){console.warn('Error de Analytics:',error)}
 }
-function registrarVisitaPerfil(){if(visitaRegistrada||!modelo)return;visitaRegistrada=true;registrarMetrica('perfil_visto')}
+function registrarVisitaPerfil(){if(visitaRegistrada||!modelo)return;visitaRegistrada=true;registrarPaginaGA();registrarMetrica('perfil_visto');void registrarMetricaPrivada('visita')}
 document.addEventListener('click',evento=>{
  const enlace=evento.target.closest('[data-metrica-whatsapp]');
- if(enlace)registrarMetrica('whatsapp_click',{ubicacion_boton:enlace.dataset.metricaWhatsapp||'desconocido'});
+ if(enlace){registrarMetrica('whatsapp_click',{ubicacion_boton:enlace.dataset.metricaWhatsapp||'desconocido'});void registrarMetricaPrivada('whatsapp');}
 });
 const langs=['es','en','pt','fr'];
 const labels={
