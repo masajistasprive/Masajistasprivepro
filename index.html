@@ -53,6 +53,57 @@ body.modo-tarjeta-alternativo .prive-barra-clasica{display:none!important}
 .prive-btn-perfil{background:transparent;border:1px solid rgba(223,194,133,.4);color:#fff}
 .prive-btn-ws{background:linear-gradient(135deg,#dfc285,#b89751);border:none;color:#0d0d0d;box-shadow:0 0 10px rgba(223,194,133,.3);font-weight:700}
 .grid-perfiles .card-image img,.story-ring img{background:#111}
+
+/* PRIVÉ TURBO 5.1 · Diseño adaptable y prevención de desbordes */
+html{width:100%;max-width:100%;overflow-x:clip;-webkit-text-size-adjust:100%}
+body{width:100%;max-width:100%;min-width:0;margin:0;overflow-x:clip}
+*,*::before,*::after{box-sizing:border-box}
+img,video,iframe,svg{max-width:100%}
+.header-prive,.footer,.footer-container,.container,main,section,nav{max-width:100%;min-width:0}
+.header-prive{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;padding-inline:clamp(10px,3vw,30px)}
+.header-center{min-width:0;flex:1;display:flex;justify-content:center}
+.header-center img{width:auto;max-width:100%;height:auto;object-fit:contain}
+.header-right{flex:0 0 auto;min-width:0}
+.pills-container{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;padding-inline:12px;max-width:100%}
+.pills-container .pill-btn{max-width:100%;min-width:0;white-space:normal}
+.stories-container{max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+.destacadas-container-wrapper,.clima-card,.dolar-card{max-width:min(900px,calc(100% - 24px))!important}
+.grid-perfiles{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:clamp(8px,1.5vw,18px)!important}
+.grid-perfiles .card-link,.grid-perfiles .card,.grid-perfiles .card-image{min-width:0!important;max-width:100%!important}
+.grid-perfiles .card-gradient-overlay{max-width:100%;overflow-wrap:anywhere}
+.grid-perfiles .card-gradient-overlay h3,.prive-card-nombre,.prive-card-detalles{overflow-wrap:anywhere}
+.prive-barra-clasica{min-width:0;gap:4px;padding-inline:6px!important}
+.prive-barra-clasica button,.prive-barra-clasica a{min-width:0;font-size:clamp(9px,1.7vw,11px)!important;padding:5px 6px!important;white-space:normal;text-align:center}
+#modalArticulo>div,.modal-edad-content{max-width:min(100%,650px);overflow-wrap:anywhere}
+@media(min-width:700px){
+ .container{max-width:1200px!important;padding-inline:20px!important}
+ .grid-perfiles{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+ body.modo-tarjeta-alternativo .grid-perfiles{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;align-items:start}
+ body.modo-tarjeta-alternativo .grid-perfiles .card-image{height:auto!important;aspect-ratio:3/4!important}
+}
+@media(min-width:1100px){
+ .grid-perfiles{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+ body.modo-tarjeta-alternativo .grid-perfiles{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+@media(max-width:699px){
+ .container{padding-inline:10px!important}
+ .header-prive{gap:6px;padding-inline:8px}
+ .header-right{max-width:38%}
+ .header-right #btn-idioma{max-width:100%;padding:6px 9px!important}
+ .header-right .btn-foro-prive{max-width:100%;overflow-wrap:anywhere;text-align:center}
+ .grid-perfiles .card-gradient-overlay h3{font-size:clamp(12px,3.8vw,18px)}
+ body.modo-tarjeta-alternativo .grid-perfiles .card-image{height:auto!important;aspect-ratio:3/4!important}
+ .prive-card-actions{gap:6px}
+ .prive-btn-accion{letter-spacing:.4px;font-size:10px;padding:10px 5px}
+}
+@media(max-width:360px){
+ .grid-perfiles{gap:6px!important}
+ .grid-perfiles .card{border-radius:8px!important}
+ .prive-barra-clasica{flex-wrap:wrap;height:auto!important;min-height:44px;padding-block:5px!important;justify-content:center!important}
+ .pills-container{gap:5px;padding-inline:6px}
+ .pills-container .pill-btn{font-size:11px;padding:7px 9px}
+}
+@media(prefers-reduced-motion:reduce){#priveTransitionScreen,.prive-transition-logo{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
