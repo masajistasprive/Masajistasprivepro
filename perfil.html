@@ -1,1269 +1,149 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="google" content="notranslate">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title id="perfil-title">Perfil | Masajistas Privé</title>
-
 <meta property="og:title" content="Masajistas Privé | Portal Exclusivo">
 <meta property="og:description" content="Perfiles independientes de bienestar en CABA.">
 <meta property="og:image" content="https://masajistasprive.com/img/logo.png">
 <meta property="og:url" content="https://masajistasprive.com">
-
 <link rel="stylesheet" href="css/style.css">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-<!-- Analytics: mismo ID que index.html -->
+<!-- GA4: mismo identificador que el index público -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DXX740HP41"></script>
-<script>
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag("js",new Date());
-gtag("config","G-DXX740HP41");
-</script>
-
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-DXX740HP41');</script>
 <style>
-:root {
-  --gold:#dfc285;
-  --dark:#0d0d0d;
+:root{--gold:#dfc285;--dark:#0d0d0d}
+#priveTransitionScreen{position:fixed;inset:0;background:var(--dark);z-index:999999;display:flex;align-items:center;justify-content:center;transition:opacity .6s}
+.prive-transition-logo{text-align:center;opacity:.4;animation:pulsePrive 1.5s infinite alternate}@keyframes pulsePrive{to{opacity:.65;transform:scale(1.02)}}
+.btn-volver-sophisticated{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;background:rgba(223,194,133,.12);border:1px solid var(--gold);color:var(--gold);border-radius:6px;text-decoration:none}.btn-volver-sophisticated svg{width:18px;height:18px;fill:var(--gold)}
+.btn-whatsapp-flotante{position:fixed;bottom:25px;right:25px;background:linear-gradient(135deg,#25d366,#128c7e);color:white;padding:12px 22px;border-radius:50px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 25px #25d36655;z-index:9999;text-decoration:none;font:600 13px Montserrat,sans-serif;letter-spacing:1px;text-transform:uppercase;max-width:calc(100vw - 40px)}.btn-whatsapp-flotante svg{width:26px;height:26px;fill:white;flex-shrink:0}
+.perfil-acciones-inferior{display:grid;gap:12px;margin-top:25px}.btn-accion-prive{display:flex;align-items:center;justify-content:center;gap:10px;padding:12px 20px;border-radius:6px;font:600 13px Montserrat,sans-serif;letter-spacing:1px;text-transform:uppercase;text-decoration:none;cursor:pointer}.btn-accion-wpp{background:linear-gradient(135deg,#25d366,#128c7e);color:white;border:0}.btn-accion-secundarios{display:grid;grid-template-columns:1fr 1fr;gap:12px}.btn-accion-fav{background:#dfc28519;border:1px solid var(--gold);color:var(--gold)}.btn-accion-fav.activo{background:var(--gold);color:#111}.btn-accion-compartir{background:#1a1a1a;border:1px solid #dfc28566;color:white}.btn-accion-prive svg{width:20px;height:20px;fill:currentColor}
+#priveLightbox{display:none;position:fixed;inset:0;background:#000f;z-index:999999;align-items:center;justify-content:center;backdrop-filter:blur(12px)}#priveLightboxImg{max-width:80vw;max-height:85vh;object-fit:contain;border:1px solid #dfc28566;border-radius:8px}#priveLightbox button{cursor:pointer;color:var(--gold);background:#000a;border:1px solid var(--gold);padding:10px 14px;border-radius:50%;font-size:22px}
+.star-rating{display:inline-flex;gap:4px;direction:rtl;font-size:24px}.star-rating input{position:absolute;opacity:0}.star-rating label{color:#555;cursor:pointer}.star-rating input:checked~label,.star-rating label:hover,.star-rating label:hover~label{color:var(--gold)}
+.prive-review-panel{grid-column:1/-1;width:100%;box-sizing:border-box;margin-top:40px;padding:25px 20px;background:#141414;border:1px solid #dfc28544;border-radius:10px;font-family:Montserrat,sans-serif}.prive-review-panel h3{text-align:center;color:var(--gold);font:600 26px 'Cormorant Garamond',serif;margin:0 0 20px}.prive-review-panel input[type=text],.prive-review-panel textarea{width:100%;box-sizing:border-box;padding:12px 15px;background:#1a1a1a;color:#fff;border:1px solid #dfc28555;border-radius:6px;font:14px Montserrat,sans-serif}.prive-review-panel .review-form{display:grid;gap:12px}.review-submit{background:linear-gradient(135deg,#dfc285,#c5a059);color:#111;border:0;border-radius:6px;padding:14px;font:600 12px Montserrat,sans-serif;letter-spacing:1.5px;cursor:pointer}.review-submit:disabled{opacity:.5;cursor:wait}.review-item{margin:15px 0;background:#1a1a1a;border:1px solid #dfc28533;border-left:3px solid var(--gold);padding:15px;border-radius:6px;overflow-wrap:anywhere;color:#ddd;font-size:13px}.review-top{display:flex;justify-content:space-between;gap:10px;color:var(--gold)}.review-item p{white-space:pre-wrap;line-height:1.6}.review-item img{max-width:100%;max-height:180px;object-fit:contain;border-radius:6px}.review-status{color:#aaa;text-align:center;font-size:13px;padding:10px}.review-actions{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:12px;border-top:1px solid #ffffff18;padding-top:10px}.review-actions button{background:none;border:0;color:var(--gold);cursor:pointer}.review-actions button:disabled{opacity:.5}.prive-error{color:#ff9e9e;text-align:center;padding:20px;overflow-wrap:anywhere}
+@media(max-width:420px){.btn-whatsapp-flotante{right:12px;bottom:12px;padding:11px 15px;font-size:11px}.btn-accion-prive{font-size:11px;padding:12px 8px}}
+/* TURBO 5.4: responsive y galería móvil */
+*,*::before,*::after{box-sizing:border-box}
+html,body{max-width:100%;overflow-x:clip}
+#perfil-content-box{min-width:0;width:100%;max-width:1200px;margin-inline:auto}
+#perfil-content-box>*{min-width:0;max-width:100%}
+.perfil-galeria-grid,.perfil-info,.galeria-miniaturas{min-width:0;max-width:100%}
+.perfil-galeria-grid img{object-fit:cover;max-width:100%}
+.perfil-galeria-grid .foto-principal{display:block;width:100%;height:auto;max-height:75vh;object-fit:contain;background:#0a0a0a}
+.galeria-miniaturas{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.galeria-miniaturas img{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:6px;cursor:zoom-in}
+.perfil-info,.perfil-descripcion,.perfil-detalles{overflow-wrap:anywhere}
+.perfil-info video{display:block;width:100%;max-width:100%;max-height:400px;background:#000;border-radius:8px}
+#priveLightbox{padding:64px 8px 28px;gap:8px}
+#priveLightboxImg{display:block;width:auto;max-width:min(82vw,1100px);max-height:calc(100dvh - 110px)}
+#priveLbPrev,#priveLbNext{flex:0 0 auto;min-width:36px;min-height:44px;padding:8px!important}
+.btn-whatsapp-flotante{min-height:48px}
+@media(max-width:600px){
+ #perfil-content-box{padding-inline:12px}
+ .perfil-galeria-grid{width:100%}
+ .galeria-miniaturas{gap:6px}
+ .perfil-acciones-inferior{padding-bottom:65px}
+ .btn-accion-secundarios{gap:8px}
+ .btn-whatsapp-flotante{bottom:max(12px,env(safe-area-inset-bottom));right:12px;padding:10px 14px;font-size:11px}
+ #priveLightbox{gap:4px;padding-inline:4px}
+ #priveLightboxImg{max-width:calc(100vw - 98px);max-height:calc(100dvh - 120px)}
+ .prive-review-panel{padding:20px 12px}
 }
-
-#priveTransitionScreen {
-  position:fixed;
-  inset:0;
-  background:var(--dark);
-  z-index:999999;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  transition:opacity .6s;
-}
-
-.prive-transition-logo {
-  text-align:center;
-  opacity:.4;
-  animation:pulsePrive 1.5s infinite alternate;
-}
-
-@keyframes pulsePrive {
-  to {opacity:.65;transform:scale(1.02)}
-}
-
-.btn-volver-sophisticated {
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  width:38px;
-  height:38px;
-  background:#dfc28519;
-  border:1px solid var(--gold);
-  color:var(--gold);
-  border-radius:6px;
-  text-decoration:none;
-}
-
-.btn-volver-sophisticated svg {
-  width:18px;
-  height:18px;
-  fill:var(--gold);
-}
-
-.btn-whatsapp-flotante {
-  position:fixed;
-  bottom:25px;
-  right:25px;
-  z-index:9999;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  max-width:calc(100vw - 40px);
-  padding:12px 22px;
-  border-radius:50px;
-  background:linear-gradient(135deg,#25d366,#128c7e);
-  color:white;
-  text-decoration:none;
-  box-shadow:0 8px 25px #25d36655;
-  font:600 13px Montserrat,sans-serif;
-  letter-spacing:1px;
-  text-transform:uppercase;
-}
-
-.btn-whatsapp-flotante svg {
-  width:26px;
-  height:26px;
-  fill:white;
-}
-
-.perfil-acciones-inferior {
-  display:grid;
-  gap:12px;
-  margin-top:25px;
-}
-
-.btn-accion-prive {
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
-  padding:12px 20px;
-  border-radius:6px;
-  font:600 13px Montserrat,sans-serif;
-  text-transform:uppercase;
-  text-decoration:none;
-  cursor:pointer;
-}
-
-.btn-accion-wpp {
-  background:linear-gradient(135deg,#25d366,#128c7e);
-  color:white;
-  border:0;
-}
-
-.btn-accion-secundarios {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-
-.btn-accion-fav {
-  background:#dfc28519;
-  border:1px solid var(--gold);
-  color:var(--gold);
-}
-
-.btn-accion-fav.activo {
-  background:var(--gold);
-  color:#111;
-}
-
-.btn-accion-compartir {
-  background:#1a1a1a;
-  border:1px solid #dfc28566;
-  color:white;
-}
-
-#priveLightbox {
-  display:none;
-  position:fixed;
-  inset:0;
-  z-index:999999;
-  background:rgba(0,0,0,.96);
-  align-items:center;
-  justify-content:center;
-  backdrop-filter:blur(12px);
-}
-
-#priveLightboxImg {
-  max-width:78vw;
-  max-height:85vh;
-  object-fit:contain;
-  border:1px solid #dfc28566;
-  border-radius:8px;
-}
-
-#priveLightbox button {
-  cursor:pointer;
-  color:var(--gold);
-  background:#000a;
-  border:1px solid var(--gold);
-  padding:10px 14px;
-  border-radius:50%;
-  font-size:22px;
-}
-
-.star-rating {
-  display:inline-flex;
-  gap:4px;
-  direction:rtl;
-  font-size:24px;
-}
-
-.star-rating input {
-  position:absolute;
-  opacity:0;
-}
-
-.star-rating label {
-  color:#555;
-  cursor:pointer;
-}
-
-.star-rating input:checked~label,
-.star-rating label:hover,
-.star-rating label:hover~label {
-  color:var(--gold);
-}
-
-.prive-review-panel {
-  grid-column:1/-1;
-  width:100%;
-  box-sizing:border-box;
-  margin-top:40px;
-  padding:25px 20px;
-  background:#141414;
-  border:1px solid #dfc28544;
-  border-radius:10px;
-  font-family:Montserrat,sans-serif;
-}
-
-.prive-review-panel h3 {
-  text-align:center;
-  color:var(--gold);
-  font:600 26px 'Cormorant Garamond',serif;
-  margin:0 0 20px;
-}
-
-.review-form {
-  display:grid;
-  gap:12px;
-}
-
-.review-form input[type=text],
-.review-form textarea {
-  width:100%;
-  box-sizing:border-box;
-  padding:12px 15px;
-  background:#1a1a1a;
-  color:#fff;
-  border:1px solid #dfc28555;
-  border-radius:6px;
-  font:14px Montserrat,sans-serif;
-}
-
-.review-submit {
-  background:linear-gradient(135deg,#dfc285,#c5a059);
-  color:#111;
-  border:0;
-  border-radius:6px;
-  padding:14px;
-  font:600 12px Montserrat,sans-serif;
-  letter-spacing:1.5px;
-  cursor:pointer;
-}
-
-.review-submit:disabled {
-  opacity:.5;
-}
-
-.review-item {
-  margin:15px 0;
-  background:#1a1a1a;
-  border:1px solid #dfc28533;
-  border-left:3px solid var(--gold);
-  padding:15px;
-  border-radius:6px;
-  overflow-wrap:anywhere;
-  color:#ddd;
-  font-size:13px;
-}
-
-.review-top {
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  color:var(--gold);
-}
-
-.review-item p {
-  white-space:pre-wrap;
-  line-height:1.6;
-}
-
-.review-item img {
-  max-width:100%;
-  max-height:180px;
-  object-fit:contain;
-  border-radius:6px;
-}
-
-.review-status {
-  color:#aaa;
-  text-align:center;
-  font-size:13px;
-  padding:10px;
-}
-
-.review-actions {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-top:12px;
-  border-top:1px solid #ffffff18;
-  padding-top:10px;
-}
-
-.review-actions button {
-  background:none;
-  border:0;
-  color:var(--gold);
-  cursor:pointer;
-}
-
-.prive-error {
-  color:#ff9e9e;
-  text-align:center;
-  padding:20px;
-}
-
-@media(max-width:420px) {
-  .btn-whatsapp-flotante {
-    right:12px;
-    bottom:12px;
-    padding:11px 15px;
-    font-size:11px;
-  }
-  .btn-accion-prive {
-    font-size:11px;
-    padding:12px 8px;
-  }
-}
+@media(prefers-reduced-motion:reduce){.prive-transition-logo{animation:none}}
 </style>
 </head>
-
 <body class="perfil-body">
-
-<div id="priveTransitionScreen">
-  <div class="prive-transition-logo">
-    <img src="img/logo.png" alt="Masajistas Privé"
-         style="max-width:220px;width:60vw">
-    <div style="color:#dfc285;letter-spacing:4px;margin-top:10px">
-      MASAJISTAS PRIVÉ
-    </div>
-  </div>
-</div>
-
+<div id="priveTransitionScreen"><div class="prive-transition-logo"><img src="img/logo.png" alt="Masajistas Privé" style="max-width:220px;width:60vw"><div style="color:#dfc285;font:14px 'Cormorant Garamond',serif;letter-spacing:4px;margin-top:10px">MASAJISTAS PRIVÉ</div></div></div>
 <div id="contenedorWppFlotante"></div>
-
-<div id="priveLightbox">
-  <button id="priveLbPrev" aria-label="Anterior">&#10094;</button>
-  <img id="priveLightboxImg" alt="Foto ampliada">
-  <button id="priveLbNext" aria-label="Siguiente">&#10095;</button>
-  <button id="priveLbClose" aria-label="Cerrar"
-    style="position:absolute;right:15px;top:15px">
-    &times;
-  </button>
-</div>
-
-<header class="header-prive">
-  <div class="header-left">
-    <img src="img/monograma.png" alt="Monograma"
-         class="header-monograma">
-  </div>
-
-  <div class="header-center">
-    <a href="index.html">
-      <img src="img/logo.png" alt="Masajistas Privé"
-           class="header-logo-grande">
-    </a>
-  </div>
-
-  <div class="header-right"
-       style="display:flex;align-items:center;gap:8px">
-    <a href="index.html" class="btn-volver-sophisticated">
-      <svg viewBox="0 0 24 24">
-        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-      </svg>
-    </a>
-
-    <button id="btn-idioma" type="button"
-      style="background:#dfc28519;border:1px solid #dfc285;color:#dfc285;padding:9px 14px;border-radius:6px">
-      🇺🇸 EN
-    </button>
-  </div>
-</header>
-
-<main class="container perfil-container" id="perfil-content-box">
-  <div style="text-align:center;color:#dfc285;padding:50px">
-    Cargando perfil...
-  </div>
-</main>
-
-<footer class="footer">
-  <p>Este es un sitio para adultos (+18).
-     Las anunciantes no tienen vínculo laboral con el portal.</p>
-  <p class="copyright">
-    © 2026 Masajistas Privé. Todos los derechos reservados.
-  </p>
-</footer>
-
+<div id="priveLightbox" role="dialog" aria-label="Galería de fotos" aria-modal="true"><button id="priveLbPrev" aria-label="Foto anterior">&#10094;</button><img id="priveLightboxImg" alt="Fotografía ampliada"><button id="priveLbNext" aria-label="Foto siguiente">&#10095;</button><button id="priveLbClose" aria-label="Cerrar" style="position:absolute;right:15px;top:15px">&times;</button></div>
+<header class="header-prive"><div class="header-left"><img src="img/monograma.png" alt="Monograma" class="header-monograma"></div><div class="header-center"><a href="index.html"><img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande"></a></div><div class="header-right" style="display:flex;align-items:center;gap:8px"><a href="index.html" class="btn-volver-sophisticated" title="Volver al portal"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></a><button id="btn-idioma" type="button" style="background:#dfc28519;border:1px solid #dfc285;color:#dfc285;padding:9px 14px;border-radius:6px;font:600 12px Montserrat,sans-serif">🇺🇸 EN</button></div></header>
+<main class="container perfil-container" id="perfil-content-box"><div style="text-align:center;color:#dfc285;padding:50px 0">Cargando perfil...</div></main>
+<footer class="footer"><p id="footerLegal">Este es un sitio para adultos (+18). Las anunciantes no tienen vínculo laboral con el portal.</p><p class="copyright">© 2026 Masajistas Privé. Todos los derechos reservados.</p></footer>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
 <script>
 'use strict';
-
-/* MASAJISTAS PRIVÉ · PERFIL + MÉTRICAS GA4 1.0 */
-
-const firebaseConfig = {
-  apiKey:"AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
-  authDomain:"masajistasprivepro.firebaseapp.com",
-  projectId:"masajistasprivepro",
-  storageBucket:"masajistasprivepro.firebasestorage.app",
-  messagingSenderId:"768677270509",
-  appId:"1:768677270509:web:f4409c2f9c0bbb42ebcde4",
-  measurementId:"G-SBN70C32JF"
-};
-
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
+const firebaseConfig={apiKey:'AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ',authDomain:'masajistasprivepro.firebaseapp.com',projectId:'masajistasprivepro',storageBucket:'masajistasprivepro.firebasestorage.app',messagingSenderId:'768677270509',appId:'1:768677270509:web:f4409c2f9c0bbb42ebcde4',measurementId:'G-SBN70C32JF'};
+if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
+const db=firebase.firestore();
+let visitaRegistrada=false;
+function registrarMetrica(nombre,datos={}){
+ if(!perfilId||typeof window.gtag!=='function')return;
+ try{window.gtag('event',nombre,{perfil_id:perfilId,perfil_categoria:String(modelo?.categoriaNormalizada||modelo?.categoria||'sin_categoria').slice(0,80),...datos})}
+ catch(error){console.warn('Error de Analytics:',error)}
 }
-
-const db = firebase.firestore();
-
-const params = new URLSearchParams(location.search);
-const perfilId = (params.get("id") || "").trim();
-
-let modelo = null;
-let idiomaPerfil = localStorage.getItem("idiomaPrive") || "es";
-let unsubscribeReviews = null;
-let reviewItems = [];
-let fotos = [];
-let fotoIndex = 0;
-let visitaRegistrada = false;
-
-/* MÉTRICAS INDIVIDUALES */
-
-function registrarMetrica(nombre,datos = {}) {
-  if (!perfilId || typeof window.gtag !== "function") return;
-
-  try {
-    window.gtag("event",nombre,{
-      perfil_id:perfilId,
-      perfil_categoria:String(
-        modelo?.categoriaNormalizada ||
-        modelo?.categoria ||
-        "sin_categoria"
-      ).slice(0,80),
-      ...datos
-    });
-  } catch(error) {
-    console.warn("No se pudo enviar la métrica:",error);
-  }
-}
-
-function registrarVisitaPerfil() {
-  if (visitaRegistrada || !modelo) return;
-  visitaRegistrada = true;
-
-  registrarMetrica("perfil_visto");
-}
-
-function registrarClickWhatsApp(ubicacion) {
-  registrarMetrica("whatsapp_click",{
-    ubicacion_boton:ubicacion
-  });
-}
-
-const traducciones = {
-  es:{
-    zona:"Zona:",
-    modalidad:"Modalidad:",
-    descripcion:"Descripción",
-    tecnicas:"Técnicas de masaje:",
-    horarios:"Días y horarios:",
-    equipamiento:"Equipamiento y servicios:",
-    pagos:"Medios de pago:",
-    turnos:"Modalidad de turnos:",
-    video:"Video de Presentación",
-    verificado:"✓ Privé Verificado",
-    whatsapp:"Mandame un WhatsApp",
-    enviar:"Enviar WhatsApp",
-    favorito:"Favorito",
-    compartir:"Compartir",
-    experiencias:"Experiencias y Comentarios",
-    calificacion:"Calificación:",
-    nombre:"Tu nombre o apodo",
-    comentario:"Escribí tu experiencia...",
-    publicar:"Enviar experiencia",
-    cargando:"Cargando experiencias...",
-    vacio:"No hay experiencias publicadas todavía.",
-    gusta:"Me gusta",
-    enviado:"Tu experiencia fue enviada para moderación."
-  },
-  en:{
-    zona:"Area:",
-    modalidad:"Modality:",
-    descripcion:"Description",
-    tecnicas:"Massage techniques:",
-    horarios:"Days and hours:",
-    equipamiento:"Equipment and services:",
-    pagos:"Payment methods:",
-    turnos:"Appointments:",
-    video:"Presentation Video",
-    verificado:"✓ Privé Verified",
-    whatsapp:"Send me a WhatsApp",
-    enviar:"Send WhatsApp",
-    favorito:"Favorite",
-    compartir:"Share",
-    experiencias:"Experiences and Reviews",
-    calificacion:"Rating:",
-    nombre:"Your name or nickname",
-    comentario:"Write your experience...",
-    publicar:"Send experience",
-    cargando:"Loading reviews...",
-    vacio:"No published reviews yet.",
-    gusta:"Like",
-    enviado:"Your review was submitted for moderation."
-  },
-  pt:{
-    zona:"Zona:",
-    modalidad:"Modalidade:",
-    descripcion:"Descrição",
-    tecnicas:"Técnicas de massagem:",
-    horarios:"Dias e horários:",
-    equipamiento:"Equipamentos e serviços:",
-    pagos:"Meios de pagamento:",
-    turnos:"Agendamentos:",
-    video:"Vídeo de Apresentação",
-    verificado:"✓ Privé Verificado",
-    whatsapp:"Mande-me um WhatsApp",
-    enviar:"Enviar WhatsApp",
-    favorito:"Favorito",
-    compartir:"Compartilhar",
-    experiencias:"Experiências e Comentários",
-    calificacion:"Avaliação:",
-    nombre:"Seu nome ou apelido",
-    comentario:"Escreva sua experiência...",
-    publicar:"Enviar experiência",
-    cargando:"Carregando experiências...",
-    vacio:"Nenhuma experiência publicada.",
-    gusta:"Curtir",
-    enviado:"Sua experiência foi enviada para moderação."
-  },
-  fr:{
-    zona:"Zone :",
-    modalidad:"Modalité :",
-    descripcion:"Description",
-    tecnicas:"Techniques de massage :",
-    horarios:"Jours et horaires :",
-    equipamiento:"Équipements et services :",
-    pagos:"Modes de paiement :",
-    turnos:"Réservations :",
-    video:"Vidéo de Présentation",
-    verificado:"✓ Privé Vérifié",
-    whatsapp:"Envoyez-moi un WhatsApp",
-    enviar:"Envoyer WhatsApp",
-    favorito:"Favori",
-    compartir:"Partager",
-    experiencias:"Expériences et Avis",
-    calificacion:"Évaluation :",
-    nombre:"Votre nom ou pseudo",
-    comentario:"Écrivez votre expérience...",
-    publicar:"Envoyer l'avis",
-    cargando:"Chargement des avis...",
-    vacio:"Aucun avis publié.",
-    gusta:"J'aime",
-    enviado:"Votre avis a été envoyé pour modération."
-  }
-};
-
-function T() {
-  return traducciones[idiomaPerfil] || traducciones.es;
-}
-
-function esc(value) {
-  return String(value ?? "").replace(/[&<>"']/g, c => ({
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#39;"
-  }[c]));
-}
-
-function safeUrl(value) {
-  if (!value || typeof value !== "string") return "";
-  const v = value.trim();
-
-  if (/^https:\/\//i.test(v)) return v;
-  if (/^(img\/|uploads\/)/i.test(v)) return v;
-  if (/^data:image\/(jpeg|png|webp);base64,/i.test(v)) return v;
-
-  return "";
-}
-
-function ocultarTransicion() {
-  const el = document.getElementById("priveTransitionScreen");
-  if (!el) return;
-  el.style.opacity = "0";
-  setTimeout(() => el.style.display = "none", 600);
-}
-
-function cambiarIdioma() {
-  const idiomas = ["es","en","pt","fr"];
-  idiomaPerfil = idiomas[(idiomas.indexOf(idiomaPerfil)+1)%4];
-  localStorage.setItem("idiomaPrive",idiomaPerfil);
-  actualizarBotonIdioma();
-
-  if (modelo) {
-    renderizarPerfil();
-    escucharExperiencias();
-  }
-}
-
-function actualizarBotonIdioma() {
-  const siguiente = {
-    es:"🇺🇸 EN",
-    en:"🇧🇷 PT",
-    pt:"🇫🇷 FR",
-    fr:"🇦🇷 ES"
-  };
-
-  document.getElementById("btn-idioma").textContent =
-    siguiente[idiomaPerfil] || "🇺🇸 EN";
-}
-
-document.getElementById("btn-idioma")
-  .addEventListener("click", cambiarIdioma);
-
-function favoritosGuardados() {
-  try {
-    const f = JSON.parse(localStorage.getItem("priveFavoritos") || "[]");
-    return Array.isArray(f) ? f : [];
-  } catch {
-    return [];
-  }
-}
-
-function toggleFavorito() {
-  const f = favoritosGuardados();
-  const index = f.indexOf(perfilId);
-
-  if (index >= 0) f.splice(index,1);
-  else f.push(perfilId);
-
-  localStorage.setItem("priveFavoritos",JSON.stringify(f));
-
-  const boton = document.getElementById("btnFavElement");
-  if (!boton) return;
-  boton.classList.toggle("activo",index < 0);
-  boton.textContent = "❤️ " + T().favorito;
-}
-
-async function compartirPerfil() {
-  if (navigator.share) {
-    try {
-      await navigator.share({
-        title:modelo.nombre+" | Masajistas Privé",
-        url:location.href
-      });
-      registrarMetrica("perfil_compartido",{
-        metodo:"compartir_nativo"
-      });
-    } catch(e) {}
-  } else {
-    try {
-      await navigator.clipboard.writeText(location.href);
-      registrarMetrica("perfil_compartido",{
-        metodo:"copiar_enlace"
-      });
-      alert("Enlace copiado");
-    } catch(e) {
-      prompt("Copiá este enlace:",location.href);
-    }
-  }
-}
-
-function abrirFoto(index) {
-  if (!fotos.length) return;
-
-  fotoIndex = (index+fotos.length)%fotos.length;
-
-  document.getElementById("priveLightboxImg").src =
-    fotos[fotoIndex];
-
-  document.getElementById("priveLightbox").style.display =
-    "flex";
-
-  registrarMetrica("foto_abierta",{
-    foto_numero:fotoIndex+1
-  });
-}
-
-function moverFoto(delta) {
-  abrirFoto(fotoIndex+delta);
-}
-
-function cerrarFoto() {
-  document.getElementById("priveLightbox").style.display =
-    "none";
-}
-
-document.getElementById("priveLbPrev").onclick =
-  () => moverFoto(-1);
-
-document.getElementById("priveLbNext").onclick =
-  () => moverFoto(1);
-
-document.getElementById("priveLbClose").onclick =
-  cerrarFoto;
-
-document.getElementById("priveLightbox").onclick = e => {
-  if (e.target.id === "priveLightbox") cerrarFoto();
-};
-
-document.addEventListener("keydown", e => {
-  const visor = document.getElementById("priveLightbox");
-  if (visor.style.display !== "flex") return;
-
-  if (e.key === "Escape") cerrarFoto();
-  if (e.key === "ArrowRight") moverFoto(1);
-  if (e.key === "ArrowLeft") moverFoto(-1);
+function registrarVisitaPerfil(){if(visitaRegistrada||!modelo)return;visitaRegistrada=true;registrarMetrica('perfil_visto')}
+document.addEventListener('click',evento=>{
+ const enlace=evento.target.closest('[data-metrica-whatsapp]');
+ if(enlace)registrarMetrica('whatsapp_click',{ubicacion_boton:enlace.dataset.metricaWhatsapp||'desconocido'});
 });
-
-let touchX = 0;
-
-document.getElementById("priveLightbox")
-  .addEventListener("touchstart",e => {
-    touchX = e.changedTouches[0].screenX;
-  },{passive:true});
-
-document.getElementById("priveLightbox")
-  .addEventListener("touchend",e => {
-    const delta = e.changedTouches[0].screenX-touchX;
-    if (Math.abs(delta)>40) moverFoto(delta<0?1:-1);
-  },{passive:true});
-
-function renderizarPerfil() {
-  const m = modelo;
-  const L = T();
-  const tradu = m.traducciones?.[idiomaPerfil] || {};
-
-  const nombre = m.nombre || "Perfil";
-  const zona = tradu.valorZona || m.zona || "";
-  const modalidad = tradu.valorModalidad || m.modalidad || "";
-
-  const desc1 = tradu.descPerfil1 || m.descripcion || "";
-  const desc2 = tradu.descPerfil2 || "";
-  const descripcion = [desc1,desc2].filter(Boolean).join("\n\n");
-
-  const tecnicas = tradu.valorTecnicas || "";
-  const horarios = tradu.valorHorarios || m.horarios || "";
-  const equipamiento = tradu.valorEquipamiento || "";
-  const pagos = tradu.valorPagos || "";
-  const turnos = tradu.valorTurnos || "";
-
-  const telefono = String(m.whatsapp || "").replace(/\D/g,"");
-  const mensaje = `Hola ${nombre}, vi tu perfil en Masajistas Privé: ${location.href}`;
-  const linkWpp = telefono ?
-    `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}` : "";
-
-  const activo = m.estado !== "pausado";
-
-  const galeria = Array.isArray(m.fotosGaleria) ?
-    m.fotosGaleria : [];
-
-  fotos = [...new Set(
-    [m.fotoPrincipal,...galeria].map(safeUrl).filter(Boolean)
-  )];
-
-  const principal = safeUrl(m.fotoPrincipal) || fotos[0] || "";
-
-  const favorito = favoritosGuardados().includes(perfilId);
-
-  const wppSvg = `<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 .1A11.9 11.9 0 001.8 18.2L.1 24l6-1.6A11.9 11.9 0 1012 .1zm0 21.6a9.7 9.7 0 01-5-1.4l-.4-.2-3.6.9 1-3.5-.3-.4A9.7 9.7 0 1112 21.7zm5.3-7.3c-.3-.1-1.7-.8-2-.9-.2-.1-.4-.1-.6.2-.2.3-.8.9-1 1-.1.2-.3.2-.6.1a8 8 0 01-4-3.5c-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5l-.9-2.1c-.2-.5-.5-.4-.7-.4h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 1.8.8 2.5.9 3.4.7.5-.1 1.7-.7 1.9-1.4.3-.7.3-1.3.2-1.4z"/></svg>`;
-
-  const wppFlotante = document.getElementById(
-    "contenedorWppFlotante"
-  );
-
-  wppFlotante.innerHTML = activo && linkWpp ?
-    `<a class="btn-whatsapp-flotante"
-        href="${esc(linkWpp)}"
-        target="_blank" rel="noopener noreferrer"
-        data-metrica-whatsapp="flotante">
-        ${wppSvg}<span>${esc(L.whatsapp)}</span>
-     </a>` : "";
-
-  const detalle = (etiqueta,valor) => valor ?
-    `<div class="detalle-item">
-       <span>${esc(etiqueta)}</span>
-       <span>${esc(valor)}</span>
-     </div>` : "";
-
-  const miniaturas = fotos.map((url,i) =>
-    `<img src="${esc(url)}"
-          alt="${esc(nombre)}"
-          data-photo="${i}"
-          loading="lazy"
-          style="cursor:zoom-in">`
-  ).join("");
-
-  const video = safeUrl(m.videoPresentacion);
-
-  const html = `
-    <div class="perfil-galeria-grid">
-      <img src="${esc(principal)}"
-           alt="${esc(nombre)}"
-           class="foto-principal"
-           id="fotoPrincipal"
-           data-photo="0"
-           style="cursor:zoom-in">
-
-      <div class="galeria-miniaturas">
-        ${miniaturas}
-      </div>
-    </div>
-
-    <div class="perfil-info">
-      <div class="perfil-titulo-seccion">
-        <h2>${esc(nombre)}</h2>
-        <span class="badge-verificado">
-          ${esc(L.verificado)}
-        </span>
-      </div>
-
-      <p class="perfil-ubicacion">
-        📍 ${esc(L.zona)} <strong>${esc(zona)}</strong>
-      </p>
-
-      <p class="perfil-modalidad">
-        🏠 ${esc(L.modalidad)}
-        <strong>${esc(modalidad)}</strong>
-      </p>
-
-      <div class="perfil-descripcion">
-        <h3>${esc(L.descripcion)}</h3>
-        <p style="white-space:pre-line">
-          ${esc(descripcion)}
-        </p>
-        ${tecnicas ? `<p><strong>${esc(L.tecnicas)}</strong> ${esc(tecnicas)}</p>` : ""}
-      </div>
-
-      ${video ? `
-        <div class="perfil-descripcion">
-          <h3>🎥 ${esc(L.video)}</h3>
-          <video controls playsinline
-                 controlslist="nodownload"
-                 style="width:100%;max-height:350px">
-            <source src="${esc(video)}" type="video/mp4">
-          </video>
-        </div>` : ""}
-
-      <div class="perfil-detalles">
-        ${detalle(L.horarios,horarios)}
-        ${detalle(L.equipamiento,equipamiento)}
-        ${detalle(L.pagos,pagos)}
-        ${detalle(L.turnos,turnos)}
-      </div>
-
-      <div class="perfil-acciones-inferior">
-        ${activo && linkWpp ? `
-          <a class="btn-accion-prive btn-accion-wpp"
-             href="${esc(linkWpp)}"
-             target="_blank" rel="noopener noreferrer"
-             data-metrica-whatsapp="principal">
-            ${wppSvg} ${esc(L.enviar)}
-          </a>` : ""}
-
-        <div class="btn-accion-secundarios">
-          <button id="btnFavElement"
-                  class="btn-accion-prive btn-accion-fav ${favorito?"activo":""}">
-            ❤️ ${esc(L.favorito)}
-          </button>
-
-          <button id="btnShare"
-                  class="btn-accion-prive btn-accion-compartir">
-            ${esc(L.compartir)}
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <section class="prive-review-panel">
-      <h3>${esc(L.experiencias)}</h3>
-
-      <div class="review-form">
-        <div style="display:flex;justify-content:space-between;align-items:center;background:#1a1a1a;padding:10px;border:1px solid #dfc28555;border-radius:6px">
-          <span style="color:#dfc285">
-            ${esc(L.calificacion)}
-          </span>
-
-          <div class="star-rating">
-            ${[5,4,3,2,1].map(n => `
-              <input type="radio" id="star${n}"
-                     name="rating" value="${n}">
-              <label for="star${n}">★</label>
-            `).join("")}
-          </div>
-        </div>
-
-        <input id="pAuthor" type="text"
-               maxlength="70"
-               placeholder="${esc(L.nombre)}">
-
-        <textarea id="pText" rows="3"
-                  maxlength="2000"
-                  placeholder="${esc(L.comentario)}"></textarea>
-
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          ${["😊","👍","🔥","❤️","⭐"].map(e => `
-            <button type="button"
-                    class="emoji-btn"
-                    data-emoji="${e}"
-                    style="background:none;border:0;font-size:20px">
-              ${e}
-            </button>`).join("")}
-
-          <label style="margin-left:auto;color:#dfc285">
-            📎 Foto
-            <input type="file" id="pImageFile"
-                   accept="image/jpeg,image/png,image/webp"
-                   style="display:none">
-          </label>
-        </div>
-
-        <small id="pFileName" style="color:#dfc285"></small>
-
-        <button id="pSubmit" type="button"
-                class="review-submit">
-          ${esc(L.publicar)}
-        </button>
-
-        <p id="pFormStatus" role="status"
-           style="color:#dfc285;font-size:12px"></p>
-      </div>
-
-      <div id="pCommentsContainer" aria-live="polite">
-        <p class="review-status">${esc(L.cargando)}</p>
-      </div>
-    </section>
-  `;
-
-  document.getElementById("perfil-content-box").innerHTML = html;
-
-  document.getElementById("perfil-title").textContent =
-    nombre+" | Masajistas Privé";
-
-  document.querySelectorAll("[data-photo]").forEach(el => {
-    el.addEventListener("click",() => {
-      abrirFoto(Number(el.dataset.photo));
-    });
-  });
-
-  document.getElementById("btnFavElement").onclick = toggleFavorito;
-  document.getElementById("btnShare").onclick = compartirPerfil;
-  document.getElementById("pSubmit").onclick = enviarExperiencia;
-
-  document.querySelectorAll(".emoji-btn").forEach(btn => {
-    btn.onclick = () => {
-      const textarea = document.getElementById("pText");
-      textarea.value += btn.dataset.emoji;
-      textarea.focus();
-    };
-  });
-
-  document.getElementById("pImageFile").onchange = e => {
-    document.getElementById("pFileName").textContent =
-      e.target.files[0]?.name || "";
-  };
+const langs=['es','en','pt','fr'];
+const labels={
+es:{back:'Volver al Portal',verified:'✓ Privé Verificado',area:'Zona:',mode:'Modalidad:',description:'Descripción',techniques:'Técnicas de masaje:',hours:'Días y horarios:',equipment:'Equipamiento y servicios:',payments:'Medios de pago:',appointments:'Modalidad de turnos:',video:'Video de Presentación',whatsapp:'Mandame un WhatsApp',sendWhatsApp:'Enviar WhatsApp',favorite:'Favorito',saved:'Favorito guardado',share:'Compartir',copied:'¡Enlace copiado!',reviews:'Experiencias y Comentarios',rating:'Calificación:',author:'Tu nombre o apodo',review:'Escribí tu experiencia...',publish:'Enviar experiencia',loading:'Cargando experiencias...',empty:'No hay experiencias publicadas todavía.',like:'Me gusta',featured:'★ Destacado',required:'Completá tu nombre, elegí una calificación y escribí tu experiencia.',sent:'Tu experiencia fue enviada para moderación.',error:'No se pudo completar la operación.',photo:'Adjuntar foto (opcional)',pending:'Enviando...',views:'Visitas'},
+en:{back:'Back to Portal',verified:'✓ Privé Verified',area:'Area:',mode:'Modality:',description:'Description',techniques:'Massage techniques:',hours:'Days and hours:',equipment:'Equipment and services:',payments:'Payment methods:',appointments:'Appointments:',video:'Presentation Video',whatsapp:'Send me a WhatsApp',sendWhatsApp:'Send WhatsApp',favorite:'Favorite',saved:'Favorite saved',share:'Share',copied:'Link copied!',reviews:'Experiences and Reviews',rating:'Rating:',author:'Your name or nickname',review:'Write your experience...',publish:'Send experience',loading:'Loading reviews...',empty:'No published reviews yet.',like:'Like',featured:'★ Featured',required:'Enter your name, rating and review.',sent:'Your review was submitted for moderation.',error:'Unable to complete the operation.',photo:'Attach photo (optional)',pending:'Sending...',views:'Views'},
+pt:{back:'Voltar ao Portal',verified:'✓ Privé Verificado',area:'Zona:',mode:'Modalidade:',description:'Descrição',techniques:'Técnicas de massagem:',hours:'Dias e horários:',equipment:'Equipamentos e serviços:',payments:'Meios de pagamento:',appointments:'Agendamentos:',video:'Vídeo de Apresentação',whatsapp:'Mande-me um WhatsApp',sendWhatsApp:'Enviar WhatsApp',favorite:'Favorito',saved:'Favorito salvo',share:'Compartilhar',copied:'Link copiado!',reviews:'Experiências e Comentários',rating:'Avaliação:',author:'Seu nome ou apelido',review:'Escreva sua experiência...',publish:'Enviar experiência',loading:'Carregando avaliações...',empty:'Ainda não há avaliações publicadas.',like:'Curtir',featured:'★ Destaque',required:'Preencha nome, avaliação e comentário.',sent:'Sua avaliação foi enviada para moderação.',error:'Não foi possível concluir.',photo:'Anexar foto (opcional)',pending:'Enviando...',views:'Visitas'},
+fr:{back:'Retour au Portail',verified:'✓ Privé Vérifié',area:'Zone :',mode:'Modalité :',description:'Description',techniques:'Techniques de massage :',hours:'Jours et horaires :',equipment:'Équipements et services :',payments:'Modes de paiement :',appointments:'Rendez-vous :',video:'Vidéo de Présentation',whatsapp:'Envoyez-moi un WhatsApp',sendWhatsApp:'Envoyer WhatsApp',favorite:'Favori',saved:'Favori enregistré',share:'Partager',copied:'Lien copié !',reviews:'Expériences et Avis',rating:'Note :',author:'Votre nom ou pseudo',review:'Écrivez votre avis...',publish:'Envoyer un avis',loading:'Chargement des avis...',empty:'Aucun avis publié pour le moment.',like:"J'aime",featured:'★ En vedette',required:'Saisissez un nom, une note et un avis.',sent:'Votre avis a été envoyé pour modération.',error:'Opération impossible.',photo:'Joindre une photo (facultatif)',pending:'Envoi...',views:'Vues'}};
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const safeUrl=v=>{try{const u=new URL(String(v||''),location.href);return ['http:','https:'].includes(u.protocol)?u.href:''}catch{return ''}};
+function getId(){const q=new URLSearchParams(location.search).get('id');if(q)return q.trim();const last=location.pathname.split('/').filter(Boolean).pop()||'';if(last&&!/^perfil\.html?$/i.test(last))return decodeURIComponent(last.replace(/\.html?$/i,''));return ''}
+const perfilId=getId();
+let idiomaPerfil=langs.includes(localStorage.getItem('idiomaPrive'))?localStorage.getItem('idiomaPrive'):'es';
+let modelo=null,unsubscribeReviews=null,reviewItems=[],lightboxUrls=[],lightboxIndex=0;
+function t(){return labels[idiomaPerfil]||labels.es}
+function hideTransition(){const e=document.getElementById('priveTransitionScreen');e.style.opacity='0';setTimeout(()=>e.remove(),650)}
+function setLanguage(l){idiomaPerfil=l;localStorage.setItem('idiomaPrive',l);const next=langs[(langs.indexOf(l)+1)%langs.length];document.getElementById('btn-idioma').textContent=({es:'🇦🇷 ES',en:'🇺🇸 EN',pt:'🇧🇷 PT',fr:'🇫🇷 FR'})[next];document.documentElement.lang=l;if(modelo){renderProfile();renderReviews()}}
+document.getElementById('btn-idioma').addEventListener('click',()=>setLanguage(langs[(langs.indexOf(idiomaPerfil)+1)%langs.length]));
+const whatsappSvg='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M.057 24l1.687-6.163A11.8 11.8 0 0 1 .157 11.89C.16 5.34 5.49 0 12.05 0c6.55 0 11.89 5.34 11.89 11.9 0 6.56-5.34 11.89-11.89 11.89-1.99 0-3.95-.5-5.69-1.45L.057 24zm6.6-3.81c1.68 1 3.28 1.59 5.39 1.59 5.45 0 9.89-4.43 9.89-9.88 0-5.46-4.42-9.89-9.88-9.89-5.45 0-9.89 4.44-9.89 9.89 0 2.22.65 3.89 1.75 5.63l-1 3.65 3.74-.98zm11.38-5.46c-.07-.12-.27-.2-.57-.35-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.64.07-.3-.15-1.26-.46-2.39-1.48-.88-.79-1.48-1.76-1.65-2.06-.18-.3-.02-.46.13-.61.13-.13.3-.35.44-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.19 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.42z"/></svg>';
+function renderProfile(){
+const m=modelo,L=t(),tr=m.traducciones||{},x=tr[idiomaPerfil]||tr.es||{};
+const pick=(key,fall='')=>x[key]||fall;
+const description=[pick('descPerfil1',m.descripcion),pick('descPerfil2')].filter(Boolean).join('\n\n');
+const phone=String(m.whatsapp||'').replace(/\D/g,'');const whatsapp=phone?`https://wa.me/${phone}?text=${encodeURIComponent(`Hola ${m.nombre||''}, vi tu perfil en Masajistas Privé: ${location.href}`)}`:'';
+const active=m.estado!=='pausado';
+const pics=(Array.isArray(m.fotosGaleria)?m.fotosGaleria:[]).map(safeUrl).filter(Boolean);const main=safeUrl(m.fotoPrincipal)||safeUrl(m.foto)||pics[0]||'img/logo.png';
+lightboxUrls=[main,...pics.filter(p=>p!==main)];
+const details=[['valorHorarios','horarios',L.hours],['valorEquipamiento','equipamiento',L.equipment],['valorPagos','pagos',L.payments],['valorTurnos','turnos',L.appointments]].map(([key,fallback,label])=>{const value=pick(key,m[fallback]||'');return value?`<div class="detalle-item"><span>${esc(label)}</span> <span>${esc(value)}</span></div>`:''}).join('');
+const favs=readFavs(),isFav=favs.includes(perfilId);
+document.getElementById('contenedorWppFlotante').innerHTML=active&&whatsapp?`<a href="${esc(whatsapp)}" target="_blank" rel="noopener noreferrer" class="btn-whatsapp-flotante" data-metrica-whatsapp="flotante">${whatsappSvg}<span>${esc(L.whatsapp)}</span></a>`:'';
+document.getElementById('perfil-content-box').innerHTML=`
+<div class="perfil-galeria-grid"><img src="${esc(main)}" alt="${esc(m.nombre)}" class="foto-principal" id="fotoPrincipal" data-photo="0" fetchpriority="high" decoding="async"><div class="galeria-miniaturas">${lightboxUrls.map((p,i)=>`<img src="${esc(p)}" alt="${esc(m.nombre)} ${i+1}" data-photo="${i}" loading="lazy" decoding="async">`).join('')}</div></div>
+<div class="perfil-info"><div class="perfil-titulo-seccion"><h2>${esc(m.nombre)}</h2><span class="badge-verificado">${esc(L.verified)}</span></div>
+<p class="perfil-ubicacion">📍 ${esc(L.area)} <strong>${esc(pick('valorZona',m.zona))}</strong></p><p class="perfil-modalidad">🏠 ${esc(L.mode)} <strong>${esc(pick('valorModalidad',m.modalidad))}</strong></p>
+<div class="perfil-descripcion"><h3>${esc(L.description)}</h3><p style="white-space:pre-line">${esc(description)}</p>${pick('valorTecnicas')?`<div style="color:#94a3b8;font-size:.9rem"><strong>${esc(L.techniques)}</strong> ${esc(pick('valorTecnicas'))}</div>`:''}</div>
+${safeUrl(m.videoPresentacion)?`<div class="perfil-descripcion" style="margin-top:20px"><h3>🎥 ${esc(L.video)}</h3><video controls playsinline preload="none" controlslist="nodownload" style="width:100%;max-height:350px;border-radius:8px;background:#000"><source src="${esc(safeUrl(m.videoPresentacion))}" type="video/mp4"></video></div>`:''}
+${details?`<div class="perfil-detalles">${details}</div>`:''}
+<div class="perfil-acciones-inferior">${active&&whatsapp?`<a href="${esc(whatsapp)}" target="_blank" rel="noopener noreferrer" class="btn-accion-prive btn-accion-wpp" data-metrica-whatsapp="principal">${whatsappSvg}<span>${esc(L.sendWhatsApp)}</span></a>`:''}<div class="btn-accion-secundarios"><button type="button" id="btnFavElement" class="btn-accion-prive btn-accion-fav ${isFav?'activo':''}">❤️ ${esc(isFav?L.saved:L.favorite)}</button><button type="button" id="btnShare" class="btn-accion-prive btn-accion-compartir">↗ ${esc(L.share)}</button></div></div></div>
+<section class="prive-review-panel"><h3>${esc(L.reviews)}</h3><div class="review-form"><div style="display:flex;justify-content:space-between;align-items:center;background:#1a1a1a;border:1px solid #dfc28555;padding:10px;border-radius:6px"><span style="color:#dfc285;font-size:13px">${esc(L.rating)}</span><div class="star-rating">${[5,4,3,2,1].map(n=>`<input type="radio" id="star${n}" name="rating" value="${n}"><label for="star${n}" title="${n} estrellas">★</label>`).join('')}</div></div><input type="text" id="pAuthor" maxlength="70" placeholder="${esc(L.author)}"><textarea id="pText" rows="3" maxlength="2000" placeholder="${esc(L.review)}"></textarea><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">${['😊','👍','🔥','❤️','⭐'].map(e=>`<button type="button" class="emoji-btn" data-emoji="${e}" style="background:none;border:0;font-size:20px;cursor:pointer">${e}</button>`).join('')}<label style="margin-left:auto;color:#dfc285;cursor:pointer">📎 ${esc(L.photo)} <input type="file" id="pImageFile" accept="image/jpeg,image/png,image/webp" style="display:none"></label></div><small id="pFileName" style="color:#dfc285"></small><button type="button" class="review-submit" id="pSubmit">${esc(L.publish)}</button><p id="pFormStatus" role="status" style="color:#dfc285;font-size:12px;margin:0"></p></div><div id="pCommentsContainer" aria-live="polite"><p class="review-status">${esc(L.loading)}</p></div></section>`;
+document.getElementById('perfil-title').textContent=`${m.nombre||'Perfil'} | Masajistas Privé`;
+document.querySelectorAll('[data-photo]').forEach(el=>el.addEventListener('click',()=>openLightbox(Number(el.dataset.photo))));
+document.getElementById('btnFavElement').addEventListener('click',toggleFavorite);
+document.getElementById('btnShare').addEventListener('click',shareProfile);
+document.querySelectorAll('.emoji-btn').forEach(b=>b.addEventListener('click',()=>{const el=document.getElementById('pText');el.value+=b.dataset.emoji;el.focus()}));
+document.getElementById('pImageFile').addEventListener('change',e=>document.getElementById('pFileName').textContent=e.target.files[0]?.name||'');
+document.getElementById('pSubmit').addEventListener('click',submitReview);
 }
-
-/* CLICS WHATSAPP: INCLUYE BOTÓN FLOTANTE */
-
-document.addEventListener("click",evento => {
-  const enlace = evento.target.closest("[data-metrica-whatsapp]");
-  if (!enlace) return;
-
-  registrarClickWhatsApp(
-    enlace.dataset.metricaWhatsapp || "desconocido"
-  );
-});
-
-/* EXPERIENCIAS APROBADAS */
-
-function escucharExperiencias() {
-  if (unsubscribeReviews) unsubscribeReviews();
-
-  const contenedor = document.getElementById("pCommentsContainer");
-  contenedor.innerHTML =
-    `<p class="review-status">${esc(T().cargando)}</p>`;
-
-  unsubscribeReviews = db
-    .collection("perfiles_comentarios")
-    .doc(perfilId)
-    .collection("mensajes")
-    .where("aprobado","==",true)
-    .onSnapshot(snapshot => {
-      reviewItems = snapshot.docs.map(doc => ({
-        id:doc.id,
-        ...doc.data()
-      }));
-      mostrarExperiencias();
-    }, error => {
-      console.error("Error experiencias:",error);
-
-      const el = document.getElementById("pCommentsContainer");
-      if (el) {
-        el.innerHTML =
-          `<p class="prive-error">
-            No se pudieron cargar las experiencias.
-            (${esc(error.code || "error")})
-          </p>`;
-      }
-    });
-}
-
-function mostrarExperiencias() {
-  const contenedor = document.getElementById("pCommentsContainer");
-  if (!contenedor) return;
-
-  const L = T();
-  contenedor.replaceChildren();
-
-  if (!reviewItems.length) {
-    contenedor.innerHTML =
-      `<p class="review-status">${esc(L.vacio)}</p>`;
-    return;
-  }
-
-  const lista = [...reviewItems].sort((a,b) => {
-    const scoreA = (a.likes||0)+(a.image?5:0);
-    const scoreB = (b.likes||0)+(b.image?5:0);
-
-    if (scoreB!==scoreA) return scoreB-scoreA;
-
-    return (b.fecha?.toMillis?.()||0)-
-           (a.fecha?.toMillis?.()||0);
-  });
-
-  lista.forEach(data => {
-    const rating = Math.max(1,Math.min(5,Number(data.rating)||5));
-    const likes = Math.max(0,Number(data.likes)||0);
-    const fecha = data.fecha?.toDate?.();
-    const fechaTexto = fecha ?
-      fecha.toLocaleString("es-AR") : "";
-
-    const foto = safeUrl(data.image);
-
-    const div = document.createElement("article");
-    div.className = "review-item";
-
-    div.innerHTML = `
-      <div class="review-top">
-        <strong>${esc(data.autor || "Anónimo")}</strong>
-        <span>
-          ${"★".repeat(rating)}${"☆".repeat(5-rating)}
-        </span>
-      </div>
-
-      <p>${esc(data.contenido)}</p>
-
-      ${foto ? `
-        <img src="${esc(foto)}"
-             alt="Fotografía adjunta"
-             loading="lazy">` : ""}
-
-      <small style="color:#888">
-        ${esc(fechaTexto)}
-      </small>
-
-      <div class="review-actions">
-        <button type="button" class="review-like">
-          👍 ${esc(L.gusta)} (${likes})
-        </button>
-
-        ${foto ? `<span style="color:#dfc285;font-size:10px">★ Destacado</span>` : ""}
-      </div>
-    `;
-
-    div.querySelector(".review-like").onclick =
-      () => darLike(data.id);
-
-    contenedor.appendChild(div);
-  });
-}
-
-/* LIKES: REQUIEREN PERMISOS SEGUROS */
-
-async function darLike(id) {
-  const clave = `priveLike:${perfilId}:${id}`;
-
-  if (localStorage.getItem(clave)) {
-    alert("Ya registraste tu Me gusta.");
-    return;
-  }
-
-  try {
-    await db.collection("perfiles_comentarios")
-      .doc(perfilId)
-      .collection("mensajes")
-      .doc(id)
-      .update({
-        likes:firebase.firestore.FieldValue.increment(1)
-      });
-
-    localStorage.setItem(clave,"1");
-  } catch(error) {
-    console.error("Error like:",error);
-    alert("No se pudo registrar el Me gusta. Falta configurar el permiso seguro.");
-  }
-}
-
-/* COMPRESIÓN DE FOTOGRAFÍAS */
-
-function comprimirImagen(file) {
-  return new Promise((resolve,reject) => {
-    if (!file) return resolve("");
-
-    if (!["image/jpeg","image/png","image/webp"].includes(file.type)) {
-      return reject(new Error("Formato de imagen no admitido"));
-    }
-
-    if (file.size > 8*1024*1024) {
-      return reject(new Error("La imagen supera los 8 MB"));
-    }
-
-    const imagen = new Image();
-    const url = URL.createObjectURL(file);
-
-    imagen.onload = () => {
-      try {
-        const escala = Math.min(
-          1,500/Math.max(imagen.width,imagen.height)
-        );
-
-        const canvas = document.createElement("canvas");
-        canvas.width = Math.max(1,Math.round(imagen.width*escala));
-        canvas.height = Math.max(1,Math.round(imagen.height*escala));
-
-        canvas.getContext("2d").drawImage(
-          imagen,0,0,canvas.width,canvas.height
-        );
-
-        const resultado = canvas.toDataURL("image/jpeg",.7);
-        URL.revokeObjectURL(url);
-
-        if (resultado.length > 850000) {
-          reject(new Error("La fotografía comprimida es demasiado grande"));
-        } else {
-          resolve(resultado);
-        }
-      } catch(error) {
-        URL.revokeObjectURL(url);
-        reject(error);
-      }
-    };
-
-    imagen.onerror = () => {
-      URL.revokeObjectURL(url);
-      reject(new Error("No se pudo procesar la imagen"));
-    };
-
-    imagen.src = url;
-  });
-}
-
-/* ENVIAR EXPERIENCIAS A MODERACIÓN */
-
-async function enviarExperiencia() {
-  const autor = document.getElementById("pAuthor").value.trim();
-  const contenido = document.getElementById("pText").value.trim();
-  const rating = document.querySelector('input[name="rating"]:checked');
-
-  const boton = document.getElementById("pSubmit");
-  const estado = document.getElementById("pFormStatus");
-
-  if (!autor || !contenido || !rating) {
-    alert("Completá tu nombre, elegí estrellas y escribí tu experiencia.");
-    return;
-  }
-
-  boton.disabled = true;
-  boton.textContent = "Enviando...";
-  estado.textContent = "";
-
-  try {
-    const archivo = document.getElementById("pImageFile").files[0];
-    const imagen = await comprimirImagen(archivo);
-
-    await db.collection("perfiles_comentarios")
-      .doc(perfilId)
-      .collection("mensajes")
-      .add({
-        autor:autor,
-        contenido:contenido,
-        rating:Number(rating.value),
-        image:imagen,
-        likes:0,
-        aprobado:false,
-        fecha:firebase.firestore.FieldValue.serverTimestamp()
-      });
-
-    document.getElementById("pAuthor").value = "";
-    document.getElementById("pText").value = "";
-    document.getElementById("pImageFile").value = "";
-    document.getElementById("pFileName").textContent = "";
-    rating.checked = false;
-
-    estado.textContent = T().enviado;
-    alert(T().enviado);
-
-  } catch(error) {
-    console.error("Error enviando experiencia:",error);
-    estado.textContent =
-      "No se pudo enviar la experiencia: "+
-      (error.code || error.message);
-  } finally {
-    boton.disabled = false;
-    boton.textContent = T().publicar;
-  }
-}
-
-/* CARGAR PERFIL Y REGISTRAR VISITA */
-
-async function cargarPerfil() {
-  const contenedor = document.getElementById("perfil-content-box");
-
-  if (!perfilId) {
-    contenedor.innerHTML =
-      `<p class="prive-error">
-        Falta el identificador del perfil.
-        Abrí el perfil desde el portal.
-      </p>`;
-    ocultarTransicion();
-    return;
-  }
-
-  try {
-    const doc = await db.collection("modelos_prive")
-      .doc(perfilId)
-      .get();
-
-    if (!doc.exists) {
-      contenedor.innerHTML =
-        `<p class="prive-error">
-          No existe el perfil ${esc(perfilId)} en Firebase.
-        </p>`;
-      return;
-    }
-
-    modelo = doc.data();
-
-    renderizarPerfil();
-    escucharExperiencias();
-
-    /* Una visita por carga correcta de la página */
-    registrarVisitaPerfil();
-
-  } catch(error) {
-    console.error("Error cargando perfil:",error);
-
-    contenedor.innerHTML =
-      `<p class="prive-error">
-        Error al cargar el perfil:
-        ${esc(error.code || error.message)}
-      </p>`;
-  } finally {
-    ocultarTransicion();
-  }
-}
-
-actualizarBotonIdioma();
-cargarPerfil();
-
+function readFavs(){try{const a=JSON.parse(localStorage.getItem('priveFavoritos')||'[]');return Array.isArray(a)?a:[]}catch{return []}}
+function toggleFavorite(){const f=readFavs(),i=f.indexOf(perfilId);if(i>=0)f.splice(i,1);else f.push(perfilId);localStorage.setItem('priveFavoritos',JSON.stringify(f));const b=document.getElementById('btnFavElement');b.classList.toggle('activo',i<0);b.textContent='❤️ '+(i<0?t().saved:t().favorite)}
+async function shareProfile(){if(navigator.share){try{await navigator.share({title:`${modelo.nombre} | Masajistas Privé`,url:location.href});registrarMetrica('perfil_compartido',{metodo:'compartir_nativo'})}catch{}}else{try{await navigator.clipboard.writeText(location.href);registrarMetrica('perfil_compartido',{metodo:'copiar_enlace'});alert(t().copied)}catch{prompt('Copiá este enlace:',location.href)}}}
+function openLightbox(i){if(!lightboxUrls.length)return;lightboxIndex=(i+lightboxUrls.length)%lightboxUrls.length;document.getElementById('priveLightboxImg').src=lightboxUrls[lightboxIndex];document.getElementById('priveLightbox').style.display='flex';registrarMetrica('foto_abierta',{foto_numero:lightboxIndex+1})}
+function moveLightbox(d){openLightbox(lightboxIndex+d)}
+function closeLightbox(){document.getElementById('priveLightbox').style.display='none'}
+document.getElementById('priveLbPrev').addEventListener('click',()=>moveLightbox(-1));document.getElementById('priveLbNext').addEventListener('click',()=>moveLightbox(1));document.getElementById('priveLbClose').addEventListener('click',closeLightbox);document.getElementById('priveLightbox').addEventListener('click',e=>{if(e.target.id==='priveLightbox')closeLightbox()});document.addEventListener('keydown',e=>{if(document.getElementById('priveLightbox').style.display!=='flex')return;if(e.key==='Escape')closeLightbox();if(e.key==='ArrowRight')moveLightbox(1);if(e.key==='ArrowLeft')moveLightbox(-1)});
+let touchX=0;document.getElementById('priveLightbox').addEventListener('touchstart',e=>{touchX=e.changedTouches[0].screenX},{passive:true});document.getElementById('priveLightbox').addEventListener('touchend',e=>{const dx=e.changedTouches[0].screenX-touchX;if(Math.abs(dx)>40)moveLightbox(dx<0?1:-1)},{passive:true});
+function listenReviews(){if(unsubscribeReviews)unsubscribeReviews();const el=document.getElementById('pCommentsContainer');el.innerHTML=`<p class="review-status">${esc(t().loading)}</p>`;
+// La consulta debe filtrar aprobados: las reglas de Firestore no filtran resultados.
+unsubscribeReviews=db.collection('perfiles_comentarios').doc(perfilId).collection('mensajes').where('aprobado','==',true).onSnapshot(snap=>{reviewItems=snap.docs.map(d=>({id:d.id,...d.data()}));renderReviews()},err=>{console.error('Error al cargar experiencias:',err);const e=document.getElementById('pCommentsContainer');if(e)e.innerHTML=`<p class="prive-error">No se pudieron cargar las experiencias (${esc(err.code||'error')}). Revisá las reglas de Firestore.</p>`});}
+function renderReviews(){const container=document.getElementById('pCommentsContainer');if(!container)return;const L=t();container.replaceChildren();if(!reviewItems.length){container.innerHTML=`<p class="review-status">${esc(L.empty)}</p>`;return}
+const items=[...reviewItems].sort((a,b)=>((b.likes||0)+(b.image?5:0))-((a.likes||0)+(a.image?5:0))||(b.fecha?.toMillis?.()||0)-(a.fecha?.toMillis?.()||0));
+items.forEach(data=>{const stars=Math.max(1,Math.min(5,Number(data.rating)||5));const likes=Math.max(0,Number(data.likes)||0);const date=data.fecha?.toDate?.();const when=date?date.toLocaleString(idiomaPerfil==='es'?'es-AR':idiomaPerfil):'';const div=document.createElement('article');div.className='review-item';div.innerHTML=`<div class="review-top"><strong>${esc(data.autor||'Anónimo')}</strong><span>${'★'.repeat(stars)}${'☆'.repeat(5-stars)}</span></div><p>${esc(data.contenido)}</p>${safeUrl(data.image)?`<img src="${esc(safeUrl(data.image))}" alt="Foto adjunta" loading="lazy">`:''}<small style="color:#888">${esc(when)}</small><div class="review-actions"><button type="button" class="review-like">👍 ${esc(L.like)} (${likes})</button>${data.image?`<span style="color:#dfc285;font-size:10px">${esc(L.featured)}</span>`:''}</div>`;div.querySelector('.review-like').addEventListener('click',()=>likeReview(data.id));container.appendChild(div)})}
+async function likeReview(id){const key=`priveLike:${perfilId}:${id}`;if(localStorage.getItem(key))return;const button=[...document.querySelectorAll('.review-like')].find(b=>b.closest('article')===document.activeElement?.closest('article'));if(button)button.disabled=true;try{await db.collection('perfiles_comentarios').doc(perfilId).collection('mensajes').doc(id).update({likes:firebase.firestore.FieldValue.increment(1)});localStorage.setItem(key,'1')}catch(err){console.error('Like bloqueado:',err);alert('No se pudo registrar el Me gusta. Requiere una operación segura en el servidor.')}finally{if(button)button.disabled=false}}
+function compressPhoto(file){return new Promise((resolve,reject)=>{if(!file){resolve('');return}if(!['image/jpeg','image/png','image/webp'].includes(file.type)){reject(new Error('Formato de imagen no admitido'));return}if(file.size>8*1024*1024){reject(new Error('La imagen supera los 8 MB'));return}const img=new Image();const url=URL.createObjectURL(file);img.onload=()=>{try{const scale=Math.min(1,500/Math.max(img.width,img.height));const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);const data=canvas.toDataURL('image/jpeg',.7);URL.revokeObjectURL(url);if(data.length>850000)reject(new Error('La imagen comprimida es demasiado grande'));else resolve(data)}catch(e){URL.revokeObjectURL(url);reject(e)}};img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('No se pudo leer la imagen'))};img.src=url})}
+async function submitReview(){const L=t(),author=document.getElementById('pAuthor').value.trim(),content=document.getElementById('pText').value.trim(),rating=document.querySelector('input[name="rating"]:checked'),button=document.getElementById('pSubmit'),status=document.getElementById('pFormStatus');if(!author||!content||!rating){alert(L.required);return}button.disabled=true;button.textContent=L.pending;status.textContent='';try{const image=await compressPhoto(document.getElementById('pImageFile').files[0]);await db.collection('perfiles_comentarios').doc(perfilId).collection('mensajes').add({autor:author,contenido:content,rating:Number(rating.value),image,likes:0,aprobado:false,fecha:firebase.firestore.FieldValue.serverTimestamp()});document.getElementById('pAuthor').value='';document.getElementById('pText').value='';document.getElementById('pImageFile').value='';document.getElementById('pFileName').textContent='';rating.checked=false;status.textContent=L.sent;alert(L.sent)}catch(e){console.error('Error al enviar experiencia:',e);status.textContent=`${L.error} (${e.code||e.message}). Las reglas deben permitir la creación controlada de comentarios pendientes.`}finally{button.disabled=false;button.textContent=L.publish}}
+async function loadProfile(){const box=document.getElementById('perfil-content-box');if(!perfilId){box.innerHTML='<p class="prive-error">Falta el ID del perfil en la dirección. Usá perfil.htm?id=nombre-del-perfil.</p>';hideTransition();return}try{const doc=await db.collection('modelos_prive').doc(perfilId).get();if(!doc.exists){box.innerHTML=`<p class="prive-error">No existe el perfil ${esc(perfilId)} en Firebase.</p>`;return}modelo=doc.data();renderProfile();listenReviews();registrarVisitaPerfil();}catch(err){console.error('Error al cargar perfil:',err);box.innerHTML=`<p class="prive-error">No se pudo cargar el perfil (${esc(err.code||err.message)}).</p>`}finally{hideTransition()}}
+setLanguage(idiomaPerfil);loadProfile();
 </script>
 </body>
 </html>
