@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title id="main-title">Masajistas Privé | Portal Exclusivo de Relax y Masajes en CABA</title>
+<title>Masajistas Privé | Portal Exclusivo de Relax y Masajes en CABA</title>
 <meta name="description" content="Portal exclusivo de masajistas independientes y servicios de relax en CABA. Encontrá profesionales verificados, gabinetes y atención a domicilio.">
 <meta name="keywords" content="masajistas caba, masajes descontracturantes, masajistas independientes, relax buenos aires, masajes terapéuticos">
 <meta property="og:title" content="Masajistas Privé | Portal Exclusivo de Relax en CABA">
@@ -13,7 +12,6 @@
 <meta property="og:url" content="https://masajistasprive.com">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#0d0d0d">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
@@ -26,1087 +24,106 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Masajistas Privé">
-
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DXX740HP41"></script>
-<script>
-window.dataLayer=window.dataLayer||[];
-function gtag(){dataLayer.push(arguments);}
-gtag('js',new Date());
-gtag('config','G-DXX740HP41');
-</script>
-
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-DXX740HP41');</script>
 <style>
-#priveTransitionScreen {
-    position:fixed;
-    inset:0;
-    background:#0d0d0d;
-    z-index:9999999;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    transition:opacity .35s ease;
-}
-.prive-transition-logo {
-    text-align:center;
-    opacity:.35;
-    animation:pulsePrive 1.5s infinite alternate;
-}
-@keyframes pulsePrive {
-    from {opacity:.2;transform:scale(.98)}
-    to {opacity:.5;transform:scale(1.02)}
-}
-.container {
-    width:100%!important;
-    box-sizing:border-box!important;
-    padding-left:12px!important;
-    padding-right:12px!important;
-    margin:0 auto!important;
-}
-.grid-perfiles {
-    display:grid!important;
-    grid-template-columns:repeat(2,minmax(0,1fr))!important;
-    gap:10px!important;
-    width:100%!important;
-    box-sizing:border-box!important;
-}
-.grid-perfiles .card-link {
-    width:100%!important;
-    display:block!important;
-    box-sizing:border-box!important;
-}
-.grid-perfiles .card {
-    height:100%!important;
-    min-height:unset!important;
-    display:flex!important;
-    flex-direction:column!important;
-    background:#0d0d0d!important;
-    border-radius:12px!important;
-    overflow:hidden!important;
-    border:1px solid rgba(223,194,133,.2)!important;
-    width:100%!important;
-    box-sizing:border-box!important;
-}
-.grid-perfiles .card-image {
-    width:100%!important;
-    position:relative!important;
-    aspect-ratio:3/4!important;
-}
-.grid-perfiles .card-image img {
-    width:100%!important;
-    height:100%!important;
-    object-fit:cover!important;
-}
-.prive-card-info-box {display:none}
-body.modo-tarjeta-alternativo .grid-perfiles {
-    display:flex!important;
-    flex-direction:column!important;
-    gap:20px!important;
-}
-body.modo-tarjeta-alternativo .grid-perfiles .card-link {
-    width:100%!important;
-    display:block!important;
-}
-body.modo-tarjeta-alternativo .grid-perfiles .card {
-    height:auto!important;
-    min-height:auto!important;
-    background:#0d0d0d!important;
-    border:1px solid rgba(223,194,133,.4)!important;
-    border-radius:12px!important;
-    overflow:hidden!important;
-    box-shadow:0 4px 20px rgba(0,0,0,.85)!important;
-    display:flex!important;
-    flex-direction:column!important;
-    padding:0!important;
-}
-body.modo-tarjeta-alternativo .grid-perfiles .card-image {
-    width:100%!important;
-    height:380px!important;
-    position:relative!important;
-    aspect-ratio:unset!important;
-}
-body.modo-tarjeta-alternativo .grid-perfiles .card-image img {
-    width:100%!important;
-    height:100%!important;
-    object-fit:cover!important;
-}
-body.modo-tarjeta-alternativo .grid-perfiles .badge-verificado {
-    top:12px!important;
-    left:12px!important;
-    background:rgba(0,0,0,.85)!important;
-    border:1px solid #dfc285!important;
-    color:#dfc285!important;
-    padding:4px 10px;
-    border-radius:4px;
-    font-size:11px;
-    z-index:10;
-    position:absolute!important;
-}
-body.modo-tarjeta-alternativo .grid-perfiles .card-gradient-overlay {
-    display:none!important;
-}
-body.modo-tarjeta-alternativo .prive-card-info-box {
-    display:block!important;
-    background:#0d0d0d;
-    padding:15px;
-    border-top:1px solid rgba(223,194,133,.2);
-}
-body.modo-tarjeta-alternativo .prive-barra-clasica {
-    display:none!important;
-}
-.prive-card-nombre {
-    font-size:1.2rem;
-    color:#fff;
-    font-family:'Cormorant Garamond',serif;
-    font-weight:600;
-    margin-bottom:2px;
-    text-transform:uppercase;
-    letter-spacing:1px;
-}
-.prive-card-detalles {
-    font-size:.75rem;
-    color:#dfc285;
-    text-transform:uppercase;
-    letter-spacing:1px;
-    margin-bottom:12px;
-}
-.prive-card-actions {
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-}
-.prive-btn-accion {
-    padding:10px;
-    border-radius:6px;
-    font-size:.7rem;
-    text-transform:uppercase;
-    letter-spacing:1.5px;
-    font-weight:600;
-    text-align:center;
-    text-decoration:none;
-    cursor:pointer;
-    font-family:'Montserrat',sans-serif;
-}
-.prive-btn-perfil {
-    background:transparent;
-    border:1px solid rgba(223,194,133,.4);
-    color:#fff;
-}
-.prive-btn-ws {
-    background:linear-gradient(135deg,#dfc285,#b89751);
-    border:none;
-    color:#0d0d0d;
-    box-shadow:0 0 10px rgba(223,194,133,.3);
-    font-weight:700;
-}
-.grid-perfiles .card-image img,
-.story-ring img {
-    content-visibility:auto;
-}
+#priveTransitionScreen{position:fixed;inset:0;background:#0d0d0d;z-index:9999999;display:flex;justify-content:center;align-items:center;transition:opacity .35s ease}
+.prive-transition-logo{text-align:center;opacity:.35;animation:pulsePrive 1.5s infinite alternate}
+@keyframes pulsePrive{from{opacity:.2;transform:scale(.98)}to{opacity:.5;transform:scale(1.02)}}
+.container{width:100%!important;box-sizing:border-box!important;padding-left:12px!important;padding-right:12px!important;margin:0 auto!important}
+.grid-perfiles{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;width:100%!important;box-sizing:border-box!important}
+.grid-perfiles .card-link{width:100%!important;display:block!important;box-sizing:border-box!important}
+.grid-perfiles .card{height:100%!important;min-height:unset!important;display:flex!important;flex-direction:column!important;background:#0d0d0d!important;border-radius:12px!important;overflow:hidden!important;border:1px solid rgba(223,194,133,.2)!important;width:100%!important;box-sizing:border-box!important}
+.grid-perfiles .card-image{width:100%!important;position:relative!important;aspect-ratio:3/4!important}
+.grid-perfiles .card-image img{width:100%!important;height:100%!important;object-fit:cover!important}
+.prive-card-info-box{display:none}
+body.modo-tarjeta-alternativo .grid-perfiles{display:flex!important;flex-direction:column!important;gap:20px!important}
+body.modo-tarjeta-alternativo .grid-perfiles .card-link{width:100%!important;display:block!important}
+body.modo-tarjeta-alternativo .grid-perfiles .card{height:auto!important;min-height:auto!important;background:#0d0d0d!important;border:1px solid rgba(223,194,133,.4)!important;border-radius:12px!important;overflow:hidden!important;box-shadow:0 4px 20px rgba(0,0,0,.85)!important;display:flex!important;flex-direction:column!important;padding:0!important}
+body.modo-tarjeta-alternativo .grid-perfiles .card-image{width:100%!important;height:380px!important;position:relative!important;aspect-ratio:unset!important}
+body.modo-tarjeta-alternativo .grid-perfiles .card-image img{width:100%!important;height:100%!important;object-fit:cover!important}
+body.modo-tarjeta-alternativo .grid-perfiles .badge-verificado{top:12px!important;left:12px!important;background:rgba(0,0,0,.85)!important;border:1px solid #dfc285!important;color:#dfc285!important;padding:4px 10px;border-radius:4px;font-size:11px;z-index:10;position:absolute!important}
+body.modo-tarjeta-alternativo .grid-perfiles .card-gradient-overlay{display:none!important}
+body.modo-tarjeta-alternativo .prive-card-info-box{display:block!important;background:#0d0d0d;padding:15px;border-top:1px solid rgba(223,194,133,.2)}
+body.modo-tarjeta-alternativo .prive-barra-clasica{display:none!important}
+.prive-card-nombre{font-size:1.2rem;color:#fff;font-family:'Cormorant Garamond',serif;font-weight:600;margin-bottom:2px;text-transform:uppercase;letter-spacing:1px}
+.prive-card-detalles{font-size:.75rem;color:#dfc285;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.prive-card-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.prive-btn-accion{padding:10px;border-radius:6px;font-size:.7rem;text-transform:uppercase;letter-spacing:1.5px;font-weight:600;text-align:center;text-decoration:none;cursor:pointer;font-family:'Montserrat',sans-serif}
+.prive-btn-perfil{background:transparent;border:1px solid rgba(223,194,133,.4);color:#fff}
+.prive-btn-ws{background:linear-gradient(135deg,#dfc285,#b89751);border:none;color:#0d0d0d;box-shadow:0 0 10px rgba(223,194,133,.3);font-weight:700}
+.grid-perfiles .card-image img,.story-ring img{content-visibility:auto}
 </style>
 </head>
 <body>
-
-<div id="priveTransitionScreen">
-    <div class="prive-transition-logo">
-        <img src="img/logo.png" alt="Masajistas Privé - Portal Exclusivo" width="220" style="max-width:220px;width:60vw;display:block;margin:0 auto">
-        <span style="display:block;color:#dfc285;font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:4px;margin-top:10px;text-transform:uppercase">Masajistas Privé</span>
-    </div>
-</div>
-
-<div id="modal-edad" class="modal-edad-overlay">
-    <div class="modal-edad-content">
-        <h2 data-i18n="brandName">MASAJISTAS PRIVÉ</h2>
-        <p data-i18n="modalEdadTexto">Este sitio web contiene material exclusivo para adultos (+18) y servicios de relax independientes. Debes ser mayor de edad para ingresar.</p>
-        <div class="modal-edad-botones">
-            <button id="btn-mayor" class="btn-ingresar" data-i18n="btnMayor">Soy mayor de 18 años</button>
-            <a href="https://www.google.com" class="btn-salir" data-i18n="btnSalir">Salir</a>
-        </div>
-    </div>
-</div>
-
-<header class="header-prive">
-    <div class="header-left" style="display:none!important"></div>
-    <div class="header-center">
-        <img src="img/logo.png" alt="Logo Masajistas Privé" class="header-logo-grande" fetchpriority="high">
-    </div>
-    <div class="header-right" style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
-        <button id="btn-idioma" onclick="cambiarIdioma()" style="background:rgba(223,194,133,.12);border:1px solid #dfc285;color:#dfc285;padding:7px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;font-family:Montserrat,sans-serif;letter-spacing:1.5px;box-shadow:0 4px 10px rgba(0,0,0,.4)">🇺🇸 EN</button>
-        <a href="foro.html" class="btn-foro-prive">
-            <span>💬 FORO</span>
-            <span>MASAJISTAS PRIVÉ</span>
-        </a>
-    </div>
-</header>
-
-<div class="clima-card" style="background:#141414;border:1px solid rgba(223,194,133,.25);border-radius:10px;padding:15px 20px;max-width:900px;margin:20px auto 0;text-align:center;font-family:Montserrat,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.5)">
-    <span style="color:#dfc285;font-size:11px;text-transform:uppercase;letter-spacing:2px" data-i18n="climaTitulo">Clima en Directo</span>
-    <div id="clima-info" style="color:#ccc;font-size:14px;margin-top:5px">Buenos Aires (CABA) — <span data-i18n="cargando">Cargando clima...</span></div>
-</div>
-
-<div class="destacadas-container-wrapper">
-    <h3 class="destacadas-titulo" data-i18n="destacadasTitulo">Destacadas</h3>
-    <div class="stories-container" id="stories-destacadas-container"></div>
-</div>
-
-<nav class="pills-container">
-    <button class="pill-btn active" data-filter="todas" data-i18n="filtroTodas">Todas</button>
-    <button class="pill-btn" data-filter="terapeuticas" data-i18n="filtroTerapeuticas">Terapéuticas</button>
-    <button class="pill-btn" data-filter="sensuales" data-i18n="filtroSensuales">Sensuales</button>
-    <button class="pill-btn" data-filter="fantasias" data-i18n="filtroFantasias">Fantasías</button>
-</nav>
-
-<div style="max-width:900px;margin:15px auto 0;padding:0 4%;text-align:center">
-    <button class="pill-btn" data-filter="favoritos" style="background:rgba(223,194,133,.12);border:1px solid #dfc285;color:#dfc285;width:100%;max-width:280px;font-weight:600;box-shadow:0 4px 15px rgba(223,194,133,.15)">⭐ Mis Favoritas</button>
-</div>
-
-<div style="max-width:900px;margin:15px auto 0;padding:0 4%;text-align:center">
-    <button id="btnAlternarEstilo" onclick="toggleEstiloVisual()" style="background:rgba(223,194,133,.15);border:1px solid #dfc285;color:#dfc285;padding:8px 20px;border-radius:20px;cursor:pointer;font-size:11px;font-weight:600;font-family:Montserrat,sans-serif;text-transform:uppercase;letter-spacing:1.5px;box-shadow:0 4px 12px rgba(223,194,133,.2)">✨ Cambiar a Estilo Tarjeta Grande</button>
-</div>
-
+<div id="priveTransitionScreen"><div class="prive-transition-logo"><img src="img/logo.png" alt="Masajistas Privé - Portal Exclusivo" width="220" style="max-width:220px;width:60vw;display:block;margin:0 auto"><span style="display:block;color:#dfc285;font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:4px;margin-top:10px;text-transform:uppercase">Masajistas Privé</span></div></div>
+<div id="modal-edad" class="modal-edad-overlay"><div class="modal-edad-content"><h2 data-i18n="brandName">MASAJISTAS PRIVÉ</h2><p data-i18n="modalEdadTexto">Este sitio web contiene material exclusivo para adultos (+18) y servicios de relax independientes. Debes ser mayor de edad para ingresar.</p><div class="modal-edad-botones"><button id="btn-mayor" class="btn-ingresar" data-i18n="btnMayor">Soy mayor de 18 años</button><a href="https://www.google.com" class="btn-salir" data-i18n="btnSalir">Salir</a></div></div></div>
+<header class="header-prive"><div class="header-left" style="display:none!important"></div><div class="header-center"><img src="img/logo.png" alt="Logo Masajistas Privé" class="header-logo-grande" fetchpriority="high"></div><div class="header-right" style="display:flex;flex-direction:column;align-items:flex-end;gap:8px"><button id="btn-idioma" onclick="cambiarIdioma()" style="background:rgba(223,194,133,.12);border:1px solid #dfc285;color:#dfc285;padding:7px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;font-family:Montserrat,sans-serif;letter-spacing:1.5px;box-shadow:0 4px 10px rgba(0,0,0,.4)">🇺🇸 EN</button><a href="foro.html" class="btn-foro-prive"><span>💬 FORO</span><span>MASAJISTAS PRIVÉ</span></a></div></header>
+<div class="clima-card" style="background:#141414;border:1px solid rgba(223,194,133,.25);border-radius:10px;padding:15px 20px;max-width:900px;margin:20px auto 0;text-align:center;font-family:Montserrat,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.5)"><span style="color:#dfc285;font-size:11px;text-transform:uppercase;letter-spacing:2px" data-i18n="climaTitulo">Clima en Directo</span><div id="clima-info" style="color:#ccc;font-size:14px;margin-top:5px">Buenos Aires (CABA) — <span data-i18n="cargando">Cargando clima...</span></div></div>
+<div class="destacadas-container-wrapper"><h3 class="destacadas-titulo" data-i18n="destacadasTitulo">Destacadas</h3><div class="stories-container" id="stories-destacadas-container"></div></div>
+<nav class="pills-container"><button class="pill-btn active" data-filter="todas" data-i18n="filtroTodas">Todas</button><button class="pill-btn" data-filter="terapeuticas" data-i18n="filtroTerapeuticas">Terapéuticas</button><button class="pill-btn" data-filter="sensuales" data-i18n="filtroSensuales">Sensuales</button><button class="pill-btn" data-filter="fantasias" data-i18n="filtroFantasias">Fantasías</button></nav>
+<div style="max-width:900px;margin:15px auto 0;padding:0 4%;text-align:center"><button class="pill-btn" data-filter="favoritos" style="background:rgba(223,194,133,.12);border:1px solid #dfc285;color:#dfc285;width:100%;max-width:280px;font-weight:600;box-shadow:0 4px 15px rgba(223,194,133,.15)">⭐ Mis Favoritas</button></div>
+<div style="max-width:900px;margin:15px auto 0;padding:0 4%;text-align:center"><button id="btnAlternarEstilo" onclick="toggleEstiloVisual()" style="background:rgba(223,194,133,.15);border:1px solid #dfc285;color:#dfc285;padding:8px 20px;border-radius:20px;cursor:pointer;font-size:11px;font-weight:600;font-family:Montserrat,sans-serif;text-transform:uppercase;letter-spacing:1.5px;box-shadow:0 4px 12px rgba(223,194,133,.2)">✨ Cambiar a Estilo Tarjeta Grande</button></div>
 <div class="art-deco-divider"><span>♦</span></div>
-
-<main class="container">
-    <div class="categoria-seccion-wrapper" data-sec="terapeuticas">
-        <h2 class="section-heading" data-i18n="seccionTerapeuticas">Masajistas Terapéuticas</h2>
-        <div class="grid-perfiles" id="grid-terapeuticas"></div>
-    </div>
-    <div class="categoria-seccion-wrapper" data-sec="sensuales" style="margin-top:2rem">
-        <h2 class="section-heading" data-i18n="seccionSensuales">Masajistas Sensuales</h2>
-        <div class="grid-perfiles" id="grid-sensuales"></div>
-    </div>
-    <div class="categoria-seccion-wrapper" data-sec="fantasias" style="margin-top:2rem">
-        <h2 class="section-heading" data-i18n="seccionFantasias">Fantasías</h2>
-        <div class="grid-perfiles" id="grid-fantasias"></div>
-    </div>
-    <div class="categoria-seccion-wrapper" data-sec="favoritos" style="margin-top:2rem;display:none">
-        <h2 class="section-heading">⭐ Mis Favoritas</h2>
-        <div class="grid-perfiles" id="grid-favoritos"></div>
-    </div>
-</main>
-
+<main class="container"><div class="categoria-seccion-wrapper" data-sec="terapeuticas"><h2 class="section-heading" data-i18n="seccionTerapeuticas">Masajistas Terapéuticas</h2><div class="grid-perfiles" id="grid-terapeuticas"></div></div><div class="categoria-seccion-wrapper" data-sec="sensuales" style="margin-top:2rem"><h2 class="section-heading" data-i18n="seccionSensuales">Masajistas Sensuales</h2><div class="grid-perfiles" id="grid-sensuales"></div></div><div class="categoria-seccion-wrapper" data-sec="fantasias" style="margin-top:2rem"><h2 class="section-heading" data-i18n="seccionFantasias">Fantasías</h2><div class="grid-perfiles" id="grid-fantasias"></div></div><div class="categoria-seccion-wrapper" data-sec="favoritos" style="margin-top:2rem;display:none"><h2 class="section-heading">⭐ Mis Favoritas</h2><div class="grid-perfiles" id="grid-favoritos"></div></div></main>
 <div class="art-deco-divider"><span>♦</span></div>
-
-<div class="dolar-card" style="background:#141414;border:1px solid rgba(223,194,133,.25);border-radius:10px;padding:20px;max-width:900px;margin:30px auto;text-align:center;font-family:Montserrat,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.5)">
-    <span style="color:#dfc285;font-size:11px;text-transform:uppercase;letter-spacing:2px" data-i18n="financierosSub">Indicadores Financieros</span>
-    <h3 style="color:#fff;font-size:18px;margin:8px 0;font-family:'Cormorant Garamond',serif" data-i18n="financierosTitulo">Cotización Dólar (Argentina)</h3>
-    <div id="dolar-info" style="color:#ccc;font-size:14px"><span data-i18n="cargandoCotizacion">Cargando cotización actual...</span></div>
-</div>
-
-<section style="max-width:900px;margin:40px auto;padding:0 20px">
-    <div style="text-align:center;margin-bottom:35px">
-        <span style="color:#dfc285;font-size:11px;text-transform:uppercase;letter-spacing:3px;font-weight:500;display:block;margin-bottom:8px" data-i18n="editorialSub">Editorial & Bienestar</span>
-        <h2 style="font-size:30px;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;color:#dfc285;font-family:'Cormorant Garamond',serif" data-i18n="cuadernoTitulo">Cuaderno Privé</h2>
-        <p style="color:#999;font-size:14px;font-weight:300" data-i18n="cuadernoDesc">Crónicas urbanas, secretos de gabinete y el arte del relax absoluto en CABA.</p>
-    </div>
-    <div id="cuaderno-rotativo" style="display:grid;gap:20px"></div>
-</section>
-
-<div id="modalArticulo" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);justify-content:center;align-items:center;z-index:9999;padding:20px">
-    <div style="background:#141414;border:1px solid #dfc285;border-radius:8px;width:100%;max-width:650px;padding:30px;box-shadow:0 10px 25px rgba(0,0,0,.5);max-height:85vh;overflow-y:auto">
-        <span id="categoriaArticuloModal" style="color:#dfc285;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:500;display:block;margin-bottom:6px"></span>
-        <h3 id="tituloArticuloModal" style="color:#dfc285;font-size:24px;margin-bottom:15px;font-family:'Cormorant Garamond',serif"></h3>
-        <p id="textoArticuloModal" style="color:#ccc;font-size:14px;line-height:1.8;margin-bottom:25px;font-weight:300;font-family:Montserrat,sans-serif;white-space:pre-line"></p>
-        <div style="text-align:right">
-            <button type="button" onclick="cerrarArticulo()" style="background:#dfc285;color:#0d0d0d;border:none;padding:8px 20px;border-radius:4px;cursor:pointer;font-weight:600;text-transform:uppercase;font-family:Montserrat,sans-serif" data-i18n="btnCerrar">Cerrar</button>
-        </div>
-    </div>
-</div>
-
-<footer class="footer">
-    <div class="footer-container">
-        <div class="footer-socials">
-            <span style="color:#dfc285;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:500" data-i18n="siguenos">Síguenos</span>
-            <div class="footer-icons-row">
-                <a href="https://instagram.com/masajistasprive" target="_blank" rel="noopener noreferrer" class="footer-icon-link" title="Instagram">
-                    <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                </a>
-                <a href="https://www.facebook.com/share/1Pw7DqVNG7/" target="_blank" rel="noopener noreferrer" class="footer-icon-link" title="Facebook">
-                    <svg viewBox="0 0 24 24"><path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.373 14.5 5 15.5 5H18V0h-3.808C10.5 0 9 1.583 9 4.615V8z"/></svg>
-                </a>
-                <a href="https://twitter.com/masajistasprive" target="_blank" rel="noopener noreferrer" class="footer-icon-link" title="Twitter / X">
-                    <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                </a>
-                <a href="https://t.me/masajistasprive" target="_blank" rel="noopener noreferrer" class="footer-icon-link" title="Telegram">
-                    <svg viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.14-.261.26-.536.26l.213-3.05 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.654-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/></svg>
-                </a>
-                <a href="https://whatsapp.com/channel/0029VbDhx91BA1f3Cob1BR1J" target="_blank" rel="noopener noreferrer" class="footer-icon-link" title="WhatsApp">
-                    <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-                </a>
-            </div>
-        </div>
-        <div class="footer-legal">
-            <p data-i18n="footerLegal">Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.</p>
-            <p style="margin-top:6px" data-i18n="footerMarcas">Todo el contenido, marcas y logotipos pertenecen a sus respectivos dueños.</p>
-            <p class="copyright" style="margin-top:12px;color:#dfc285;font-size:12px" data-i18n="footerCopy">© 2026 Masajistas Privé. Todos los derechos reservados.</p>
-        </div>
-    </div>
-</footer>
-
+<div class="dolar-card" style="background:#141414;border:1px solid rgba(223,194,133,.25);border-radius:10px;padding:20px;max-width:900px;margin:30px auto;text-align:center;font-family:Montserrat,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.5)"><span style="color:#dfc285;font-size:11px;text-transform:uppercase;letter-spacing:2px" data-i18n="financierosSub">Indicadores Financieros</span><h3 style="color:#fff;font-size:18px;margin:8px 0;font-family:'Cormorant Garamond',serif" data-i18n="financierosTitulo">Cotización Dólar (Argentina)</h3><div id="dolar-info" style="color:#ccc;font-size:14px"><span data-i18n="cargandoCotizacion">Cargando cotización actual...</span></div></div>
+<section style="max-width:900px;margin:40px auto;padding:0 20px"><div style="text-align:center;margin-bottom:35px"><span style="color:#dfc285;font-size:11px;text-transform:uppercase;letter-spacing:3px;font-weight:500;display:block;margin-bottom:8px" data-i18n="editorialSub">Editorial & Bienestar</span><h2 style="font-size:30px;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;color:#dfc285;font-family:'Cormorant Garamond',serif" data-i18n="cuadernoTitulo">Cuaderno Privé</h2><p style="color:#999;font-size:14px;font-weight:300" data-i18n="cuadernoDesc">Crónicas urbanas, secretos de gabinete y el arte del relax absoluto en CABA.</p></div><div id="cuaderno-rotativo" style="display:grid;gap:20px"></div></section>
+<div id="modalArticulo" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);justify-content:center;align-items:center;z-index:9999;padding:20px"><div style="background:#141414;border:1px solid #dfc285;border-radius:8px;width:100%;max-width:650px;padding:30px;box-shadow:0 10px 25px rgba(0,0,0,.5);max-height:85vh;overflow-y:auto"><span id="categoriaArticuloModal" style="color:#dfc285;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:500;display:block;margin-bottom:6px"></span><h3 id="tituloArticuloModal" style="color:#dfc285;font-size:24px;margin-bottom:15px;font-family:'Cormorant Garamond',serif"></h3><p id="textoArticuloModal" style="color:#ccc;font-size:14px;line-height:1.8;margin-bottom:25px;font-weight:300;font-family:Montserrat,sans-serif;white-space:pre-line"></p><div style="text-align:right"><button type="button" onclick="cerrarArticulo()" style="background:#dfc285;color:#0d0d0d;border:none;padding:8px 20px;border-radius:4px;cursor:pointer;font-weight:600;text-transform:uppercase;font-family:Montserrat,sans-serif" data-i18n="btnCerrar">Cerrar</button></div></div></div>
+<footer class="footer"><div class="footer-container"><div class="footer-socials"><span style="color:#dfc285;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:500" data-i18n="siguenos">Síguenos</span><div class="footer-icons-row">
+<a href="https://instagram.com/masajistasprive" target="_blank" rel="noopener noreferrer" class="footer-icon-link" title="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+<a href="https://www.facebook.com/share/1Pw7DqVNG7/" target="_blank" rel="noopener noreferrer" class="footer-icon-link" title="Facebook"><svg viewBox="0 0 24 24"><path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.373 14.5 5 15.5 5H18V0h-3.808C10.5 0 9 1.583 9 4.615V8z"/></svg></a>
+<a href="https://twitter.com/masajistasprive" target="_blank" rel="noopener noreferrer" class="footer-icon-link" title="Twitter / X"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+<a href="https://t.me/masajistasprive" target="_blank" rel="noopener noreferrer" class="footer-icon-link" title="Telegram"><svg viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.14-.261.26-.536.26l.213-3.05 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.654-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/></svg></a>
+<a href="https://whatsapp.com/channel/0029VbDhx91BA1f3Cob1BR1J" target="_blank" rel="noopener noreferrer" class="footer-icon-link" title="WhatsApp"><svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg></a>
+</div></div><div class="footer-legal"><p data-i18n="footerLegal">Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.</p><p style="margin-top:6px" data-i18n="footerMarcas">Todo el contenido, marcas y logotipos pertenecen a sus respectivos dueños.</p><p class="copyright" style="margin-top:12px;color:#dfc285;font-size:12px" data-i18n="footerCopy">© 2026 Masajistas Privé. Todos los derechos reservados.</p></div></div></footer>
 <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
 <script>
-/*
-  MASAJISTAS PRIVÉ - INDEX OPTIMIZADO 4.0
-
-  Mejoras:
-  - Una única suscripción a Firestore.
-  - Cambio de idioma sin volver a consultar Firebase.
-  - Clima y dólar consultados una sola vez por carga.
-  - Caché temporal de clima y dólar.
-  - Tarjetas con imágenes diferidas.
-  - Portadas prioritarias para las primeras tarjetas.
-  - Sin esperar a Firebase para ocultar la transición.
-  - Conserva filtros, favoritas, likes, idiomas y estilos.
-
-  Pendiente estructural:
-  Separar los datos públicos livianos de las galerías
-  Base64 para reducir el volumen leído de Firestore.
-*/
-
-const firebaseConfig = {
-    apiKey:"AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ",
-    authDomain:"masajistasprivepro.firebaseapp.com",
-    projectId:"masajistasprivepro",
-    storageBucket:"masajistasprivepro.firebasestorage.app",
-    measurementId:"G-SBN70C32JF"
-};
-
+/* MASAJISTAS PRIVÉ · INDEX 4.1 · Fichas públicas livianas */
+const firebaseConfig={apiKey:'AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ',authDomain:'masajistasprivepro.firebaseapp.com',projectId:'masajistasprivepro',storageBucket:'masajistasprivepro.firebasestorage.app',measurementId:'G-SBN70C32JF'};
 let db;
-let idiomaActual = localStorage.getItem('idiomaPrive') || 'es';
-let modoTarjetaActivo = localStorage.getItem('priveModoTarjetaActivo') === 'true';
-let documentosPerfiles = [];
-let suscripcionPerfiles = null;
-let renderPendiente = false;
-
-const traducciones = {
-    es:{
-        pageTitle:"Masajistas Privé | Portal Exclusivo",
-        brandName:"MASAJISTAS PRIVÉ",
-        modalEdadTexto:"Este sitio web contiene material exclusivo para adultos (+18) y servicios de relax independientes. Debes ser mayor de edad para ingresar.",
-        btnMayor:"Soy mayor de 18 años",
-        btnSalir:"Salir",
-        climaTitulo:"Clima en Directo",
-        cargando:"Cargando clima...",
-        destacadasTitulo:"Destacadas",
-        filtroTodas:"Todas",
-        filtroTerapeuticas:"Terapéuticas",
-        filtroSensuales:"Sensuales",
-        filtroFantasias:"Fantasías",
-        seccionTerapeuticas:"Masajistas Terapéuticas",
-        seccionSensuales:"Masajistas Sensuales",
-        seccionFantasias:"Fantasías",
-        badgeVerificado:"✓ Verificado",
-        espacioDisponible:"Espacio Disponible",
-        publicaPerfil:"Publicá tu perfil aquí",
-        contactanos:"Contáctanos",
-        financierosSub:"Indicadores Financieros",
-        financierosTitulo:"Cotización Dólar (Argentina)",
-        cargandoCotizacion:"Cargando cotización actual...",
-        editorialSub:"Editorial & Bienestar",
-        cuadernoTitulo:"Cuaderno Privé",
-        cuadernoDesc:"Crónicas urbanas, secretos de gabinete y el arte del relax absoluto en CABA.",
-        btnCerrar:"Cerrar",
-        siguenos:"Síguenos",
-        footerLegal:"Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.",
-        footerMarcas:"Todo el contenido, marcas y logotipos pertenecen a sus respectivos dueños.",
-        footerCopy:"© 2026 Masajistas Privé. Todos los derechos reservados."
-    },
-    en:{
-        pageTitle:"Masajistas Privé | Exclusive Portal",
-        brandName:"MASAJISTAS PRIVÉ",
-        modalEdadTexto:"This website contains exclusive adult material (+18) and independent relaxation services. You must be of legal age to enter.",
-        btnMayor:"I am over 18 years old",
-        btnSalir:"Exit",
-        climaTitulo:"Live Weather",
-        cargando:"Loading weather...",
-        destacadasTitulo:"Featured",
-        filtroTodas:"All",
-        filtroTerapeuticas:"Therapeutic",
-        filtroSensuales:"Sensual",
-        filtroFantasias:"Fantasies",
-        seccionTerapeuticas:"Therapeutic Masseuses",
-        seccionSensuales:"Sensual Masseuses",
-        seccionFantasias:"Fantasies",
-        badgeVerificado:"✓ Verified",
-        espacioDisponible:"Available Space",
-        publicaPerfil:"Publish your profile here",
-        contactanos:"Contact Us",
-        financierosSub:"Financial Indicators",
-        financierosTitulo:"US Dollar Rate (Argentina)",
-        cargandoCotizacion:"Loading current rate...",
-        editorialSub:"Editorial & Wellness",
-        cuadernoTitulo:"Privé Notebook",
-        cuadernoDesc:"Urban chronicles, cabinet secrets, and the art of absolute relaxation in Buenos Aires.",
-        btnCerrar:"Close",
-        siguenos:"Follow Us",
-        footerLegal:"This is an exclusive site for adults (+18). The published advertisers are independent and have no employment, corporate, or dependency relationship with this portal.",
-        footerMarcas:"All content, trademarks, and logos belong to their respective owners.",
-        footerCopy:"© 2026 Masajistas Privé. All rights reserved."
-    },
-    pt:{
-        pageTitle:"Masajistas Privé | Portal Exclusivo",
-        brandName:"MASAJISTAS PRIVÉ",
-        modalEdadTexto:"Este site contém material exclusivo para adultos (+18) e serviços de relaxamento independentes. Você deve ser maior de idade para entrar.",
-        btnMayor:"Sou maior de 18 anos",
-        btnSalir:"Sair",
-        climaTitulo:"Clima ao Vivo",
-        cargando:"Carregando clima...",
-        destacadasTitulo:"Destaques",
-        filtroTodas:"Todas",
-        filtroTerapeuticas:"Terapéuticas",
-        filtroSensuales:"Sensuais",
-        filtroFantasias:"Fantasias",
-        seccionTerapeuticas:"Massagistas Terapéuticas",
-        seccionSensuales:"Massagistas Sensuais",
-        seccionFantasias:"Massagistas Fantasias",
-        badgeVerificado:"✓ Verificado",
-        espacioDisponible:"Espaço Disponível",
-        publicaPerfil:"Publique seu perfil aqui",
-        contactanos:"Contate-nos",
-        financeirosSub:"Indicadores Financeiros",
-        financierosTitulo:"Cotação Dólar (Argentina)",
-        cargandoCotizacion:"Carregando cotação atual...",
-        editorialSub:"Editorial & Bem-estar",
-        cuadernoTitulo:"Caderno Privé",
-        cuadernoDesc:"Crônicas urbanas, segredos de estúdio e a arte do relax absoluto em Buenos Aires.",
-        btnCerrar:"Fechar",
-        siguenos:"Siga-nos",
-        footerLegal:"Este é um site exclusivo para adultos (+18). Os anunciantes publicados são independentes e não possuem vínculo empregatício, societário ou de dependência com este portal.",
-        footerMarcas:"Todo o conteúdo, marcas e logotipos pertencem aos respectivos donos.",
-        footerCopy:"© 2026 Masajistas Privé. Todos os direitos reservados."
-    },
-    fr:{
-        pageTitle:"Masajistas Privé | Portail Exclusif",
-        brandName:"MASAJISTAS PRIVÉ",
-        modalEdadTexto:"Ce site Web contient du contenu exclusif pour adultes (+18) et des services de relaxation indépendants. Vous devez être majeur pour entrer.",
-        btnMayor:"J'ai plus de 18 ans",
-        btnSalir:"Quitter",
-        climaTitulo:"Météo en Direct",
-        cargando:"Chargement de la météo...",
-        destacadasTitulo:"En Vedette",
-        filtroTodas:"Tous",
-        filtroTerapeuticas:"Thérapeutiques",
-        filtroSensuales:"Sensuelles",
-        filtroFantasias:"Fantasies",
-        seccionTerapeuticas:"Masseuses Thérapeutiques",
-        seccionSensuales:"Masseuses Sensuelles",
-        seccionFantasias:"Fantasies",
-        badgeVerificado:"✓ Vérifié",
-        espacioDisponible:"Espace Disponible",
-        publicaPerfil:"Publiez votre profil ici",
-        contactanos:"Contactez-nous",
-        financierosSub:"Indicateurs Financiers",
-        financierosTitulo:"Taux du Dollar (Argentine)",
-        cargandoCotizacion:"Chargement du taux...",
-        editorialSub:"Éditorial & Bien-être",
-        cuadernoTitulo:"Carnet Privé",
-        cuadernoDesc:"Chroniques urbaines, secrets de studio et l'art de la relaxation absolue à Buenos Aires.",
-        btnCerrar:"Fermer",
-        siguenos:"Suivez-nous",
-        footerLegal:"Ceci est un site exclusif pour adultes (+18). Les annonceurs publiés sont indépendants et n'ont aucun lien d'emploi, d'entreprise ou de dépendance avec ce portail.",
-        footerMarcas:"Tout le contenu, les marques et les logos appartiennent à leurs propriétaires respectifs.",
-        footerCopy:"© 2026 Masajistas Privé. Tous droits réservés."
-    }
+let idiomaActual=localStorage.getItem('idiomaPrive')||'es';
+let modoTarjetaActivo=localStorage.getItem('priveModoTarjetaActivo')==='true';
+let documentosPerfiles=[];
+let suscripcionPerfiles=null;
+let renderPendiente=false;
+const traducciones={
+es:{pageTitle:'Masajistas Privé | Portal Exclusivo',brandName:'MASAJISTAS PRIVÉ',modalEdadTexto:'Este sitio web contiene material exclusivo para adultos (+18) y servicios de relax independientes. Debes ser mayor de edad para ingresar.',btnMayor:'Soy mayor de 18 años',btnSalir:'Salir',climaTitulo:'Clima en Directo',cargando:'Cargando clima...',destacadasTitulo:'Destacadas',filtroTodas:'Todas',filtroTerapeuticas:'Terapéuticas',filtroSensuales:'Sensuales',filtroFantasias:'Fantasías',seccionTerapeuticas:'Masajistas Terapéuticas',seccionSensuales:'Masajistas Sensuales',seccionFantasias:'Fantasías',badgeVerificado:'✓ Verificado',espacioDisponible:'Espacio Disponible',publicaPerfil:'Publicá tu perfil aquí',contactanos:'Contáctanos',financierosSub:'Indicadores Financieros',financierosTitulo:'Cotización Dólar (Argentina)',cargandoCotizacion:'Cargando cotización actual...',editorialSub:'Editorial & Bienestar',cuadernoTitulo:'Cuaderno Privé',cuadernoDesc:'Crónicas urbanas, secretos de gabinete y el arte del relax absoluto en CABA.',btnCerrar:'Cerrar',siguenos:'Síguenos',footerLegal:'Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.',footerMarcas:'Todo el contenido, marcas y logotipos pertenecen a sus respectivos dueños.',footerCopy:'© 2026 Masajistas Privé. Todos los derechos reservados.'},
+en:{pageTitle:'Masajistas Privé | Exclusive Portal',brandName:'MASAJISTAS PRIVÉ',modalEdadTexto:'This website contains exclusive adult material (+18) and independent relaxation services. You must be of legal age to enter.',btnMayor:'I am over 18 years old',btnSalir:'Exit',climaTitulo:'Live Weather',cargando:'Loading weather...',destacadasTitulo:'Featured',filtroTodas:'All',filtroTerapeuticas:'Therapeutic',filtroSensuales:'Sensual',filtroFantasias:'Fantasies',seccionTerapeuticas:'Therapeutic Masseuses',seccionSensuales:'Sensual Masseuses',seccionFantasias:'Fantasies',badgeVerificado:'✓ Verified',espacioDisponible:'Available Space',publicaPerfil:'Publish your profile here',contactanos:'Contact Us',financierosSub:'Financial Indicators',financierosTitulo:'US Dollar Rate (Argentina)',cargandoCotizacion:'Loading current rate...',editorialSub:'Editorial & Wellness',cuadernoTitulo:'Privé Notebook',cuadernoDesc:'Urban chronicles, cabinet secrets, and the art of absolute relaxation in Buenos Aires.',btnCerrar:'Close',siguenos:'Follow Us',footerLegal:'This is an exclusive site for adults (+18). The published advertisers are independent and have no employment, corporate, or dependency relationship with this portal.',footerMarcas:'All content, trademarks, and logos belong to their respective owners.',footerCopy:'© 2026 Masajistas Privé. All rights reserved.'},
+pt:{pageTitle:'Masajistas Privé | Portal Exclusivo',brandName:'MASAJISTAS PRIVÉ',modalEdadTexto:'Este site contém material exclusivo para adultos (+18) e serviços de relaxamento independentes. Você deve ser maior de idade para entrar.',btnMayor:'Sou maior de 18 anos',btnSalir:'Sair',climaTitulo:'Clima ao Vivo',cargando:'Carregando clima...',destacadasTitulo:'Destaques',filtroTodas:'Todas',filtroTerapeuticas:'Terapéuticas',filtroSensuales:'Sensuais',filtroFantasias:'Fantasias',seccionTerapeuticas:'Massagistas Terapéuticas',seccionSensuales:'Massagistas Sensuais',seccionFantasias:'Massagistas Fantasias',badgeVerificado:'✓ Verificado',espacioDisponible:'Espaço Disponível',publicaPerfil:'Publique seu perfil aqui',contactanos:'Contate-nos',financierosSub:'Indicadores Financeiros',financierosTitulo:'Cotação Dólar (Argentina)',cargandoCotizacion:'Carregando cotação atual...',editorialSub:'Editorial & Bem-estar',cuadernoTitulo:'Caderno Privé',cuadernoDesc:'Crônicas urbanas, segredos de estúdio e a arte do relax absoluto em Buenos Aires.',btnCerrar:'Fechar',siguenos:'Siga-nos',footerLegal:'Este é um site exclusivo para adultos (+18). Os anunciantes publicados são independentes e não possuem vínculo empregatício, societário ou de dependência com este portal.',footerMarcas:'Todo o conteúdo, marcas e logotipos pertencem aos respectivos donos.',footerCopy:'© 2026 Masajistas Privé. Todos os direitos reservados.'},
+fr:{pageTitle:'Masajistas Privé | Portail Exclusif',brandName:'MASAJISTAS PRIVÉ',modalEdadTexto:'Ce site Web contient du contenu exclusif pour adultes (+18) et des services de relaxation indépendants. Vous devez être majeur pour entrer.',btnMayor:"J'ai plus de 18 ans",btnSalir:'Quitter',climaTitulo:'Météo en Direct',cargando:'Chargement de la météo...',destacadasTitulo:'En Vedette',filtroTodas:'Tous',filtroTerapeuticas:'Thérapeutiques',filtroSensuales:'Sensuelles',filtroFantasias:'Fantasies',seccionTerapeuticas:'Masseuses Thérapeutiques',seccionSensuales:'Masseuses Sensuelles',seccionFantasias:'Fantasies',badgeVerificado:'✓ Vérifié',espacioDisponible:'Espace Disponible',publicaPerfil:'Publiez votre profil ici',contactanos:'Contactez-nous',financierosSub:'Indicateurs Financiers',financierosTitulo:'Taux du Dollar (Argentine)',cargandoCotizacion:'Chargement du taux...',editorialSub:'Éditorial & Bien-être',cuadernoTitulo:'Carnet Privé',cuadernoDesc:"Chroniques urbaines, secrets de studio et l'art de la relaxation absolue à Buenos Aires.",btnCerrar:'Fermer',siguenos:'Suivez-nous',footerLegal:"Ceci est un site exclusif pour adultes (+18). Les annonceurs publiés sont indépendants et n'ont aucun lien d'emploi, d'entreprise ou de dépendance avec ce portail.",footerMarcas:'Tout le contenu, les marques et les logos appartiennent à leurs propriétaires respectifs.',footerCopy:'© 2026 Masajistas Privé. Tous droits réservés.'}
 };
-
-const bancoArticulos = {
-    es:[{
-        categoria:"Bienestar & CABA",
-        titulo:"El ritual post-oficina: Cómo desconectar del microcentro en diez minutos",
-        extracto:"El ruido de la City porteña, el subte colapsado y las pantallas cargan de tensión invisible la zona cervical.",
-        cuerpo:"El ritmo de Buenos Aires exige una pausa programada."
-    }],
-    en:[{
-        categoria:"Wellness & BA",
-        titulo:"The Post-Office Ritual: How to Disconnect from Downtown in Ten Minutes",
-        extracto:"The noise of Buenos Aires' City fills the cervical area with invisible tension.",
-        cuerpo:"The pace of Buenos Aires demands a scheduled pause."
-    }],
-    pt:[{
-        categoria:"Bem-estar & BA",
-        titulo:"O ritual pós-escritório: Como se desconectar do centro em dez minutos",
-        extracto:"O barulho da City portenha carrega a cervical de tensão.",
-        cuerpo:"O ritmo de Buenos Aires exige uma pausa programada."
-    }],
-    fr:[{
-        categoria:"Bien-être & BA",
-        titulo:"Le rituel post-bureau : Comment déconnecter du centre en dix minutes",
-        extracto:"Le bruit de la ville charge la zone cervicale d'une tension invisible.",
-        cuerpo:"Le rythme de Buenos Aires exige une pause."
-    }]
-};
-
-function escaparHTML(valor) {
-    return String(valor ?? '').replace(/[&<>"']/g,caracter=>({
-        '&':'&amp;',
-        '<':'&lt;',
-        '>':'&gt;',
-        '"':'&quot;',
-        "'":'&#39;'
-    })[caracter]);
-}
-
-function escaparAtributo(valor) {
-    return escaparHTML(valor);
-}
-
-function imagenSegura(valor) {
-    if(typeof valor !== 'string' || !valor.trim()) {
-        return 'img/monograma.png';
-    }
-    const v=valor.trim();
-    if(/^data:image\/(?:png|jpeg|jpg|webp|gif);base64,/i.test(v)) return v;
-    if(/^https:\/\//i.test(v)) return v;
-    if(
-        !/^[a-z][a-z0-9+.-]*:/i.test(v) &&
-        !v.startsWith('//') &&
-        !v.startsWith('/') &&
-        !v.includes('\\') &&
-        !v.includes('..') &&
-        !/[\u0000-\u001f]/.test(v)
-    ) return v;
-    return 'img/monograma.png';
-}
-
-function telefonoSeguro(valor) {
-    const numero=String(valor || '5491131774848').replace(/\D/g,'');
-    return numero.length>=8 && numero.length<=16
-        ? numero
-        : '5491131774848';
-}
-
-function obtenerJSONLocal(clave,alternativa) {
-    try {
-        const dato=JSON.parse(localStorage.getItem(clave));
-        return dato ?? alternativa;
-    } catch {
-        return alternativa;
-    }
-}
-
-function ocultarTransicionPrive() {
-    const pantalla=document.getElementById('priveTransitionScreen');
-    if(!pantalla || pantalla.dataset.cerrando==='1') return;
-    pantalla.dataset.cerrando='1';
-    pantalla.style.opacity='0';
-    setTimeout(()=>pantalla.remove(),350);
-}
-
-function toggleEstiloVisual() {
-    modoTarjetaActivo=!modoTarjetaActivo;
-    localStorage.setItem('priveModoTarjetaActivo',String(modoTarjetaActivo));
-    aplicarEstiloVisualActual();
-
-    if(db) {
-        db.collection('metricas_estilos').add({
-            estilo:modoTarjetaActivo?'tarjeta_grande':'normal_prive',
-            fecha:firebase.firestore.FieldValue.serverTimestamp()
-        }).catch(()=>{});
-    }
-}
-
-function aplicarEstiloVisualActual() {
-    const btn=document.getElementById('btnAlternarEstilo');
-    document.body.classList.toggle('modo-tarjeta-alternativo',modoTarjetaActivo);
-    if(btn) {
-        btn.textContent=modoTarjetaActivo
-            ? '🏛 Cambiar a Estilo Normal (Privé)'
-            : '✨ Cambiar a Estilo Tarjeta Grande';
-    }
-}
-
-function aplicarIdioma(lang) {
-    if(!traducciones[lang]) lang='es';
-    idiomaActual=lang;
-    localStorage.setItem('idiomaPrive',lang);
-    document.documentElement.lang=lang;
-
-    const btn=document.getElementById('btn-idioma');
-    if(btn) {
-        btn.textContent=({
-            es:'🇺🇸 EN',
-            en:'🇧🇷 PT',
-            pt:'🇫🇷 FR',
-            fr:'🇦🇷 ES'
-        })[lang];
-    }
-
-    document.title=traducciones[lang].pageTitle;
-
-    document.querySelectorAll('[data-i18n]').forEach(el=>{
-        const clave=el.getAttribute('data-i18n');
-        if(traducciones[lang][clave]) {
-            el.textContent=traducciones[lang][clave];
-        }
-    });
-
-    cargarArticulosDelDia();
-    programarRenderPerfiles();
-}
-
-function cambiarIdioma() {
-    const siguiente={
-        es:'en',
-        en:'pt',
-        pt:'fr',
-        fr:'es'
-    };
-    aplicarIdioma(siguiente[idiomaActual] || 'es');
-}
-
-function cargarArticulosDelDia() {
-    const contenedor=document.getElementById('cuaderno-rotativo');
-    if(!contenedor) return;
-
-    const art=(bancoArticulos[idiomaActual] || bancoArticulos.es)[0];
-    contenedor.replaceChildren();
-
-    const tarjeta=document.createElement('div');
-    tarjeta.className='blog-card';
-
-    const categoria=document.createElement('span');
-    categoria.style.cssText='color:#dfc285;font-size:11px;text-transform:uppercase;letter-spacing:2px';
-    categoria.textContent=art.categoria;
-
-    const titulo=document.createElement('h3');
-    titulo.style.cssText="color:#fff;font-size:22px;margin-bottom:10px;font-family:'Cormorant Garamond',serif";
-    titulo.textContent=art.titulo;
-
-    const extracto=document.createElement('p');
-    extracto.style.cssText='color:#bcbbb5;font-size:14px';
-    extracto.textContent=art.extracto;
-
-    tarjeta.append(categoria,titulo,extracto);
-    tarjeta.addEventListener('click',()=>{
-        abrirArticulo(art.titulo,art.cuerpo,art.categoria);
-    });
-
-    contenedor.append(tarjeta);
-}
-
-function abrirArticulo(titulo,texto,categoria) {
-    document.getElementById('categoriaArticuloModal').textContent=categoria;
-    document.getElementById('tituloArticuloModal').textContent=titulo;
-    document.getElementById('textoArticuloModal').textContent=texto;
-    document.getElementById('modalArticulo').style.display='flex';
-}
-
-function cerrarArticulo() {
-    document.getElementById('modalArticulo').style.display='none';
-}
-
-async function consultarConCache(clave,url,minutos) {
-    const ahora=Date.now();
-
-    try {
-        const cache=JSON.parse(sessionStorage.getItem(clave) || 'null');
-        if(cache && cache.fecha && ahora-cache.fecha<minutos*60000) {
-            return cache.datos;
-        }
-    } catch {}
-
-    const controlador=new AbortController();
-    const timeout=setTimeout(()=>controlador.abort(),7000);
-
-    try {
-        const respuesta=await fetch(url,{signal:controlador.signal});
-        if(!respuesta.ok) throw new Error('Error HTTP '+respuesta.status);
-
-        const datos=await respuesta.json();
-
-        try {
-            sessionStorage.setItem(clave,JSON.stringify({
-                fecha:ahora,
-                datos
-            }));
-        } catch {}
-
-        return datos;
-    } finally {
-        clearTimeout(timeout);
-    }
-}
-
-async function obtenerClimaCABA() {
-    try {
-        const datos=await consultarConCache(
-            'priveClimaCache',
-            'https://api.open-meteo.com/v1/forecast?latitude=-34.6132&longitude=-58.3816&current=temperature_2m,relative_humidity_2m,weather_code&timezone=America%2FArgentina%2FBuenos_Aires',
-            15
-        );
-
-        const temp=Math.round(datos.current.temperature_2m);
-        const humedad=datos.current.relative_humidity_2m;
-
-        document.getElementById('clima-info').innerHTML=
-            `Buenos Aires (CABA) — <span style="color:#dfc285;font-weight:600">${temp} °C</span> | Humedad: ${humedad}%`;
-    } catch(error) {
-        document.getElementById('clima-info').textContent='Buenos Aires (CABA)';
-    }
-}
-
-async function obtenerDolar() {
-    try {
-        const datos=await consultarConCache(
-            'priveDolarCache',
-            'https://dolarapi.com/v1/dolares/blue',
-            10
-        );
-
-        const compra=Number(datos.compra);
-        const venta=Number(datos.venta);
-
-        if(!Number.isFinite(compra) || !Number.isFinite(venta)) return;
-
-        document.getElementById('dolar-info').textContent=
-            `Dólar Blue — Compra: $${compra.toLocaleString('es-AR')} | Venta: $${venta.toLocaleString('es-AR')}`;
-    } catch(error) {
-        document.getElementById('dolar-info').textContent=
-            'Cotización temporalmente no disponible';
-    }
-}
-
-function categoriaDeModelo(valor) {
-    const cat=String(valor || '').toLowerCase().trim();
-
-    if(cat.includes('sensual')) return 'sensuales';
-    if(cat.includes('fantasia') || cat.includes('fantasía')) return 'fantasias';
-    return 'terapeuticas';
-}
-
-function construirTarjeta(docSnap,indice,likesDados) {
-    const m=docSnap.data();
-    const docId=docSnap.id;
-    const idCodificado=encodeURIComponent(docId);
-    const nombre=escaparHTML(m.nombre || 'Anunciante');
-    const categoria=categoriaDeModelo(m.categoria);
-
-    const traduccionModelo=
-        m.traducciones?.[idiomaActual] ||
-        m.traducciones?.es ||
-        {};
-
-    const zona=String(traduccionModelo.valorZona || m.zona || 'CABA');
-    const modalidad=String(traduccionModelo.valorModalidad || m.modalidad || 'Gabinete propio');
-
-    const zonaHTML=escaparHTML(zona);
-    const modalidadHTML=escaparHTML(modalidad);
-
-    const foto=imagenSegura(
-        m.fotoPrincipal ||
-        m.foto ||
-        (Array.isArray(m.fotosGaleria) ? m.fotosGaleria[0] : '') ||
-        'img/monograma.png'
-    );
-
-    const telefono=telefonoSeguro(m.whatsapp || m.telefono);
-    const linkWs=`https://wa.me/${telefono}?text=${encodeURIComponent('Hola, vi tu perfil en Masajistas Privé y quiero consultar.')}`;
-
-    const yaDioLike=likesDados[docId]===true;
-    const likes=Number.isFinite(Number(m.likes))?Number(m.likes):0;
-    const badge=escaparHTML(traducciones[idiomaActual].badgeVerificado);
-
-    const perfilURL=`perfil.html?id=${idCodificado}`;
-    const comentarioURL=`${perfilURL}#pCommentsContainer`;
-
-    const prioridad=indice<4
-        ? 'loading="eager" fetchpriority="high"'
-        : 'loading="lazy" fetchpriority="low"';
-
-    const imagenHTML=`
-        <img
-            src="${escaparAtributo(foto)}"
-            alt="Masajista ${nombre} en ${zonaHTML} - Masajistas Privé"
-            ${prioridad}
-            decoding="async"
-            onerror="this.onerror=null;this.src='img/monograma.png'"
-        >
-    `;
-
-    const botonLike=`
-        <button
-            type="button"
-            data-like-id="${escaparAtributo(docId)}"
-            style="background:${yaDioLike?'rgba(223,194,133,.3)':'transparent'};border:1px solid #dfc285;color:#dfc285;padding:5px 10px;border-radius:15px;cursor:pointer;font-size:11px;font-weight:600;display:flex;align-items:center;gap:5px;font-family:Montserrat,sans-serif"
-            ${yaDioLike?'disabled':''}
-        >
-            ❤️ <span class="like-count-${escaparAtributo(docId)}">${likes}</span>
-        </button>
-    `;
-
-    const botonComentarios=`
-        <a href="${comentarioURL}" style="background:transparent;border:1px solid rgba(223,194,133,.4);color:#fff;padding:5px 10px;border-radius:15px;text-decoration:none;font-size:11px;font-weight:600;display:flex;align-items:center;gap:5px;font-family:Montserrat,sans-serif">
-            💬 Experiencias
-        </a>
-    `;
-
-    return `
-        <div class="card-link" data-categoria="${categoria}">
-            <article class="card">
-                <a href="${perfilURL}" style="text-decoration:none;color:inherit;display:block">
-                    <div class="card-image">
-                        ${imagenHTML}
-                        <span class="badge-verificado">${badge}</span>
-                        <div class="card-gradient-overlay">
-                            <h3>${nombre}</h3>
-                            <span class="zona">📍 ${escaparHTML(zona.toUpperCase())}</span>
-                            <span class="modalidad-tag">${modalidadHTML}</span>
-                        </div>
-                    </div>
-                </a>
-
-                <div class="prive-barra-clasica" style="height:44px;padding:0 12px;background:#0d0d0d;border-top:1px solid rgba(223,194,133,.2);display:flex;align-items:center;justify-content:space-between;box-sizing:border-box;flex-shrink:0">
-                    ${botonLike}
-                    ${botonComentarios}
-                </div>
-
-                <div class="prive-card-info-box">
-                    <div class="prive-card-nombre">${nombre}</div>
-                    <div class="prive-card-detalles">📍 ${escaparHTML(zona.toUpperCase())} • ${escaparHTML(modalidad.toUpperCase())}</div>
-
-                    <div style="display:flex;gap:10px;margin:10px 0;align-items:center;justify-content:space-between">
-                        ${botonLike}
-                        ${botonComentarios}
-                    </div>
-
-                    <div class="prive-card-actions">
-                        <a href="${perfilURL}" class="prive-btn-accion prive-btn-perfil">Ver Perfil</a>
-                        <a href="${escaparAtributo(linkWs)}" target="_blank" rel="noopener noreferrer" class="prive-btn-accion prive-btn-ws">WhatsApp</a>
-                    </div>
-                </div>
-            </article>
-        </div>
-    `;
-}
-
-function programarRenderPerfiles() {
-    if(renderPendiente) return;
-    renderPendiente=true;
-
-    requestAnimationFrame(()=>{
-        renderPendiente=false;
-        renderizarPerfiles();
-    });
-}
-
-function renderizarPerfiles() {
-    const terapeuticas=document.getElementById('grid-terapeuticas');
-    const sensuales=document.getElementById('grid-sensuales');
-    const fantasias=document.getElementById('grid-fantasias');
-    const favoritos=document.getElementById('grid-favoritos');
-    const stories=document.getElementById('stories-destacadas-container');
-
-    if(!terapeuticas || !sensuales || !fantasias || !favoritos || !stories) return;
-
-    const html={
-        terapeuticas:[],
-        sensuales:[],
-        fantasias:[],
-        favoritos:[],
-        stories:[]
-    };
-
-    const favoritosIds=obtenerJSONLocal('priveFavoritos',[]);
-    const favoritosSet=new Set(Array.isArray(favoritosIds)?favoritosIds:[]);
-    const likesDados=obtenerJSONLocal('priveLikesDados',{});
-
-    const activos=documentosPerfiles.filter(doc=>doc.data().estado!=='pausado');
-
-    activos.forEach((doc,indice)=>{
-        const m=doc.data();
-        const categoria=categoriaDeModelo(m.categoria);
-        const tarjeta=construirTarjeta(doc,indice,likesDados);
-
-        html[categoria].push(tarjeta);
-
-        if(favoritosSet.has(doc.id)) {
-            html.favoritos.push(tarjeta);
-        }
-
-        if(m.destacada===true) {
-            const foto=imagenSegura(
-                m.fotoPrincipal ||
-                m.foto ||
-                (Array.isArray(m.fotosGaleria)?m.fotosGaleria[0]:'')
-            );
-
-            const nombre=escaparHTML(m.nombre || 'Anunciante');
-
-            html.stories.push(`
-                <a href="perfil.html?id=${encodeURIComponent(doc.id)}" class="story-item">
-                    <div class="story-ring">
-                        <img src="${escaparAtributo(foto)}" alt="Perfil destacado de ${nombre}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='img/monograma.png'">
-                    </div>
-                    <span>${nombre}</span>
-                </a>
-            `);
-        }
-    });
-
-    const anuncio=`
-        <a href="https://wa.me/5491131774848?text=Hola,%20quiero%20publicar%20mi%20anuncio%20en%20Masajistas%20Prive" target="_blank" rel="noopener noreferrer" class="card-ad-link">
-            <article class="card-ad">
-                <div class="ad-content">
-                    <h3 data-i18n="espacioDisponible">${escaparHTML(traducciones[idiomaActual].espacioDisponible)}</h3>
-                    <p data-i18n="publicaPerfil">${escaparHTML(traducciones[idiomaActual].publicaPerfil)}</p>
-                    <span class="btn-ad" data-i18n="contactanos">${escaparHTML(traducciones[idiomaActual].contactanos)}</span>
-                </div>
-            </article>
-        </a>
-    `;
-
-    html.terapeuticas.push(anuncio);
-    html.sensuales.push(anuncio);
-    html.fantasias.push(anuncio);
-
-    terapeuticas.innerHTML=html.terapeuticas.join('');
-    sensuales.innerHTML=html.sensuales.join('');
-    fantasias.innerHTML=html.fantasias.join('');
-
-    favoritos.innerHTML=html.favoritos.length
-        ? html.favoritos.join('')
-        : '<p style="grid-column:1/-1;text-align:center;color:#888;font-size:13px;font-style:italic;padding:20px 0">No tenés perfiles guardados en favoritos todavía.</p>';
-
-    stories.innerHTML=html.stories.join('');
-
-    aplicarEstiloVisualActual();
-}
-
-function cargarPerfilesDesdeFirebase() {
-    if(!db || suscripcionPerfiles) return;
-
-    suscripcionPerfiles=db.collection('modelos_prive').onSnapshot(
-        snapshot=>{
-            documentosPerfiles=snapshot.docs.slice();
-
-            // Mezcla una vez por actualización, no por cambio de idioma.
-            for(let i=documentosPerfiles.length-1;i>0;i--) {
-                const j=Math.floor(Math.random()*(i+1));
-                [documentosPerfiles[i],documentosPerfiles[j]]=
-                    [documentosPerfiles[j],documentosPerfiles[i]];
-            }
-
-            programarRenderPerfiles();
-            ocultarTransicionPrive();
-        },
-        error=>{
-            console.error('Error cargando anunciantes:',error);
-            ocultarTransicionPrive();
-        }
-    );
-}
-
-window.darLikeIndice=function(docId,btnElement) {
-    const likesDados=obtenerJSONLocal('priveLikesDados',{});
-
-    if(likesDados[docId]===true || !db) return;
-
-    likesDados[docId]=true;
-    localStorage.setItem('priveLikesDados',JSON.stringify(likesDados));
-
-    document.querySelectorAll('[data-like-id]').forEach(btn=>{
-        if(btn.dataset.likeId===docId) {
-            btn.disabled=true;
-            btn.style.background='rgba(223,194,133,.3)';
-        }
-    });
-
-    db.collection('modelos_prive').doc(docId).update({
-        likes:firebase.firestore.FieldValue.increment(1)
-    }).catch(error=>{
-        console.error('Error al dar like:',error);
-        delete likesDados[docId];
-        localStorage.setItem('priveLikesDados',JSON.stringify(likesDados));
-        programarRenderPerfiles();
-    });
-};
-
-function inicializarInteracciones() {
-    const modalEdad=document.getElementById('modal-edad');
-    const btnMayor=document.getElementById('btn-mayor');
-
-    if(sessionStorage.getItem('edadVerificada')==='true' && modalEdad) {
-        modalEdad.style.display='none';
-    }
-
-    if(btnMayor && modalEdad) {
-        btnMayor.addEventListener('click',()=>{
-            sessionStorage.setItem('edadVerificada','true');
-            modalEdad.style.display='none';
-        });
-    }
-
-    document.addEventListener('click',evento=>{
-        const botonLike=evento.target.closest('[data-like-id]');
-
-        if(botonLike) {
-            evento.preventDefault();
-            evento.stopPropagation();
-            window.darLikeIndice(botonLike.dataset.likeId,botonLike);
-            return;
-        }
-
-        const pill=evento.target.closest('.pill-btn[data-filter]');
-        if(!pill) return;
-
-        const filtro=pill.dataset.filter;
-
-        document.querySelectorAll('.pill-btn[data-filter]').forEach(p=>{
-            p.classList.toggle('active',p===pill);
-        });
-
-        document.querySelectorAll('.categoria-seccion-wrapper').forEach(wrap=>{
-            const seccion=wrap.dataset.sec;
-            const visible=filtro==='todas'
-                ? seccion!=='favoritos'
-                : seccion===filtro;
-
-            wrap.style.display=visible?'block':'none';
-        });
-    });
-}
-
-function iniciarFirebase() {
-    try {
-        if(!window.firebase || !firebase.firestore) {
-            throw new Error('No se cargó Firebase');
-        }
-
-        if(!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-
-        db=firebase.firestore();
-        cargarPerfilesDesdeFirebase();
-
-    } catch(error) {
-        console.error('Error inicializando Firebase:',error);
-        ocultarTransicionPrive();
-    }
-}
-
-function iniciarPagina() {
-    aplicarEstiloVisualActual();
-    inicializarInteracciones();
-    aplicarIdioma(idiomaActual);
-
-    // No se bloquea la página esperando servicios externos.
-    obtenerClimaCABA();
-    obtenerDolar();
-
-    // El overlay no depende de que terminen las consultas.
-    setTimeout(ocultarTransicionPrive,900);
-
-    // Los SDK defer terminan de cargar antes de DOMContentLoaded.
-    iniciarFirebase();
-}
-
-if(document.readyState==='loading') {
-    document.addEventListener('DOMContentLoaded',iniciarPagina,{once:true});
-} else {
-    iniciarPagina();
-}
+const bancoArticulos={es:[{categoria:'Bienestar & CABA',titulo:'El ritual post-oficina: Cómo desconectar del microcentro en diez minutos',extracto:'El ruido de la City porteña, el subte colapsado y las pantallas cargan de tensión invisible la zona cervical.',cuerpo:'El ritmo de Buenos Aires exige una pausa programada.'}],en:[{categoria:'Wellness & BA',titulo:'The Post-Office Ritual: How to Disconnect from Downtown in Ten Minutes',extracto:"The noise of Buenos Aires' City fills the cervical area with invisible tension.",cuerpo:'The pace of Buenos Aires demands a scheduled pause.'}],pt:[{categoria:'Bem-estar & BA',titulo:'O ritual pós-escritório: Como se desconectar do centro em dez minutos',extracto:'O barulho da City portenha carrega a cervical de tensão.',cuerpo:'O ritmo de Buenos Aires exige uma pausa programada.'}],fr:[{categoria:'Bien-être & BA',titulo:'Le rituel post-bureau : Comment déconnecter du centre en dix minutes',extracto:"Le bruit de la ville charge la zone cervicale d'une tension invisible.",cuerpo:'Le rythme de Buenos Aires exige une pause.'}]};
+function escaparHTML(valor){return String(valor??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function imagenSegura(valor){if(typeof valor!=='string'||!valor.trim())return 'img/monograma.png';const v=valor.trim();if(/^https:\/\//i.test(v))return v;if(!/^[a-z][a-z0-9+.-]*:/i.test(v)&&!v.startsWith('//')&&!v.startsWith('/')&&!v.includes('\\')&&!v.includes('..')&&!/[\u0000-\u001f]/.test(v))return v;return 'img/monograma.png';}
+function telefonoSeguro(valor){const numero=String(valor||'5491131774848').replace(/\D/g,'');return numero.length>=8&&numero.length<=16?numero:'5491131774848';}
+function obtenerJSONLocal(clave,alternativa){try{return JSON.parse(localStorage.getItem(clave))??alternativa}catch{return alternativa}}
+function ocultarTransicionPrive(){const pantalla=document.getElementById('priveTransitionScreen');if(!pantalla||pantalla.dataset.cerrando==='1')return;pantalla.dataset.cerrando='1';pantalla.style.opacity='0';setTimeout(()=>pantalla.remove(),350)}
+function toggleEstiloVisual(){modoTarjetaActivo=!modoTarjetaActivo;localStorage.setItem('priveModoTarjetaActivo',String(modoTarjetaActivo));aplicarEstiloVisualActual();if(db){db.collection('metricas_estilos').add({estilo:modoTarjetaActivo?'tarjeta_grande':'normal_prive',fecha:firebase.firestore.FieldValue.serverTimestamp()}).catch(()=>{});}}
+function aplicarEstiloVisualActual(){const btn=document.getElementById('btnAlternarEstilo');document.body.classList.toggle('modo-tarjeta-alternativo',modoTarjetaActivo);if(btn)btn.textContent=modoTarjetaActivo?'🏛 Cambiar a Estilo Normal (Privé)':'✨ Cambiar a Estilo Tarjeta Grande';}
+function aplicarIdioma(lang){if(!traducciones[lang])lang='es';idiomaActual=lang;localStorage.setItem('idiomaPrive',lang);document.documentElement.lang=lang;const btn=document.getElementById('btn-idioma');if(btn)btn.textContent=({es:'🇺🇸 EN',en:'🇧🇷 PT',pt:'🇫🇷 FR',fr:'🇦🇷 ES'})[lang];document.title=traducciones[lang].pageTitle;document.querySelectorAll('[data-i18n]').forEach(el=>{const clave=el.getAttribute('data-i18n');if(traducciones[lang][clave])el.textContent=traducciones[lang][clave]});cargarArticulosDelDia();programarRenderPerfiles();}
+function cambiarIdioma(){aplicarIdioma(({es:'en',en:'pt',pt:'fr',fr:'es'})[idiomaActual]||'es')}
+function cargarArticulosDelDia(){const contenedor=document.getElementById('cuaderno-rotativo');if(!contenedor)return;const art=(bancoArticulos[idiomaActual]||bancoArticulos.es)[0];contenedor.replaceChildren();const tarjeta=document.createElement('div');tarjeta.className='blog-card';const categoria=document.createElement('span');categoria.style.cssText='color:#dfc285;font-size:11px;text-transform:uppercase;letter-spacing:2px';categoria.textContent=art.categoria;const titulo=document.createElement('h3');titulo.style.cssText="color:#fff;font-size:22px;margin-bottom:10px;font-family:'Cormorant Garamond',serif";titulo.textContent=art.titulo;const extracto=document.createElement('p');extracto.style.cssText='color:#bcbbb5;font-size:14px';extracto.textContent=art.extracto;tarjeta.append(categoria,titulo,extracto);tarjeta.addEventListener('click',()=>abrirArticulo(art.titulo,art.cuerpo,art.categoria));contenedor.append(tarjeta)}
+function abrirArticulo(titulo,texto,categoria){document.getElementById('categoriaArticuloModal').textContent=categoria;document.getElementById('tituloArticuloModal').textContent=titulo;document.getElementById('textoArticuloModal').textContent=texto;document.getElementById('modalArticulo').style.display='flex'}
+function cerrarArticulo(){document.getElementById('modalArticulo').style.display='none'}
+async function consultarConCache(clave,url,minutos){const ahora=Date.now();try{const cache=JSON.parse(sessionStorage.getItem(clave)||'null');if(cache&&cache.fecha&&ahora-cache.fecha<minutos*60000)return cache.datos}catch{}const controlador=new AbortController();const timeout=setTimeout(()=>controlador.abort(),7000);try{const respuesta=await fetch(url,{signal:controlador.signal});if(!respuesta.ok)throw new Error('Error HTTP '+respuesta.status);const datos=await respuesta.json();try{sessionStorage.setItem(clave,JSON.stringify({fecha:ahora,datos}))}catch{}return datos}finally{clearTimeout(timeout)}}
+async function obtenerClimaCABA(){try{const datos=await consultarConCache('priveClimaCache','https://api.open-meteo.com/v1/forecast?latitude=-34.6132&longitude=-58.3816&current=temperature_2m,relative_humidity_2m,weather_code&timezone=America%2FArgentina%2FBuenos_Aires',15);const temp=Math.round(datos.current.temperature_2m);const humedad=datos.current.relative_humidity_2m;document.getElementById('clima-info').innerHTML=`Buenos Aires (CABA) — <span style="color:#dfc285;font-weight:600">${temp} °C</span> | Humedad: ${humedad}%`}catch{document.getElementById('clima-info').textContent='Buenos Aires (CABA)'}}
+async function obtenerDolar(){try{const datos=await consultarConCache('priveDolarCache','https://dolarapi.com/v1/dolares/blue',10);const compra=Number(datos.compra),venta=Number(datos.venta);if(!Number.isFinite(compra)||!Number.isFinite(venta))return;document.getElementById('dolar-info').textContent=`Dólar Blue — Compra: $${compra.toLocaleString('es-AR')} | Venta: $${venta.toLocaleString('es-AR')}`}catch{document.getElementById('dolar-info').textContent='Cotización temporalmente no disponible'}}
+function categoriaDeModelo(valor){const cat=String(valor||'').toLowerCase().trim();if(cat.includes('sensual'))return 'sensuales';if(cat.includes('fantasia')||cat.includes('fantasía'))return 'fantasias';return 'terapeuticas'}
+function construirTarjeta(docSnap,indice,likesDados){const m=docSnap.data(),docId=docSnap.id,idCodificado=encodeURIComponent(docId),nombre=escaparHTML(m.nombre||'Anunciante'),categoria=categoriaDeModelo(m.categoriaNormalizada||m.categoria);const traduccionModelo=m.traducciones?.[idiomaActual]||m.traducciones?.es||{};const zona=String(traduccionModelo.valorZona||m.zona||'CABA'),modalidad=String(traduccionModelo.valorModalidad||m.modalidad||'Gabinete propio');const zonaHTML=escaparHTML(zona),modalidadHTML=escaparHTML(modalidad);const foto=imagenSegura(m.fotoPrincipal||m.foto||'img/monograma.png');const telefono=telefonoSeguro(m.whatsapp||m.telefono);const linkWs=`https://wa.me/${telefono}?text=${encodeURIComponent('Hola, vi tu perfil en Masajistas Privé y quiero consultar.')}`;const yaDioLike=likesDados[docId]===true;const likes=Number.isFinite(Number(m.likes))?Number(m.likes):0;const badge=escaparHTML(traducciones[idiomaActual].badgeVerificado);const perfilURL=`perfil.html?id=${idCodificado}`,comentarioURL=`${perfilURL}#pCommentsContainer`;const prioridad=indice<4?'loading="eager" fetchpriority="high"':'loading="lazy" fetchpriority="low"';const imagenHTML=`<img src="${escaparHTML(foto)}" alt="Masajista ${nombre} en ${zonaHTML} - Masajistas Privé" ${prioridad} decoding="async" onerror="this.onerror=null;this.src='img/monograma.png'">`;
+/* La interfaz conserva el botón. Las reglas actuales pueden rechazar su escritura. */
+const botonLike=`<button type="button" data-like-id="${escaparHTML(docId)}" style="background:${yaDioLike?'rgba(223,194,133,.3)':'transparent'};border:1px solid #dfc285;color:#dfc285;padding:5px 10px;border-radius:15px;cursor:pointer;font-size:11px;font-weight:600;display:flex;align-items:center;gap:5px;font-family:Montserrat,sans-serif" ${yaDioLike?'disabled':''}>❤️ <span class="like-count-${escaparHTML(docId)}">${likes}</span></button>`;
+const botonComentarios=`<a href="${comentarioURL}" style="background:transparent;border:1px solid rgba(223,194,133,.4);color:#fff;padding:5px 10px;border-radius:15px;text-decoration:none;font-size:11px;font-weight:600;display:flex;align-items:center;gap:5px;font-family:Montserrat,sans-serif">💬 Experiencias</a>`;
+return `<div class="card-link" data-categoria="${categoria}"><article class="card"><a href="${perfilURL}" style="text-decoration:none;color:inherit;display:block"><div class="card-image">${imagenHTML}<span class="badge-verificado">${badge}</span><div class="card-gradient-overlay"><h3>${nombre}</h3><span class="zona">📍 ${escaparHTML(zona.toUpperCase())}</span><span class="modalidad-tag">${modalidadHTML}</span></div></div></a><div class="prive-barra-clasica" style="height:44px;padding:0 12px;background:#0d0d0d;border-top:1px solid rgba(223,194,133,.2);display:flex;align-items:center;justify-content:space-between;box-sizing:border-box;flex-shrink:0">${botonLike}${botonComentarios}</div><div class="prive-card-info-box"><div class="prive-card-nombre">${nombre}</div><div class="prive-card-detalles">📍 ${escaparHTML(zona.toUpperCase())} • ${escaparHTML(modalidad.toUpperCase())}</div><div style="display:flex;gap:10px;margin:10px 0;align-items:center;justify-content:space-between">${botonLike}${botonComentarios}</div><div class="prive-card-actions"><a href="${perfilURL}" class="prive-btn-accion prive-btn-perfil">Ver Perfil</a><a href="${escaparHTML(linkWs)}" target="_blank" rel="noopener noreferrer" class="prive-btn-accion prive-btn-ws">WhatsApp</a></div></div></article></div>`}
+function programarRenderPerfiles(){if(renderPendiente)return;renderPendiente=true;requestAnimationFrame(()=>{renderPendiente=false;renderizarPerfiles()})}
+function renderizarPerfiles(){const terapeuticas=document.getElementById('grid-terapeuticas'),sensuales=document.getElementById('grid-sensuales'),fantasias=document.getElementById('grid-fantasias'),favoritos=document.getElementById('grid-favoritos'),stories=document.getElementById('stories-destacadas-container');if(!terapeuticas||!sensuales||!fantasias||!favoritos||!stories)return;const html={terapeuticas:[],sensuales:[],fantasias:[],favoritos:[],stories:[]};const favoritosIds=obtenerJSONLocal('priveFavoritos',[]),favoritosSet=new Set(Array.isArray(favoritosIds)?favoritosIds:[]),likesDados=obtenerJSONLocal('priveLikesDados',{});const activos=documentosPerfiles.filter(doc=>doc.data().estado!=='pausado');activos.forEach((doc,indice)=>{const m=doc.data(),categoria=categoriaDeModelo(m.categoriaNormalizada||m.categoria),tarjeta=construirTarjeta(doc,indice,likesDados);html[categoria].push(tarjeta);if(favoritosSet.has(doc.id))html.favoritos.push(tarjeta);if(m.destacada===true){const foto=imagenSegura(m.fotoPrincipal||m.foto||'img/monograma.png'),nombre=escaparHTML(m.nombre||'Anunciante');html.stories.push(`<a href="perfil.html?id=${encodeURIComponent(doc.id)}" class="story-item"><div class="story-ring"><img src="${escaparHTML(foto)}" alt="Perfil destacado de ${nombre}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='img/monograma.png'"></div><span>${nombre}</span></a>`)}});const anuncio=`<a href="https://wa.me/5491131774848?text=Hola,%20quiero%20publicar%20mi%20anuncio%20en%20Masajistas%20Prive" target="_blank" rel="noopener noreferrer" class="card-ad-link"><article class="card-ad"><div class="ad-content"><h3 data-i18n="espacioDisponible">${escaparHTML(traducciones[idiomaActual].espacioDisponible)}</h3><p data-i18n="publicaPerfil">${escaparHTML(traducciones[idiomaActual].publicaPerfil)}</p><span class="btn-ad" data-i18n="contactanos">${escaparHTML(traducciones[idiomaActual].contactanos)}</span></div></article></a>`;html.terapeuticas.push(anuncio);html.sensuales.push(anuncio);html.fantasias.push(anuncio);terapeuticas.innerHTML=html.terapeuticas.join('');sensuales.innerHTML=html.sensuales.join('');fantasias.innerHTML=html.fantasias.join('');favoritos.innerHTML=html.favoritos.length?html.favoritos.join(''):'<p style="grid-column:1/-1;text-align:center;color:#888;font-size:13px;font-style:italic;padding:20px 0">No tenés perfiles guardados en favoritos todavía.</p>';stories.innerHTML=html.stories.join('');aplicarEstiloVisualActual()}
+function cargarPerfilesDesdeFirebase(){if(!db||suscripcionPerfiles)return;/* ÚNICO CAMBIO DE FUENTE: documentos livianos, sin galerías Base64. */suscripcionPerfiles=db.collection('perfiles_publicos').onSnapshot(snapshot=>{documentosPerfiles=snapshot.docs.slice();for(let i=documentosPerfiles.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[documentosPerfiles[i],documentosPerfiles[j]]=[documentosPerfiles[j],documentosPerfiles[i]]}programarRenderPerfiles();ocultarTransicionPrive()},error=>{console.error('Error cargando fichas públicas:',error);ocultarTransicionPrive()})}
+window.darLikeIndice=function(docId){const likesDados=obtenerJSONLocal('priveLikesDados',{});if(likesDados[docId]===true||!db)return;/* Conserva el comportamiento anterior, con reversión si Firestore rechaza. */likesDados[docId]=true;localStorage.setItem('priveLikesDados',JSON.stringify(likesDados));document.querySelectorAll('[data-like-id]').forEach(btn=>{if(btn.dataset.likeId===docId){btn.disabled=true;btn.style.background='rgba(223,194,133,.3)'}});db.collection('modelos_prive').doc(docId).update({likes:firebase.firestore.FieldValue.increment(1)}).catch(error=>{console.warn('Like no permitido por las reglas actuales:',error.code||error.message);delete likesDados[docId];localStorage.setItem('priveLikesDados',JSON.stringify(likesDados));programarRenderPerfiles()})};
+function inicializarInteracciones(){const modalEdad=document.getElementById('modal-edad'),btnMayor=document.getElementById('btn-mayor');if(sessionStorage.getItem('edadVerificada')==='true'&&modalEdad)modalEdad.style.display='none';if(btnMayor&&modalEdad)btnMayor.addEventListener('click',()=>{sessionStorage.setItem('edadVerificada','true');modalEdad.style.display='none'});document.addEventListener('click',evento=>{const botonLike=evento.target.closest('[data-like-id]');if(botonLike){evento.preventDefault();evento.stopPropagation();window.darLikeIndice(botonLike.dataset.likeId);return}const pill=evento.target.closest('.pill-btn[data-filter]');if(!pill)return;const filtro=pill.dataset.filter;document.querySelectorAll('.pill-btn[data-filter]').forEach(p=>p.classList.toggle('active',p===pill));document.querySelectorAll('.categoria-seccion-wrapper').forEach(wrap=>{const seccion=wrap.dataset.sec,visible=filtro==='todas'?seccion!=='favoritos':seccion===filtro;wrap.style.display=visible?'block':'none'})})}
+function iniciarFirebase(){try{if(!window.firebase||!firebase.firestore)throw new Error('No se cargó Firebase');if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);db=firebase.firestore();cargarPerfilesDesdeFirebase()}catch(error){console.error('Error inicializando Firebase:',error);ocultarTransicionPrive()}}
+function iniciarPagina(){aplicarEstiloVisualActual();inicializarInteracciones();aplicarIdioma(idiomaActual);obtenerClimaCABA();obtenerDolar();setTimeout(ocultarTransicionPrive,900);iniciarFirebase()}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',iniciarPagina,{once:true});else iniciarPagina();
 </script>
 </body>
 </html>
