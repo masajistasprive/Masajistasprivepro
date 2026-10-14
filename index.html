@@ -288,6 +288,16 @@ body.modo-tarjeta-alternativo .grid-perfiles .card-ad .ad-content{inset:0!import
  .prive-club-topic{padding:7px 9px!important}
  .prive-club-topic strong{font-size:10px!important}
 }
+
+/* PRIVÉ ZONAS · Enlaces SEO locales integrados */
+.prive-zonas{width:min(1000px,calc(100% - 24px));margin:28px auto 34px;padding:25px clamp(15px,4vw,32px);border:1px solid rgba(223,194,133,.36);border-radius:16px;background:linear-gradient(145deg,#211b14,#111 65%);text-align:center;font-family:Montserrat,sans-serif}
+.prive-zonas-kicker{display:block;color:#dfc285;font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase}
+.prive-zonas h2{font:600 clamp(29px,5vw,42px)/1.1 'Cormorant Garamond',serif;color:#f0dcae;margin:8px 0 10px}
+.prive-zonas p{font-size:12px;line-height:1.7;color:#c7bca8;max-width:680px;margin:0 auto 20px}
+.prive-zonas-links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.prive-zonas-links a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:12px 17px;border:1px solid rgba(223,194,133,.52);border-radius:10px;background:#15130f;color:#f1dbac;text-decoration:none;font-size:12px;font-weight:600;transition:background .2s,border-color .2s}
+.prive-zonas-links a:hover,.prive-zonas-links a:focus-visible{background:#34291a;border-color:#dfc285;outline-offset:3px}
+@media(max-width:540px){.prive-zonas{padding:20px 12px}.prive-zonas-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.prive-zonas-links a{padding:10px 6px;font-size:11px}.prive-zonas-links a:last-child:nth-child(odd){grid-column:1/-1}}
 </style>
 </head>
 <body>
@@ -301,6 +311,19 @@ body.modo-tarjeta-alternativo .grid-perfiles .card-ad .ad-content{inset:0!import
 <div class="prive-view-controls"><button class="pill-btn prive-favorites-control" data-filter="favoritos">★ <span>Mis favoritas</span></button><button id="btnAlternarEstilo" class="prive-layout-control" type="button" onclick="toggleEstiloVisual()">▦ <span>Vista ampliada</span></button></div>
 <div class="art-deco-divider"><span>♦</span></div>
 <main class="container prive-main"><div class="categoria-seccion-wrapper" data-sec="terapeuticas"><h2 class="section-heading" data-i18n="seccionTerapeuticas">Masajistas Terapéuticas</h2><div class="grid-perfiles" id="grid-terapeuticas"></div></div><div class="categoria-seccion-wrapper" data-sec="sensuales" style="margin-top:2rem"><h2 class="section-heading" data-i18n="seccionSensuales">Masajistas Sensuales</h2><div class="grid-perfiles" id="grid-sensuales"></div></div><div class="categoria-seccion-wrapper" data-sec="fantasias" style="margin-top:2rem"><h2 class="section-heading" data-i18n="seccionFantasias">Fantasías</h2><div class="grid-perfiles" id="grid-fantasias"></div></div><div class="categoria-seccion-wrapper" data-sec="favoritos" style="margin-top:2rem;display:none"><h2 class="section-heading">⭐ Mis Favoritas</h2><div class="grid-perfiles" id="grid-favoritos"></div></div></main>
+<section class="prive-zonas" aria-labelledby="prive-zonas-titulo">
+<span class="prive-zonas-kicker">EXPLORÁ BUENOS AIRES</span>
+<h2 id="prive-zonas-titulo">Masajistas por zona en CABA</h2>
+<p>Descubrí masajistas independientes por barrio y encontrá propuestas de relax cerca de la zona que buscás.</p>
+<nav class="prive-zonas-links" aria-label="Masajistas por barrio">
+<a href="masajistas-tribunales.html">📍 Tribunales</a>
+<a href="masajistas-congreso.html">📍 Congreso</a>
+<a href="masajistas-recoleta.html">📍 Recoleta</a>
+<a href="masajistas-microcentro.html">📍 Microcentro</a>
+<a href="masajistas-puerto-madero.html">📍 Puerto Madero</a>
+</nav>
+</section>
+
 <div class="art-deco-divider"><span>♦</span></div>
 <div class="dolar-card" style="background:#141414;border:1px solid rgba(223,194,133,.25);border-radius:10px;padding:20px;max-width:900px;margin:30px auto;text-align:center;font-family:Montserrat,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.5)"><span style="color:#dfc285;font-size:11px;text-transform:uppercase;letter-spacing:2px" data-i18n="financierosSub">Indicadores Financieros</span><h3 style="color:#fff;font-size:18px;margin:8px 0;font-family:'Cormorant Garamond',serif" data-i18n="financierosTitulo">Cotización Dólar (Argentina)</h3><div id="dolar-info" style="color:#ccc;font-size:14px"><span data-i18n="cargandoCotizacion">Cargando cotización actual...</span></div></div>
 <section style="max-width:900px;margin:40px auto;padding:0 20px"><div style="text-align:center;margin-bottom:35px"><span style="color:#dfc285;font-size:11px;text-transform:uppercase;letter-spacing:3px;font-weight:500;display:block;margin-bottom:8px" data-i18n="editorialSub">Editorial & Bienestar</span><h2 style="font-size:30px;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;color:#dfc285;font-family:'Cormorant Garamond',serif" data-i18n="cuadernoTitulo">Cuaderno Privé</h2><p style="color:#999;font-size:14px;font-weight:300" data-i18n="cuadernoDesc">Crónicas urbanas, secretos de gabinete y el arte del relax absoluto en CABA.</p></div><div id="cuaderno-rotativo" style="display:grid;gap:20px"></div></section>
