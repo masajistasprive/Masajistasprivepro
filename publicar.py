@@ -64,6 +64,25 @@ def consultar(url, payload=None):
         return json.load(response)
 
 
+def detalle_error(exc):
+    """Muestra solo el mensaje de error, nunca URL, cabeceras ni credenciales."""
+    try:
+        respuesta = json.loads(exc.read(8192).decode('utf-8', errors='replace'))
+        error = respuesta.get('error', {})
+        mensaje = error.get('message', '')
+        estado = error.get('status', '')
+        if not isinstance(mensaje, str):
+            mensaje = ''
+        if not isinstance(estado, str):
+            estado = ''
+        # Protección adicional: eliminar la clave si el proveedor la incluyera.
+        mensaje = mensaje.replace(KEY, '[CLAVE OCULTA]')
+        mensaje = mensaje.replace('\n', ' ').replace('\r', ' ')[:450]
+        return f'{estado}: {mensaje}' if mensaje else (estado or 'Sin detalle de Google')
+    except (ValueError, UnicodeError, TypeError, AttributeError):
+        return 'Google no devolvió un detalle JSON legible'
+
+
 def modelos_disponibles():
     encontrados = []
     siguiente = None
@@ -86,7 +105,7 @@ def modelos_disponibles():
 try:
     disponibles = modelos_disponibles()
 except urllib.error.HTTPError as exc:
-    sys.exit(f'No se pudo consultar la lista de modelos de Gemini: HTTP {exc.code}. No se publicó.')
+    sys.exit(f'No se pudo consultar la lista de modelos de Gemini: HTTP {exc.code}. {detalle_error(exc)}. No se publicó.')
 except (urllib.error.URLError, TimeoutError, ValueError, TypeError) as exc:
     sys.exit(f'No se pudo consultar la lista de modelos ({type(exc).__name__}). No se publicó.')
 
@@ -107,7 +126,7 @@ for modelo in ordenados:
         article = json.loads(texto)
         break
     except urllib.error.HTTPError as exc:
-        print(f'El modelo {modelo} devolvió HTTP {exc.code}.')
+        print(f'El modelo {modelo} devolvió HTTP {exc.code}: {detalle_error(exc)}')
         if exc.code in (404, 400):
             continue
         sys.exit(f'Gemini devolvió HTTP {exc.code}. No se publicó.')
