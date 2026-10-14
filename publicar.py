@@ -1,24 +1,28 @@
+#!/usr/bin/env python3
+"""Publicación diaria de Cuaderno Privé desde GitHub Actions.
+
+Requiere GEMINI_API_KEY en los secrets del repositorio.
+No habilita facturación ni genera artículos de relleno.
+"""
 import datetime
 import json
 import os
 import pathlib
+import re
 import sys
+import time
 import urllib.error
+import urllib.parse
 import urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parent
+if ROOT.name == 'scripts':
+    ROOT = ROOT.parent
 DEST = ROOT / 'cuaderno' / 'articulos'
-KEY = os.getenv('GEMINI_API_KEY', '').strip()
-
-if not KEY:
-    sys.exit('Falta GEMINI_API_KEY en GitHub Secrets. No se publica contenido de relleno.')
-
-HOY = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=-3))).date().isoformat()
-ARCHIVO = DEST / f'{HOY}.json'
-if ARCHIVO.exists():
-    print('Ya existe un artículo para hoy:', HOY)
-    sys.exit(0)
-
+KEY = os.environ.get('GEMINI_API_KEY', '').strip()
+API_BASE = 'https://generativelanguage.googleapis.com/v1beta'
+TODAY = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=-3))).date()
+DATE = TODAY.isoformat()
 TOPICS = [
     'masajes relajantes y descanso',
     'masaje sensitivo y percepción de los sentidos',
@@ -31,152 +35,146 @@ TOPICS = [
     'autocuidado masculino y relajación',
     'higiene y etiqueta en un gabinete de masajes',
 ]
-TEMA = TOPICS[datetime.date.fromisoformat(HOY).toordinal() % len(TOPICS)]
-PROMPT = (
-    f'Escribí para Cuaderno Privé, revista argentina premium para adultos, '
-    f'un artículo ORIGINAL sobre {TEMA}. Español rioplatense cuidado, elegante, '
-    'no explícito, sin prometer servicios sexuales, sin testimonios inventados '
-    'ni consejos médicos. Entre 450 y 650 palabras, informativo y útil. '
-    'Sin links inventados. Respondé SOLO JSON válido con las claves titulo '
-    '(máximo 85 caracteres), bajada (máximo 200), categoria, contenido '
-    '(texto plano con párrafos separados por dos saltos de línea). '
-    'No uses Markdown ni HTML.'
-)
-
-API_BASE = 'https://generativelanguage.googleapis.com/v1beta'
-PAYLOAD = {
-    'contents': [{'parts': [{'text': PROMPT}]}],
-    'generationConfig': {'responseMimeType': 'application/json', 'temperature': 0.8},
-}
+PREFERRED = [
+    'gemini-3.1-flash-lite',
+    'gemini-3-flash',
+    'gemini-3.5-flash-lite',
+    'gemini-2.5-flash-lite',
+    'gemini-2-flash-lite',
+    'gemini-2-flash',
+]
 
 
-def consultar(url, payload=None):
-    headers = {'x-goog-api-key': KEY}
-    if payload is not None:
-        headers['Content-Type'] = 'application/json'
+def api(method, endpoint, payload=None, timeout=70):
+    url = API_BASE + endpoint
+    data = None if payload is None else json.dumps(payload).encode('utf-8')
     request = urllib.request.Request(
         url,
-        data=json.dumps(payload).encode('utf-8') if payload is not None else None,
-        headers=headers,
-        method='POST' if payload is not None else 'GET',
+        data=data,
+        headers={'x-goog-api-key': KEY, 'Content-Type': 'application/json'},
+        method=method,
     )
-    with urllib.request.urlopen(request, timeout=100) as response:
-        return json.load(response)
-
-
-def detalle_error(exc):
-    """Muestra solo el mensaje de error, nunca URL, cabeceras ni credenciales."""
     try:
-        respuesta = json.loads(exc.read(8192).decode('utf-8', errors='replace'))
-        error = respuesta.get('error', {})
-        mensaje = error.get('message', '')
-        estado = error.get('status', '')
-        if not isinstance(mensaje, str):
-            mensaje = ''
-        if not isinstance(estado, str):
-            estado = ''
-        # Protección adicional: eliminar la clave si el proveedor la incluyera.
-        mensaje = mensaje.replace(KEY, '[CLAVE OCULTA]')
-        mensaje = mensaje.replace('\n', ' ').replace('\r', ' ')[:450]
-        return f'{estado}: {mensaje}' if mensaje else (estado or 'Sin detalle de Google')
-    except (ValueError, UnicodeError, TypeError, AttributeError):
-        return 'Google no devolvió un detalle JSON legible'
-
-
-def modelos_disponibles():
-    encontrados = []
-    siguiente = None
-    while True:
-        url = API_BASE + '/models?pageSize=100'
-        if siguiente:
-            from urllib.parse import quote
-            url += '&pageToken=' + quote(siguiente, safe='')
-        respuesta = consultar(url)
-        for modelo in respuesta.get('models', []):
-            nombre = modelo.get('name', '')
-            metodos = modelo.get('supportedGenerationMethods', [])
-            if nombre.startswith('models/') and 'generateContent' in metodos:
-                encontrados.append(nombre)
-        siguiente = respuesta.get('nextPageToken')
-        if not siguiente:
-            return encontrados
-
-
-try:
-    disponibles = modelos_disponibles()
-except urllib.error.HTTPError as exc:
-    sys.exit(f'No se pudo consultar la lista de modelos de Gemini: HTTP {exc.code}. {detalle_error(exc)}. No se publicó.')
-except (urllib.error.URLError, TimeoutError, ValueError, TypeError) as exc:
-    sys.exit(f'No se pudo consultar la lista de modelos ({type(exc).__name__}). No se publicó.')
-
-# Priorizar los modelos que Google recomienda explícitamente para esta clave.
-preferidos = (
-    'models/gemini-3.8-flash',
-    'models/gemini-3.5-flash-lite',
-    'models/gemini-3-flash-preview',
-    'models/gemini-flash-latest',
-)
-ordenados = [m for m in preferidos if m in disponibles]
-ordenados += [
-    m for m in disponibles
-    if m not in ordenados
-    and 'flash' in m.lower()
-    and 'tts' not in m.lower()
-    and 'audio' not in m.lower()
-    and 'live' not in m.lower()
-    and 'image' not in m.lower()
-    and '2.5-flash' not in m.lower()
-]
-if not ordenados:
-    sys.exit('No hay modelos Flash de texto disponibles para esta clave. No se publicó.')
-
-article = None
-for modelo in ordenados:
-    print('Probando modelo:', modelo)
-    try:
-        data = consultar(f'{API_BASE}/{modelo}:generateContent', PAYLOAD)
-        partes = data['candidates'][0]['content']['parts']
-        texto = ''.join(p.get('text', '') for p in partes)
-        article = json.loads(texto)
-        break
+        with urllib.request.urlopen(request, timeout=timeout) as response:
+            return json.load(response)
     except urllib.error.HTTPError as exc:
-        print(f'El modelo {modelo} devolvió HTTP {exc.code}: {detalle_error(exc)}')
-        if exc.code in (404, 400):
-            continue
-        sys.exit(f'Gemini devolvió HTTP {exc.code}. No se publicó.')
-    except (urllib.error.URLError, TimeoutError, ValueError, KeyError, IndexError, TypeError) as exc:
-        sys.exit(f'Falló la generación o el formato de respuesta ({type(exc).__name__}). No se publicó.')
+        detail = exc.read(1200).decode('utf-8', errors='replace')
+        try:
+            detail = json.loads(detail).get('error', {}).get('message', detail)
+        except ValueError:
+            pass
+        raise RuntimeError(f'HTTP {exc.code}: {detail[:400]}') from exc
+    except (urllib.error.URLError, TimeoutError) as exc:
+        raise RuntimeError(f'Error de conexión: {exc}') from exc
 
-if article is None:
-    sys.exit('Ninguno de los modelos disponibles pudo generar el artículo. No se publicó.')
 
-if not isinstance(article, dict):
-    sys.exit('La respuesta no es un objeto JSON. No se publicó.')
+def available_models():
+    models = []
+    page_token = ''
+    for _ in range(10):
+        query = '?pageSize=100'
+        if page_token:
+            query += '&pageToken=' + urllib.parse.quote(page_token, safe='')
+        response = api('GET', '/models' + query, timeout=30)
+        for item in response.get('models', []):
+            if 'generateContent' in item.get('supportedGenerationMethods', []):
+                models.append(item['name'].removeprefix('models/'))
+        page_token = response.get('nextPageToken', '')
+        if not page_token:
+            break
+    return models
 
-CAMPOS = ('titulo', 'bajada', 'categoria', 'contenido')
-for field in CAMPOS:
-    if not isinstance(article.get(field), str) or not article[field].strip():
-        sys.exit(f'Falta el campo {field}. No se publicó.')
 
-article = {field: article[field].strip() for field in CAMPOS}
-if len(article['titulo']) > 85 or len(article['bajada']) > 200:
-    sys.exit('El título o la bajada superan el límite. No se publicó.')
-if len(article['contenido'].split()) < 300:
-    sys.exit('El artículo es demasiado corto. No se publicó.')
+def extract_article(response):
+    candidates = response.get('candidates') or []
+    if not candidates:
+        raise ValueError('Gemini no devolvió candidatos de texto.')
+    parts = candidates[0].get('content', {}).get('parts', [])
+    text = ''.join(part.get('text', '') for part in parts).strip()
+    if text.startswith('```'):
+        text = re.sub(r'^```(?:json)?\s*|\s*```$', '', text).strip()
+    article = json.loads(text)
+    if not isinstance(article, dict):
+        raise ValueError('La respuesta no es un objeto JSON.')
+    for field in ('titulo', 'bajada', 'categoria', 'contenido'):
+        if not isinstance(article.get(field), str) or not article[field].strip():
+            raise ValueError(f'Falta el campo {field}.')
+    if len(article['titulo']) > 85 or len(article['bajada']) > 200:
+        raise ValueError('Título o bajada exceden la longitud permitida.')
+    word_count = len(article['contenido'].split())
+    if not 300 <= word_count <= 750:
+        raise ValueError(f'Extensión inválida: {word_count} palabras.')
+    cleaned = {key: article[key].strip() for key in ('titulo', 'bajada', 'categoria', 'contenido')}
+    cleaned['fecha'] = DATE
+    return cleaned
 
-article['fecha'] = HOY
-DEST.mkdir(parents=True, exist_ok=True)
-ARCHIVO.write_text(json.dumps(article, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
 
-items = []
-for path in sorted(DEST.glob('????-??-??.json'), reverse=True)[:90]:
+def main():
+    if not KEY:
+        sys.exit('Falta GEMINI_API_KEY en GitHub Secrets. No se publica contenido de relleno.')
+    if (DEST / f'{DATE}.json').exists():
+        print(f'Ya existe un artículo del {DATE}; no se duplica.')
+        return
+    topic = TOPICS[TODAY.toordinal() % len(TOPICS)]
+    prompt = (
+        'Escribí para Cuaderno Privé, revista argentina premium para adultos, '
+        f'un artículo ORIGINAL sobre {topic}. Español rioplatense cuidado, elegante, '
+        'no explícito, sin prometer servicios sexuales, sin testimonios inventados '
+        'ni consejos médicos. Entre 450 y 650 palabras, informativo y útil. '
+        'Sin enlaces inventados. Respondé SOLO JSON válido con las claves titulo '
+        '(máximo 85 caracteres), bajada (máximo 200), categoria y contenido '
+        '(texto plano con párrafos separados por dos saltos de línea). '
+        'No uses Markdown ni HTML.'
+    )
     try:
-        entry = json.loads(path.read_text(encoding='utf-8'))
-        items.append({key: entry[key] for key in ('fecha', 'titulo', 'bajada', 'categoria')})
-    except (ValueError, KeyError, TypeError):
-        continue
+        available = available_models()
+    except RuntimeError as exc:
+        sys.exit(f'No se pudo consultar la lista real de modelos: {exc}')
+    candidates = [name for name in PREFERRED if name in available]
+    if not candidates:
+        # No se elige un modelo desconocido sin confirmar que admite generateContent.
+        print('Modelos que admiten generateContent:', ', '.join(available) or '(ninguno)')
+        sys.exit('No hay modelos de texto preferidos disponibles para esta clave.')
+    print('Modelos disponibles para probar:', ', '.join(candidates), flush=True)
+    article = None
+    for model in candidates:
+        print(f'Probando modelo: {model}', flush=True)
+        payload = {
+            'contents': [{'parts': [{'text': prompt}]}],
+            'generationConfig': {'responseMimeType': 'application/json', 'temperature': 0.7},
+        }
+        try:
+            response = api('POST', f'/models/{model}:generateContent', payload)
+            article = extract_article(response)
+            print(f'Generación válida con {model}', flush=True)
+            break
+        except (RuntimeError, ValueError, KeyError, json.JSONDecodeError) as exc:
+            message = str(exc)
+            print(f'No se pudo generar con {model}: {message[:500]}', flush=True)
+            # Errores de autorización/cuota no se arreglan rotando modelos.
+            if re.search(r'HTTP (401|403)', message):
+                sys.exit('Revisá los permisos de GEMINI_API_KEY; se detuvo sin publicar.')
+            if 'HTTP 429' in message:
+                print('Límite de solicitudes alcanzado; se prueba otra opción disponible.', flush=True)
+            if 'HTTP 503' in message:
+                time.sleep(2)
+    if article is None:
+        sys.exit('Ningún modelo devolvió un artículo válido. No se publicó nada.')
+    DEST.mkdir(parents=True, exist_ok=True)
+    target = DEST / f'{DATE}.json'
+    target.write_text(json.dumps(article, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    items = []
+    for file in sorted(DEST.glob('????-??-??.json'), reverse=True)[:90]:
+        try:
+            entry = json.loads(file.read_text(encoding='utf-8'))
+            items.append({key: entry[key] for key in ('fecha', 'titulo', 'bajada', 'categoria')})
+        except (ValueError, KeyError, TypeError):
+            print(f'Se omitió del índice: {file.name}', flush=True)
+    (ROOT / 'cuaderno' / 'indice.json').write_text(
+        json.dumps(items, ensure_ascii=False, indent=2) + '\n', encoding='utf-8'
+    )
+    print(f'Publicado {DATE}: {article["titulo"]}')
 
-(ROOT / 'cuaderno' / 'indice.json').write_text(
-    json.dumps(items, ensure_ascii=False, indent=2) + '\n', encoding='utf-8'
-)
-print('Publicado:', HOY, article['titulo'])
+
+if __name__ == '__main__':
+    main()
