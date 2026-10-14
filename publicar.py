@@ -43,28 +43,79 @@ PROMPT = (
     'No uses Markdown ni HTML.'
 )
 
-URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent'
+API_BASE = 'https://generativelanguage.googleapis.com/v1beta'
 PAYLOAD = {
     'contents': [{'parts': [{'text': PROMPT}]}],
     'generationConfig': {'responseMimeType': 'application/json', 'temperature': 0.8},
 }
-REQUEST = urllib.request.Request(
-    URL,
-    data=json.dumps(PAYLOAD).encode('utf-8'),
-    headers={'Content-Type': 'application/json', 'x-goog-api-key': KEY},
-    method='POST',
-)
+
+
+def consultar(url, payload=None):
+    headers = {'x-goog-api-key': KEY}
+    if payload is not None:
+        headers['Content-Type'] = 'application/json'
+    request = urllib.request.Request(
+        url,
+        data=json.dumps(payload).encode('utf-8') if payload is not None else None,
+        headers=headers,
+        method='POST' if payload is not None else 'GET',
+    )
+    with urllib.request.urlopen(request, timeout=100) as response:
+        return json.load(response)
+
+
+def modelos_disponibles():
+    encontrados = []
+    siguiente = None
+    while True:
+        url = API_BASE + '/models?pageSize=100'
+        if siguiente:
+            from urllib.parse import quote
+            url += '&pageToken=' + quote(siguiente, safe='')
+        respuesta = consultar(url)
+        for modelo in respuesta.get('models', []):
+            nombre = modelo.get('name', '')
+            metodos = modelo.get('supportedGenerationMethods', [])
+            if nombre.startswith('models/') and 'generateContent' in metodos:
+                encontrados.append(nombre)
+        siguiente = respuesta.get('nextPageToken')
+        if not siguiente:
+            return encontrados
+
 
 try:
-    with urllib.request.urlopen(REQUEST, timeout=100) as response:
-        data = json.load(response)
-    text = data['candidates'][0]['content']['parts'][0]['text']
-    article = json.loads(text)
+    disponibles = modelos_disponibles()
 except urllib.error.HTTPError as exc:
-    # No mostrar el cuerpo de respuesta ni credenciales en registros públicos.
-    sys.exit(f'Gemini devolvió HTTP {exc.code}. No se publicó el artículo.')
-except (urllib.error.URLError, TimeoutError, ValueError, KeyError, IndexError, TypeError) as exc:
-    sys.exit(f'Falló la generación o el formato de respuesta ({type(exc).__name__}). No se publicó.')
+    sys.exit(f'No se pudo consultar la lista de modelos de Gemini: HTTP {exc.code}. No se publicó.')
+except (urllib.error.URLError, TimeoutError, ValueError, TypeError) as exc:
+    sys.exit(f'No se pudo consultar la lista de modelos ({type(exc).__name__}). No se publicó.')
+
+preferidos = ('models/gemini-2.5-flash', 'models/gemini-2.5-flash-lite',
+             'models/gemini-2.0-flash', 'models/gemini-1.5-flash')
+ordenados = [m for m in preferidos if m in disponibles]
+ordenados += [m for m in disponibles if m not in ordenados and 'flash' in m.lower()]
+if not ordenados:
+    sys.exit('La clave no tiene modelos Flash compatibles con generateContent. No se publicó.')
+
+article = None
+for modelo in ordenados:
+    print('Probando modelo:', modelo)
+    try:
+        data = consultar(f'{API_BASE}/{modelo}:generateContent', PAYLOAD)
+        partes = data['candidates'][0]['content']['parts']
+        texto = ''.join(p.get('text', '') for p in partes)
+        article = json.loads(texto)
+        break
+    except urllib.error.HTTPError as exc:
+        print(f'El modelo {modelo} devolvió HTTP {exc.code}.')
+        if exc.code in (404, 400):
+            continue
+        sys.exit(f'Gemini devolvió HTTP {exc.code}. No se publicó.')
+    except (urllib.error.URLError, TimeoutError, ValueError, KeyError, IndexError, TypeError) as exc:
+        sys.exit(f'Falló la generación o el formato de respuesta ({type(exc).__name__}). No se publicó.')
+
+if article is None:
+    sys.exit('Ninguno de los modelos disponibles pudo generar el artículo. No se publicó.')
 
 if not isinstance(article, dict):
     sys.exit('La respuesta no es un objeto JSON. No se publicó.')
