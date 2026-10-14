@@ -350,7 +350,48 @@ function seleccionarIdiomaPrive(lang){aplicarIdioma(lang);cerrarMenuIdioma()}
 document.addEventListener('click',e=>{if(!e.target.closest('#priveLanguage'))cerrarMenuIdioma()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')cerrarMenuIdioma()});
 function cambiarIdioma(){aplicarIdioma(({es:'en',en:'pt',pt:'fr',fr:'es'})[idiomaActual]||'es')}
-function cargarArticulosDelDia(){const contenedor=document.getElementById('cuaderno-rotativo');if(!contenedor)return;const art=(bancoArticulos[idiomaActual]||bancoArticulos.es)[0];contenedor.replaceChildren();const tarjeta=document.createElement('div');tarjeta.className='blog-card';const categoria=document.createElement('span');categoria.style.cssText='color:#dfc285;font-size:11px;text-transform:uppercase;letter-spacing:2px';categoria.textContent=art.categoria;const titulo=document.createElement('h3');titulo.style.cssText="color:#fff;font-size:22px;margin-bottom:10px;font-family:'Cormorant Garamond',serif";titulo.textContent=art.titulo;const extracto=document.createElement('p');extracto.style.cssText='color:#bcbbb5;font-size:14px';extracto.textContent=art.extracto;tarjeta.append(categoria,titulo,extracto);tarjeta.addEventListener('click',()=>abrirArticulo(art.titulo,art.cuerpo,art.categoria));contenedor.append(tarjeta)}
+/* Cuaderno Privé: la portada lee el mismo índice que cuaderno.html. */
+let solicitudCuaderno=0;
+async function cargarArticulosDelDia(){
+ const contenedor=document.getElementById('cuaderno-rotativo');
+ if(!contenedor)return;
+ const turno=++solicitudCuaderno;
+ contenedor.replaceChildren();
+ const tarjeta=document.createElement('a');
+ tarjeta.className='blog-card';
+ tarjeta.href='cuaderno.html';
+ tarjeta.style.cssText='display:block;text-decoration:none;color:inherit;cursor:pointer';
+ const categoria=document.createElement('span');
+ categoria.style.cssText='color:#dfc285;font-size:11px;text-transform:uppercase;letter-spacing:2px';
+ const titulo=document.createElement('h3');
+ titulo.style.cssText="color:#fff;font-size:22px;margin:10px 0;font-family:'Cormorant Garamond',serif";
+ const extracto=document.createElement('p');
+ extracto.style.cssText='color:#bcbbb5;font-size:14px;line-height:1.6';
+ const leer=document.createElement('span');
+ leer.style.cssText='color:#dfc285;font-size:12px;font-weight:600';
+ leer.textContent='Abrir Cuaderno Privé →';
+ tarjeta.append(categoria,titulo,extracto,leer);
+ contenedor.append(tarjeta);
+ categoria.textContent='CUADERNO PRIVÉ';
+ titulo.textContent='Consultando la última publicación…';
+ extracto.textContent='';
+ try{
+  const respuesta=await fetch('cuaderno/indice.json',{cache:'no-store'});
+  if(!respuesta.ok)throw new Error('Índice no disponible');
+  const lista=await respuesta.json();
+  if(!Array.isArray(lista)||!lista.length)throw new Error('Sin artículos');
+  if(turno!==solicitudCuaderno)return;
+  const ultimo=lista[0];
+  categoria.textContent=[ultimo.categoria,ultimo.fecha].filter(Boolean).join(' · ')||'CUADERNO PRIVÉ';
+  titulo.textContent=ultimo.titulo||'Última publicación de Cuaderno Privé';
+  extracto.textContent=ultimo.bajada||'';
+ }catch(error){
+  if(turno!==solicitudCuaderno)return;
+  console.warn('No se pudo cargar la última publicación del Cuaderno:',error);
+  titulo.textContent='Descubrí Cuaderno Privé';
+  extracto.textContent='Entrá para leer las últimas publicaciones.';
+ }
+}
 function abrirArticulo(titulo,texto,categoria){document.getElementById('categoriaArticuloModal').textContent=categoria;document.getElementById('tituloArticuloModal').textContent=titulo;document.getElementById('textoArticuloModal').textContent=texto;document.getElementById('modalArticulo').style.display='flex'}
 function cerrarArticulo(){document.getElementById('modalArticulo').style.display='none'}
 async function consultarConCache(clave,url,minutos){const ahora=Date.now();try{const cache=JSON.parse(sessionStorage.getItem(clave)||'null');if(cache&&cache.fecha&&ahora-cache.fecha<minutos*60000)return cache.datos}catch{}const controlador=new AbortController();const timeout=setTimeout(()=>controlador.abort(),7000);try{const respuesta=await fetch(url,{signal:controlador.signal});if(!respuesta.ok)throw new Error('Error HTTP '+respuesta.status);const datos=await respuesta.json();try{sessionStorage.setItem(clave,JSON.stringify({fecha:ahora,datos}))}catch{}return datos}finally{clearTimeout(timeout)}}
