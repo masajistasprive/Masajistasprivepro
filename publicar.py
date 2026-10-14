@@ -109,12 +109,26 @@ except urllib.error.HTTPError as exc:
 except (urllib.error.URLError, TimeoutError, ValueError, TypeError) as exc:
     sys.exit(f'No se pudo consultar la lista de modelos ({type(exc).__name__}). No se publicó.')
 
-preferidos = ('models/gemini-2.5-flash', 'models/gemini-2.5-flash-lite',
-             'models/gemini-2.0-flash', 'models/gemini-1.5-flash')
+# Priorizar los modelos que Google recomienda explícitamente para esta clave.
+preferidos = (
+    'models/gemini-3.8-flash',
+    'models/gemini-3.5-flash-lite',
+    'models/gemini-3-flash-preview',
+    'models/gemini-flash-latest',
+)
 ordenados = [m for m in preferidos if m in disponibles]
-ordenados += [m for m in disponibles if m not in ordenados and 'flash' in m.lower()]
+ordenados += [
+    m for m in disponibles
+    if m not in ordenados
+    and 'flash' in m.lower()
+    and 'tts' not in m.lower()
+    and 'audio' not in m.lower()
+    and 'live' not in m.lower()
+    and 'image' not in m.lower()
+    and '2.5-flash' not in m.lower()
+]
 if not ordenados:
-    sys.exit('La clave no tiene modelos Flash compatibles con generateContent. No se publicó.')
+    sys.exit('No hay modelos Flash de texto disponibles para esta clave. No se publicó.')
 
 article = None
 for modelo in ordenados:
