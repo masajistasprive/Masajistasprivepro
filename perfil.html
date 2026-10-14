@@ -45,7 +45,7 @@ html,body{max-width:100%;overflow-x:clip}
  #perfil-content-box{padding-inline:12px}
  .perfil-galeria-grid{width:100%}
  .galeria-miniaturas{gap:6px}
- .perfil-acciones-inferior{padding-bottom:65px}
+ .perfil-acciones-inferior{padding-bottom:75px}
  .btn-accion-secundarios{gap:8px}
  .btn-whatsapp-flotante{bottom:max(12px,env(safe-area-inset-bottom));right:12px;padding:10px 14px;font-size:11px}
  #priveLightbox{gap:4px;padding-inline:4px}
@@ -53,6 +53,30 @@ html,body{max-width:100%;overflow-x:clip}
  .prive-review-panel{padding:20px 12px}
 }
 @media(prefers-reduced-motion:reduce){.prive-transition-logo{animation:none}}
+
+/* PRIVÉ MOBILE 5.5 — lectura clara sin modificar datos de Firebase */
+#perfil-content-box .perfil-info,
+#perfil-content-box .perfil-descripcion { min-width:0; max-width:100%; }
+#perfil-content-box .perfil-descripcion { width:100%; overflow-wrap:break-word; }
+#perfil-content-box .perfil-descripcion h3 { font-family:'Cormorant Garamond',serif; font-size:clamp(23px,5vw,30px); line-height:1.2; margin:0 0 16px; color:var(--gold); }
+#perfil-content-box .prive-description-text,
+#perfil-content-box .prive-techniques-text { font-family:Montserrat,sans-serif !important; font-size:clamp(14px,3.7vw,16px) !important; font-weight:400 !important; line-height:1.75 !important; letter-spacing:0 !important; color:#dedede !important; text-align:left !important; overflow-wrap:break-word; word-break:normal; white-space:normal; }
+#perfil-content-box .prive-description-text p { margin:0 0 1.15em !important; padding:0 !important; font:inherit !important; line-height:inherit !important; letter-spacing:inherit !important; color:inherit !important; text-align:left !important; }
+#perfil-content-box .prive-description-text p:last-child { margin-bottom:0 !important; }
+#perfil-content-box .prive-techniques { margin-top:22px; padding:16px; border:1px solid rgba(223,194,133,.25); border-radius:10px; background:#151515; }
+#perfil-content-box .prive-techniques-title { display:block; margin:0 0 10px; color:var(--gold); font:600 14px/1.5 Montserrat,sans-serif; }
+#perfil-content-box .prive-techniques-text { color:#cbd5e1 !important; }
+#perfil-content-box .prive-techniques-text p { margin:0 0 10px; font:inherit; line-height:inherit; }
+#perfil-content-box .prive-techniques-text p:last-child { margin-bottom:0; }
+#perfil-content-box .perfil-detalles .detalle-item { overflow-wrap:break-word; }
+@media(max-width:600px){
+ #perfil-content-box .perfil-descripcion { padding:16px 14px !important; }
+ #perfil-content-box .prive-description-text,#perfil-content-box .prive-techniques-text { font-size:14px !important; line-height:1.7 !important; }
+ .btn-whatsapp-flotante { position:fixed !important; right:12px !important; bottom:max(12px,env(safe-area-inset-bottom)) !important; width:auto !important; height:auto !important; min-height:48px !important; max-width:calc(100vw - 24px) !important; padding:11px 15px !important; border-radius:50px !important; background:linear-gradient(135deg,#25d366,#128c7e) !important; color:#fff !important; box-shadow:0 8px 25px #25d36655 !important; display:flex !important; align-items:center !important; justify-content:center !important; gap:10px !important; font:600 11px Montserrat,sans-serif !important; letter-spacing:1px !important; text-transform:uppercase !important; z-index:9999 !important; }
+ .btn-whatsapp-flotante span { display:inline !important; white-space:normal !important; text-align:center !important; }
+ .btn-whatsapp-flotante svg { display:block !important; width:26px !important; height:26px !important; fill:#fff !important; flex-shrink:0 !important; }
+
+}
 </style>
 </head>
 <body class="perfil-body">
@@ -131,6 +155,14 @@ function t(){return labels[idiomaPerfil]||labels.es}
 function hideTransition(){const e=document.getElementById('priveTransitionScreen');e.style.opacity='0';setTimeout(()=>e.remove(),650)}
 function setLanguage(l){idiomaPerfil=l;localStorage.setItem('idiomaPrive',l);const next=langs[(langs.indexOf(l)+1)%langs.length];document.getElementById('btn-idioma').textContent=({es:'🇦🇷 ES',en:'🇺🇸 EN',pt:'🇧🇷 PT',fr:'🇫🇷 FR'})[next];document.documentElement.lang=l;if(modelo){renderProfile();renderReviews()}}
 document.getElementById('btn-idioma').addEventListener('click',()=>setLanguage(langs[(langs.indexOf(idiomaPerfil)+1)%langs.length]));
+// Convierte saltos de línea del texto guardado en párrafos legibles.
+// No interpreta HTML de anunciantes: todo se escapa antes de insertar.
+function formatProfileText(value){
+ const raw=String(value??'').replace(/\r\n?/g,'\n').trim();
+ if(!raw)return '';
+ const paragraphs=raw.split(/\n\s*\n|\n(?=\s*[-•●▪✓✔🌿💆✨🏠📍])/u).map(x=>x.trim()).filter(Boolean);
+ return paragraphs.map(p=>`<p>${esc(p).replace(/\n/g,'<br>')}</p>`).join('');
+}
 const whatsappSvg='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M.057 24l1.687-6.163A11.8 11.8 0 0 1 .157 11.89C.16 5.34 5.49 0 12.05 0c6.55 0 11.89 5.34 11.89 11.9 0 6.56-5.34 11.89-11.89 11.89-1.99 0-3.95-.5-5.69-1.45L.057 24zm6.6-3.81c1.68 1 3.28 1.59 5.39 1.59 5.45 0 9.89-4.43 9.89-9.88 0-5.46-4.42-9.89-9.88-9.89-5.45 0-9.89 4.44-9.89 9.89 0 2.22.65 3.89 1.75 5.63l-1 3.65 3.74-.98zm11.38-5.46c-.07-.12-.27-.2-.57-.35-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.64.07-.3-.15-1.26-.46-2.39-1.48-.88-.79-1.48-1.76-1.65-2.06-.18-.3-.02-.46.13-.61.13-.13.3-.35.44-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.19 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.42z"/></svg>';
 function renderProfile(){
 const m=modelo,L=t(),tr=m.traducciones||{},x=tr[idiomaPerfil]||tr.es||{};
@@ -147,10 +179,10 @@ document.getElementById('perfil-content-box').innerHTML=`
 <div class="perfil-galeria-grid"><img src="${esc(main)}" alt="${esc(m.nombre)}" class="foto-principal" id="fotoPrincipal" data-photo="0" fetchpriority="high" decoding="async"><div class="galeria-miniaturas">${lightboxUrls.map((p,i)=>`<img src="${esc(p)}" alt="${esc(m.nombre)} ${i+1}" data-photo="${i}" loading="lazy" decoding="async">`).join('')}</div></div>
 <div class="perfil-info"><div class="perfil-titulo-seccion"><h2>${esc(m.nombre)}</h2><span class="badge-verificado">${esc(L.verified)}</span></div>
 <p class="perfil-ubicacion">📍 ${esc(L.area)} <strong>${esc(pick('valorZona',m.zona))}</strong></p><p class="perfil-modalidad">🏠 ${esc(L.mode)} <strong>${esc(pick('valorModalidad',m.modalidad))}</strong></p>
-<div class="perfil-descripcion"><h3>${esc(L.description)}</h3><p style="white-space:pre-line">${esc(description)}</p>${pick('valorTecnicas')?`<div style="color:#94a3b8;font-size:.9rem"><strong>${esc(L.techniques)}</strong> ${esc(pick('valorTecnicas'))}</div>`:''}</div>
+<div class="perfil-descripcion"><h3>${esc(L.description)}</h3><div class="prive-description-text">${formatProfileText(description)}</div>${pick('valorTecnicas')?`<section class="prive-techniques"><strong class="prive-techniques-title">${esc(L.techniques)}</strong><div class="prive-techniques-text">${formatProfileText(pick('valorTecnicas'))}</div></section>`:''}</div>
 ${safeUrl(m.videoPresentacion)?`<div class="perfil-descripcion" style="margin-top:20px"><h3>🎥 ${esc(L.video)}</h3><video controls playsinline preload="none" controlslist="nodownload" style="width:100%;max-height:350px;border-radius:8px;background:#000"><source src="${esc(safeUrl(m.videoPresentacion))}" type="video/mp4"></video></div>`:''}
 ${details?`<div class="perfil-detalles">${details}</div>`:''}
-<div class="perfil-acciones-inferior">${active&&whatsapp?`<a href="${esc(whatsapp)}" target="_blank" rel="noopener noreferrer" class="btn-accion-prive btn-accion-wpp" data-metrica-whatsapp="principal">${whatsappSvg}<span>${esc(L.sendWhatsApp)}</span></a>`:''}<div class="btn-accion-secundarios"><button type="button" id="btnFavElement" class="btn-accion-prive btn-accion-fav ${isFav?'activo':''}">❤️ ${esc(isFav?L.saved:L.favorite)}</button><button type="button" id="btnShare" class="btn-accion-prive btn-accion-compartir">↗ ${esc(L.share)}</button></div></div></div>
+<div class="perfil-acciones-inferior"><div class="btn-accion-secundarios"><button type="button" id="btnFavElement" class="btn-accion-prive btn-accion-fav ${isFav?'activo':''}">❤️ ${esc(isFav?L.saved:L.favorite)}</button><button type="button" id="btnShare" class="btn-accion-prive btn-accion-compartir">↗ ${esc(L.share)}</button></div></div></div>
 <section class="prive-review-panel"><h3>${esc(L.reviews)}</h3><div class="review-form"><div style="display:flex;justify-content:space-between;align-items:center;background:#1a1a1a;border:1px solid #dfc28555;padding:10px;border-radius:6px"><span style="color:#dfc285;font-size:13px">${esc(L.rating)}</span><div class="star-rating">${[5,4,3,2,1].map(n=>`<input type="radio" id="star${n}" name="rating" value="${n}"><label for="star${n}" title="${n} estrellas">★</label>`).join('')}</div></div><input type="text" id="pAuthor" maxlength="70" placeholder="${esc(L.author)}"><textarea id="pText" rows="3" maxlength="2000" placeholder="${esc(L.review)}"></textarea><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">${['😊','👍','🔥','❤️','⭐'].map(e=>`<button type="button" class="emoji-btn" data-emoji="${e}" style="background:none;border:0;font-size:20px;cursor:pointer">${e}</button>`).join('')}<label style="margin-left:auto;color:#dfc285;cursor:pointer">📎 ${esc(L.photo)} <input type="file" id="pImageFile" accept="image/jpeg,image/png,image/webp" style="display:none"></label></div><small id="pFileName" style="color:#dfc285"></small><button type="button" class="review-submit" id="pSubmit">${esc(L.publish)}</button><p id="pFormStatus" role="status" style="color:#dfc285;font-size:12px;margin:0"></p></div><div id="pCommentsContainer" aria-live="polite"><p class="review-status">${esc(L.loading)}</p></div></section>`;
 document.getElementById('perfil-title').textContent=`${m.nombre||'Perfil'} | Masajistas Privé`;
 document.querySelectorAll('[data-photo]').forEach(el=>el.addEventListener('click',()=>openLightbox(Number(el.dataset.photo))));
