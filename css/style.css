@@ -757,3 +757,10 @@ body.perfil-pausado .whatsapp-sticky-btn {
     opacity: 0 !important;
     pointer-events: none !important;
 }
+
+/* Privé: logo centrado y sin duplicar las copias marcadas por Control Center. */
+.perfil-galeria-grid::before{top:calc(min(480px,70vh)/2 + 8px)!important;}
+@media(max-width:600px){.perfil-galeria-grid::before{top:calc(min(480px,70vh)/2 + 6px)!important;}}
+.perfil-galeria-grid:has(> .foto-principal[src*="#prive-centro-v1"])::before,
+.grid-perfiles .card-image:has(img[src*="#prive-centro-v1"])::before{content:none!important;display:none!important;}
+.prive-lightbox-photo:has(#priveLightboxImg[src*="#prive-centro-v1"]) .prive-watermark{display:none!important;}
