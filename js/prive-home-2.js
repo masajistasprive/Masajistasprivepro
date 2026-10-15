@@ -78,7 +78,7 @@ renderizarPerfiles=function(){
  if(home2PendingState&&home2Loaded){const v=home2PendingState;home2PendingState=null;home2('priveBuscar').value=typeof v.search==='string'?v.search:'';for(const[id,value]of [['priveZona',v.area],['priveModalidad',v.mode]]){const select=home2(id);if([...select.options].some(o=>o.value===value))select.value=value}home2LastCategory=['todas','terapeuticas','sensuales','fantasias'].includes(v.lastCategory)?v.lastCategory:'todas';home2Choose(v.category)}
  if(home2InitialHash&&home2Loaded){home2InitialHash=false;home2Choose('favoritos')}
  aplicarBusquedaPrive();
- const featured=home2('stories-destacadas-container');if(featured)featured.parentElement.hidden=!featured.children.length;
+ const featured=home2('stories-destacadas-container');if(featured){const total=featured.children.length;featured.parentElement.hidden=!total;featured.style.setProperty('--prive-featured-columns',String(Math.max(1,Math.min(total,4))));featured.style.setProperty('--prive-featured-wide-columns',String(Math.max(1,Math.min(total,6))));}
  if(focus){const buttons=[...document.querySelectorAll('[data-prive-favorite]')];const next=buttons.find(b=>b.dataset.priveFavorite===focus&&b.closest('.categoria-seccion-wrapper').style.display!=='none');(next||document.querySelector('[data-prive-nav=favoritos]')).focus({preventScroll:true})}
 };
 const home2OriginalLanguage=aplicarIdioma;
