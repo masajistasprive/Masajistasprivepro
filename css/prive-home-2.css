@@ -130,3 +130,6 @@ body.prive-home-v2{margin:0;min-width:320px;padding-bottom:calc(86px + env(safe-
 .prive-home-v2 .pills-container .pill-btn.active{color:#19130e!important;border-color:#f0d9a5!important}
 .prive-home-v2 .section-heading{font-family:'Cormorant Garamond',Georgia,serif!important;font-size:clamp(28px,4.8vw,36px)!important;line-height:1.15!important;font-weight:600!important;letter-spacing:.2px!important;text-transform:none!important;color:#f4dfb5!important;-webkit-text-fill-color:currentColor!important;-webkit-background-clip:initial!important;background:linear-gradient(90deg,#dfc28512,transparent)!important;border-top:1px solid #dfc28544;border-bottom:1px solid #dfc28544;border-left:3px solid #dfc285;border-radius:0 10px 10px 0;padding:12px 14px!important;margin:24px 0 17px!important;overflow-wrap:anywhere}
 .prive-home-v2 .categoria-seccion-wrapper:first-child .section-heading{margin-top:10px!important}
+
+/* Encuadre individual de Morena: solo su miniatura de Destacadas. */
+.prive-home-v2 #stories-destacadas-container .story-item[href="perfil.html?id=morena-b7e626e3"] .story-ring img{object-position:center center!important}
