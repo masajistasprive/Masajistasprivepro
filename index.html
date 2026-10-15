@@ -30,287 +30,25 @@
 <meta name="apple-mobile-web-app-title" content="Masajistas Privé">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DXX740HP41"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-DXX740HP41');</script>
-<style>
-#priveTransitionScreen{position:fixed;inset:0;background:#0d0d0d;z-index:9999999;display:flex;justify-content:center;align-items:center;transition:opacity .35s ease}
-.prive-transition-logo{text-align:center;opacity:.35;animation:pulsePrive 1.5s infinite alternate}
-@keyframes pulsePrive{from{opacity:.2;transform:scale(.98)}to{opacity:.5;transform:scale(1.02)}}
-.container{width:100%!important;box-sizing:border-box!important;padding-left:12px!important;padding-right:12px!important;margin:0 auto!important}
-.grid-perfiles{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;width:100%!important;box-sizing:border-box!important}
-.grid-perfiles .card-link{width:100%!important;display:block!important;box-sizing:border-box!important}
-.grid-perfiles .card{height:100%!important;min-height:unset!important;display:flex!important;flex-direction:column!important;background:#0d0d0d!important;border-radius:12px!important;overflow:hidden!important;border:1px solid rgba(223,194,133,.2)!important;width:100%!important;box-sizing:border-box!important}
-.grid-perfiles .card-image{width:100%!important;position:relative!important;aspect-ratio:3/4!important}
-.grid-perfiles .card-image img{width:100%!important;height:100%!important;object-fit:cover!important}
-.prive-card-info-box{display:none}
-body.modo-tarjeta-alternativo .grid-perfiles{display:flex!important;flex-direction:column!important;gap:20px!important}
-body.modo-tarjeta-alternativo .grid-perfiles .card-link{width:100%!important;display:block!important}
-body.modo-tarjeta-alternativo .grid-perfiles .card{height:auto!important;min-height:auto!important;background:#0d0d0d!important;border:1px solid rgba(223,194,133,.4)!important;border-radius:12px!important;overflow:hidden!important;box-shadow:0 4px 20px rgba(0,0,0,.85)!important;display:flex!important;flex-direction:column!important;padding:0!important}
-body.modo-tarjeta-alternativo .grid-perfiles .card-image{width:100%!important;height:380px!important;position:relative!important;aspect-ratio:unset!important}
-body.modo-tarjeta-alternativo .grid-perfiles .card-image img{width:100%!important;height:100%!important;object-fit:cover!important}
-body.modo-tarjeta-alternativo .grid-perfiles .badge-verificado{top:12px!important;left:12px!important;background:rgba(0,0,0,.85)!important;border:1px solid #dfc285!important;color:#dfc285!important;padding:4px 10px;border-radius:4px;font-size:11px;z-index:10;position:absolute!important}
-body.modo-tarjeta-alternativo .grid-perfiles .card-gradient-overlay{display:none!important}
-body.modo-tarjeta-alternativo .prive-card-info-box{display:block!important;background:#0d0d0d;padding:15px;border-top:1px solid rgba(223,194,133,.2)}
-body.modo-tarjeta-alternativo .prive-barra-clasica{display:none!important}
-.prive-card-nombre{font-size:1.2rem;color:#fff;font-family:'Cormorant Garamond',serif;font-weight:600;margin-bottom:2px;text-transform:uppercase;letter-spacing:1px}
-.prive-card-detalles{font-size:.75rem;color:#dfc285;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
-.prive-card-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.prive-btn-accion{padding:10px;border-radius:6px;font-size:.7rem;text-transform:uppercase;letter-spacing:1.5px;font-weight:600;text-align:center;text-decoration:none;cursor:pointer;font-family:'Montserrat',sans-serif}
-.prive-btn-perfil{background:transparent;border:1px solid rgba(223,194,133,.4);color:#fff}
-.prive-btn-ws{background:linear-gradient(135deg,#dfc285,#b89751);border:none;color:#0d0d0d;box-shadow:0 0 10px rgba(223,194,133,.3);font-weight:700}
-.grid-perfiles .card-image img,.story-ring img{background:#111}
 
-/* PRIVÉ TURBO 5.1 · Diseño adaptable y prevención de desbordes */
-html{width:100%;max-width:100%;overflow-x:clip;-webkit-text-size-adjust:100%}
-body{width:100%;max-width:100%;min-width:0;margin:0;overflow-x:clip}
-*,*::before,*::after{box-sizing:border-box}
-img,video,iframe,svg{max-width:100%}
-.header-prive,.footer,.footer-container,.container,main,section,nav{max-width:100%;min-width:0}
-.header-prive{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;padding-inline:clamp(10px,3vw,30px)}
-.header-center{min-width:0;flex:1;display:flex;justify-content:center}
-.header-center img{width:auto;max-width:100%;height:auto;object-fit:contain}
-.header-right{flex:0 0 auto;min-width:0}
-.pills-container{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;padding-inline:12px;max-width:100%}
-.pills-container .pill-btn{max-width:100%;min-width:0;white-space:normal}
-.stories-container{max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
-.destacadas-container-wrapper,.clima-card,.dolar-card{max-width:min(900px,calc(100% - 24px))!important}
-.grid-perfiles{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:clamp(8px,1.5vw,18px)!important}
-.grid-perfiles .card-link,.grid-perfiles .card,.grid-perfiles .card-image{min-width:0!important;max-width:100%!important}
-.grid-perfiles .card-gradient-overlay{max-width:100%;overflow-wrap:anywhere}
-.grid-perfiles .card-gradient-overlay h3,.prive-card-nombre,.prive-card-detalles{overflow-wrap:anywhere}
-.prive-barra-clasica{min-width:0;gap:4px;padding-inline:6px!important}
-.prive-barra-clasica button,.prive-barra-clasica a{min-width:0;font-size:clamp(9px,1.7vw,11px)!important;padding:5px 6px!important;white-space:normal;text-align:center}
-#modalArticulo>div,.modal-edad-content{max-width:min(100%,650px);overflow-wrap:anywhere}
-@media(min-width:700px){
- .container{max-width:1200px!important;padding-inline:20px!important}
- .grid-perfiles{grid-template-columns:repeat(3,minmax(0,1fr))!important}
- body.modo-tarjeta-alternativo .grid-perfiles{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;align-items:start}
- body.modo-tarjeta-alternativo .grid-perfiles .card-image{height:auto!important;aspect-ratio:3/4!important}
-}
-@media(min-width:1100px){
- .grid-perfiles{grid-template-columns:repeat(4,minmax(0,1fr))!important}
- body.modo-tarjeta-alternativo .grid-perfiles{grid-template-columns:repeat(3,minmax(0,1fr))!important}
-}
-@media(max-width:699px){
- .container{padding-inline:10px!important}
- .header-prive{gap:6px;padding-inline:8px}
- .header-right{max-width:38%}
- .header-right #btn-idioma{max-width:100%;padding:6px 9px!important}
- .header-right .btn-foro-prive{max-width:100%;overflow-wrap:anywhere;text-align:center}
- .grid-perfiles .card-gradient-overlay h3{font-size:clamp(12px,3.8vw,18px)}
- body.modo-tarjeta-alternativo .grid-perfiles .card-image{height:auto!important;aspect-ratio:3/4!important}
- .prive-card-actions{gap:6px}
- .prive-btn-accion{letter-spacing:.4px;font-size:10px;padding:10px 5px}
-}
-@media(max-width:360px){
- .grid-perfiles{gap:6px!important}
- .grid-perfiles .card{border-radius:8px!important}
- .prive-barra-clasica{flex-wrap:wrap;height:auto!important;min-height:44px;padding-block:5px!important;justify-content:center!important}
- .pills-container{gap:5px;padding-inline:6px}
- .pills-container .pill-btn{font-size:11px;padding:7px 9px}
-}
-@media(prefers-reduced-motion:reduce){#priveTransitionScreen,.prive-transition-logo{animation:none!important;transition:none!important}}
-
-/* TURBO 5.2 — Destacadas sin recortes: distribución adaptable */
-.destacadas-container-wrapper{width:100%!important;box-sizing:border-box!important;overflow:visible!important;padding-inline:clamp(8px,2vw,20px)!important}
-#stories-destacadas-container.stories-container{display:flex!important;flex-wrap:wrap!important;justify-content:center!important;align-items:flex-start!important;gap:14px 12px!important;width:100%!important;max-width:100%!important;overflow:visible!important;padding:10px 0 14px!important;box-sizing:border-box!important}
-#stories-destacadas-container .story-item{display:flex!important;flex-direction:column!important;align-items:center!important;flex:0 0 auto!important;width:clamp(80px,20vw,112px)!important;max-width:100%!important;min-width:0!important;margin:0!important;text-align:center!important;text-decoration:none}
-#stories-destacadas-container .story-ring{display:flex!important;align-items:center!important;justify-content:center!important;width:clamp(76px,19vw,106px)!important;height:clamp(76px,19vw,106px)!important;max-width:100%!important;aspect-ratio:1!important;border-radius:50%!important;overflow:hidden!important;flex-shrink:0!important}
-#stories-destacadas-container .story-ring img{width:100%!important;height:100%!important;max-width:none!important;object-fit:cover!important;border-radius:50%!important}
-#stories-destacadas-container .story-item>span{display:block!important;width:100%!important;overflow-wrap:anywhere!important;white-space:normal!important;line-height:1.3!important;margin-top:8px!important}
-@media(min-width:700px){#stories-destacadas-container.stories-container{gap:20px!important}}
-/* TURBO 5.3: cuatro destacadas por fila, circulos fluidos */
-#stories-destacadas-container.stories-container{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:clamp(5px,1.6vw,20px)!important;justify-items:center!important;align-items:start!important;width:100%!important;max-width:100%!important;overflow:visible!important;padding:10px 0 14px!important;box-sizing:border-box!important}
-#stories-destacadas-container .story-item{display:flex!important;flex-direction:column!important;align-items:center!important;width:100%!important;max-width:145px!important;min-width:0!important;margin:0!important;box-sizing:border-box!important;text-align:center!important}
-#stories-destacadas-container .story-ring{width:min(100%,125px)!important;height:auto!important;aspect-ratio:1/1!important;min-width:0!important;max-width:125px!important;box-sizing:border-box!important;flex-shrink:0!important;border-radius:50%!important;overflow:hidden!important}
-#stories-destacadas-container .story-ring img{display:block!important;width:100%!important;height:100%!important;aspect-ratio:1/1!important;object-fit:cover!important;border-radius:50%!important}
-#stories-destacadas-container .story-item>span{width:100%!important;min-width:0!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;overflow-wrap:normal!important;font-size:clamp(10px,2.6vw,15px)!important;line-height:1.35!important;margin-top:7px!important}
-@media(min-width:700px){#stories-destacadas-container.stories-container{gap:clamp(14px,3vw,35px)!important}}
-
-/* PRIVÉ PREMIUM HOME 3.0 — estética editorial, móvil primero */
-:root{--prive-gold:#dfc285;--prive-gold-soft:#f0dcae;--prive-line:rgba(223,194,133,.26)}
-body{background:radial-gradient(ellipse 80% 500px at 50% 0%,#201b15 0%,#0d0d0d 65%);color:#f4efe6}
-.header-prive{background:rgba(13,13,13,.97);border-bottom:1px solid var(--prive-line);min-height:94px}
-.header-logo-grande{max-height:120px;object-fit:contain}
-.prive-hero{max-width:1050px;margin:20px auto 10px;padding:clamp(26px,5vw,58px) 18px 22px;text-align:center;position:relative}
-.prive-hero:before{content:'';position:absolute;top:0;left:calc(50% - 34px);width:68px;height:1px;background:var(--prive-gold)}
-.prive-hero-eyebrow{color:var(--prive-gold);font:500 10px Montserrat,sans-serif;letter-spacing:3px}
-.prive-hero h1{color:var(--prive-gold-soft);font:600 clamp(39px,8vw,76px)/1.05 'Cormorant Garamond',serif;margin:12px 0 8px}
-.prive-hero h1 em{font-weight:400}
-.prive-hero p{font:400 clamp(12px,2.8vw,15px)/1.8 Montserrat,sans-serif;color:#c5beb3;max-width:570px;margin:0 auto 22px}
-.prive-hero-cta{display:inline-flex;gap:12px;align-items:center;text-decoration:none;background:linear-gradient(115deg,#ead29b,#c6a35f);color:#17120c;border-radius:8px;padding:12px 22px;font:600 11px Montserrat,sans-serif;letter-spacing:1px;text-transform:uppercase;min-height:44px}
-.clima-card,.dolar-card{background:linear-gradient(145deg,#1c1a17,#111)!important;border:1px solid var(--prive-line)!important;border-radius:14px!important;box-shadow:0 12px 30px #0005!important;max-width:860px!important}
-.clima-card{margin:10px auto 25px!important;padding:12px 18px!important}
-.dolar-card{margin:35px auto!important;padding:20px!important}
-#clima-info,#dolar-info{line-height:1.65}
-.destacadas-container-wrapper{margin-top:10px!important}
-.destacadas-titulo,.section-heading{font-family:'Cormorant Garamond',serif!important;color:var(--prive-gold-soft)!important;font-weight:600!important;letter-spacing:.5px!important;text-transform:none!important}
-#stories-destacadas-container .story-ring{border:2px solid var(--prive-gold)!important;padding:3px!important;background:#17130f!important;box-shadow:0 5px 18px #0008!important}
-#stories-destacadas-container .story-ring img{border:2px solid #111!important}
-#stories-destacadas-container .story-item>span{color:#e6d7ba!important;font-weight:500!important}
-.prive-discovery{max-width:850px;margin:20px auto 12px;padding:0 14px;text-align:center;scroll-margin-top:18px}
-.prive-discovery-title{font:600 clamp(25px,5vw,35px) 'Cormorant Garamond',serif;color:var(--prive-gold-soft);margin-bottom:12px}
-.prive-search-wrap{display:flex;align-items:center;gap:10px;background:#1a1917;border:1px solid rgba(223,194,133,.45);border-radius:12px;padding:0 13px;color:var(--prive-gold);min-height:50px;box-shadow:0 8px 25px #0005}
-.prive-search-wrap:focus-within{border-color:var(--prive-gold);box-shadow:0 0 0 2px #dfc28526}
-.prive-search-wrap input{background:transparent;border:0;outline:0;color:#fff;font:400 13px Montserrat,sans-serif;width:100%;min-width:0;height:48px}
-.prive-search-wrap input::placeholder{color:#a79c89}
-#priveLimpiar{background:transparent;border:0;color:var(--prive-gold);font-size:25px;cursor:pointer;min-width:32px}
-.prive-search-count{min-height:20px;margin-top:7px;color:#b9aa8c;font:400 11px Montserrat,sans-serif}
-.pills-container{margin:8px auto 0!important;gap:8px!important}
-.pills-container .pill-btn{border:1px solid rgba(223,194,133,.4)!important;background:#1a1917!important;color:#e2d4b7!important;border-radius:999px!important;min-height:40px;padding:9px 13px!important;box-shadow:none!important;font:500 11px Montserrat,sans-serif!important;transition:background .2s,border-color .2s}
-.pills-container .pill-btn.active{background:linear-gradient(110deg,#e8d09b,#bd9957)!important;color:#15110c!important;border-color:#e8d09b!important}
-#btnAlternarEstilo{background:#171613!important;border-radius:999px!important;box-shadow:none!important;border-color:rgba(223,194,133,.3)!important}
-.prive-main{margin-top:20px!important}
-.grid-perfiles .card{background:#151412!important;border:1px solid rgba(223,194,133,.3)!important;border-radius:13px!important;box-shadow:0 8px 22px #0006!important;transition:transform .2s,border-color .2s}
-.grid-perfiles .card-image{overflow:hidden!important}
-.grid-perfiles .card-image img{transition:transform .35s ease}
-@media(hover:hover){.grid-perfiles .card:hover{transform:translateY(-3px);border-color:#dfc28599!important}.grid-perfiles .card:hover img{transform:scale(1.025)}}
-.grid-perfiles .card-gradient-overlay{background:linear-gradient(transparent 20%,rgba(0,0,0,.88))!important}
-.grid-perfiles .badge-verificado{background:rgba(12,12,12,.86)!important;color:var(--prive-gold)!important;border:1px solid rgba(223,194,133,.65)!important;border-radius:5px!important;font-size:10px!important}
-.prive-barra-clasica{background:#161513!important;border-top:1px solid var(--prive-line)!important}
-.prive-barra-clasica button,.prive-barra-clasica a{border-radius:999px!important}
-body.modo-tarjeta-alternativo .prive-card-info-box{background:#151412!important}
-body.modo-tarjeta-alternativo .prive-btn-ws{background:linear-gradient(110deg,#25d366,#128c7e)!important;color:white!important;box-shadow:none!important}
-.blog-card{background:linear-gradient(145deg,#1e1b17,#131313)!important;border:1px solid var(--prive-line)!important;border-radius:14px!important;padding:22px!important;cursor:pointer}
-.footer{border-top:1px solid var(--prive-line)}
-@media(max-width:600px){.header-prive{min-height:80px;padding-block:8px}.header-logo-grande{max-height:96px}.prive-hero{margin-top:10px;padding-top:25px}.prive-hero-eyebrow{font-size:9px;letter-spacing:2px}.prive-hero p{max-width:330px}.grid-perfiles{gap:10px!important}.prive-barra-clasica{padding-inline:4px!important}.prive-barra-clasica button,.prive-barra-clasica a{font-size:9px!important;padding:6px 7px!important}.clima-card{margin-inline:12px!important}.dolar-card{margin-inline:12px!important}}
-@media(prefers-reduced-motion:reduce){.grid-perfiles .card,.grid-perfiles .card-image img{transition:none!important}}
-
-/* PRIVÉ 3.1 — portada directa, sin bienvenida redundante */
-.destacadas-container-wrapper{margin-top:8px!important;padding-top:8px!important;padding-bottom:2px!important}
-.destacadas-titulo{margin:6px 0 5px!important;font-size:clamp(23px,5vw,31px)!important}
-#stories-destacadas-container.stories-container{padding-top:4px!important;padding-bottom:8px!important}
-.clima-card{margin:8px auto 6px!important;padding:9px 14px!important;border-radius:12px!important;background:linear-gradient(125deg,#1b1916,#111)!important;box-shadow:none!important}
-.clima-card [data-i18n="climaTitulo"]{font-size:9px!important;letter-spacing:1.5px!important}
-#clima-info{font-size:12px!important;line-height:1.55!important;margin-top:2px!important}
-.prive-discovery{margin-top:10px!important;padding-top:10px!important}
-.prive-discovery-title{font-size:clamp(24px,5.5vw,35px)!important;margin-bottom:12px!important}
-.dolar-card{background:linear-gradient(135deg,#1d1a15,#101010)!important;border-radius:14px!important;box-shadow:none!important;padding:15px!important}
-@media(max-width:600px){.clima-card{margin-inline:12px!important}.destacadas-container-wrapper{margin-top:4px!important}}
-
-/* PRIVÉ PREMIUM 3.2 · Selector de idiomas */
-.header-prive{position:relative;z-index:80;overflow:visible!important}
-.header-right{overflow:visible!important}
-.prive-language{position:relative;z-index:90;font-family:Montserrat,sans-serif}
-.prive-language-trigger{display:flex;align-items:center;justify-content:center;gap:9px;min-height:42px;padding:8px 12px;border:1px solid rgba(223,194,133,.65);border-radius:12px;background:linear-gradient(145deg,#29241c,#111);color:#f0d7a4;box-shadow:inset 0 1px rgba(255,255,255,.07),0 5px 20px #0006;cursor:pointer;font:600 12px Montserrat,sans-serif;letter-spacing:1.2px;transition:border-color .2s,background .2s}
-.prive-language-trigger:focus-visible,.prive-language-menu button:focus-visible{outline:2px solid #f3dfb3;outline-offset:3px}
-.prive-language-trigger:hover,.prive-language-trigger[aria-expanded="true"]{border-color:#f3dfb3;background:#2a241b}
-.prive-language-chevron{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;transition:transform .2s}
-.prive-language-trigger[aria-expanded="true"] .prive-language-chevron{transform:rotate(180deg)}
-.prive-language-menu{position:absolute;right:0;top:calc(100% + 9px);width:190px;padding:7px;background:#171613;border:1px solid #9d814e;border-radius:13px;box-shadow:0 14px 38px #000c;z-index:1000}
-.prive-language-menu[hidden]{display:none!important}
-.prive-language-menu button{display:grid;grid-template-columns:26px 1fr 24px;align-items:center;gap:7px;width:100%;padding:11px 9px;background:transparent;color:#e6dfd1;border:0;border-radius:8px;text-align:left;font:500 12px Montserrat,sans-serif;cursor:pointer}
-.prive-language-menu button:hover,.prive-language-menu button[aria-checked="true"]{background:#dfc2851c;color:#f4d99f}
-.prive-language-menu small{font-size:10px;color:#bda675;text-align:right}
-@media(max-width:699px){.header-right .prive-language-trigger{padding:8px 10px!important;min-height:40px}.prive-language-menu{width:175px}}
-
-/* Corazones Privé: estilo premium, independiente de favoritos */
-.prive-voto-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px;padding:8px 13px;border:1px solid #dfc28577;border-radius:11px;background:#dfc28512;color:#dfc285;font:600 12px Montserrat,sans-serif;cursor:pointer;transition:background .2s}
-.prive-voto-btn.prive-votado{background:#dfc285;color:#16120b;border-color:#dfc285}
-.prive-voto-btn:disabled{opacity:.65;cursor:wait}
-.prive-voto-btn:focus-visible{outline:2px solid white;outline-offset:2px}
-
-/* PRIVÉ 3.4 — controles compactos de edición y favoritos */
-.prive-view-controls{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin:17px auto 9px;padding:0 12px;max-width:650px}
-.prive-view-controls .prive-favorites-control,.prive-view-controls .prive-layout-control{display:inline-flex!important;align-items:center;justify-content:center;gap:9px;flex:1 1 155px;max-width:240px;min-height:44px;padding:10px 13px!important;background:linear-gradient(155deg,#25221c,#121212)!important;border:1px solid rgba(223,194,133,.38)!important;border-radius:11px!important;color:#e8d2a4!important;box-shadow:inset 0 1px 0 #ffffff0a!important;font:600 11px/1.3 Montserrat,sans-serif!important;letter-spacing:1.1px!important;text-transform:uppercase;cursor:pointer;transition:border-color .2s,background .2s}
-.prive-view-controls .prive-favorites-control.active,.prive-view-controls .prive-layout-control:hover,.prive-view-controls .prive-favorites-control:hover{border-color:#dfc285!important;background:linear-gradient(155deg,#373024,#1b1813)!important}
-.prive-view-controls button:focus-visible{outline:2px solid #fff;outline-offset:3px}
-/* Corazón sin círculo ni fondo: zona táctil conservada */
-.grid-perfiles .prive-voto-btn{background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;color:#efc2c9!important;min-height:42px!important;min-width:48px!important;padding:7px 5px!important;font:600 12px Montserrat,sans-serif!important;gap:5px!important}
-.grid-perfiles .prive-voto-btn.prive-votado{background:transparent!important;color:#ff6f8d!important}
-.grid-perfiles .prive-voto-btn:active{transform:scale(.94)}
-/* Publicá tu anuncio: mismo ancho y altura que las tarjetas del catálogo */
-.grid-perfiles .card-ad-link{display:block!important;width:100%!important;min-width:0!important;max-width:100%!important;text-decoration:none}
-.grid-perfiles .card-ad{position:relative!important;display:block!important;overflow:hidden!important;width:100%!important;height:auto!important;min-height:0!important;margin:0!important;padding:0!important;border-radius:12px!important;border:1px solid rgba(223,194,133,.28)!important;background:radial-gradient(circle at 50% 32%,#31291e,#111 67%)!important;box-shadow:none!important}
-.grid-perfiles .card-ad::before{content:'';display:block;width:100%;aspect-ratio:3/4}
-.grid-perfiles .card-ad::after{content:'';display:block;height:44px;background:#0d0d0d;border-top:1px solid rgba(223,194,133,.2)}
-.grid-perfiles .card-ad .ad-content{position:absolute!important;inset:0 0 44px!important;width:100%!important;max-width:100%!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:12px!important;padding:14px 10px!important;text-align:center!important;transform:none!important}
-.grid-perfiles .card-ad .ad-content h3{font:600 clamp(19px,3.2vw,28px)/1.1 'Cormorant Garamond',serif!important;color:#ecd5a5!important;margin:0!important}
-.grid-perfiles .card-ad .ad-content p{font:400 clamp(10px,2.4vw,12px)/1.55 Montserrat,sans-serif!important;color:#d6c5a5!important;margin:0!important}
-.grid-perfiles .card-ad .btn-ad{display:inline-flex!important;align-items:center!important;justify-content:center!important;padding:9px 12px!important;border:1px solid #dfc285!important;border-radius:7px!important;background:#dfc28516!important;color:#f0d7a4!important;font:600 10px Montserrat,sans-serif!important;letter-spacing:.5px!important}
-body.modo-tarjeta-alternativo .grid-perfiles .card-ad::after{display:none}
-body.modo-tarjeta-alternativo .grid-perfiles .card-ad .ad-content{inset:0!important}
-@media(max-width:420px){.prive-view-controls{gap:8px}.prive-view-controls .prive-favorites-control,.prive-view-controls .prive-layout-control{font-size:10px!important;letter-spacing:.45px!important;flex-basis:135px}.grid-perfiles .card-ad .ad-content{gap:8px!important;padding:8px!important}}
-
-/* PRIVÉ 3.5 — clima discreto junto a Foro e Idioma; portada más directa */
-.header-prive .header-right{gap:5px!important;justify-content:center;max-width:46%;}
-.header-prive .clima-card{width:auto!important;max-width:100%!important;min-width:0!important;margin:0!important;padding:5px 7px!important;border-radius:8px!important;box-shadow:none!important;background:transparent!important;border:1px solid rgba(223,194,133,.2)!important;text-align:center!important;}
-.header-prive .clima-card [data-i18n="climaTitulo"]{display:none!important;}
-.header-prive #clima-info{font:500 10px/1.3 Montserrat,sans-serif!important;letter-spacing:0!important;margin:0!important;white-space:normal;overflow-wrap:anywhere;}
-.header-prive #clima-info strong{font-weight:600;}
-.prive-discovery-title{display:none!important;}
-.prive-discovery{margin:7px auto 3px!important;padding-top:0!important;}
-.pills-container{margin-top:6px!important;}
-.art-deco-divider{display:none!important;}
-.prive-main{margin-top:4px!important;}
-@media(max-width:600px){
- .header-prive{min-height:0!important;padding-block:5px!important;}
- .header-prive .header-right{gap:4px!important;max-width:49%!important;}
- .header-prive .clima-card{padding:3px 5px!important;}
- .header-prive #clima-info{font-size:9px!important;line-height:1.25!important;}
- .destacadas-container-wrapper{margin-top:2px!important;padding-top:3px!important;}
- .prive-discovery{margin-top:3px!important;}
-}
-
-
-/* PRIVÉ CLUB · acceso desde portada */
-.prive-club-home{width:min(900px,calc(100% - 24px));margin:17px auto 24px;padding:22px clamp(15px,4vw,30px);border:1px solid rgba(223,194,133,.5);border-radius:16px;background:radial-gradient(ellipse at top right,#352819 0%,#191613 46%,#101010 100%);box-shadow:0 12px 32px #0007;font-family:Montserrat,sans-serif}
-.prive-club-home-top{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
-.prive-club-home .club-kicker{font-size:10px;letter-spacing:2.5px;color:#dfc285;font-weight:600}
-.prive-club-home h2{font:600 clamp(30px,6vw,43px)/1.1 'Cormorant Garamond',serif;color:#f0dcae;margin:6px 0}
-.prive-club-home p{color:#cfc4b1;font-size:12px;line-height:1.7;margin:4px 0 12px}
-.prive-club-home .club-enter{display:inline-flex;justify-content:center;align-items:center;min-height:44px;padding:12px 18px;border-radius:9px;background:linear-gradient(120deg,#f0d9a6,#c6a05c);color:#15110d;text-decoration:none;font-size:11px;font-weight:700;letter-spacing:.6px}
-.prive-club-home h3{font-size:12px;color:#e6d4ae;letter-spacing:1px;margin:18px 0 10px;text-transform:uppercase}
-.prive-club-topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
-.prive-club-topic{display:block;text-decoration:none;border:1px solid #dfc28536;background:#0e0e0e9c;border-radius:10px;padding:12px;min-width:0}
-.prive-club-topic strong{display:block;font-size:12px;line-height:1.45;color:#f4e8d3;overflow-wrap:anywhere}
-.prive-club-topic small{display:block;color:#bfae90;font-size:10px;margin-top:8px;overflow-wrap:anywhere}
-.prive-club-topic:focus-visible,.prive-club-home .club-enter:focus-visible{outline:2px solid white;outline-offset:3px}
-@media(max-width:600px){.prive-club-topics{grid-template-columns:1fr}.prive-club-home{padding:17px 14px}.prive-club-home-top{align-items:flex-start}}
-
-/* PRIVÉ CLUB COMPACTO 2026 — conserva Firebase, idiomas y navegación */
-.prive-club-home{margin:8px auto 12px!important;padding:12px 15px!important;border-radius:12px!important;box-shadow:0 5px 18px #0005!important}
-.prive-club-home-top{gap:8px!important;align-items:center!important}
-.prive-club-home .club-kicker{font-size:9px!important;letter-spacing:1.4px!important}
-.prive-club-home h2{font-size:clamp(25px,5vw,31px)!important;line-height:1!important;margin:3px 0!important}
-.prive-club-home p{font-size:11px!important;line-height:1.4!important;margin:3px 0 5px!important}
-.prive-club-home .club-enter{min-height:36px!important;padding:8px 12px!important;font-size:10px!important;white-space:nowrap}
-.prive-club-home h3{font-size:10px!important;margin:9px 0 6px!important;letter-spacing:.8px!important}
-.prive-club-topics{gap:6px!important}
-.prive-club-topic{padding:8px 10px!important;border-radius:8px!important}
-.prive-club-topic strong{font-size:11px!important;line-height:1.3!important}
-.prive-club-topic small{font-size:9px!important;margin-top:3px!important}
-@media(max-width:600px){
- .prive-club-home{padding:11px 12px!important}
- .prive-club-home-top{flex-wrap:nowrap!important;align-items:center!important}
- .prive-club-home-top>div{min-width:0;flex:1}
- .prive-club-home .club-enter{flex:0 0 auto;max-width:43%;white-space:normal;text-align:center;line-height:1.3}
- .prive-club-home p{font-size:10px!important;line-height:1.35!important}
- .prive-club-topics{grid-template-columns:1fr!important;gap:5px!important}
- .prive-club-topic{padding:7px 9px!important}
- .prive-club-topic strong{font-size:10px!important}
-}
-
-/* PRIVÉ ZONAS · Enlaces SEO locales integrados */
-.prive-zonas{width:min(1000px,calc(100% - 24px));margin:28px auto 34px;padding:25px clamp(15px,4vw,32px);border:1px solid rgba(223,194,133,.36);border-radius:16px;background:linear-gradient(145deg,#211b14,#111 65%);text-align:center;font-family:Montserrat,sans-serif}
-.prive-zonas-kicker{display:block;color:#dfc285;font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase}
-.prive-zonas h2{font:600 clamp(29px,5vw,42px)/1.1 'Cormorant Garamond',serif;color:#f0dcae;margin:8px 0 10px}
-.prive-zonas p{font-size:12px;line-height:1.7;color:#c7bca8;max-width:680px;margin:0 auto 20px}
-.prive-zonas-links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
-.prive-zonas-links a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:12px 17px;border:1px solid rgba(223,194,133,.52);border-radius:10px;background:#15130f;color:#f1dbac;text-decoration:none;font-size:12px;font-weight:600;transition:background .2s,border-color .2s}
-.prive-zonas-links a:hover,.prive-zonas-links a:focus-visible{background:#34291a;border-color:#dfc285;outline-offset:3px}
-@media(max-width:540px){.prive-zonas{padding:20px 12px}.prive-zonas-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.prive-zonas-links a{padding:10px 6px;font-size:11px}.prive-zonas-links a:last-child:nth-child(odd){grid-column:1/-1}}
-</style>
+<link rel="stylesheet" href="css/prive-home-2.css?v=20261015-1">
 </head>
-<body>
+<body class="prive-home-v2" id="inicio-prive">
 <div id="priveTransitionScreen"><div class="prive-transition-logo"><img src="img/logo.png" alt="Masajistas Privé - Portal Exclusivo" width="220" style="max-width:220px;width:60vw;display:block;margin:0 auto"><span style="display:block;color:#dfc285;font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:4px;margin-top:10px;text-transform:uppercase">Masajistas Privé</span></div></div>
 <div id="modal-edad" class="modal-edad-overlay"><div class="modal-edad-content"><h2 data-i18n="brandName">MASAJISTAS PRIVÉ</h2><p data-i18n="modalEdadTexto">Este sitio web contiene material exclusivo para adultos (+18) y servicios de relax independientes. Debes ser mayor de edad para ingresar.</p><div class="modal-edad-botones"><button id="btn-mayor" class="btn-ingresar" data-i18n="btnMayor">Soy mayor de 18 años</button><a href="https://www.google.com" class="btn-salir" data-i18n="btnSalir">Salir</a></div></div></div>
-<header class="header-prive"><div class="header-left" style="display:none!important"></div><div class="header-center"><img src="img/logo.png" alt="Logo Masajistas Privé" class="header-logo-grande" fetchpriority="high"></div><div class="header-right" style="display:flex;flex-direction:column;align-items:flex-end;gap:8px"><div class="prive-language" id="priveLanguage"><button id="btn-idioma" type="button" class="prive-language-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="priveLanguageMenu" onclick="alternarMenuIdioma()"><span id="priveIdiomaBandera" aria-hidden="true">🇦🇷</span><span id="priveIdiomaCodigo">ES</span><svg class="prive-language-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div id="priveLanguageMenu" class="prive-language-menu" role="menu" aria-label="Seleccionar idioma" hidden><button type="button" role="menuitemradio" aria-checked="true" data-prive-lang="es" onclick="seleccionarIdiomaPrive('es')"><span>🇦🇷</span><span>Español</span><small>ES</small></button><button type="button" role="menuitemradio" aria-checked="false" data-prive-lang="en" onclick="seleccionarIdiomaPrive('en')"><span>🇺🇸</span><span>English</span><small>EN</small></button><button type="button" role="menuitemradio" aria-checked="false" data-prive-lang="pt" onclick="seleccionarIdiomaPrive('pt')"><span>🇧🇷</span><span>Português</span><small>PT</small></button><button type="button" role="menuitemradio" aria-checked="false" data-prive-lang="fr" onclick="seleccionarIdiomaPrive('fr')"><span>🇫🇷</span><span>Français</span><small>FR</small></button></div></div><a href="club.html" class="btn-foro-prive"><span>💬 PRIVÉ CLUB</span><span data-i18n="clubHeader">COMUNIDAD +18</span></a><div class="clima-card" style="background:#141414;border:1px solid rgba(223,194,133,.25);border-radius:10px;padding:15px 20px;max-width:900px;margin:20px auto 0;text-align:center;font-family:Montserrat,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.5)"><span style="color:#dfc285;font-size:11px;text-transform:uppercase;letter-spacing:2px" data-i18n="climaTitulo">Clima en Directo</span><div id="clima-info" style="color:#ccc;font-size:14px;margin-top:5px">Buenos Aires (CABA) — <span data-i18n="cargando">Cargando clima...</span></div></div></header>
+<header class="header-prive"><a class="header-center" href="index.html" aria-label="Masajistas Privé — Inicio"><img src="img/logo.png" alt="Masajistas Privé" class="header-logo-grande" width="690" height="361" fetchpriority="high"></a><div class="header-right"><div class="prive-language" id="priveLanguage"><button id="btn-idioma" type="button" class="prive-language-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="priveLanguageMenu" onclick="alternarMenuIdioma()"><span id="priveIdiomaBandera" aria-hidden="true">🇦🇷</span><span id="priveIdiomaCodigo">ES</span><svg class="prive-language-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div id="priveLanguageMenu" class="prive-language-menu" role="menu" aria-label="Seleccionar idioma" hidden><button type="button" role="menuitemradio" aria-checked="true" data-prive-lang="es" onclick="seleccionarIdiomaPrive('es')"><span>🇦🇷</span><span>Español</span><small>ES</small></button><button type="button" role="menuitemradio" aria-checked="false" data-prive-lang="en" onclick="seleccionarIdiomaPrive('en')"><span>🇺🇸</span><span>English</span><small>EN</small></button><button type="button" role="menuitemradio" aria-checked="false" data-prive-lang="pt" onclick="seleccionarIdiomaPrive('pt')"><span>🇧🇷</span><span>Português</span><small>PT</small></button><button type="button" role="menuitemradio" aria-checked="false" data-prive-lang="fr" onclick="seleccionarIdiomaPrive('fr')"><span>🇫🇷</span><span>Français</span><small>FR</small></button></div></div><button type="button" id="priveMenuButton" class="prive-menu-trigger" aria-label="Abrir menú" aria-expanded="false" aria-controls="priveSiteMenu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18M3 12h18M3 19h18"/></svg></button></div></header>
+<nav id="priveSiteMenu" class="prive-site-menu" aria-label="Menú principal" hidden><a href="#catalogo-prive" data-v2="explore">Explorar</a><a href="club.html">Privé Club</a><a href="cuaderno.html">Cuaderno Privé</a><a href="#prive-zonas-titulo" data-v2="byArea">Explorar por barrio</a><a href="https://wa.me/5491131774848?text=Hola,%20quiero%20publicar%20mi%20anuncio%20en%20Masajistas%20Prive" target="_blank" rel="noopener noreferrer" data-v2="advertise">Publicá tu perfil ↗</a></nav>
+<section class="prive-discovery" id="catalogo-prive" aria-label="Buscar perfiles">
+<label class="prive-search-wrap" for="priveBuscar"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="7"/><path d="m16 16 5 5"/></svg><input id="priveBuscar" type="search" autocomplete="off" placeholder="¿En qué barrio buscás?" aria-label="Buscar por nombre o zona"><button type="button" id="priveLimpiar" aria-label="Limpiar búsqueda" hidden>×</button></label>
+<nav class="pills-container" aria-label="Categorías"><button type="button" class="pill-btn" data-filter="terapeuticas" data-i18n="filtroTerapeuticas">Terapéuticas</button><button type="button" class="pill-btn" data-filter="sensuales" data-i18n="filtroSensuales">Sensuales</button><button type="button" class="pill-btn" data-filter="fantasias" data-i18n="filtroFantasias">Fantasías</button></nav>
+<div class="prive-filters"><label><span class="sr-only" data-v2="area">Barrio</span><select id="priveZona" aria-label="Filtrar por barrio"><option value="">Todos los barrios</option></select></label><label><span class="sr-only" data-v2="mode">Modalidad</span><select id="priveModalidad" aria-label="Filtrar por modalidad"><option value="">Toda modalidad</option></select></label><button id="priveReset" class="prive-reset" type="button" aria-label="Restablecer filtros"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 17h16M8 4v6M16 14v6"/></svg></button></div>
+<div class="prive-catalogue-title"><h1 data-v2="discover">Descubrí profesionales</h1><button class="pill-btn prive-all active" type="button" data-filter="todas" data-v2="all">Ver todas →</button></div>
+<div class="prive-search-count" id="priveSearchCount" role="status" aria-live="polite">Cargando perfiles…</div>
+<div class="prive-view-controls"><button id="btnAlternarEstilo" class="prive-layout-control" type="button" onclick="toggleEstiloVisual()">▦ Vista ampliada</button></div>
+<div id="priveEmpty" class="prive-empty" hidden><p data-v2="empty">No encontramos perfiles con esos filtros.</p><button type="button" class="prive-reset-text" data-prive-reset data-v2="reset">Limpiar filtros</button></div>
+</section><main class="container prive-main" id="priveResultados" aria-label="Catálogo de profesionales"><div class="categoria-seccion-wrapper" data-sec="terapeuticas"><h2 class="section-heading" data-i18n="seccionTerapeuticas">Masajistas Terapéuticas</h2><div class="grid-perfiles" id="grid-terapeuticas"></div></div><div class="categoria-seccion-wrapper" data-sec="sensuales" style="margin-top:2rem"><h2 class="section-heading" data-i18n="seccionSensuales">Masajistas Sensuales</h2><div class="grid-perfiles" id="grid-sensuales"></div></div><div class="categoria-seccion-wrapper" data-sec="fantasias" style="margin-top:2rem"><h2 class="section-heading" data-i18n="seccionFantasias">Fantasías</h2><div class="grid-perfiles" id="grid-fantasias"></div></div><div class="categoria-seccion-wrapper" data-sec="favoritos" style="margin-top:2rem;display:none"><h2 class="section-heading">⭐ Mis Favoritas</h2><div class="grid-perfiles" id="grid-favoritos"></div></div></main>
 <div class="destacadas-container-wrapper"><h3 class="destacadas-titulo" data-i18n="destacadasTitulo">Destacadas</h3><div class="stories-container" id="stories-destacadas-container"></div></div>
 <section class="prive-club-home" aria-labelledby="priveClubTitle"><div class="prive-club-home-top"><div><span class="club-kicker" data-i18n="clubKicker">COMUNIDAD EXCLUSIVA +18</span><h2 id="priveClubTitle">Privé Club</h2><p data-i18n="clubDescription">Conversaciones sin prejuicios, con respeto y discreción. Sumate con tu apodo.</p></div><a class="club-enter" href="club.html" data-i18n="clubEnter">Entrar al Club →</a></div><h3 data-i18n="clubLatest">Últimas conversaciones</h3><div id="priveClubTopics" class="prive-club-topics" aria-live="polite"><p data-i18n="clubLoading">Cargando conversaciones…</p></div></section>
-<section class="prive-discovery" id="catalogo-prive" aria-label="Buscar perfiles"><div class="prive-discovery-title">Explorá Masajistas Privé</div><label class="prive-search-wrap" for="priveBuscar"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 5 5" stroke="currentColor" stroke-width="1.8"/></svg><input id="priveBuscar" type="search" autocomplete="off" placeholder="Buscar por nombre o zona..." aria-label="Buscar por nombre o zona"><button type="button" id="priveLimpiar" aria-label="Limpiar búsqueda" hidden>×</button></label><div class="prive-search-count" id="priveSearchCount" role="status" aria-live="polite"></div></section>
-<nav class="pills-container"><button class="pill-btn active" data-filter="todas" data-i18n="filtroTodas">Todas</button><button class="pill-btn" data-filter="terapeuticas" data-i18n="filtroTerapeuticas">Terapéuticas</button><button class="pill-btn" data-filter="sensuales" data-i18n="filtroSensuales">Sensuales</button><button class="pill-btn" data-filter="fantasias" data-i18n="filtroFantasias">Fantasías</button></nav>
-<div class="prive-view-controls"><button class="pill-btn prive-favorites-control" data-filter="favoritos">★ <span>Mis favoritas</span></button><button id="btnAlternarEstilo" class="prive-layout-control" type="button" onclick="toggleEstiloVisual()">▦ <span>Vista ampliada</span></button></div>
-<div class="art-deco-divider"><span>♦</span></div>
-<main class="container prive-main"><div class="categoria-seccion-wrapper" data-sec="terapeuticas"><h2 class="section-heading" data-i18n="seccionTerapeuticas">Masajistas Terapéuticas</h2><div class="grid-perfiles" id="grid-terapeuticas"></div></div><div class="categoria-seccion-wrapper" data-sec="sensuales" style="margin-top:2rem"><h2 class="section-heading" data-i18n="seccionSensuales">Masajistas Sensuales</h2><div class="grid-perfiles" id="grid-sensuales"></div></div><div class="categoria-seccion-wrapper" data-sec="fantasias" style="margin-top:2rem"><h2 class="section-heading" data-i18n="seccionFantasias">Fantasías</h2><div class="grid-perfiles" id="grid-fantasias"></div></div><div class="categoria-seccion-wrapper" data-sec="favoritos" style="margin-top:2rem;display:none"><h2 class="section-heading">⭐ Mis Favoritas</h2><div class="grid-perfiles" id="grid-favoritos"></div></div></main>
 <section class="prive-zonas" aria-labelledby="prive-zonas-titulo">
 <span class="prive-zonas-kicker">EXPLORÁ BUENOS AIRES</span>
 <h2 id="prive-zonas-titulo">Masajistas por zona en CABA</h2>
@@ -325,7 +63,8 @@ body.modo-tarjeta-alternativo .grid-perfiles .card-ad .ad-content{inset:0!import
 </section>
 
 <div class="art-deco-divider"><span>♦</span></div>
-<div class="dolar-card" style="background:#141414;border:1px solid rgba(223,194,133,.25);border-radius:10px;padding:20px;max-width:900px;margin:30px auto;text-align:center;font-family:Montserrat,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.5)"><span style="color:#dfc285;font-size:11px;text-transform:uppercase;letter-spacing:2px" data-i18n="financierosSub">Indicadores Financieros</span><h3 style="color:#fff;font-size:18px;margin:8px 0;font-family:'Cormorant Garamond',serif" data-i18n="financierosTitulo">Cotización Dólar (Argentina)</h3><div id="dolar-info" style="color:#ccc;font-size:14px"><span data-i18n="cargandoCotizacion">Cargando cotización actual...</span></div></div>
+<details class="prive-extras"><summary data-v2="useful">Información de Buenos Aires</summary><div class="clima-card"><span data-i18n="climaTitulo">Clima en Directo</span><div id="clima-info">Buenos Aires (CABA)</div></div><div class="dolar-card" style="background:#141414;border:1px solid rgba(223,194,133,.25);border-radius:10px;padding:20px;max-width:900px;margin:30px auto;text-align:center;font-family:Montserrat,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.5)"><span style="color:#dfc285;font-size:11px;text-transform:uppercase;letter-spacing:2px" data-i18n="financierosSub">Indicadores Financieros</span><h3 style="color:#fff;font-size:18px;margin:8px 0;font-family:'Cormorant Garamond',serif" data-i18n="financierosTitulo">Cotización Dólar (Argentina)</h3><div id="dolar-info" style="color:#ccc;font-size:14px"><span data-i18n="cargandoCotizacion">Cargando cotización actual...</span></div></div>
+</details>
 <section style="max-width:900px;margin:40px auto;padding:0 20px"><div style="text-align:center;margin-bottom:35px"><span style="color:#dfc285;font-size:11px;text-transform:uppercase;letter-spacing:3px;font-weight:500;display:block;margin-bottom:8px" data-i18n="editorialSub">Editorial & Bienestar</span><h2 style="font-size:30px;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;color:#dfc285;font-family:'Cormorant Garamond',serif" data-i18n="cuadernoTitulo">Cuaderno Privé</h2><p style="color:#999;font-size:14px;font-weight:300" data-i18n="cuadernoDesc">Crónicas urbanas, secretos de gabinete y el arte del relax absoluto en CABA.</p></div><div id="cuaderno-rotativo" style="display:grid;gap:20px"></div></section>
 <div id="modalArticulo" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);justify-content:center;align-items:center;z-index:9999;padding:20px"><div style="background:#141414;border:1px solid #dfc285;border-radius:8px;width:100%;max-width:650px;padding:30px;box-shadow:0 10px 25px rgba(0,0,0,.5);max-height:85vh;overflow-y:auto"><span id="categoriaArticuloModal" style="color:#dfc285;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:500;display:block;margin-bottom:6px"></span><h3 id="tituloArticuloModal" style="color:#dfc285;font-size:24px;margin-bottom:15px;font-family:'Cormorant Garamond',serif"></h3><p id="textoArticuloModal" style="color:#ccc;font-size:14px;line-height:1.8;margin-bottom:25px;font-weight:300;font-family:Montserrat,sans-serif;white-space:pre-line"></p><div style="text-align:right"><button type="button" onclick="cerrarArticulo()" style="background:#dfc285;color:#0d0d0d;border:none;padding:8px 20px;border-radius:4px;cursor:pointer;font-weight:600;text-transform:uppercase;font-family:Montserrat,sans-serif" data-i18n="btnCerrar">Cerrar</button></div></div></div>
 <footer class="footer"><div class="footer-container"><div class="footer-socials"><span style="color:#dfc285;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:500" data-i18n="siguenos">Síguenos</span><div class="footer-icons-row">
@@ -335,6 +74,7 @@ body.modo-tarjeta-alternativo .grid-perfiles .card-ad .ad-content{inset:0!import
 <a href="https://t.me/masajistasprive" target="_blank" rel="noopener noreferrer" class="footer-icon-link" title="Telegram"><svg viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.14-.261.26-.536.26l.213-3.05 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.654-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/></svg></a>
 <a href="https://whatsapp.com/channel/0029VbDhx91BA1f3Cob1BR1J" target="_blank" rel="noopener noreferrer" class="footer-icon-link" title="WhatsApp"><svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg></a>
 </div></div><div class="footer-legal"><p data-i18n="footerLegal">Este es un sitio exclusivo para adultos (+18). Las anunciantes publicadas son independientes y no tienen vínculo laboral, societario ni de dependencia con este portal.</p><p style="margin-top:6px" data-i18n="footerMarcas">Todo el contenido, marcas y logotipos pertenecen a sus respectivos dueños.</p><p class="copyright" style="margin-top:12px;color:#dfc285;font-size:12px" data-i18n="footerCopy">© 2026 Masajistas Privé. Todos los derechos reservados.</p></div></div></footer>
+<nav class="prive-bottom-nav" aria-label="Navegación principal"><button type="button" data-prive-nav="inicio" class="active" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v11h-6v-7H9v7H3Z"/></svg><span data-v2="home">Inicio</span></button><button type="button" data-prive-nav="explorar"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="7"/><path d="m16 16 5 5"/></svg><span data-v2="explore">Explorar</span></button><button type="button" class="pill-btn" data-filter="favoritos" data-prive-nav="favoritos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.8 5.8 6.4.9-4.6 4.5 1.1 6.4-5.7-3-5.7 3 1.1-6.4-4.6-4.5 6.4-.9Z"/></svg><span data-v2="favorites">Favoritas</span></button><a href="club.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 6 5 4 4-7 4 7 5-4-2 14H5Z"/></svg><span>Club</span></a></nav>
 <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
@@ -520,5 +260,6 @@ function iniciarBusquedaPrive(){const input=document.getElementById('priveBuscar
 function iniciarPagina(){iniciarBusquedaPrive();aplicarEstiloVisualActual();inicializarInteracciones();aplicarIdioma(idiomaActual);setTimeout(()=>{obtenerClimaCABA();obtenerDolar()},300);setTimeout(ocultarTransicionPrive,900);iniciarFirebase()}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',iniciarPagina,{once:true});else iniciarPagina();
 </script>
+<script defer src="js/prive-home-2.js?v=20261015-1"></script>
 </body>
 </html>

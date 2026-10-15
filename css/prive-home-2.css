@@ -1,0 +1,98 @@
+/* Masajistas Privé · Portada 2.0 · Sólo esta portada carga este archivo. */
+:root{--p2-gold:#dfc285;--p2-gold-light:#f2dbac;--p2-line:#dfc28538;--p2-muted:#b9b6ae;--p2-surface:#171819;--p2-width:1120px;color-scheme:dark}
+html{scroll-behavior:smooth;scroll-padding-top:20px;-webkit-text-size-adjust:100%}
+body.prive-home-v2{margin:0;min-width:320px;padding-bottom:calc(86px + env(safe-area-inset-bottom));background:#090b0c!important;background-image:none!important;color:#eee;letter-spacing:0;font-size:14px}
+.prive-home-v2 *, .prive-home-v2 *::before,.prive-home-v2 *::after{box-sizing:border-box}
+.prive-home-v2 [hidden]{display:none!important}
+.prive-home-v2 img{max-width:100%}
+.prive-home-v2 button,.prive-home-v2 select,.prive-home-v2 input{font:inherit}
+.prive-home-v2 button{cursor:pointer}
+.prive-home-v2 button:disabled{opacity:.55;cursor:wait}
+.prive-home-v2 :focus-visible{outline:2px solid var(--p2-gold-light);outline-offset:4px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+.prive-home-v2 h1,.prive-home-v2 h2,.prive-home-v2 h3{background:none!important;-webkit-text-fill-color:currentColor!important;text-shadow:none;color:var(--p2-gold-light);letter-spacing:-.4px!important}
+.prive-home-v2 .header-prive{position:relative;min-height:96px;padding:8px 22px;gap:14px;max-width:var(--p2-width);margin:auto;background:transparent;border:0;z-index:30}
+.prive-home-v2 .header-center{flex:1;min-width:0;justify-content:flex-start}
+.prive-home-v2 .header-logo-grande{width:205px!important;height:auto!important;max-height:none!important;display:block}
+.prive-home-v2 .header-right{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.prive-menu-trigger{width:44px;height:44px;border:0;background:transparent;color:var(--p2-gold);display:grid;place-items:center;border-radius:10px}
+.prive-home-v2 svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.prive-language{position:relative}
+.prive-language-trigger{display:flex;align-items:center;gap:5px;min-height:44px;padding:8px 6px;border:0;color:#f0dcae;background:transparent;border-radius:8px;font-size:13px!important}
+#priveIdiomaBandera{display:none}.prive-language-chevron{width:14px!important;height:14px!important}
+.prive-language-menu{position:absolute;top:calc(100% + 8px);right:0;min-width:185px;border:1px solid #6c5735;border-radius:12px;padding:6px;background:#171819;box-shadow:0 15px 50px #000a;z-index:50}
+.prive-language-menu button{display:flex;gap:10px;align-items:center;width:100%;min-height:44px;padding:10px;border:0;border-radius:7px;background:transparent;color:#eee;text-align:left;font-size:12px}
+.prive-language-menu button[aria-checked=true],.prive-language-menu button:hover{background:#dfc28520}.prive-language-menu small{margin-left:auto;color:var(--p2-gold)}
+.prive-site-menu{position:absolute;top:110px;right:max(16px,calc((100vw - 1080px)/2));z-index:40;min-width:240px;max-width:calc(100% - 32px);padding:9px;border:1px solid #78603a;background:#151718;border-radius:14px;box-shadow:0 18px 50px #000a}
+.prive-site-menu a{display:block;min-height:44px;padding:13px;border-radius:8px;font-size:13px;color:#f0dcae}.prive-site-menu a:hover{background:#dfc28515}
+.prive-hero{position:relative;isolation:isolate;max-width:var(--p2-width);margin:-10px auto 0;padding:40px 24px 48px;min-height:245px;overflow:hidden;background:#151310 url('../img/prive-spa-home.webp') center right/cover no-repeat;border-radius:0 0 22px 22px}
+.prive-hero:before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,#090b0c99,transparent 85%),linear-gradient(0deg,#090b0c,transparent 40%);z-index:-1}
+.prive-hero-content{max-width:680px}.prive-hero-eyebrow{color:#c6c4c0;letter-spacing:3px;font-size:10px}
+.prive-hero h1{font-size:clamp(43px,7vw,76px);line-height:.98;margin:16px 0 13px;max-width:630px}
+.prive-hero p{font-size:clamp(12px,2vw,17px);color:#c8c6c0;line-height:1.6;margin:0;max-width:80%}
+.prive-discovery{position:relative;max-width:var(--p2-width);margin:-8px auto 0;padding:0 20px;z-index:2}
+.prive-search-wrap{display:flex;align-items:center;gap:12px;min-height:60px;padding:0 16px;background:linear-gradient(120deg,#242627,#191b1c);border:1px solid #8a8980;border-radius:18px;color:#f0eee9;box-shadow:0 8px 25px #0003}
+.prive-search-wrap:focus-within{border-color:var(--p2-gold)}.prive-search-wrap>svg{flex-shrink:0}
+#priveBuscar{width:100%;min-width:0;min-height:58px;background:transparent;border:0;outline:0;color:white;font-size:15px}
+#priveBuscar::placeholder{color:#aaa9a5}#priveLimpiar{min-width:36px;min-height:44px;padding:0;background:transparent;border:0;color:var(--p2-gold);font-size:25px}
+.prive-home-v2 .pills-container{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:12px 0;padding:0}
+.prive-home-v2 .pills-container .pill-btn{display:flex;justify-content:center;align-items:center;min-height:49px;min-width:0;margin:0;padding:9px 5px;border:1px solid #827459;border-radius:13px;background:transparent;color:#e9e4da;box-shadow:none;font-size:clamp(11px,2.9vw,15px);text-transform:none;letter-spacing:0;white-space:normal}
+.prive-home-v2 .pills-container .pill-btn.active{background:linear-gradient(120deg,#e7cfa1,#c5a374);border-color:#e3c697;color:#1d1710;font-weight:600}
+.prive-filters{display:grid;grid-template-columns:1fr 1fr 44px;gap:9px;align-items:center}.prive-filters label{min-width:0}.prive-filters select{width:100%;min-height:44px;border:1px solid #55564e;border-radius:10px;background:#151718;color:#d2d5d5;padding:0 28px 0 12px;font-size:12px;text-overflow:ellipsis}
+.prive-reset{display:grid;place-items:center;width:44px;min-height:44px;border:1px solid #55564e;border-radius:10px;background:transparent;color:#ddd}
+.prive-catalogue-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:22px 0 0}.prive-catalogue-title h1{font-size:clamp(27px,5vw,38px);margin:0;line-height:1.05}
+.prive-home-v2 .prive-all{min-height:44px;flex-shrink:0;border:0;background:transparent;color:var(--p2-gold);font-size:11px;padding:8px 0;white-space:nowrap;text-transform:none;letter-spacing:0;box-shadow:none}
+.prive-search-count{font-size:11px;color:var(--p2-muted);min-height:22px;line-height:1.5;padding-top:5px}
+.prive-view-controls{display:flex;justify-content:flex-end;margin:0 0 6px}.prive-layout-control{min-height:32px;border:0;background:transparent;color:#b9b6ae;font-size:11px!important;padding:3px 0 3px 10px}
+.prive-home-v2 .container{width:100%;max-width:var(--p2-width);margin:0 auto;padding:0 20px;min-width:0}.prive-main{min-height:80px}
+.prive-home-v2 .section-heading{font-size:23px;text-align:left;margin:16px 0 12px}.prive-home-v2 .categoria-seccion-wrapper:first-child .section-heading{margin-top:0}
+.prive-home-v2 .grid-perfiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;align-items:start;margin-bottom:25px}
+.prive-home-v2 .card-link{min-width:0;width:100%;position:relative}.prive-home-v2 .card-link[style*="display: none"]{display:none!important}
+.prive-home-v2 .grid-perfiles .card{display:flex;flex-direction:column;width:100%;min-width:0;min-height:0;height:100%;padding:0;border:1px solid #dfc2852e!important;background:linear-gradient(120deg,#202223,#141617)!important;border-radius:14px;overflow:hidden;box-shadow:none;transition:border-color .2s}
+.prive-home-v2 .grid-perfiles .card-image{aspect-ratio:4/5!important;width:100%;height:auto!important;position:relative;overflow:hidden}
+.prive-home-v2 .grid-perfiles .card-image img{display:block;object-fit:cover;object-position:center top;transition:transform .3s;aspect-ratio:4/5}
+.prive-home-v2 .prive-card-photo-link{display:block;position:relative}
+.prive-home-v2 .prive-card-summary{padding:11px 10px 12px;min-width:0}.prive-home-v2 .prive-card-summary h3{font-size:26px;line-height:1.05;color:#f7f3eb;margin:0 0 6px;overflow-wrap:anywhere}
+.prive-card-zone{display:flex;gap:4px;align-items:center;font-size:12px;line-height:1.4;color:#cfceca;overflow-wrap:anywhere}.prive-card-zone svg{width:13px;height:15px;flex-shrink:0}
+.prive-card-mode{display:inline-block;margin-top:8px;padding:3px 7px;border:1px solid #b59459;border-radius:20px;font-size:10px;color:#e2cfaa;line-height:1.3;overflow-wrap:anywhere;max-width:100%}
+.prive-favorite-button{position:absolute;right:6px;top:6px;z-index:15;display:grid;place-items:center;width:44px;height:44px;padding:9px;border:1px solid #ffffff25;border-radius:50%;background:#090b0c70;color:#fff;backdrop-filter:blur(5px)}
+.prive-favorite-button svg{width:24px;height:24px}.prive-favorite-button[aria-pressed=true]{color:#f2d49b;background:#15120be6;border-color:#dfc28588}.prive-favorite-button[aria-pressed=true] svg{fill:#dfc285}
+.prive-home-v2 .prive-card-verified{position:static!important;display:inline-flex;vertical-align:middle;margin-left:4px;color:var(--p2-gold);font-size:15px;line-height:1}
+.prive-home-v2 .prive-barra-clasica{display:flex;justify-content:space-between;align-items:center;gap:3px;padding:5px 8px;border-top:1px solid #dfc28522;min-height:42px}.prive-barra-clasica button,.prive-barra-clasica a{display:flex;align-items:center;justify-content:center;gap:4px;font-size:10px!important;min-height:34px;min-width:0;border:0!important;background:transparent!important;color:#c6bdad!important;padding:5px 3px!important;border-radius:8px;white-space:normal;text-align:center;line-height:1.2}
+.prive-home-v2 .prive-votado{color:#f2d49b!important}.prive-home-v2 .prive-card-actions{display:none;grid-template-columns:1fr 1fr;gap:7px;padding:0 12px 12px}.prive-card-actions a{font-size:11px;min-height:42px;border:1px solid #8d744b;border-radius:8px;display:grid;place-items:center;color:#e3d3b6;padding:6px}.prive-card-actions .prive-btn-ws{background:#c9a96e;color:#15120b;border:0}
+.prive-home-v2.modo-tarjeta-alternativo .grid-perfiles{grid-template-columns:1fr}.prive-home-v2.modo-tarjeta-alternativo .prive-card-actions{display:grid}
+.prive-home-v2 .card-ad-link{display:block;min-width:0;align-self:stretch}.prive-home-v2 .grid-perfiles .card-ad{min-height:250px;height:100%;background:#171614;border:1px dashed #9b8156;border-radius:14px;padding:16px;display:grid;place-items:center;text-align:center}.prive-home-v2 .card-ad h3{font-size:27px}.prive-home-v2 .card-ad p{font-size:12px}.prive-home-v2 .btn-ad{display:inline-block;padding:10px;border:1px solid #b99558;border-radius:8px;font-size:11px}.prive-home-v2 .card-ad:before{display:none}
+.prive-empty{text-align:center;border:1px solid var(--p2-line);border-radius:14px;padding:20px;color:#cfc7b8}.prive-reset-text{border:0;background:transparent;color:var(--p2-gold);min-height:44px;text-decoration:underline}
+.prive-bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:1000;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding:7px max(8px,calc((100vw - 700px)/2)) calc(7px + env(safe-area-inset-bottom));background:#0c0e0ff5;backdrop-filter:blur(16px);border-top:1px solid #dfc28540;box-shadow:0 -4px 22px #0004}
+.prive-home-v2 .prive-bottom-nav button,.prive-bottom-nav a{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;min-height:52px;min-width:0;padding:4px;background:transparent;border:0;border-radius:9px;color:#aaaead;font-size:11px;text-transform:none;letter-spacing:0;box-shadow:none}
+.prive-bottom-nav .active,.prive-bottom-nav [aria-current=page]{color:var(--p2-gold-light)!important}.prive-bottom-nav .active svg{fill:#dfc28522}
+.prive-home-v2 .destacadas-container-wrapper,.prive-club-home,.prive-zonas{width:calc(100% - 40px);max-width:1080px;margin:32px auto!important;padding:22px;border:1px solid var(--p2-line);border-radius:16px;background:#151513;box-shadow:none}
+.prive-home-v2 .destacadas-titulo{font-size:28px;text-align:left;margin:0 0 16px;color:var(--p2-gold-light)}
+.prive-home-v2 #stories-destacadas-container{display:flex;gap:16px;overflow-x:auto;max-width:100%;padding:0 0 8px}.prive-home-v2 .story-item{width:80px;min-width:80px;text-align:center;display:block;font-size:11px;color:#d9c8a6}.prive-home-v2 .story-ring{width:76px;height:76px;border:1px solid #c6a66b;border-radius:50%;padding:3px;margin:0 auto 8px}.prive-home-v2 .story-ring img{width:100%;height:100%;border-radius:50%;object-fit:cover}.story-item>span{overflow-wrap:anywhere}
+.prive-club-home-top{display:flex;align-items:center;justify-content:space-between;gap:16px}.club-kicker,.prive-zonas-kicker{color:#cbb487;font-size:9px;letter-spacing:2px}.prive-club-home h2,.prive-zonas h2{font-size:32px;margin:7px 0}.prive-club-home p,.prive-zonas p{font-size:12px;line-height:1.7;color:#c7c0b4}.club-enter{flex-shrink:0;border:1px solid #ad8e57;border-radius:9px;background:#dfc285;color:#17120b!important;font-size:11px;padding:13px;min-height:44px}.prive-club-home h3{font-size:22px}.prive-club-topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.prive-club-topic{padding:12px;border:1px solid #dfc28533;border-radius:10px;min-width:0}.prive-club-topic strong{display:block;overflow-wrap:anywhere;font-size:12px;color:#e5d5b5}.prive-club-topic small{display:block;font-size:10px;color:#aaa;margin-top:8px}
+.prive-zonas-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.prive-zonas-links a{padding:12px;border:1px solid var(--p2-line);border-radius:9px;font-size:12px;min-height:44px}
+.prive-extras{width:calc(100% - 40px);max-width:1080px;margin:20px auto;padding:15px;border:1px solid var(--p2-line);border-radius:14px;font-size:12px;color:#bcb5a7}.prive-extras summary{min-height:30px;cursor:pointer}.prive-home-v2 .clima-card,.prive-home-v2 .dolar-card{max-width:100%!important;margin:10px 0!important;padding:14px!important;border-radius:10px;line-height:1.6;background:#141617!important;border:1px solid var(--p2-line)!important}.prive-home-v2 .art-deco-divider{display:none}.prive-home-v2 .footer{margin-top:40px;padding-bottom:25px}.prive-home-v2 .blog-card{padding:20px;background:#181916;border:1px solid var(--p2-line);border-radius:14px}
+#priveTransitionScreen{position:fixed;inset:0;z-index:9999999;background:#090b0c;display:grid;place-items:center;transition:opacity .25s}.prive-transition-logo{text-align:center}
+@media(min-width:700px){.prive-home-v2 .grid-perfiles{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}.prive-home-v2.modo-tarjeta-alternativo .grid-perfiles{grid-template-columns:repeat(2,minmax(0,1fr))}.prive-hero{min-height:310px;padding:42px}.prive-home-v2 .header-prive{padding-inline:30px}.prive-discovery,.prive-home-v2 .container{padding-inline:30px}.prive-home-v2 .pills-container{max-width:640px}.prive-search-wrap{max-width:100%}.prive-filters{max-width:640px}.prive-home-v2 .card-image{max-height:380px}}
+@media(min-width:1050px){.prive-home-v2 .grid-perfiles{grid-template-columns:repeat(4,minmax(0,1fr))}.prive-home-v2.modo-tarjeta-alternativo .grid-perfiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:380px){.prive-home-v2 .header-prive{padding-inline:14px;gap:5px}.prive-home-v2 .header-logo-grande{width:180px!important}.prive-home-v2 .header-right{gap:2px}.prive-hero{padding-inline:16px}.prive-discovery,.prive-home-v2 .container{padding-inline:14px}.prive-home-v2 .grid-perfiles{gap:9px}.prive-catalogue-title h1{font-size:26px}.prive-home-v2 .prive-card-summary{padding:9px 8px}.prive-home-v2 .prive-card-summary h3{font-size:23px}.prive-home-v2 .prive-barra-clasica{padding-inline:4px}.prive-home-v2 .prive-barra-clasica button,.prive-home-v2 .prive-barra-clasica a{font-size:9px!important}.prive-filters{gap:6px}.prive-filters select{font-size:11px;padding-left:8px}}
+@media(max-width:600px){.prive-club-topics{grid-template-columns:1fr}.prive-club-home-top{align-items:flex-start}.club-enter{font-size:10px;padding:10px}.prive-home-v2 .destacadas-container-wrapper,.prive-club-home,.prive-zonas{padding:16px;width:calc(100% - 28px)}.prive-home-v2 .header-prive{min-height:100px}.prive-hero h1{max-width:310px}.prive-extras{width:calc(100% - 28px)}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.prive-home-v2 *, .prive-home-v2 *:before,.prive-home-v2 *:after{transition:none!important;animation:none!important}}
+
+/* Preferencia aprobada: portada directa, sin lema ni bloque de presentación. */
+.prive-home-v2 .header-prive{margin-bottom:8px}.prive-home-v2 .prive-discovery{margin-top:0}
+/* Prioridad sobre las reglas históricas !important de la hoja compartida. */
+.prive-home-v2 .container:not(.perfil-container){max-width:var(--p2-width)!important;padding:0 20px!important}
+.prive-home-v2 .grid-perfiles{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:13px!important}
+.prive-home-v2.modo-tarjeta-alternativo .grid-perfiles{grid-template-columns:1fr!important}
+.prive-home-v2 .section-heading{font-size:23px!important;text-align:left!important;text-transform:none!important;margin:16px 0 12px!important;letter-spacing:0!important;border:0;padding-bottom:0}
+.prive-home-v2 .categoria-seccion-wrapper:first-child .section-heading{margin-top:0!important}
+.prive-home-v2 .prive-card-summary{display:block}
+.prive-home-v2 .prive-all.active,.prive-home-v2 .prive-bottom-nav .pill-btn.active{background:transparent!important;border:0!important;color:var(--p2-gold-light)!important}
+.prive-home-v2 .pills-container{border:0;overflow:visible}
+.prive-home-v2 .grid-perfiles .card-ad{background:#171614!important;border:1px dashed #9b8156!important;padding:16px!important}
+.prive-home-v2 .card-ad:before{display:none!important}
+.prive-home-v2 .destacadas-container-wrapper{padding:22px!important}
+@media(min-width:700px){.prive-home-v2 .container:not(.perfil-container){padding-inline:30px!important}.prive-home-v2 .grid-perfiles{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:20px!important}.prive-home-v2.modo-tarjeta-alternativo .grid-perfiles{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(min-width:1050px){.prive-home-v2 .grid-perfiles{grid-template-columns:repeat(4,minmax(0,1fr))!important}.prive-home-v2.modo-tarjeta-alternativo .grid-perfiles{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
+@media(max-width:380px){.prive-home-v2 .container:not(.perfil-container){padding-inline:14px!important}.prive-home-v2 .grid-perfiles{gap:9px!important}}
