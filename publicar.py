@@ -132,10 +132,19 @@ def main():
         '(texto plano con párrafos separados por dos saltos de línea). '
         'No uses Markdown ni HTML.'
     )
-    try:
-        available = available_models()
-    except RuntimeError as exc:
-        sys.exit(f'No se pudo consultar la lista real de modelos: {exc}')
+    for intento_lista in range(3):
+        try:
+            available = available_models()
+            break
+        except RuntimeError as exc:
+            status = getattr(exc, 'status', None)
+            transitorio = status in (408, 500, 502, 503, 504) or 'Error de conexión:' in str(exc)
+            if transitorio and intento_lista < 2:
+                espera = (10, 30)[intento_lista]
+                print(f'Lista de modelos temporalmente no disponible; reintento en {espera} segundos.', flush=True)
+                time.sleep(espera)
+                continue
+            sys.exit(f'No se pudo consultar la lista real de modelos: {exc}')
     candidates = [name for name in PREFERRED if name in available]
     if not candidates:
         # No se elige un modelo desconocido sin confirmar que admite generateContent.

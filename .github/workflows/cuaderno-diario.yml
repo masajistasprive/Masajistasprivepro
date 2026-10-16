@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: write
+  pages: write
 
 concurrency:
   group: cuaderno-prive-diario
@@ -57,3 +58,10 @@ jobs:
           fi
   
 
+
+      # Un push con GITHUB_TOKEN no dispara Pages automáticamente.
+      # Se solicita reconstruir el sitio existente, sin cambiar su hosting ni dominio.
+      - name: Actualizar sitio publicado
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method POST "repos/$GITHUB_REPOSITORY/pages/builds"

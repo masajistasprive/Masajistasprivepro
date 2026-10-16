@@ -1,5 +1,11 @@
 [
   {
+    "fecha": "2026-10-16",
+    "titulo": "Antes del primer turno: el valor de una buena consulta",
+    "bajada": "Elegir una experiencia de relax empieza antes de llegar al gabinete. Qué preguntar, cómo leer una propuesta y por qué los detalles claros hacen la diferencia.",
+    "categoria": "Bienestar"
+  },
+  {
     "fecha": "2026-10-15",
     "titulo": "El arte de la desconexión: rituales para recuperar la calma tras la jornada",
     "bajada": "Al caer el sol, el mundo exterior pierde relevancia. Aprenda a transformar el regreso a casa en un santuario privado de serenidad, sofisticación y bienestar personal.",
@@ -12,3 +18,4 @@
     "categoria": "Estilo de vida"
   }
 ]
+
