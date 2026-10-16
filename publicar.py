@@ -45,6 +45,12 @@ PREFERRED = [
 ]
 
 
+class APIError(RuntimeError):
+    def __init__(self, status, detail):
+        self.status = status
+        super().__init__(f'HTTP {status}: {detail}')
+
+
 def api(method, endpoint, payload=None, timeout=70):
     url = API_BASE + endpoint
     data = None if payload is None else json.dumps(payload).encode('utf-8')
@@ -63,7 +69,7 @@ def api(method, endpoint, payload=None, timeout=70):
             detail = json.loads(detail).get('error', {}).get('message', detail)
         except ValueError:
             pass
-        raise RuntimeError(f'HTTP {exc.code}: {detail[:400]}') from exc
+        raise APIError(exc.code, detail[:400]) from exc
     except (urllib.error.URLError, TimeoutError) as exc:
         raise RuntimeError(f'Error de conexión: {exc}') from exc
 
@@ -143,21 +149,31 @@ def main():
             'contents': [{'parts': [{'text': prompt}]}],
             'generationConfig': {'responseMimeType': 'application/json', 'temperature': 0.7},
         }
-        try:
-            response = api('POST', f'/models/{model}:generateContent', payload)
-            article = extract_article(response)
-            print(f'Generación válida con {model}', flush=True)
+        # Solo errores transitorios: tres intentos por modelo, sin rotar claves
+        # ni activar facturación. Los cupos se reintentan en otra ejecución diaria.
+        for intento in range(3):
+            try:
+                response = api('POST', f'/models/{model}:generateContent', payload)
+                article = extract_article(response)
+                print(f'Generación válida con {model}', flush=True)
+                break
+            except (RuntimeError, ValueError, KeyError, json.JSONDecodeError) as exc:
+                message = str(exc)
+                print(f'No se pudo generar con {model} (intento {intento + 1}/3): {message[:500]}', flush=True)
+                status = getattr(exc, 'status', None)
+                if status in (401, 403):
+                    sys.exit('Revisá los permisos de GEMINI_API_KEY; se detuvo sin publicar.')
+                if status == 429:
+                    sys.exit('Cupo de Gemini alcanzado; se reintentará en la próxima ejecución programada, sin activar servicios pagos.')
+                transitorio = status in (408, 500, 502, 503, 504) or 'Error de conexión:' in message
+                if transitorio and intento < 2:
+                    espera = (10, 30)[intento]
+                    print(f'Servicio temporalmente no disponible; reintento en {espera} segundos.', flush=True)
+                    time.sleep(espera)
+                    continue
+                break
+        if article is not None:
             break
-        except (RuntimeError, ValueError, KeyError, json.JSONDecodeError) as exc:
-            message = str(exc)
-            print(f'No se pudo generar con {model}: {message[:500]}', flush=True)
-            # Errores de autorización/cuota no se arreglan rotando modelos.
-            if re.search(r'HTTP (401|403)', message):
-                sys.exit('Revisá los permisos de GEMINI_API_KEY; se detuvo sin publicar.')
-            if 'HTTP 429' in message:
-                print('Límite de solicitudes alcanzado; se prueba otra opción disponible.', flush=True)
-            if 'HTTP 503' in message:
-                time.sleep(2)
     if article is None:
         sys.exit('Ningún modelo devolvió un artículo válido. No se publicó nada.')
     DEST.mkdir(parents=True, exist_ok=True)
@@ -178,3 +194,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
