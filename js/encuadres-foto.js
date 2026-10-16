@@ -1,0 +1,41 @@
+// El fragmento conserva la URL original y no se envía al servidor de imágenes.
+const CLAVE='prive-encuadre-v1=';
+const limite=(v,min,max,def)=>Number.isFinite(Number(v))?Math.max(min,Math.min(max,Number(v))):def;
+export function normalizarEncuadres(value){
+  const uno=(v,top)=>({x:limite(v?.x,0,100,50),y:limite(v?.y,0,100,top),zoom:limite(v?.zoom,25,300,100)});
+  return {portada:uno(value?.portada,0),destacada:uno(value?.destacada,50)};
+}
+export function leerEncuadres(url){
+  if(typeof url!=='string')return null;
+  const fragmento=url.split('#')[1]||'';
+  const dato=fragmento.split('&').find(x=>x.startsWith(CLAVE));
+  if(!dato)return null;
+  const numeros=dato.slice(CLAVE.length).split(',');
+  if(numeros.length!==6||numeros.some(x=>x.trim()===''||!Number.isFinite(Number(x))))return null;
+  return normalizarEncuadres({portada:{x:numeros[0],y:numeros[1],zoom:numeros[2]},destacada:{x:numeros[3],y:numeros[4],zoom:numeros[5]}});
+}
+export function guardarEncuadres(url,valor){
+  if(typeof url!=='string'||!url)return url;
+  // Base64 se migra antes de guardar; el contenido binario no se altera aquí.
+  if(url.startsWith('data:'))return url;
+  const indice=url.indexOf('#'),base=indice<0?url:url.slice(0,indice);
+  const partes=(indice<0?'':url.slice(indice+1)).split('&').filter(x=>x&&!x.startsWith(CLAVE));
+  if(valor){const e=normalizarEncuadres(valor);partes.push(CLAVE+[e.portada.x,e.portada.y,e.portada.zoom,e.destacada.x,e.destacada.y,e.destacada.zoom].map(x=>Math.round(x*100)/100).join(','));}
+  return base+(partes.length?'#'+partes.join('&'):'');
+}
+export function geometriaEncuadre(iw,ih,w,h,valor){
+  if(![iw,ih,w,h].every(n=>Number.isFinite(n)&&n>0))return null;
+  const e=normalizarEncuadres({portada:valor}).portada;
+  const escala=Math.max(w/iw,h/ih)*e.zoom/100;
+  const ancho=iw*escala,alto=ih*escala;
+  return {width:ancho,height:alto,left:(w-ancho)*e.x/100,top:(h-alto)*e.y/100};
+}
+export function aplicarEncuadre(img,valor){
+  const frame=img.parentElement;
+  if(!frame)return;
+  const g=geometriaEncuadre(img.naturalWidth,img.naturalHeight,frame.clientWidth,frame.clientHeight,valor);
+  if(!g)return;
+  frame.style.position='relative';frame.style.overflow='hidden';
+  const props={position:'absolute',display:'block',width:g.width+'px',height:g.height+'px',left:g.left+'px',top:g.top+'px','max-width':'none','max-height':'none','min-width':'0','aspect-ratio':'auto','object-fit':'fill',transform:'none',transition:'none',margin:'0','border-radius':'0'};
+  for(const [k,v]of Object.entries(props))img.style.setProperty(k,v,'important');
+}
