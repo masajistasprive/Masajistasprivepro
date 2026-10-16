@@ -1,6 +1,6 @@
 import {leerEncuadres,aplicarEncuadre} from './encuadres-foto.js?v=20261016-1';
 // Solo portada y destacadas: nunca cambia las fotos de la galería ni el original.
-const selector='.card-image img, #stories-destacadas-container .story-ring img';
+const selector='.card-image img, #stories-destacadas-container .story-ring img, #stories-nuevas-container .story-ring img';
 const activos=new Map();
 const resize=typeof ResizeObserver==='function'?new ResizeObserver(entries=>{
   const padres=new Set(entries.map(e=>e.target));

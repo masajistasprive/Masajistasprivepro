@@ -79,11 +79,11 @@ renderizarPerfiles=function(){
  if(home2PendingState&&home2Loaded){const v=home2PendingState;home2PendingState=null;home2('priveBuscar').value=typeof v.search==='string'?v.search:'';for(const[id,value]of [['priveZona',v.area],['priveModalidad',v.mode]]){const select=home2(id);if([...select.options].some(o=>o.value===value))select.value=value}home2LastCategory=['todas','terapeuticas','sensuales','fantasias'].includes(v.lastCategory)?v.lastCategory:'todas';home2Choose(v.category)}
  if(home2InitialHash&&home2Loaded){home2InitialHash=false;home2Choose('favoritos')}
  aplicarBusquedaPrive();
- const featured=home2('stories-destacadas-container');if(featured){const total=featured.children.length;featured.parentElement.hidden=!total;featured.style.setProperty('--prive-featured-columns',String(Math.max(1,Math.min(total,4))));featured.style.setProperty('--prive-featured-wide-columns',String(Math.max(1,Math.min(total,6))));}
+ home2Vitrinas();
  if(focus){const buttons=[...document.querySelectorAll('[data-prive-favorite]')];const next=buttons.find(b=>b.dataset.priveFavorite===focus&&b.closest('.categoria-seccion-wrapper').style.display!=='none');(next||document.querySelector('[data-prive-nav=favoritos]')).focus({preventScroll:true})}
 };
 const home2OriginalLanguage=aplicarIdioma;
-aplicarIdioma=function(lang){home2OriginalLanguage(lang);home2UpdateText()};
+aplicarIdioma=function(lang){home2OriginalLanguage(lang);home2UpdateText();home2Vitrinas()};
 aplicarEstiloVisualActual=function(){document.body.classList.toggle('modo-tarjeta-alternativo',modoTarjetaActivo);const button=home2('btnAlternarEstilo');if(button){button.textContent='▦ '+(modoTarjetaActivo?home2T().compact:home2T().large);button.setAttribute('aria-pressed',String(modoTarjetaActivo))}};
 cargarPerfilesDesdeFirebase=function(){
  if(!db||suscripcionPerfiles)return;
@@ -117,3 +117,15 @@ inicializarInteracciones=function(){
 const home2OriginalStart=iniciarFirebase;
 iniciarFirebase=function(){home2OriginalStart();if(!db){home2Failed=true;aplicarBusquedaPrive()}};
 window.addEventListener('hashchange',()=>{if(location.hash==='#favoritas')home2Choose('favoritos')});
+
+
+function home2Vitrinas(){
+ const title=home2('nuevasTitulo');if(title)title.textContent=({es:'Nuevas anunciantes',en:'New advertisers',pt:'Novas anunciantes',fr:'Nouvelles annonceuses'})[idiomaActual]||'Nuevas anunciantes';
+ const docs=documentosPerfiles.filter(d=>d.data().estado!=='pausado').slice().sort((a,b)=>String(a.data().nombre||a.id).localeCompare(String(b.data().nombre||b.id),'es')||a.id.localeCompare(b.id));
+ for(const [id,field]of [['stories-destacadas-container','destacada'],['stories-nuevas-container','nuevaAnunciante']]){
+  const target=home2(id);if(!target)continue;
+  const selected=docs.filter(d=>d.data()[field]===true).slice(0,4);
+  target.innerHTML=selected.map(d=>{const m=d.data(),name=escaparHTML(m.nombre||'Anunciante'),photo=escaparHTML(imagenSegura(m.fotoPrincipal||m.foto||'img/monograma.png'));return `<a href="perfil.html?id=${encodeURIComponent(d.id)}" class="story-item"><div class="story-ring"><img src="${photo}" alt="${name}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='img/monograma.png'"></div><span>${name}</span></a>`}).join('');
+  target.dataset.count=String(selected.length);target.style.setProperty('--prive-featured-columns',String(selected.length||1));target.style.setProperty('--prive-featured-wide-columns',String(selected.length||1));target.parentElement.hidden=!selected.length;
+ }
+}
