@@ -29,6 +29,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Masajistas Privé">
 <script src="js/metricas-prive.js?v=20261016-1"></script>
+<script src="js/visitas-portada.js?v=20261019-analytics1"></script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DXX740HP41"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-DXX740HP41');</script>
 
@@ -241,7 +242,9 @@ async function cargarClubHome(){
  }
 }
 
-function iniciarFirebase(){try{if(!window.firebase||!firebase.firestore)throw new Error('No se cargó Firebase');if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);db=firebase.firestore();cargarPerfilesDesdeFirebase();cargarClubHome()}catch(error){console.error('Error inicializando Firebase:',error);ocultarTransicionPrive()}}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&db)void window.privePortada?.registrar(db);});
+window.addEventListener('pageshow',()=>{if(db)void window.privePortada?.registrar(db);});
+function iniciarFirebase(){try{if(!window.firebase||!firebase.firestore)throw new Error('No se cargó Firebase');if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);db=firebase.firestore();void window.privePortada?.registrar(db);cargarPerfilesDesdeFirebase();cargarClubHome()}catch(error){console.error('Error inicializando Firebase:',error);ocultarTransicionPrive()}}
 
 function aplicarBusquedaPrive(){
  const campo=document.getElementById('priveBuscar');if(!campo)return;
@@ -263,7 +266,3 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <script type="module" src="js/encuadres-portal.js?v=20261016-vitrinas1"></script>
 </body>
 </html>
-
-
-
-
