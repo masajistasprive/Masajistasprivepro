@@ -147,3 +147,24 @@ body.prive-home-v2{margin:0;min-width:320px;padding-bottom:calc(86px + env(safe-
 .prive-home-v2 :is(#stories-destacadas-container,#stories-nuevas-container)[data-count="3"]{--prive-circle-size:125px}
 .prive-home-v2 :is(#stories-destacadas-container,#stories-nuevas-container)[data-count="4"]{--prive-circle-size:112px}
 .prive-home-v2 :is(#stories-destacadas-container,#stories-nuevas-container) .story-ring{width:min(100%,var(--prive-circle-size,112px))!important}
+
+/* Aros independientes del encuadre: las imágenes posicionadas no pueden taparlos. */
+.prive-home-v2 :is(#stories-destacadas-container,#stories-nuevas-container) .story-ring{
+ position:relative!important;isolation:isolate;background:#080808!important;
+ border:0!important;padding:6px!important;
+ box-shadow:0 3px 14px #dfc28533!important;
+}
+.prive-home-v2 :is(#stories-destacadas-container,#stories-nuevas-container) .story-ring::after{
+ content:"";position:absolute;inset:0;z-index:2;box-sizing:border-box;
+ border:4px solid #dfc285;border-radius:50%;box-shadow:inset 0 0 0 3px #080808;
+ pointer-events:none;
+}
+.prive-home-v2 #stories-nuevas-container .story-ring{
+ box-shadow:0 2px 9px #dfc28520!important;
+}
+.prive-home-v2 #stories-nuevas-container .story-ring::after{
+ border:4px double #c6a66b;box-shadow:inset 0 0 0 3px #080808;
+}
+.prive-home-v2 :is(#stories-destacadas-container,#stories-nuevas-container) .story-ring img{
+ border:0!important;
+}
