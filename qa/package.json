@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "scripts": {
+    "test": "node check-categories.cjs"
+  },
+  "devDependencies": {
+    "linkedom": "0.18.13"
+  }
+}
