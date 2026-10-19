@@ -190,3 +190,8 @@ body.prive-home-v2{margin:0;min-width:320px;padding-bottom:calc(86px + env(safe-
 .prive-home-v2 .prive-main{min-height:0}
 @media(max-width:380px){.prive-home-v2 .prive-category-cards{gap:7px}.prive-home-v2 .prive-header-indicators{font-size:10px;gap:5px}.prive-home-v2 .prive-category-card span{left:6px;font-size:17px!important}}
 @media(prefers-reduced-motion:reduce){.prive-home-v2 .prive-category-card img{transition:none}}
+/* Anular el ancho heredado del antiguo panel financiero dentro de la cabecera. */
+.prive-home-v2 .prive-header-indicators #clima-info,.prive-home-v2 .prive-header-indicators #dolar-info{width:auto!important;max-width:100%!important;flex:0 1 auto;margin:0!important;padding:0!important;white-space:nowrap;font-size:inherit!important;line-height:1.5!important;background:transparent!important;border:0!important;box-shadow:none!important}
+.prive-home-v2 .prive-header-indicators #clima-info{flex-shrink:0}
+.prive-home-v2 .prive-category-card span{overflow-wrap:anywhere}
+@media(min-width:700px){.prive-home-v2 .prive-category-cards{margin-inline:auto}}
