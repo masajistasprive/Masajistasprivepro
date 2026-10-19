@@ -6,6 +6,8 @@ const home2Text={
  pt:{kicker:'BUENOS AIRES · BEM-ESTAR E RELAXAMENTO',hero:'Seu momento de bem-estar',sub:'Encontre sua próxima massagem em Buenos Aires.',discover:'Descubra profissionais',all:'Ver todas →',home:'Início',explore:'Explorar',favorites:'Favoritas',area:'Bairro',mode:'Modalidade',areas:'Todos os bairros',modes:'Toda modalidade',search:'Em qual bairro você procura?',searchLabel:'Buscar por nome ou bairro',empty:'Nenhum perfil com esses filtros.',emptyFav:'Ainda não há favoritas. Toque na estrela de um perfil para salvar.',reset:'Limpar filtros',byArea:'Explorar por bairro',advertise:'Publique seu perfil ↗',useful:'Informações de Buenos Aires',save:'Salvar nas favoritas',unsave:'Remover das favoritas',saved:'Perfil salvo nas favoritas.',removed:'Perfil removido das favoritas.',localError:'Não foi possível salvar neste navegador. Verifique o armazenamento.',results:'perfis',result:'perfil',loading:'Carregando perfis…',failed:'Não foi possível carregar os perfis. Verifique a conexão e tente novamente.',retry:'Tentar novamente',reviews:'Experiências',view:'Ver perfil',large:'Vista ampliada',compact:'Vista compacta',likes:'Curtir'},
  fr:{kicker:'BUENOS AIRES · BIEN-ÊTRE ET DÉTENTE',hero:'Votre moment de bien-être',sub:'Trouvez votre prochain massage à Buenos Aires.',discover:'Découvrez les professionnels',all:'Tout voir →',home:'Accueil',explore:'Explorer',favorites:'Favoris',area:'Quartier',mode:'Modalité',areas:'Tous les quartiers',modes:'Toutes les modalités',search:'Dans quel quartier cherchez-vous ?',searchLabel:'Rechercher par nom ou quartier',empty:'Aucun profil ne correspond à ces filtres.',emptyFav:'Aucun favori. Touchez l’étoile d’un profil pour le garder.',reset:'Effacer les filtres',byArea:'Explorer par quartier',advertise:'Publiez votre profil ↗',useful:'Informations de Buenos Aires',save:'Ajouter aux favoris',unsave:'Retirer des favoris',saved:'Profil ajouté aux favoris.',removed:'Profil retiré des favoris.',localError:'Impossible d’enregistrer. Vérifiez le stockage du navigateur.',results:'profils',result:'profil',loading:'Chargement des profils…',failed:'Impossible de charger les profils. Vérifiez la connexion et réessayez.',retry:'Réessayer',reviews:'Avis',view:'Voir le profil',large:'Vue agrandie',compact:'Vue compacte',likes:'J’aime'}
 };
+Object.assign(home2Text.es,{close:'Cerrar perfiles'});Object.assign(home2Text.en,{close:'Close profiles'});Object.assign(home2Text.pt,{close:'Fechar perfis'});Object.assign(home2Text.fr,{close:'Fermer les profils'});
+let home2CatalogueOpen=false;
 const home2=id=>document.getElementById(id),home2T=()=>home2Text[idiomaActual]||home2Text.es;
 const home2Normalize=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('es').trim();
 let home2Filter='todas',home2LastCategory='todas',home2Loaded=false,home2Failed=false;
@@ -15,14 +17,15 @@ function home2Favorites(){const value=obtenerJSONLocal('priveFavoritos',[]);retu
 const home2Star='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.8 5.8 6.4.9-4.6 4.5 1.1 6.4-5.7-3-5.7 3 1.1-6.4-4.6-4.5 6.4-.9Z"/></svg>';
 const home2Heart='<svg class="prive-like-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 4.8a5.3 5.3 0 0 0-7.5 0l-.7.8-.7-.8a5.3 5.3 0 0 0-7.5 7.5L12 20.5l8.2-8.2a5.3 5.3 0 0 0 0-7.5Z"/></svg>';
 const home2Pin='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>';
-function home2SaveState(){try{sessionStorage.setItem('priveHome2Filters',JSON.stringify({category:home2Filter,lastCategory:home2LastCategory,search:home2('priveBuscar').value,area:home2('priveZona').value,mode:home2('priveModalidad').value}))}catch{}}
+function home2SaveState(){try{sessionStorage.setItem('priveHome2Filters',JSON.stringify({open:home2CatalogueOpen,category:home2Filter,lastCategory:home2LastCategory,search:home2('priveBuscar').value,area:home2('priveZona').value,mode:home2('priveModalidad').value}))}catch{}}
 function home2Choose(filter){
  if(!['todas','terapeuticas','sensuales','fantasias','favoritos'].includes(filter))filter='todas';
- home2Filter=filter;if(filter!=='favoritos')home2LastCategory=filter;
+ home2CatalogueOpen=true;home2Filter=filter;if(filter!=='favoritos')home2LastCategory=filter;
  document.querySelectorAll('.pill-btn[data-filter]').forEach(b=>{const active=b.dataset.filter===filter;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))});
  document.querySelectorAll('[data-prive-nav]').forEach(b=>{const active=b.dataset.priveNav===(filter==='favoritos'?'favoritos':'explorar');b.classList.toggle('active',active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
  aplicarBusquedaPrive();
 }
+function home2CloseCatalogue(){home2CatalogueOpen=false;document.querySelectorAll('.pill-btn[data-filter]').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-pressed','false')});document.querySelectorAll('[data-prive-nav]').forEach(b=>{const active=b.dataset.priveNav==='inicio';b.classList.toggle('active',active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});aplicarBusquedaPrive();}
 function home2Reset(){home2('priveBuscar').value='';home2('priveZona').value='';home2('priveModalidad').value='';home2Choose('todas')}
 function home2Options(){
  const t=home2T(),docs=documentosPerfiles.filter(d=>d.data().estado!=='pausado');
@@ -52,6 +55,8 @@ construirTarjeta=function(docSnap,indice){
 };
 aplicarBusquedaPrive=function(){
  const input=home2('priveBuscar');if(!input)return;
+ home2('priveCatalogueTools').hidden=!home2CatalogueOpen;home2('priveResultados').hidden=!home2CatalogueOpen;
+ if(!home2CatalogueOpen){home2SaveState();return;}
  const t=home2T(),term=home2Normalize(input.value),area=home2('priveZona').value,mode=home2('priveModalidad').value;
  home2('priveLimpiar').hidden=!input.value;
  const ids=new Set();
@@ -76,7 +81,7 @@ const home2OriginalRender=renderizarPerfiles;
 renderizarPerfiles=function(){
  const focus=document.activeElement?.dataset?.priveFavorite;
  home2OriginalRender();home2Options();
- if(home2PendingState&&home2Loaded){const v=home2PendingState;home2PendingState=null;home2('priveBuscar').value=typeof v.search==='string'?v.search:'';for(const[id,value]of [['priveZona',v.area],['priveModalidad',v.mode]]){const select=home2(id);if([...select.options].some(o=>o.value===value))select.value=value}home2LastCategory=['todas','terapeuticas','sensuales','fantasias'].includes(v.lastCategory)?v.lastCategory:'todas';home2Choose(v.category)}
+ if(home2PendingState&&home2Loaded){const v=home2PendingState;home2PendingState=null;home2('priveBuscar').value=typeof v.search==='string'?v.search:'';for(const[id,value]of [['priveZona',v.area],['priveModalidad',v.mode]]){const select=home2(id);if([...select.options].some(o=>o.value===value))select.value=value}home2LastCategory=['todas','terapeuticas','sensuales','fantasias'].includes(v.lastCategory)?v.lastCategory:'todas';if(v.open===true)home2Choose(v.category)}
  if(home2InitialHash&&home2Loaded){home2InitialHash=false;home2Choose('favoritos')}
  aplicarBusquedaPrive();
  home2Vitrinas();
@@ -98,12 +103,12 @@ inicializarInteracciones=function(){
  const announce=document.createElement('p');announce.id='priveFavoriteNotice';announce.className='sr-only';announce.setAttribute('role','status');document.body.append(announce);
  const closeMenu=()=>{home2('priveSiteMenu').hidden=true;home2('priveMenuButton').setAttribute('aria-expanded','false')};
  home2('priveMenuButton').onclick=()=>{const open=home2('priveSiteMenu').hidden;home2('priveSiteMenu').hidden=!open;home2('priveMenuButton').setAttribute('aria-expanded',String(open));if(open)cerrarMenuIdioma()};
- home2('priveZona').onchange=aplicarBusquedaPrive;home2('priveModalidad').onchange=aplicarBusquedaPrive;home2('priveReset').onclick=home2Reset;
+ home2('priveZona').onchange=aplicarBusquedaPrive;home2('priveModalidad').onchange=aplicarBusquedaPrive;home2('priveReset').onclick=home2Reset;home2('priveCloseCatalogue').onclick=home2CloseCatalogue;
  document.addEventListener('click',event=>{
   const favorite=event.target.closest('[data-prive-favorite]');
   if(favorite){event.preventDefault();const id=favorite.dataset.priveFavorite,ids=home2Favorites(),added=!ids.has(id);if(added)ids.add(id);else ids.delete(id);try{localStorage.setItem('priveFavoritos',JSON.stringify([...ids]));announce.textContent=added?home2T().saved:home2T().removed;renderizarPerfiles()}catch{announce.textContent=home2T().localError}return}
   const pill=event.target.closest('.pill-btn[data-filter]');if(pill)home2Choose(pill.dataset.filter);
-  const nav=event.target.closest('[data-prive-nav]');if(nav){const id=nav.dataset.priveNav;if(id==='inicio'){home2Reset();window.scrollTo({top:0,behavior:'smooth'});document.querySelectorAll('[data-prive-nav]').forEach(b=>{const active=b===nav;b.classList.toggle('active',active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')})}else{if(id==='explorar'&&home2Filter==='favoritos')home2Choose(home2LastCategory);home2('catalogo-prive').scrollIntoView({behavior:'smooth',block:'start'})}}
+  const nav=event.target.closest('[data-prive-nav]');if(nav){const id=nav.dataset.priveNav;if(id==='inicio'){home2CloseCatalogue();window.scrollTo({top:0,behavior:'smooth'});document.querySelectorAll('[data-prive-nav]').forEach(b=>{const active=b===nav;b.classList.toggle('active',active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')})}else{if(id==='explorar')home2CloseCatalogue();home2('catalogo-prive').scrollIntoView({behavior:'smooth',block:'start'})}}
   if(event.target.closest('[data-prive-reset]'))home2Reset();
   if(!event.target.closest('#priveMenuButton')&&!event.target.closest('#priveSiteMenu'))closeMenu();
   if(event.target.closest('#priveSiteMenu a'))closeMenu();
@@ -129,3 +134,4 @@ function home2Vitrinas(){
   target.dataset.count=String(selected.length);target.style.setProperty('--prive-featured-columns',String(selected.length||1));target.style.setProperty('--prive-featured-wide-columns',String(selected.length||1));target.parentElement.hidden=!selected.length;
  }
 }
+
