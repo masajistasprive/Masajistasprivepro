@@ -20,329 +20,32 @@ gtag('js',new Date());
 gtag('config','G-DXX740HP41');
 </script>
 
+<script defer src="js/recorrido-prive.js?v=20261020-entrada1"></script>
 <style>
-:root {
-  --gold:#dfc285;
-  --gold-light:#f6e7bb;
-  --bg:#080808;
-  --muted:#b5ada1;
-}
-* {box-sizing:border-box}
-html {scroll-behavior:smooth}
-body {
-  margin:0;
-  min-height:100dvh;
-  background:
-    radial-gradient(ellipse at 50% 24%,#4b39231e,transparent 65%),
-    #080808;
-  color:#fff;
-  font-family:Montserrat,sans-serif;
-}
-body:before {
-  content:"";
-  position:fixed;
-  inset:0;
-  background:repeating-linear-gradient(
-    90deg,transparent 0,transparent 69px,
-    #ffffff05 70px
-  );
-  pointer-events:none;
-}
-.page {
-  position:relative;
-  max-width:640px;
-  margin:auto;
-  padding:22px 22px 30px;
-  text-align:center;
-}
-.topline {
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:12px;
-  color:var(--gold);
-  font-size:10px;
-  letter-spacing:3px;
-  text-transform:uppercase;
-}
-.topline:before,.topline:after {
-  content:"";
-  width:36px;
-  height:1px;
-  background:#8c7346;
-}
-.logo {
-  display:block;
-  width:170px;
-  max-width:55%;
-  height:auto;
-  margin:22px auto 20px;
-  filter:drop-shadow(0 8px 25px #dfc28525);
-}
-.rule {
-  width:90px;
-  height:1px;
-  margin:20px auto;
-  background:linear-gradient(90deg,transparent,var(--gold),transparent);
-}
-.eyebrow {
-  color:var(--gold);
-  text-transform:uppercase;
-  letter-spacing:3px;
-  font-size:10px;
-  font-weight:600;
-}
-h1 {
-  font-family:"Cormorant Garamond",serif;
-  font-size:clamp(44px,10vw,70px);
-  font-weight:500;
-  line-height:.99;
-  margin:20px 0;
-  letter-spacing:-1px;
-}
-h1 em {
-  display:block;
-  color:var(--gold);
-  font-weight:400;
-}
-.intro {
-  color:#c8c0b4;
-  font-size:14px;
-  line-height:1.85;
-  max-width:460px;
-  margin:0 auto 25px;
-}
-.intro strong {color:#fff;font-weight:500}
-.goldline {
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:10px;
-  color:#b9a780;
-  font-size:10px;
-  letter-spacing:2px;
-  text-transform:uppercase;
-  margin:26px 0;
-}
-.goldline span {
-  height:1px;
-  width:30px;
-  background:#77603b;
-}
-.features {
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:9px;
-  margin:25px 0 30px;
-}
-.feature {
-  border:1px solid #66523580;
-  background:linear-gradient(160deg,#211b14,#111);
-  padding:17px 8px;
-  border-radius:9px;
-  min-width:0;
-}
-.feature-icon {
-  display:block;
-  font-size:22px;
-  margin-bottom:9px;
-}
-.feature strong {
-  display:block;
-  color:var(--gold-light);
-  font-family:"Cormorant Garamond",serif;
-  font-size:19px;
-  font-weight:600;
-  line-height:1.1;
-}
-.feature small {
-  display:block;
-  color:#a8a29a;
-  font-size:10px;
-  margin-top:7px;
-  line-height:1.5;
-}
-.cta-wrap {margin:28px 0}
-.cta {
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:12px;
-  min-height:66px;
-  padding:17px;
-  background:linear-gradient(115deg,#b99350,#f3dfa7,#c29a54);
-  border:1px solid #f6e2ae;
-  border-radius:9px;
-  color:#18120a;
-  text-decoration:none;
-  text-transform:uppercase;
-  font-weight:700;
-  font-size:13px;
-  letter-spacing:1.3px;
-  box-shadow:0 8px 35px #dfc28535;
-  transition:transform .2s,box-shadow .2s;
-}
-.cta:hover {
-  transform:translateY(-2px);
-  box-shadow:0 12px 40px #dfc28555;
-}
-.cta:focus-visible {
-  outline:3px solid white;
-  outline-offset:4px;
-}
-.cta-arrow {font-size:24px}
-.cta-sub {
-  color:#aaa;
-  font-size:11px;
-  margin-top:12px;
-  letter-spacing:.3px;
-}
-.editorial {
-  margin:35px 0 15px;
-  padding:25px 18px;
-  border-top:1px solid #54452e;
-  border-bottom:1px solid #54452e;
-}
-.editorial h2 {
-  font-family:"Cormorant Garamond",serif;
-  color:var(--gold);
-  font-size:30px;
-  font-weight:500;
-  margin:0 0 10px;
-}
-.editorial p {
-  color:#b6b0a8;
-  font-size:12px;
-  line-height:1.9;
-  margin:0;
-}
-.footer {
-  margin-top:30px;
-  color:#8e8980;
-  font-size:10px;
-  line-height:1.8;
-}
-.footer strong {color:var(--gold)}
-@media(max-width:380px) {
-  .page {padding-inline:15px}
-  .feature {padding:13px 5px}
-  .feature strong {font-size:16px}
-  .feature small {font-size:9px}
-  .cta {font-size:11px;letter-spacing:1px}
-}
-@media(prefers-reduced-motion:reduce) {
-  * {scroll-behavior:auto!important;transition:none!important}
-}
-.social-section {margin:32px 0 20px;padding-top:24px;border-top:1px solid #54452e}
-.social-section h2 {font-family:"Cormorant Garamond",serif;color:var(--gold);font-size:30px;font-weight:500;margin:0 0 8px}
-.social-section p {color:var(--muted);font-size:12px;line-height:1.7;margin:0 0 18px}
-.social-links {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.social-links a {display:flex;align-items:center;gap:9px;min-height:56px;padding:12px;color:var(--gold-light);text-decoration:none;border:1px solid #66523580;border-radius:9px;background:#15130f;font-size:12px;text-align:left}
-.social-links svg {width:20px;height:20px;fill:currentColor;flex:none}
-.social-links a span:last-child {margin-left:auto}
-.social-links a:hover {background:#292217;border-color:var(--gold)}
-.social-links a:focus-visible {outline:3px solid white;outline-offset:3px}
-@media(max-width:350px) {.social-links {grid-template-columns:1fr}}
+:root{--gold:#dfc285;--light:#f3e5ab;--muted:#b5ada1;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#30271955,transparent 70%),#080808;color:#f5f2ec;font-family:Montserrat,Arial,sans-serif}
+.page{max-width:580px;margin:auto;padding:22px 22px 26px;text-align:center}.topline{color:var(--gold);font-size:10px;letter-spacing:2px;text-transform:uppercase}.logo{display:block;width:132px;max-width:45%;height:auto;margin:15px auto}
+h1{font:500 clamp(34px,8.5vw,49px)/1.06 'Cormorant Garamond',Georgia,serif;margin:16px 0;color:var(--light)}.intro{max-width:450px;margin:0 auto 14px;color:#ccc3b6;font-size:14px;line-height:1.65}.categories{margin:0 0 22px;color:var(--gold);font-size:12px;line-height:1.6}
+.entry{padding:20px 16px;background:#171511;border:1px solid #dfc28544;border-radius:14px}.entry p{margin:0 0 15px;color:#cfc6b8;font-size:12px;line-height:1.6}.cta{display:flex;align-items:center;justify-content:center;min-height:56px;padding:14px 12px;border:1px solid var(--light);border-radius:9px;background:linear-gradient(110deg,#c5a362,#f0dba5,#c5a362);color:#17120b;font-size:13px;line-height:1.4;font-weight:700;text-decoration:none}.cta:hover{filter:brightness(1.07)}.exit{display:inline-block;margin-top:15px;color:#c2b8a9;font-size:12px;text-underline-offset:3px}.cta:focus-visible,.exit:focus-visible,summary:focus-visible,.social-links a:focus-visible{outline:2px solid var(--light);outline-offset:4px}
+.secondary{margin:22px 0 0;border-top:1px solid #dfc28522;padding-top:16px}summary{color:var(--gold);font-size:12px;cursor:pointer;min-height:32px}.social-section h2{font:500 25px 'Cormorant Garamond',Georgia,serif;color:var(--light)}.social-section p{font-size:12px;color:var(--muted);line-height:1.6}.social-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.social-links a{display:flex;align-items:center;gap:8px;min-height:48px;padding:10px;color:var(--gold);font-size:11px;text-decoration:none;border:1px solid #dfc28533;border-radius:9px;text-align:left}.social-links svg{width:18px;height:18px;fill:currentColor;flex:none}.social-links a span:last-child{margin-left:auto}.footer{margin-top:22px;color:#999184;font-size:10px;line-height:1.8}.footer strong{color:var(--gold)}
+@media(max-width:350px){.page{padding:18px 15px}.entry{padding:16px 12px}.cta{font-size:12px}.social-links{grid-template-columns:1fr}}
 </style>
 </head>
 
-<body>
+<body data-prive-page="landing">
 <main class="page">
-
-  <div class="topline">Buenos Aires · Argentina</div>
-
-  <img
-    src="img/logo.png"
-    alt="Masajistas Privé"
-    class="logo"
-    fetchpriority="high"
-  >
-
-  <div class="rule"></div>
-
-  <div class="eyebrow">Una experiencia para descubrir</div>
-
-  <h1>
-    El bienestar
-    <em>tiene otro nivel.</em>
-  </h1>
-
-  <p class="intro">
-    Elegí por zona, conocé las propuestas de nuestras
-    <strong>profesionales independientes</strong> y contactá
-    directamente por WhatsApp.
-  </p>
-
-  <div class="cta-wrap">
-    <a
-      id="btnEntrarPrive"
-      class="cta"
-      href="index.html"
-      aria-label="Explorar el directorio Masajistas Privé"
-    >
-      <span>Ver perfiles disponibles</span>
-      <span class="cta-arrow">→</span>
-    </a>
-    <div class="cta-sub">
-      Fotos, zonas y modalidades de atención en CABA
-    </div>
-  </div>
-
-
-  <div class="goldline">
-    <span></span>
-    Tu momento empieza acá
-    <span></span>
-  </div>
-
-  <div class="features">
-    <div class="feature">
-      <span class="feature-icon">✦</span>
-      <strong>Explorá</strong>
-      <small>Distintos perfiles y propuestas</small>
-    </div>
-
-    <div class="feature">
-      <span class="feature-icon">⌖</span>
-      <strong>Elegí</strong>
-      <small>Opciones en zonas de CABA</small>
-    </div>
-
-    <div class="feature">
-      <span class="feature-icon">◇</span>
-      <strong>Conectá</strong>
-      <small>Contacto directo e independiente</small>
-    </div>
-  </div>
-
-  <section class="editorial">
-    <h2>Un universo por explorar</h2>
-    <p>
-      Desde masajes terapéuticos hasta propuestas
-      de relajación y experiencias sensoriales
-      para adultos. Conocé los perfiles disponibles,
-      sus características y modalidades de atención
-      antes de decidir con quién contactar.
-    </p>
-  </section>
-
-  <div class="cta-wrap">
-    <a
-      id="btnEntrarPriveFinal"
-      class="cta"
-      href="index.html"
-      aria-label="Explorar el directorio Masajistas Privé"
-    >
-      <span>Explorar el directorio</span>
-      <span class="cta-arrow">→</span>
-    </a>
-    <div class="cta-sub">
-      Explorá el directorio y elegí a tu manera
-    </div>
-  </div>
-
-
+ <div class="topline">Buenos Aires · Argentina</div>
+ <img src="img/logo.png" alt="Masajistas Privé" class="logo" width="132" fetchpriority="high">
+ <h1>Masajes y bienestar<br>en Buenos Aires</h1>
+ <p class="intro">Conocé profesionales independientes, elegí por zona y categoría y contactá directamente por WhatsApp.</p>
+ <p class="categories">Terapéuticas · Sensuales · Fantasías</p>
+ <section class="entry" aria-label="Acceso para mayores de edad">
+  <p>Este directorio está destinado exclusivamente a personas mayores de 18 años.</p>
+  <a id="btnEntrarPrive" class="cta" href="index.html">Soy mayor de 18 · Ver perfiles</a>
+  <a class="exit" href="https://www.google.com" data-prive-salir>Salir</a>
+ </section>
+ <details class="secondary">
+  <summary>Redes de Privé</summary>
   <section class="social-section" aria-labelledby="social-title">
     <h2 id="social-title">Seguí a Privé</h2>
     <p>Novedades y publicaciones en nuestras redes.</p>
@@ -353,43 +56,8 @@ h1 em {
       <a href="https://whatsapp.com/channel/0029VbDhx91BA1f3Cob1BR1J" target="_blank" rel="noopener noreferrer" data-social="whatsapp" aria-label="Abrir el canal de WhatsApp de Masajistas Privé (nueva pestaña)"><svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg><span>Canal de WhatsApp</span><span aria-hidden="true">↗</span></a>
     </nav>
   </section>
-
-  <footer class="footer">
-    <strong>MASAJISTAS PRIVÉ</strong>
-    <div>Directorio independiente · Buenos Aires</div>
-    <div>Acceso destinado exclusivamente a mayores de 18 años.</div>
-    <div>Las anunciantes son independientes del portal.</div>
-    <div>© 2026 · Todos los derechos reservados</div>
-  </footer>
-
+ </details>
+ <footer class="footer"><strong>MASAJISTAS PRIVÉ</strong><div>Directorio independiente · CABA</div><div>Las anunciantes son independientes del portal.</div><div>© 2026 · Todos los derechos reservados</div></footer>
 </main>
-
-<script>
-'use strict';
-
-document.querySelectorAll('#btnEntrarPrive, #btnEntrarPriveFinal').forEach((boton)=>{
-  boton.addEventListener('click',()=>{
-    if(typeof window.gtag==='function'){
-      window.gtag('event','landing_entrada_portal',{
-        ubicacion:'landing_meta',
-        destino:'portal_principal',
-        posicion:boton.id==='btnEntrarPrive'?'superior':'inferior',
-        transport_type:'beacon'
-      });
-    }
-  });
-});
-document.querySelectorAll('[data-social]').forEach((enlace)=>{
-  enlace.addEventListener('click',()=>{
-    if(typeof window.gtag==='function'){
-      window.gtag('event','landing_click_red_social',{
-        red_social:enlace.dataset.social,
-        ubicacion:'landing_meta',
-        transport_type:'beacon'
-      });
-    }
-  });
-});
-</script>
 </body>
 </html>
