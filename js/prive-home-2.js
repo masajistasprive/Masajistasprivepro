@@ -108,7 +108,18 @@ inicializarInteracciones=function(){
  document.addEventListener('click',event=>{
   const favorite=event.target.closest('[data-prive-favorite]');
   if(favorite){event.preventDefault();const id=favorite.dataset.priveFavorite,ids=home2Favorites(),added=!ids.has(id);if(added)ids.add(id);else ids.delete(id);try{localStorage.setItem('priveFavoritos',JSON.stringify([...ids]));announce.textContent=added?home2T().saved:home2T().removed;renderizarPerfiles()}catch{announce.textContent=home2T().localError}return}
-  const pill=event.target.closest('.pill-btn[data-filter]');if(pill)home2Choose(pill.dataset.filter);
+  const pill=event.target.closest('.pill-btn[data-filter]');
+  if(pill){
+   const filter=pill.dataset.filter;home2Choose(filter);
+   requestAnimationFrame(()=>{
+    if(!home2CatalogueOpen||home2Filter!==filter)return;
+    const feedback=!home2Loaded||home2Failed||!home2('priveEmpty').hidden;
+    const target=home2(feedback?'priveCatalogueTools':'priveResultados');
+    target.setAttribute('tabindex','-1');target.style.scrollMarginTop='16px';
+    target.focus({preventScroll:true});
+    target.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+   });
+  }
   const nav=event.target.closest('[data-prive-nav]');if(nav){const id=nav.dataset.priveNav;if(id==='inicio'){home2CloseCatalogue();window.scrollTo({top:0,behavior:'smooth'});document.querySelectorAll('[data-prive-nav]').forEach(b=>{const active=b===nav;b.classList.toggle('active',active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')})}else{if(id==='explorar')home2CloseCatalogue();home2('catalogo-prive').scrollIntoView({behavior:'smooth',block:'start'})}}
   if(event.target.closest('[data-prive-reset]'))home2Reset();
   if(!event.target.closest('#priveMenuButton')&&!event.target.closest('#priveSiteMenu'))closeMenu();
