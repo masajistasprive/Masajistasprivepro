@@ -79,13 +79,14 @@
 <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="js/votos-visibles.js?v=20261020-recursos1"></script>
 <script>
 /* MASAJISTAS PRIVÉ · TURBO 5.0 · Fichas públicas livianas */
 const firebaseConfig={apiKey:'AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ',authDomain:'masajistasprivepro.firebaseapp.com',projectId:'masajistasprivepro',storageBucket:'masajistasprivepro.firebasestorage.app',measurementId:'G-SBN70C32JF'};
 let db;
 
 // CORAZONES PRIVÉ: votos reales, separados de los favoritos personales.
-const priveVotos={cuentas:new Map(),propios:new Map(),subs:new Map(),ocupados:new Set()};
+const priveVotos={cuentas:new Map(),propios:new Map(),ocupados:new Set()};
 let priveAuthPromise=null;
 function priveUsuario(){
  if(priveAuthPromise)return priveAuthPromise;
@@ -108,14 +109,13 @@ function privePintarVotos(id){
  });
 }
 function priveEscucharVotos(id){
- if(priveVotos.subs.has(id))return;
- const stop=priveRutaVotos(id).onSnapshot(snap=>{
-  priveVotos.cuentas.set(id,snap.size);privePintarVotos(id);
- },err=>console.warn('No se pudieron leer los votos:',id,err.code||err.message));
- priveVotos.subs.set(id,stop);
- priveUsuario().then(u=>priveRutaVotos(id).doc(u.uid).get()).then(doc=>{
-  priveVotos.propios.set(id,doc.exists);privePintarVotos(id);
- }).catch(err=>console.warn('No se pudo consultar tu voto:',err.code||err.message));
+ window.priveVotosVisibles.registrar('perfil:'+id,'data-prive-voto',id,()=>{
+  let vigente=true,ultimo=null,usuario=null;
+  const pintar=()=>{if(!vigente||!ultimo)return;priveVotos.cuentas.set(id,ultimo.size);if(usuario)priveVotos.propios.set(id,ultimo.docs.some(d=>d.id===usuario.uid));privePintarVotos(id);};
+  const stop=priveRutaVotos(id).onSnapshot(snap=>{ultimo=snap;pintar();},err=>console.warn('No se pudieron leer los votos:',id,err.code||err.message));
+  priveUsuario().then(u=>{usuario=u;pintar();}).catch(err=>console.warn('No se pudo consultar tu voto:',err.code||err.message));
+  return ()=>{vigente=false;ultimo=null;stop();};
+ },()=>privePintarVotos(id));
 }
 async function priveAlternarVoto(id){
  if(priveVotos.ocupados.has(id))return;
@@ -263,7 +263,8 @@ function iniciarBusquedaPrive(){const input=document.getElementById('priveBuscar
 function iniciarPagina(){iniciarBusquedaPrive();aplicarEstiloVisualActual();inicializarInteracciones();aplicarIdioma(idiomaActual);setTimeout(()=>{obtenerClimaCABA();obtenerDolar()},300);setTimeout(ocultarTransicionPrive,900);iniciarFirebase()}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',iniciarPagina,{once:true});else iniciarPagina();
 </script>
-<script defer src="js/prive-home-2.js?v=20261019-scroll1"></script>
+<script defer src="js/prive-home-2.js?v=20261020-recursos1"></script>
 <script type="module" src="js/encuadres-portal.js?v=20261016-vitrinas1"></script>
 </body>
 </html>
+

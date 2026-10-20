@@ -174,6 +174,7 @@ html,body{max-width:100%;overflow-x:clip}
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="js/votos-visibles.js?v=20261020-recursos1"></script>
 <script>
 'use strict';
 const firebaseConfig={apiKey:'AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ',authDomain:'masajistasprivepro.firebaseapp.com',projectId:'masajistasprivepro',storageBucket:'masajistasprivepro.firebasestorage.app',messagingSenderId:'768677270509',appId:'1:768677270509:web:f4409c2f9c0bbb42ebcde4',measurementId:'G-SBN70C32JF'};
@@ -181,7 +182,7 @@ if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
 const db=firebase.firestore();
 
 // CORAZONES PRIVÉ: votos reales, separados de los favoritos personales.
-const priveVotos={cuentas:new Map(),propios:new Map(),subs:new Map(),ocupados:new Set()};
+const priveVotos={cuentas:new Map(),propios:new Map(),ocupados:new Set()};
 let priveAuthPromise=null;
 function priveUsuario(){
  if(priveAuthPromise)return priveAuthPromise;
@@ -204,14 +205,13 @@ function privePintarVotos(id){
  });
 }
 function priveEscucharVotos(id){
- if(priveVotos.subs.has(id))return;
- const stop=priveRutaVotos(id).onSnapshot(snap=>{
-  priveVotos.cuentas.set(id,snap.size);privePintarVotos(id);
- },err=>console.warn('No se pudieron leer los votos:',id,err.code||err.message));
- priveVotos.subs.set(id,stop);
- priveUsuario().then(u=>priveRutaVotos(id).doc(u.uid).get()).then(doc=>{
-  priveVotos.propios.set(id,doc.exists);privePintarVotos(id);
- }).catch(err=>console.warn('No se pudo consultar tu voto:',err.code||err.message));
+ window.priveVotosVisibles.registrar('perfil:'+id,'data-prive-voto',id,()=>{
+  let vigente=true,ultimo=null,usuario=null;
+  const pintar=()=>{if(!vigente||!ultimo)return;priveVotos.cuentas.set(id,ultimo.size);if(usuario)priveVotos.propios.set(id,ultimo.docs.some(d=>d.id===usuario.uid));privePintarVotos(id);};
+  const stop=priveRutaVotos(id).onSnapshot(snap=>{ultimo=snap;pintar();},err=>console.warn('No se pudieron leer los votos:',id,err.code||err.message));
+  priveUsuario().then(u=>{usuario=u;pintar();}).catch(err=>console.warn('No se pudo consultar tu voto:',err.code||err.message));
+  return ()=>{vigente=false;ultimo=null;stop();};
+ },()=>privePintarVotos(id));
 }
 async function priveAlternarVoto(id){
  if(priveVotos.ocupados.has(id))return;
@@ -258,7 +258,7 @@ function getId(){const q=new URLSearchParams(location.search).get('id');if(q)ret
 const perfilId=getId();
 let idiomaPerfil=langs.includes(localStorage.getItem('idiomaPrive'))?localStorage.getItem('idiomaPrive'):'es';
 let modelo=null,unsubscribeReviews=null,reviewItems=[],lightboxUrls=[],lightboxIndex=0;
-const priveReviewSubs=new Map(),priveReviewCounts=new Map(),priveReviewMine=new Map(),priveReviewBusy=new Set();
+const priveReviewCounts=new Map(),priveReviewMine=new Map(),priveReviewBusy=new Set();
 function t(){return labels[idiomaPerfil]||labels.es}
 function hideTransition(){const e=document.getElementById('priveTransitionScreen');e.style.opacity='0';setTimeout(()=>e.remove(),650)}
 function setLanguage(l){idiomaPerfil=l;localStorage.setItem('idiomaPrive',l);const next=langs[(langs.indexOf(l)+1)%langs.length];document.getElementById('btn-idioma').textContent=({es:'🇦🇷 ES',en:'🇺🇸 EN',pt:'🇧🇷 PT',fr:'🇫🇷 FR'})[next];document.documentElement.lang=l;if(modelo){renderProfile();renderReviews()}}
@@ -317,7 +317,7 @@ function listenReviews(){if(unsubscribeReviews)unsubscribeReviews();const el=doc
 // La consulta debe filtrar aprobados: las reglas de Firestore no filtran resultados.
 unsubscribeReviews=db.collection('perfiles_comentarios').doc(perfilId).collection('mensajes').where('aprobado','==',true).onSnapshot(snap=>{reviewItems=snap.docs.map(d=>({id:d.id,...d.data()}));renderReviews()},err=>{console.error('Error al cargar experiencias:',err);const e=document.getElementById('pCommentsContainer');if(e)e.innerHTML=`<p class="prive-error">No se pudieron cargar las experiencias (${esc(err.code||'error')}). Revisá las reglas de Firestore.</p>`});}
 function renderReviews(){const container=document.getElementById('pCommentsContainer');if(!container)return;const L=t();container.replaceChildren();if(!reviewItems.length){container.innerHTML=`<p class="review-status">${esc(L.empty)}</p>`;return}
-const ids=new Set(reviewItems.map(r=>r.id));for(const [id,stop] of priveReviewSubs){if(!ids.has(id)){stop();priveReviewSubs.delete(id);priveReviewCounts.delete(id);priveReviewMine.delete(id)}}
+const ids=new Set(reviewItems.map(r=>r.id));for(const id of priveReviewCounts.keys())if(!ids.has(id)){priveReviewCounts.delete(id);priveReviewMine.delete(id)}
 const items=[...reviewItems].sort((a,b)=>((b.likes||0)+(b.image?5:0))-((a.likes||0)+(a.image?5:0))||(b.fecha?.toMillis?.()||0)-(a.fecha?.toMillis?.()||0));
 items.forEach(data=>{const stars=Math.max(1,Math.min(5,Number(data.rating)||5));const likes=Math.max(0,Number(data.likes)||0);const date=data.fecha?.toDate?.();const when=date?date.toLocaleString(idiomaPerfil==='es'?'es-AR':idiomaPerfil):'';const div=document.createElement('article');div.className='review-item';div.innerHTML=`<div class="review-top"><strong>${esc(data.autor||'Anónimo')}</strong><span>${'★'.repeat(stars)}${'☆'.repeat(5-stars)}</span></div><p>${esc(data.contenido)}</p>${safeUrl(data.image)?`<img src="${esc(safeUrl(data.image))}" alt="" loading="lazy" class="review-photo">`:''}<small style="color:#888">${esc(when)}</small><div class="review-actions"><button type="button" class="review-like" data-review-id="${esc(data.id)}" aria-pressed="false">👍 ${esc(L.like)}</button>${data.image?`<span style="color:#dfc285;font-size:10px">${esc(L.featured)}</span>`:''}</div>`;div.querySelector('.review-like').addEventListener('click',()=>likeReview(data.id));priveEscucharReviewLikes(data.id);privePintarReviewLike(data.id);const reviewPhoto=div.querySelector('.review-photo');if(reviewPhoto){reviewPhoto.addEventListener('error',()=>reviewPhoto.remove());if(reviewPhoto.complete&&reviewPhoto.naturalWidth===0)reviewPhoto.remove()}container.appendChild(div)});
 if(items.length>2){container.classList.add('prive-reviews-list','is-collapsed');const b=document.createElement('button');b.type='button';b.className='prive-reviews-more';b.textContent=({es:'Ver todas las experiencias',en:'See all reviews',pt:'Ver todas as avaliações',fr:'Voir tous les avis'})[idiomaPerfil];b.addEventListener('click',()=>{const closed=container.classList.toggle('is-collapsed');b.textContent=closed?({es:'Ver todas las experiencias',en:'See all reviews',pt:'Ver todas as avaliações',fr:'Voir tous les avis'})[idiomaPerfil]:({es:'Mostrar menos',en:'Show less',pt:'Mostrar menos',fr:'Afficher moins'})[idiomaPerfil];});container.appendChild(b)}else container.classList.remove('is-collapsed');}
@@ -332,11 +332,14 @@ function privePintarReviewLike(id){
  });
 }
 function priveEscucharReviewLikes(id){
- if(priveReviewSubs.has(id))return;
- const col=db.collection('perfiles_comentarios').doc(perfilId).collection('mensajes').doc(id).collection('votos');
- const stop=col.onSnapshot(snap=>{priveReviewCounts.set(id,snap.size);privePintarReviewLike(id)},err=>console.warn('Votos comentario:',err.code||err.message));
- priveReviewSubs.set(id,stop);
- priveUsuario().then(u=>col.doc(u.uid).get()).then(d=>{priveReviewMine.set(id,d.exists);privePintarReviewLike(id)}).catch(console.warn);
+ window.priveVotosVisibles.registrar('review:'+id,'data-review-id',id,()=>{
+  let vigente=true,ultimo=null,usuario=null;
+  const pintar=()=>{if(!vigente||!ultimo)return;priveReviewCounts.set(id,ultimo.size);if(usuario)priveReviewMine.set(id,ultimo.docs.some(d=>d.id===usuario.uid));privePintarReviewLike(id);};
+  const col=db.collection('perfiles_comentarios').doc(perfilId).collection('mensajes').doc(id).collection('votos');
+  const stop=col.onSnapshot(snap=>{ultimo=snap;pintar();},err=>console.warn('Votos comentario:',err.code||err.message));
+  priveUsuario().then(u=>{usuario=u;pintar();}).catch(console.warn);
+  return ()=>{vigente=false;ultimo=null;stop();};
+ },()=>privePintarReviewLike(id));
 }
 async function likeReview(id){
  if(priveReviewBusy.has(id))return;
@@ -359,4 +362,5 @@ setLanguage(idiomaPerfil);loadProfile();
 </script>
 </body>
 </html>
+
 
