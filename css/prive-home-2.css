@@ -182,7 +182,7 @@ body.prive-home-v2{margin:0;min-width:320px;padding-bottom:calc(86px + env(safe-
 .prive-home-v2 .prive-category-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform .2s ease}
 .prive-home-v2 .prive-category-card:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(transparent 35%,#090b0ce6 87%)}
 .prive-home-v2 .prive-category-card span{position:absolute;left:8px;right:5px;bottom:37px;font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(17px,4.1vw,29px)!important;font-weight:600;line-height:1.1;letter-spacing:-.4px}
-.prive-home-v2 .prive-category-card>svg{position:absolute;left:9px;bottom:11px;width:20px;height:20px;color:#dfc285}
+.prive-home-v2 .prive-category-card>.prive-category-enter{position:absolute;left:9px;bottom:11px;color:#dfc285;font:600 11px/1.2 'Montserrat',Arial,sans-serif;letter-spacing:.2px;text-decoration:underline;text-underline-offset:3px}
 .prive-home-v2 .prive-category-cards .prive-category-card.active{outline:2px solid #f0d9a5;outline-offset:2px;border-color:#f0d9a5}
 .prive-home-v2 .prive-category-card:hover img{transform:scale(1.03)}
 .prive-home-v2 .prive-catalogue-actions{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:4px 0 9px}
