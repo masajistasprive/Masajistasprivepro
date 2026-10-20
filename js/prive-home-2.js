@@ -142,8 +142,9 @@ function home2Vitrinas(){
  for(const [id,field]of [['stories-destacadas-container','destacada'],['stories-nuevas-container','nuevaAnunciante']]){
   const target=home2(id);if(!target)continue;
   const selected=docs.filter(d=>d.data()[field]===true).slice(0,4);
-  target.innerHTML=selected.map(d=>{const m=d.data(),name=escaparHTML(m.nombre||'Anunciante'),photo=escaparHTML(imagenSegura(m.fotoPrincipal||m.foto||'img/monograma.png'));return `<a href="perfil.html?id=${encodeURIComponent(d.id)}" class="story-item"><div class="story-ring"><img src="${photo}" alt="${name}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='img/monograma.png'"></div><span>${name}</span></a>`}).join('');
+  target.innerHTML=selected.map(d=>{const m=d.data(),name=escaparHTML(m.nombre||'Anunciante'),photo=escaparHTML(imagenSegura(m.fotoPrincipal||m.foto||'img/monograma.png'));return `<a href="perfil.html?id=${encodeURIComponent(d.id)}" class="story-item"><div class="story-ring"><div class="story-photo"><img src="${photo}" alt="${name}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='img/monograma.png'"></div></div><span>${name}</span></a>`}).join('');
   target.dataset.count=String(selected.length);target.style.setProperty('--prive-featured-columns',String(selected.length||1));target.style.setProperty('--prive-featured-wide-columns',String(selected.length||1));target.parentElement.hidden=!selected.length;
  }
 }
+
 
