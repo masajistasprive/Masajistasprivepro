@@ -148,27 +148,44 @@ body.prive-home-v2{margin:0;min-width:320px;padding-bottom:calc(86px + env(safe-
 .prive-home-v2 :is(#stories-destacadas-container,#stories-nuevas-container)[data-count="4"]{--prive-circle-size:112px}
 .prive-home-v2 :is(#stories-destacadas-container,#stories-nuevas-container) .story-ring{width:min(100%,var(--prive-circle-size,112px))!important}
 
-/* Aros independientes del encuadre: las imágenes posicionadas no pueden taparlos. */
+/* La foto tiene un marco interior propio; el aro nunca depende de su encuadre. */
 .prive-home-v2 :is(#stories-destacadas-container,#stories-nuevas-container) .story-ring{
  position:relative!important;isolation:isolate;background:#080808!important;
- border:0!important;padding:6px!important;
+ border:0!important;padding:0!important;
  box-shadow:0 3px 14px #dfc28533!important;
+}
+.prive-home-v2 :is(#stories-destacadas-container,#stories-nuevas-container) .story-photo{
+ position:absolute!important;inset:7px!important;overflow:hidden!important;
+ border-radius:50%!important;isolation:isolate;
 }
 .prive-home-v2 :is(#stories-destacadas-container,#stories-nuevas-container) .story-ring::after{
  content:"";position:absolute;inset:0;z-index:2;box-sizing:border-box;
- border:4px solid #dfc285;border-radius:50%;box-shadow:inset 0 0 0 3px #080808;
- pointer-events:none;
+ border:4px solid #dfc285;border-radius:50%;pointer-events:none;
 }
 .prive-home-v2 #stories-nuevas-container .story-ring{
  box-shadow:0 2px 9px #dfc28520!important;
 }
 .prive-home-v2 #stories-nuevas-container .story-ring::after{
- border:4px double #c6a66b;box-shadow:inset 0 0 0 3px #080808;
+ border:2px solid #c6a66b;box-shadow:inset 0 0 0 2px #080808,inset 0 0 0 3px #c6a66b;
 }
 .prive-home-v2 :is(#stories-destacadas-container,#stories-nuevas-container) .story-ring img{
  border:0!important;
 }
 
+/* Íconos de marca: sus trazados son rellenos, no dibujos de línea. */
+.prive-home-v2 .footer-socials{gap:14px}
+.prive-home-v2 .footer-icons-row{gap:12px;flex-wrap:wrap;margin:0}
+.prive-home-v2 .footer-icon-link{
+ width:40px;height:40px;flex:0 0 40px;box-sizing:border-box;
+ color:#dfc285;background:#dfc28508;border:1px solid #dfc28555;
+ border-radius:50%;text-decoration:none;
+}
+.prive-home-v2 .footer-icon-link svg{
+ display:block;width:19px;height:19px;flex:none;
+ fill:currentColor;stroke:none;stroke-width:0;
+}
+.prive-home-v2 .footer-icon-link:hover{color:#f3e5ab;background:#dfc28515;border-color:#dfc285}
+.prive-home-v2 .footer-icon-link:focus-visible{outline:2px solid #f3e5ab;outline-offset:4px}
 
 /* Portada compacta: categorías con imagen, catálogo bajo elección y datos en cabecera. */
 .prive-home-v2 .header-prive{flex-wrap:wrap;padding-bottom:0}
@@ -195,3 +212,4 @@ body.prive-home-v2{margin:0;min-width:320px;padding-bottom:calc(86px + env(safe-
 .prive-home-v2 .prive-header-indicators #clima-info{flex-shrink:0}
 .prive-home-v2 .prive-category-card span{overflow-wrap:anywhere}
 @media(min-width:700px){.prive-home-v2 .prive-category-cards{margin-inline:auto}}
+
