@@ -16,6 +16,7 @@
 <!-- GA4: mismo identificador que el index público -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DXX740HP41"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-DXX740HP41',{send_page_view:false});</script>
+<script src="js/recorrido-prive.js?v=20261020-entrada1"></script>
 <style>
 :root{--gold:#dfc285;--dark:#0d0d0d}
 #priveTransitionScreen{position:fixed;inset:0;background:var(--dark);z-index:999999;display:flex;align-items:center;justify-content:center;transition:opacity .6s}
@@ -241,7 +242,7 @@ function registrarMetrica(nombre,datos={}){
  try{window.gtag('event',nombre,{perfil_id:perfilId,perfil_categoria:String(modelo?.categoriaNormalizada||modelo?.categoria||'sin_categoria').slice(0,80),...datos})}
  catch(error){console.warn('Error de Analytics:',error)}
 }
-function registrarVisitaPerfil(){if(visitaRegistrada||!modelo)return;visitaRegistrada=true;registrarPaginaGA();registrarMetrica('perfil_visto');void registrarMetricaPrivada('visita')}
+function registrarVisitaPerfil(){if(visitaRegistrada||!modelo)return;visitaRegistrada=true;window.priveRecorrido?.perfilListo(perfilId);registrarPaginaGA();registrarMetrica('perfil_visto');void registrarMetricaPrivada('visita')}
 document.addEventListener('click',evento=>{
  const enlace=evento.target.closest('[data-metrica-whatsapp]');
  if(enlace){registrarMetrica('whatsapp_click',{ubicacion_boton:enlace.dataset.metricaWhatsapp||'desconocido'});void registrarMetricaPrivada('whatsapp');}
@@ -362,5 +363,6 @@ setLanguage(idiomaPerfil);loadProfile();
 </script>
 </body>
 </html>
+
 
 

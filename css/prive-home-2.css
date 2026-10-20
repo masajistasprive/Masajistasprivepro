@@ -213,3 +213,12 @@ body.prive-home-v2{margin:0;min-width:320px;padding-bottom:calc(86px + env(safe-
 .prive-home-v2 .prive-category-card span{overflow-wrap:anywhere}
 @media(min-width:700px){.prive-home-v2 .prive-category-cards{margin-inline:auto}}
 
+
+
+/* Confirmación +18 compacta y accesible; la landing comparte esta decisión. */
+.prive-home-v2 .modal-edad-overlay{z-index:1000001}
+.prive-home-v2 .modal-edad-content{padding:24px;max-width:370px}
+.prive-home-v2 .modal-edad-content h2{font:600 27px/1.1 'Cormorant Garamond',Georgia,serif;color:#dfc285;margin:0 0 14px}
+.prive-home-v2 .modal-edad-content p{font-size:13px;line-height:1.65;color:#d0c7b8;margin:0 0 20px}
+.prive-home-v2 .modal-edad-botones :is(button,a){min-height:46px;display:flex;align-items:center;justify-content:center}
+.prive-home-v2 .modal-edad-botones :is(button,a):focus-visible{outline:2px solid #f3e5ab;outline-offset:4px}
