@@ -1,0 +1,40 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import vm from 'node:vm';
+import {metadata,page,publicProfiles} from '../scripts/perfiles-compartir.mjs';
+const template=await readFile(new URL('../perfil.html',import.meta.url),'utf8');
+test('metadatos estáticos personalizados, escapados y misma aplicación',()=>{
+ const m=metadata({id:'prada-123',nombre:'Prada <"&',categoria:'terapeuticas',zona:'Tribunales',fotoPrincipal:'/img/prada1.jpg#prive-encuadre-v1=x'});
+ const html=page(template,m);
+ assert.match(html,/<base href="\/">/);
+ assert.match(html,/og:image" content="https:\/\/masajistasprive.com\/img\/prada1.jpg"/);
+ assert.match(html,/Prada &lt;&quot;&amp;/);
+ assert.match(html,/og:url" content="https:\/\/masajistasprive.com\/p\/prada-123.html\?v=[a-f0-9]{16}"/);
+ assert.ok(html.includes("collection('modelos_prive').doc(perfilId).get()"));
+ assert.ok(html.includes('await window.priveEnlacePerfilListo;renderProfile()'));
+ assert.equal(metadata({id:'a',nombre:'A',foto:'/x.jpg'}).version,metadata({id:'a',nombre:'A',foto:'/x.jpg'}).version);
+ assert.throws(()=>metadata({id:'../bad',foto:'/x.jpg'}));
+ assert.throws(()=>metadata({id:'a',foto:'javascript:alert(1)'}));
+});
+test('catálogo paginado y fallo seguro ante límites o respuesta vacía',async()=>{
+ let n=0;
+ const result=await publicProfiles(async url=>({ok:true,json:async()=>{
+  n++;
+  if(n===1)return {documents:[{name:'x/a',fields:{nombre:{stringValue:'A'}}}],nextPageToken:'next'};
+  assert.equal(url.searchParams.get('pageToken'),'next');
+  return {documents:[{name:'x/b',fields:{estado:{stringValue:'pausado'}}}]};
+ }}));
+ assert.equal(result.length,2);assert.equal(result[0].nombre,'A');
+ await assert.rejects(publicProfiles(async()=>({ok:false,status:429})));
+ await assert.rejects(publicProfiles(async()=>({ok:true,json:async()=>({})})));
+});
+const client=await readFile(new URL('../js/perfil-compartir.js',import.meta.url),'utf8');
+test('enlace nuevo mantiene campaña y hash; sin catálogo conserva original',async()=>{
+ const location=new URL('https://masajistasprive.com/perfil.html?id=prada-123&utm_source=facebook#galeria');
+ let replaced;
+ const context={window:{},URL,location,AbortController,setTimeout,clearTimeout,history:{state:null,replaceState:(a,b,url)=>replaced=url},fetch:async()=>({ok:true,json:async()=>({'prada-123':{path:'/p/prada-123.html',version:'1234567890abcdef'}})})};
+ vm.runInNewContext(client,context);await context.window.priveEnlacePerfilListo;
+ assert.equal(replaced,'https://masajistasprive.com/p/prada-123.html?utm_source=facebook&v=1234567890abcdef#galeria');
+ replaced=undefined;context.fetch=async()=>{throw Error('offline')};vm.runInNewContext(client,context);await context.window.priveEnlacePerfilListo;assert.equal(replaced,undefined);
+});
