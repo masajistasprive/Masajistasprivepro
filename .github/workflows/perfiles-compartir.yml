@@ -1,0 +1,59 @@
+name: Portadas para compartir perfiles
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '23 * * * *'
+  push:
+    branches: [main]
+    paths: ['perfil.html', 'js/perfil-compartir.js', 'scripts/perfiles-compartir.mjs', '.github/workflows/perfiles-compartir.yml', 'qa/perfiles-compartir.test.mjs']
+  pull_request:
+    paths: ['perfil.html', 'js/perfil-compartir.js', 'scripts/perfiles-compartir.mjs', '.github/workflows/perfiles-compartir.yml', 'qa/perfiles-compartir.test.mjs']
+permissions:
+  contents: read
+concurrency:
+  group: portadas-perfiles-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test qa/perfiles-compartir.test.mjs
+      - run: node scripts/perfiles-compartir.mjs --check
+  sincronizar:
+    if: github.event_name != 'pull_request'
+    needs: verificar
+    permissions:
+      contents: write
+      pages: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node scripts/perfiles-compartir.mjs
+      - name: Guardar portadas públicas
+        id: guardar
+        run: |
+          git config user.name "Prive Portadas Bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- p
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "Actualizar portadas públicas para compartir perfiles"
+            git pull --rebase origin main
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Publicar portadas actualizadas
+        if: steps.guardar.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method POST "repos/$GITHUB_REPOSITORY/pages/builds"
