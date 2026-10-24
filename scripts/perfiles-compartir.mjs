@@ -9,6 +9,7 @@ export function decode(value){
  if('stringValue' in value)return value.stringValue;
  if('booleanValue' in value)return value.booleanValue;
  if('arrayValue' in value)return (value.arrayValue.values||[]).map(decode);
+ if('mapValue' in value)return Object.fromEntries(Object.entries(value.mapValue.fields||{}).map(([k,v])=>[k,decode(v)]));
  return null;
 }
 export async function publicProfiles(fetcher=fetch){
@@ -68,6 +69,29 @@ export function directory(entries){
 <main><h1>Directorio de masajistas en CABA</h1><p>Conocé las zonas y categorías de los perfiles publicados. Abrí cada ficha para ver sus fotografías, modalidades y datos de contacto actualizados.</p><nav aria-label="Explorar por zona"><a href="/masajistas-tribunales.html">Tribunales</a><a href="/masajistas-congreso.html">Congreso</a><a href="/masajistas-recoleta.html">Recoleta</a><a href="/masajistas-microcentro.html">Microcentro</a><a href="/masajistas-puerto-madero.html">Puerto Madero</a></nav><ul aria-label="Perfiles publicados">${links}</ul></main>
 <footer>Masajistas Privé · Directorio exclusivo para mayores de 18 años. Las anunciantes son independientes. La disponibilidad se consulta en cada perfil.</footer></body></html>\n`;
 }
+export const areaFiles=['masajistas-tribunales.html','masajistas-congreso.html','masajistas-recoleta.html','masajistas-microcentro.html','masajistas-puerto-madero.html'];
+const normalizeArea=value=>String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+export function areaPage(template,profiles){
+ const config=template.match(/const area=("[^"]+"), aliases=(\[[^\]]+\]);/);
+ if(!config)throw Error('No se pudo validar la zona de la página.');
+ const area=JSON.parse(config[1]),aliases=JSON.parse(config[2]);
+ const matches=profiles.filter(p=>{
+  if(p.estado==='pausado')return false;
+  const zone=normalizeArea(p.zona||p.traducciones?.es?.valorZona);
+  return aliases.some(a=>zone===a||zone.includes(' '+a+' ')||zone.startsWith(a+' ')||zone.endsWith(' '+a));
+ }).sort((a,b)=>String(a.nombre||'').localeCompare(String(b.nombre||''),'es'));
+ const cards=matches.map(p=>{
+  const meta=metadata(p),name=escapeHTML(p.nombre||'Anunciante');
+  const zone=escapeHTML(p.zona||p.traducciones?.es?.valorZona||area);
+  const mode=escapeHTML(p.modalidad||p.traducciones?.es?.valorModalidad||'Consultar modalidad');
+  return `<article class="card"><a class="photo" href="${meta.path}"><img src="${escapeHTML(meta.image)}" alt="Perfil de ${name} en ${zone}" loading="lazy" decoding="async"></a><div class="info"><h3>${name}</h3><p>📍 ${zone} · ${mode}</p><div class="buttons"><a class="btn gold" href="${meta.path}">Ver perfil</a></div></div></article>`;
+ }).join('\n')||`<div class="status">Por ahora no hay perfiles publicados en ${escapeHTML(area)}. Podés explorar otras zonas o el <a href="perfiles.html">directorio completo</a>.</div>`;
+ const content='<!-- prive-zona-inicio -->\n'+cards+'\n<!-- prive-zona-fin -->';
+ if(template.includes('<!-- prive-zona-inicio -->'))return template.replace(/<!-- prive-zona-inicio -->[\s\S]*?<!-- prive-zona-fin -->/,()=>content);
+ const placeholder=`<div class="status">Cargando perfiles de ${area}…</div>`;
+ if(!template.includes(placeholder))throw Error('Falta el contenedor inicial de perfiles de '+area);
+ return template.replace(placeholder,()=>content);
+}
 async function main(){
  const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
  const template=await readFile(path.join(root,'perfil.html'),'utf8');
@@ -79,12 +103,14 @@ async function main(){
  const manifest=Object.fromEntries(entries.map(m=>[m.id,{path:m.path,version:m.version}]));
  const nextSitemap=sitemap(await readFile(path.join(root,'sitemap.xml'),'utf8'),entries);
  const nextDirectory=directory(entries);
+ const nextAreas=await Promise.all(areaFiles.map(async file=>({file,html:areaPage(await readFile(path.join(root,file),'utf8'),profiles)})));
  if(!process.argv.includes('--check')){
   await mkdir(path.join(root,'p'),{recursive:true});
   for(const {meta,html}of pages)await writeFile(path.join(root,meta.path.slice(1)),html);
   await writeFile(path.join(root,'p/indice.json'),JSON.stringify(manifest,null,2)+'\n');
   await writeFile(path.join(root,'sitemap.xml'),nextSitemap);
   await writeFile(path.join(root,'perfiles.html'),nextDirectory);
+  for(const {file,html}of nextAreas)await writeFile(path.join(root,file),html);
  }
  console.log(`${entries.length} perfiles con portada y metadatos verificados.`);
 }

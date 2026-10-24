@@ -5,9 +5,9 @@ on:
     - cron: '23 * * * *'
   push:
     branches: [main]
-    paths: ['perfil.html', 'js/perfil-compartir.js', 'scripts/perfiles-compartir.mjs', '.github/workflows/perfiles-compartir.yml', 'qa/perfiles-compartir.test.mjs']
+    paths: ['perfil.html', 'js/perfil-compartir.js', 'scripts/perfiles-compartir.mjs', '.github/workflows/perfiles-compartir.yml', 'qa/perfiles-compartir.test.mjs', 'qa/check-profile-contact.cjs']
   pull_request:
-    paths: ['perfil.html', 'js/perfil-compartir.js', 'scripts/perfiles-compartir.mjs', '.github/workflows/perfiles-compartir.yml', 'qa/perfiles-compartir.test.mjs']
+    paths: ['perfil.html', 'js/perfil-compartir.js', 'scripts/perfiles-compartir.mjs', '.github/workflows/perfiles-compartir.yml', 'qa/perfiles-compartir.test.mjs', 'qa/check-profile-contact.cjs']
 permissions:
   contents: read
 concurrency:
@@ -23,6 +23,8 @@ jobs:
         with:
           node-version: '22'
       - run: node --test qa/perfiles-compartir.test.mjs
+      - run: npm install --prefix qa --ignore-scripts --no-audit --no-fund
+      - run: node qa/check-profile-contact.cjs
       - run: node scripts/perfiles-compartir.mjs --check
   sincronizar:
     if: github.event_name != 'pull_request'
@@ -43,7 +45,7 @@ jobs:
         run: |
           git config user.name "Prive Portadas Bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- p sitemap.xml perfiles.html
+          git add -- p sitemap.xml perfiles.html masajistas-*.html
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
