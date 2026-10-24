@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
-import {metadata,page,publicProfiles} from '../scripts/perfiles-compartir.mjs';
+import {metadata,page,publicProfiles,sitemap,directory} from '../scripts/perfiles-compartir.mjs';
 const template=await readFile(new URL('../perfil.html',import.meta.url),'utf8');
 test('metadatos estáticos personalizados, escapados y misma aplicación',()=>{
  const m=metadata({id:'prada-123',nombre:'Prada <"&',categoria:'terapeuticas',zona:'Tribunales',fotoPrincipal:'/img/prada1.jpg#prive-encuadre-v1=x'});
@@ -37,4 +37,23 @@ test('enlace nuevo mantiene campaña y hash; sin catálogo conserva original',as
  vm.runInNewContext(client,context);await context.window.priveEnlacePerfilListo;
  assert.equal(replaced,'https://masajistasprive.com/p/prada-123.html?utm_source=facebook&v=1234567890abcdef#galeria');
  replaced=undefined;context.fetch=async()=>{throw Error('offline')};vm.runInNewContext(client,context);await context.window.priveEnlacePerfilListo;assert.equal(replaced,undefined);
+});
+
+test('sitemap conserva barrios, excluye perfiles anteriores y genera canónicos únicos',()=>{
+ const original='<urlset>\n<url><loc>https://masajistasprive.com/</loc></url>\n<url><loc>https://masajistasprive.com/masajistas-recoleta.html</loc></url>\n<url><loc>https://masajistasprive.com/p/pausado.html</loc></url>\n</urlset>';
+ const active=[metadata({id:'activa',nombre:'Activa',zona:'CABA'})];
+ const result=sitemap(original,active);
+ assert.ok(result.includes('masajistas-recoleta.html'));
+ assert.ok(!result.includes('pausado.html'));
+ assert.ok(result.includes('/p/activa.html</loc>'));
+ assert.ok(!result.includes('?v='));
+ assert.equal(sitemap(result,active),result);
+ assert.throws(()=>sitemap('error',active));
+});
+test('directorio ofrece enlaces reales y escapa contenido de las fichas',()=>{
+ const html=directory([metadata({id:'activa',nombre:'<script>"&',zona:'CABA'})]);
+ assert.ok(html.includes('href="/p/activa.html"'));
+ assert.ok(html.includes('&lt;script&gt;&quot;&amp;'));
+ assert.ok(!html.includes('<script>"&'));
+ assert.ok(!html.includes('firebase'));
 });

@@ -48,6 +48,26 @@ export function page(template,meta){
  }
  return html.replace('</head>',`<meta property="og:type" content="website">\n<meta name="description" content="${escapeHTML(meta.description)}">\n<meta name="twitter:card" content="summary_large_image">\n<meta name="twitter:title" content="${escapeHTML(meta.title)}">\n<meta name="twitter:description" content="${escapeHTML(meta.description)}">\n<meta name="twitter:image" content="${escapeHTML(meta.image)}">\n<link rel="canonical" href="${origin+meta.path}">\n</head>`);
 }
+// El sitemap conserva las páginas editoriales y de barrios. Solo se añaden
+// enlaces canónicos de perfiles actualmente publicados, sin versiones ni UTM.
+export function sitemap(existing,entries){
+ if(!existing.includes('</urlset>'))throw Error('Sitemap inválido: no se publican cambios.');
+ const base=existing.replace(/\s*<url>\s*<loc>https:\/\/masajistasprive\.com\/(?:p\/[^<]*|perfiles\.html)<\/loc>[\s\S]*?<\/url>/g,'');
+ const urls=[origin+'/perfiles.html',...entries.map(m=>origin+m.path)];
+ return base.replace('</urlset>',urls.map(url=>'  <url><loc>'+escapeHTML(url)+'</loc></url>').join('\n')+'\n</urlset>');
+}
+export function directory(entries){
+ const links=entries.map(m=>`<li><a href="${escapeHTML(m.path)}"><strong>${escapeHTML(m.title.replace(/ \| Masajistas Privé$/,''))}</strong><span>${escapeHTML(m.description)}</span><span class="open">Ver perfil →</span></a></li>`).join('\n');
+ return `<!doctype html>
+<html lang="es-AR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Directorio de masajistas en CABA | Masajistas Privé</title>
+<meta name="description" content="Explorá los perfiles publicados en Masajistas Privé. Compará zonas y categorías de masajistas independientes en CABA y consultá desde su ficha.">
+<link rel="canonical" href="${origin}/perfiles.html"><meta name="robots" content="index,follow"><meta name="theme-color" content="#0d0d0d"><link rel="icon" href="/img/monograma.png">
+<style>*{box-sizing:border-box}body{margin:0;background:#0d0d0d;color:#eee;font:16px/1.6 system-ui,sans-serif}header,main,footer{max-width:1050px;margin:auto;padding:24px}header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px}header img{display:block;width:200px;max-width:65vw;height:auto}a{color:#dfc285}nav{display:flex;gap:20px;flex-wrap:wrap}h1{font:normal clamp(30px,6vw,48px)/1.2 Georgia,serif;color:#dfc285}p{color:#bbb;max-width:70ch}ul{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px}li a{height:100%;display:flex;flex-direction:column;gap:12px;text-decoration:none;border:1px solid #dfc28555;background:#151515;border-radius:12px;padding:24px}strong{font:normal 27px/1.3 Georgia,serif}li span{font-size:14px;color:#ccc;overflow-wrap:anywhere}.open{color:#dfc285;margin-top:auto}a:focus-visible{outline:3px solid #dfc285;outline-offset:4px}footer{border-top:1px solid #dfc28533;font-size:13px;color:#aaa}</style>
+</head><body><header><a href="/"><img src="/img/logo.png" alt="Masajistas Privé" width="690" height="361"></a><nav aria-label="Navegación principal"><a href="/">Inicio</a><a href="/cuaderno.html">Cuaderno Privé</a></nav></header>
+<main><h1>Directorio de masajistas en CABA</h1><p>Conocé las zonas y categorías de los perfiles publicados. Abrí cada ficha para ver sus fotografías, modalidades y datos de contacto actualizados.</p><nav aria-label="Explorar por zona"><a href="/masajistas-tribunales.html">Tribunales</a><a href="/masajistas-congreso.html">Congreso</a><a href="/masajistas-recoleta.html">Recoleta</a><a href="/masajistas-microcentro.html">Microcentro</a><a href="/masajistas-puerto-madero.html">Puerto Madero</a></nav><ul aria-label="Perfiles publicados">${links}</ul></main>
+<footer>Masajistas Privé · Directorio exclusivo para mayores de 18 años. Las anunciantes son independientes. La disponibilidad se consulta en cada perfil.</footer></body></html>\n`;
+}
 async function main(){
  const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
  const template=await readFile(path.join(root,'perfil.html'),'utf8');
@@ -57,10 +77,14 @@ async function main(){
  // Validar todo antes de escribir. Nunca borrar páginas ni imágenes originales.
  const pages=entries.map(meta=>({meta,html:page(template,meta)}));
  const manifest=Object.fromEntries(entries.map(m=>[m.id,{path:m.path,version:m.version}]));
+ const nextSitemap=sitemap(await readFile(path.join(root,'sitemap.xml'),'utf8'),entries);
+ const nextDirectory=directory(entries);
  if(!process.argv.includes('--check')){
   await mkdir(path.join(root,'p'),{recursive:true});
   for(const {meta,html}of pages)await writeFile(path.join(root,meta.path.slice(1)),html);
   await writeFile(path.join(root,'p/indice.json'),JSON.stringify(manifest,null,2)+'\n');
+  await writeFile(path.join(root,'sitemap.xml'),nextSitemap);
+  await writeFile(path.join(root,'perfiles.html'),nextDirectory);
  }
  console.log(`${entries.length} perfiles con portada y metadatos verificados.`);
 }
