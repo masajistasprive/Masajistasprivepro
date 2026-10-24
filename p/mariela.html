@@ -166,6 +166,7 @@ html,body{max-width:100%;overflow-x:clip}
 .prive-voto-btn:focus-visible{outline:2px solid white;outline-offset:2px}
 .review-like.activo{background:#dfc285!important;color:#16120b!important;border-color:#dfc285!important}
 </style>
+<style>.prive-whatsapp-principal{min-height:48px;margin:16px 0 20px;letter-spacing:.4px;text-align:center}.prive-whatsapp-principal span{white-space:normal}</style>
 <meta property="og:type" content="website">
 <meta name="description" content="terapeuticas · Congreso / Balvanera">
 <meta name="twitter:card" content="summary_large_image">
@@ -286,7 +287,7 @@ function renderProfile(){
 const m=modelo,L=t(),tr=m.traducciones||{},x=tr[idiomaPerfil]||tr.es||{};
 const pick=(key,fall='')=>x[key]||fall;
 const description=[pick('descPerfil1',m.descripcion),pick('descPerfil2')].filter(Boolean).join('\n\n');
-const phone=String(m.whatsapp||'').replace(/\D/g,'');const whatsapp=phone?`https://wa.me/${phone}?text=${encodeURIComponent(`Hola ${m.nombre||''}, vi tu perfil en Masajistas Privé: ${location.href}`)}`:'';
+const phone=String(m.whatsapp||m.telefono||'').replace(/\D/g,'');const whatsapp=phone?`https://wa.me/${phone}?text=${encodeURIComponent(`Hola ${m.nombre||''}, vi tu perfil en Masajistas Privé: ${location.href}`)}`:'';
 const active=m.estado!=='pausado';
 const pics=(Array.isArray(m.fotosGaleria)?m.fotosGaleria:[]).map(safeUrl).filter(Boolean);const main=safeUrl(m.fotoPrincipal)||safeUrl(m.foto)||pics[0]||'img/logo.png';
 lightboxUrls=[main,...pics.filter(p=>p!==main)];
@@ -297,6 +298,7 @@ document.getElementById('perfil-content-box').innerHTML=`
 <div class="perfil-galeria-grid"><img src="${esc(main)}" alt="${esc(m.nombre)}" class="foto-principal" id="fotoPrincipal" data-photo="0" fetchpriority="high" decoding="async"><div class="galeria-miniaturas">${lightboxUrls.map((p,i)=>`<img src="${esc(p)}" alt="${esc(m.nombre)} ${i+1}" data-photo="${i}" loading="lazy" decoding="async">`).join('')}</div></div>
 <div class="perfil-info"><div class="perfil-titulo-seccion"><h2>${esc(m.nombre)}</h2><span class="badge-verificado">${esc(L.verified)}</span></div>
 <p class="perfil-ubicacion">📍 ${esc(L.area)} <strong>${esc(pick('valorZona',m.zona))}</strong></p><p class="perfil-modalidad">🏠 ${esc(L.mode)} <strong>${esc(pick('valorModalidad',m.modalidad))}</strong></p>
+${active&&whatsapp?`<a href="${esc(whatsapp)}" target="_blank" rel="noopener noreferrer" class="btn-accion-prive btn-accion-wpp prive-whatsapp-principal" data-metrica-whatsapp="principal">${whatsappSvg}<span>${esc(L.sendWhatsApp)}</span></a>`:''}
 <div class="perfil-descripcion"><h3>${esc(L.description)}</h3><div id="priveDescription" class="prive-description-text">${formatProfileText(description)}</div>${description.length>330?`<button type="button" id="priveReadMore" class="prive-read-more" aria-expanded="false">${esc(({es:"Leer más",en:"Read more",pt:"Ler mais",fr:"Lire plus"})[idiomaPerfil])}</button>`:""}${pick('valorTecnicas')?`<section class="prive-techniques"><strong class="prive-techniques-title">${esc(L.techniques)}</strong><div class="prive-techniques-text">${formatProfileText(pick('valorTecnicas'))}</div></section>`:''}</div>
 ${details?`<div class="perfil-detalles">${details}</div>`:''}
 <div class="perfil-acciones-inferior"><button type="button" class="prive-voto-btn" data-prive-voto="${esc(perfilId)}" aria-pressed="false">❤️ Me gusta <span data-prive-cuenta></span></button><div class="btn-accion-secundarios"><button type="button" id="btnFavElement" class="btn-accion-prive btn-accion-fav ${isFav?'activo':''}">⭐ ${esc(isFav?L.saved:L.favorite)}</button><button type="button" id="btnShare" class="btn-accion-prive btn-accion-compartir">↗ ${esc(L.share)}</button></div></div></div>
