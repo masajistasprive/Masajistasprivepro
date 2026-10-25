@@ -2,6 +2,9 @@ name: Medir carga pública Privé
 on:
   pull_request:
     paths: ['tests/carga-publica.cjs', '.github/workflows/medir-rendimiento.yml']
+  push:
+    branches: [main]
+    paths: ['index.html', 'perfil.html', 'js/votos-visibles.js', 'js/prive-home-2.js']
   workflow_dispatch:
 permissions:
   contents: read

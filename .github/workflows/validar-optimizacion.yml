@@ -5,6 +5,7 @@ on:
       - 'index.html'
       - 'perfil.html'
       - 'js/votos-visibles.js'
+      - 'js/prive-home-2.js'
       - 'tests/**'
       - '.github/workflows/validar-optimizacion.yml'
   workflow_dispatch:

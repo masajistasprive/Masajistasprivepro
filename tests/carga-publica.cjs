@@ -2,6 +2,7 @@
    Mide una carga por caso; no es una estadística de usuarios ni facturación. */
 const {chromium}=require('../qa/node_modules/playwright');
 (async()=>{
+ if(process.env.GITHUB_EVENT_NAME==='push'){let ready=false;for(let i=0;i<24;i++){const s=await fetch('https://masajistasprive.com/index.html?audit='+process.env.GITHUB_SHA+'-'+i).then(r=>r.text());if(s.includes('prive-home-2.js?v=20261024-carga3')){ready=true;break}await new Promise(r=>setTimeout(r,10000))}if(!ready)throw Error('La publicación todavía no refleja la revisión medida')}
  const browser=await chromium.launch({headless:true});
  try{for(const mobile of [false,true])for(const path of ['/','/perfil.html?id=prada']){
   const context=await browser.newContext({viewport:mobile?{width:390,height:844}:{width:1440,height:1000},isMobile:mobile,hasTouch:mobile});
