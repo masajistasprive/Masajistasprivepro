@@ -24,7 +24,20 @@ function sincronizar(){
   }
 }
 function programar(){if(!pendiente){pendiente=true;requestAnimationFrame(sincronizar);}}
-const observer=new MutationObserver(programar);
+function afectaEncuadres(node){
+ if(node.nodeType!==1)return false;
+ if(activos.has(node)||node.matches?.(selector)||node.querySelector?.(selector))return true;
+ // Un contenedor retirado puede haber perdido los selectores de sus ancestros.
+ if(node.querySelector?.('img'))for(const img of activos.keys())if(node.contains(img))return true;
+ return false;
+}
+const observer=new MutationObserver(changes=>{
+ for(const change of changes){
+  if(change.type==='attributes'){if(afectaEncuadres(change.target)){programar();return;}continue;}
+  for(const node of change.addedNodes)if(afectaEncuadres(node)){programar();return;}
+  for(const node of change.removedNodes)if(afectaEncuadres(node)){programar();return;}
+ }
+});
 observer.observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['src']});
 window.addEventListener('resize',programar);
 // Los filtros pueden mostrar de nuevo una tarjeta cuyas dimensiones eran cero.

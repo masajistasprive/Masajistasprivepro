@@ -78,6 +78,32 @@ aplicarBusquedaPrive=function(){
  if(home2Failed){const retry=document.createElement('button');retry.type='button';retry.className='prive-reset-text';retry.textContent=t.retry;retry.onclick=()=>{home2Failed=false;suscripcionPerfiles?.();suscripcionPerfiles=null;if(!db)iniciarFirebase();else cargarPerfilesDesdeFirebase()};status.append(' ',retry)}
  home2SaveState();
 };
+// Cambiar una favorita conserva las tarjetas y fotos que ya están en pantalla.
+function home2SyncFavorites(){
+ const grid=home2('grid-favoritos');if(!grid)return;
+ const focus=document.activeElement?.dataset?.priveFavorite,ids=home2Favorites(),t=home2T();
+ const docs=documentosPerfiles.filter(d=>d.data().estado!=='pausado'),byId=new Map(docs.map(d=>[d.id,d]));
+ const selected=docs.filter(d=>ids.has(d.id)),desired=new Set(selected.map(d=>d.id)),existing=new Map();
+ for(const child of [...grid.children]){
+  const id=child.dataset.perfilId;
+  if(!id||!desired.has(id))child.remove();else existing.set(id,child);
+ }
+ let next=grid.firstElementChild;
+ for(const [index,doc]of selected.entries()){
+  let card=existing.get(doc.id);
+  if(!card){const holder=document.createElement('div');holder.innerHTML=construirTarjeta(doc,index);card=holder.firstElementChild;}
+  if(card!==next)grid.insertBefore(card,next);
+  next=card.nextElementSibling;
+ }
+ for(const button of document.querySelectorAll('[data-prive-favorite]')){
+  const id=button.dataset.priveFavorite,saved=ids.has(id),name=String(byId.get(id)?.data().nombre||'Anunciante');
+  const pressed=String(saved),label=(saved?t.unsave:t.save)+' · '+name;
+  if(button.getAttribute('aria-pressed')!==pressed)button.setAttribute('aria-pressed',pressed);
+  if(button.getAttribute('aria-label')!==label)button.setAttribute('aria-label',label);
+ }
+ aplicarBusquedaPrive();
+ if(focus){const button=[...document.querySelectorAll('[data-prive-favorite]')].find(b=>b.dataset.priveFavorite===focus&&b.closest('.categoria-seccion-wrapper').style.display!=='none');(button||document.querySelector('[data-prive-nav=favoritos]')).focus({preventScroll:true});}
+}
 const home2OriginalRender=renderizarPerfiles;
 renderizarPerfiles=function(){
  const focus=document.activeElement?.dataset?.priveFavorite;
@@ -107,7 +133,7 @@ inicializarInteracciones=function(){
  home2('priveZona').onchange=aplicarBusquedaPrive;home2('priveModalidad').onchange=aplicarBusquedaPrive;home2('priveReset').onclick=home2Reset;home2('priveCloseCatalogue').onclick=home2CloseCatalogue;
  document.addEventListener('click',event=>{
   const favorite=event.target.closest('[data-prive-favorite]');
-  if(favorite){event.preventDefault();const id=favorite.dataset.priveFavorite,ids=home2Favorites(),added=!ids.has(id);if(added)ids.add(id);else ids.delete(id);try{localStorage.setItem('priveFavoritos',JSON.stringify([...ids]));announce.textContent=added?home2T().saved:home2T().removed;renderizarPerfiles()}catch{announce.textContent=home2T().localError}return}
+  if(favorite){event.preventDefault();const id=favorite.dataset.priveFavorite,ids=home2Favorites(),added=!ids.has(id);if(added)ids.add(id);else ids.delete(id);try{localStorage.setItem('priveFavoritos',JSON.stringify([...ids]));announce.textContent=added?home2T().saved:home2T().removed;home2SyncFavorites()}catch{announce.textContent=home2T().localError}return}
   const pill=event.target.closest('.pill-btn[data-filter]');
   if(pill){
    const filter=pill.dataset.filter;home2Choose(filter);
@@ -126,8 +152,8 @@ inicializarInteracciones=function(){
   if(event.target.closest('#priveSiteMenu a'))closeMenu();
  });
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!home2('priveSiteMenu').hidden){closeMenu();home2('priveMenuButton').focus()}});
- window.addEventListener('storage',event=>{if(event.key==='priveFavoritos')programarRenderPerfiles()});
- window.addEventListener('pageshow',()=>{if(home2Loaded)renderizarPerfiles()});
+ window.addEventListener('storage',event=>{if(event.key==='priveFavoritos'||event.key===null)home2SyncFavorites()});
+ window.addEventListener('pageshow',()=>{if(home2Loaded)home2SyncFavorites()});
  // The last search is restored after the first Firebase snapshot and option generation.
  const state=home2PendingState;home2UpdateText();home2PendingState=state;
 };

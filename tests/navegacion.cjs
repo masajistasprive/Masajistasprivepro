@@ -9,7 +9,7 @@ function firebaseMock(){
  const listeners=new Map();let clubReads=0,reviewsStarted=0,reviewsStopped=0;
  const users=id=>JSON.parse(localStorage.getItem('qa-votes-'+id)||'[]');
  const snap=p=>{const id=p.split('/')[1];let docs=p==='perfiles_publicos'?Object.entries(models).map(([id,d])=>({id,data:()=>d})):p==='club_posts'?[{id:'post',data:()=>({status:'published',title:'Club QA',author:'QA',createdAt:{toMillis:()=>1}})}]:p.startsWith('perfiles_comentarios/')&&p.endsWith('/mensajes')?[{id:'review-qa',data:()=>({autor:'QA visitante',contenido:localStorage.getItem('qa-review-text')||'Experiencia aprobada QA',rating:5,aprobado:true})}]:p.startsWith('votos_perfiles/')?users(id).map(id=>({id})):[];return{docs,size:docs.length}};
- const emit=()=>{for(const [p,cbs]of listeners)for(const cb of cbs)cb(snap(p))};
+ const emit=()=>{for(const [p,cbs]of listeners){if(p==='perfiles_publicos'||p==='club_posts')continue;for(const cb of cbs)cb(snap(p))}};
  addEventListener('storage',emit);
  function query(p){return {collection:n=>query(p+'/'+n),doc:(id='auto')=>query(p+'/'+id),where(){return this},orderBy(){return this},limit(){return this},async get(){if(p.startsWith('modelos_prive/'))return{exists:true,data:()=>models[p.split('/')[1]]};if(p==='club_posts')clubReads++;if(p.split('/').length===4)return{exists:users(p.split('/')[1]).includes('qa-user')};return snap(p)},onSnapshot(cb){const review=p.startsWith('perfiles_comentarios/')&&p.endsWith('/mensajes');if(review)reviewsStarted++;if(!listeners.has(p))listeners.set(p,new Set());listeners.get(p).add(cb);cb(snap(p));return()=>{listeners.get(p).delete(cb);if(review)reviewsStopped++}},async set(){if(p.startsWith('votos_perfiles/')){const id=p.split('/')[1];localStorage.setItem('qa-votes-'+id,JSON.stringify([...new Set([...users(id),'qa-user'])]));emit()}},async delete(){const id=p.split('/')[1];localStorage.setItem('qa-votes-'+id,JSON.stringify(users(id).filter(x=>x!=='qa-user')));emit()},async add(){return {id:'mock'}}}}
  const firestore=()=>({collection:n=>query(n)});firestore.FieldValue={serverTimestamp:()=>0};
@@ -35,7 +35,11 @@ const server=http.createServer((req,res)=>{if(req.url==='/img/miniaturas/'+ '1'.
   await page.locator('.prive-category-card[data-filter="terapeuticas"]').click();
   const heart=page.locator('#grid-terapeuticas [data-prive-voto="qa0"]');
   await heart.click();await page.waitForFunction(()=>document.querySelector('#grid-terapeuticas [data-prive-voto="qa0"]').getAttribute('aria-pressed')==='true');
+  await page.locator('#priveBuscar').fill('QA 0');
+  await page.evaluate(()=>{window.qaStable={cards:[...document.querySelectorAll('.card-link[data-perfil-id]')],stories:[...document.querySelectorAll('.story-item img')]}});
   await page.locator('[data-prive-favorite="qa0"]').first().click();
+  assert(await page.evaluate(()=>window.qaStable.cards.every(n=>n.isConnected)&&window.qaStable.stories.every(n=>n.isConnected)),'Guardar favorita mantiene tarjetas e imágenes existentes');
+  assert.equal(await page.locator('#priveBuscar').inputValue(),'QA 0');await page.locator('#priveBuscar').fill('');
   await page.locator('[data-prive-nav="favoritos"]').click();assert(await page.locator('#grid-favoritos [data-prive-voto="qa0"]').isVisible());
   const profile=await context.newPage();profile.on('pageerror',e=>errors.push(e.message));await profile.goto(url+'/perfil.html?id=qa0');
   await profile.locator('#fotoPrincipal').waitFor();assert.equal(new URL(await profile.locator('#fotoPrincipal').getAttribute('src'),url).href,url+'/img/logo.png','La galería conserva el original');const ph=profile.locator('[data-prive-voto="qa0"]');await ph.scrollIntoViewIfNeeded();
@@ -56,7 +60,12 @@ const server=http.createServer((req,res)=>{if(req.url==='/img/miniaturas/'+ '1'.
   await reviews.locator('[data-prive-reviews]').scrollIntoViewIfNeeded();await reviews.getByText('Actualizada durante pausa QA',{exact:true}).waitFor();assert.equal(await reviews.evaluate(()=>window.qa.reviewsStarted()),2,'Resincronizar al regresar');
   await reviews.close();
   await page.bringToFront();await page.reload();await page.locator('.story-item').first().waitFor();assert.equal(await page.evaluate(()=>window.qa.clubReads()),0,'Club cached during navigation');
-  assert.deepEqual(errors,[]);console.log('PASS browser '+(mobile?'mobile 390px':'desktop 1440px')+': categories, favorites, two-tab votes, reload, gallery, WhatsApp, Club cache, visible reviews, live updates, pause/resync, no JS errors');
+  await profile.bringToFront();await profile.locator('#btnFavElement').click();await page.waitForFunction(()=>!document.querySelector('#grid-favoritos [data-perfil-id="qa0"]'));
+  await profile.locator('#btnFavElement').click();await page.waitForFunction(()=>!!document.querySelector('#grid-favoritos [data-perfil-id="qa0"]'));
+  await page.bringToFront();await page.locator('[data-prive-nav="favoritos"]').click();await page.locator('#grid-favoritos [data-prive-favorite="qa0"]').press('Enter');
+  await page.waitForFunction(()=>!document.querySelector('#grid-favoritos [data-perfil-id="qa0"]'));assert.equal(await page.evaluate(()=>document.activeElement?.dataset?.priveNav),'favoritos','Conservar foco al quitar última favorita con teclado');
+  assert(await page.locator('#priveEmpty').isVisible());
+  assert.deepEqual(errors,[]);console.log('PASS browser '+(mobile?'mobile 390px':'desktop 1440px')+': categories, favorites, two-tab votes, reload, gallery, WhatsApp, Club cache, stable favorite DOM, cross-tab favorites, keyboard focus, visible reviews, live updates, pause/resync, no JS errors');
   await context.close();
  }}finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exitCode=1}).finally(()=>server.close());

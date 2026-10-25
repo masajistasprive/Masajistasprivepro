@@ -6,6 +6,8 @@ on:
       - 'perfil.html'
       - 'js/votos-visibles.js'
       - 'js/prive-home-2.js'
+      - 'js/encuadres-portal.js'
+      - 'qa/check-categories.cjs'
       - 'tests/**'
       - '.github/workflows/validar-optimizacion.yml'
   workflow_dispatch:
@@ -30,6 +32,7 @@ jobs:
           node tests/visibilidad.test.cjs
           node tests/recorridos.test.cjs
           node tests/comentarios.test.cjs
+          node tests/encuadres-dom.test.cjs
       - name: Instalar navegador de pruebas
         run: |
           npm install --prefix qa --no-save --ignore-scripts --no-audit --no-fund playwright@1.58.2
