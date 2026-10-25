@@ -136,13 +136,22 @@ iniciarFirebase=function(){home2OriginalStart();if(!db){home2Failed=true;aplicar
 window.addEventListener('hashchange',()=>{if(location.hash==='#favoritas')home2Choose('favoritos')});
 
 
+// El fragmento de encuadre se conserva tanto en miniatura como en original.
+function home2StorySource(raw){
+ const original=imagenSegura(raw);
+ try{const u=new URL(original,'https://masajistasprive.com/'),fragment=u.hash;u.hash='';
+  const thumb=window.priveMiniaturas?.[u.href];
+  if(typeof thumb==='string'&&/^\/img\/miniaturas\/[a-f0-9]{24}\.webp$/.test(thumb))return {src:thumb+fragment,original};
+ }catch{}
+ return {src:original,original:null};
+}
 function home2Vitrinas(){
  const title=home2('nuevasTitulo');if(title)title.textContent=({es:'Nuevas anunciantes',en:'New advertisers',pt:'Novas anunciantes',fr:'Nouvelles annonceuses'})[idiomaActual]||'Nuevas anunciantes';
  const docs=documentosPerfiles.filter(d=>d.data().estado!=='pausado').slice().sort((a,b)=>String(a.data().nombre||a.id).localeCompare(String(b.data().nombre||b.id),'es')||a.id.localeCompare(b.id));
  for(const [id,field]of [['stories-destacadas-container','destacada'],['stories-nuevas-container','nuevaAnunciante']]){
   const target=home2(id);if(!target)continue;
   const selected=docs.filter(d=>d.data()[field]===true).slice(0,4);
-  target.innerHTML=selected.map(d=>{const m=d.data(),name=escaparHTML(m.nombre||'Anunciante'),photo=escaparHTML(imagenSegura(m.fotoPrincipal||m.foto||'img/monograma.png'));return `<a href="perfil.html?id=${encodeURIComponent(d.id)}" class="story-item"><div class="story-ring"><div class="story-photo"><img src="${photo}" alt="${name}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='img/monograma.png'"></div></div><span>${name}</span></a>`}).join('');
+  target.innerHTML=selected.map(d=>{const m=d.data(),name=escaparHTML(m.nombre||'Anunciante'),image=home2StorySource(m.fotoPrincipal||m.foto||'img/monograma.png'),photo=escaparHTML(image.src);return `<a href="perfil.html?id=${encodeURIComponent(d.id)}" class="story-item"><div class="story-ring"><div class="story-photo"><img src="${photo}" ${image.original?`data-prive-original="${escaparHTML(image.original)}"`:""} alt="${name}" loading="lazy" decoding="async" onerror="if(this.dataset.priveOriginal){const original=this.dataset.priveOriginal;delete this.dataset.priveOriginal;this.src=original}else{this.onerror=null;this.src='img/monograma.png'}"></div></div><span>${name}</span></a>`}).join('');
   target.dataset.count=String(selected.length);target.style.setProperty('--prive-featured-columns',String(selected.length||1));target.style.setProperty('--prive-featured-wide-columns',String(selected.length||1));target.parentElement.hidden=!selected.length;
  }
 }
