@@ -212,7 +212,7 @@ function privePintarVotos(id){
 function priveEscucharVotos(id){
  window.priveVotosVisibles.registrar('perfil:'+id,'data-prive-voto',id,()=>{
   let vigente=true,ultimo=null,usuario=null;
-  const pintar=()=>{if(!vigente||!ultimo||priveVotos.ocupados.has(id)||priveVotos.votadosLocalmente.has(id))return;priveVotos.cuentas.set(id,ultimo.size);if(usuario)priveVotos.propios.set(id,ultimo.docs.some(d=>d.id===usuario.uid));privePintarVotos(id);};
+  const pintar=()=>{if(!vigente||!ultimo)return;if(!priveVotos.votadosLocalmente.has(id)&&!priveVotos.ocupados.has(id)){priveVotos.cuentas.set(id,ultimo.size);if(usuario)priveVotos.propios.set(id,ultimo.docs.some(d=>d.id===usuario.uid));}privePintarVotos(id);};
   // Una lectura al entrar en pantalla, sin suscripción permanente.
   // Un voto propio actualiza la cuenta local; se refresca al volver a abrir el perfil.
   priveRutaVotos(id).get().then(snap=>{if(vigente){ultimo=snap;pintar();}},err=>console.warn('No se pudieron leer los votos:',id,err.code||err.message));
