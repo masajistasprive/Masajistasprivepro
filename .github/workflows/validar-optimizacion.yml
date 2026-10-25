@@ -1,0 +1,26 @@
+name: Validar optimizaciones Privé
+on:
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'perfil.html'
+      - 'js/votos-visibles.js'
+      - 'firestore.indexes.json'
+      - 'tests/**'
+      - '.github/workflows/validar-optimizacion.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validacion-estatica:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Obtener código
+        uses: actions/checkout@v4
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Ejecutar pruebas
+        run: node tests/optimizacion.test.cjs
