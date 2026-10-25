@@ -201,8 +201,7 @@ function priveUsuario(){
 function priveRutaVotos(id){return db.collection('votos_perfiles').doc(id).collection('usuarios')}
 function privePintarVotos(id){
  const total=priveVotos.cuentas.get(id)||0,activo=priveVotos.propios.get(id)===true;
- document.querySelectorAll('[data-prive-voto]').forEach(b=>{
-  if(b.dataset.priveVoto!==id)return;
+ document.querySelectorAll('[data-prive-voto="'+CSS.escape(id)+'"]').forEach(b=>{
   const n=b.querySelector('[data-prive-cuenta]');if(n)n.textContent=total?String(total):'';
   b.classList.toggle('prive-votado',activo);b.setAttribute('aria-pressed',String(activo));
   b.disabled=priveVotos.ocupados.has(id);
