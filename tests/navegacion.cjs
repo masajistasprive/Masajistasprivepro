@@ -38,7 +38,7 @@ const server=http.createServer((req,res)=>{if(req.url==='/img/miniaturas/'+ '1'.
   await page.locator('[data-prive-favorite="qa0"]').first().click();
   await page.locator('[data-prive-nav="favoritos"]').click();assert(await page.locator('#grid-favoritos [data-prive-voto="qa0"]').isVisible());
   const profile=await context.newPage();profile.on('pageerror',e=>errors.push(e.message));await profile.goto(url+'/perfil.html?id=qa0');
-  await profile.locator('#fotoPrincipal').waitFor();assert.equal(await profile.locator('#fotoPrincipal').getAttribute('src'),'img/logo.png','La galería conserva el original');const ph=profile.locator('[data-prive-voto="qa0"]');await ph.scrollIntoViewIfNeeded();
+  await profile.locator('#fotoPrincipal').waitFor();assert.equal(new URL(await profile.locator('#fotoPrincipal').getAttribute('src'),url).href,url+'/img/logo.png','La galería conserva el original');const ph=profile.locator('[data-prive-voto="qa0"]');await ph.scrollIntoViewIfNeeded();
   await profile.waitForFunction(()=>document.querySelector('[data-prive-voto]').getAttribute('aria-pressed')==='true');
   await ph.click();await profile.waitForFunction(()=>document.querySelector('[data-prive-voto]').getAttribute('aria-pressed')==='false');
   await page.bringToFront();await page.waitForFunction(()=>document.querySelector('#grid-favoritos [data-prive-voto]').getAttribute('aria-pressed')==='false');
