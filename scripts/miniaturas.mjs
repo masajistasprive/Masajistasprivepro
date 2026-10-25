@@ -15,7 +15,7 @@ export function sourceURL(raw){
 }
 export async function imageBytes(url,root,fetcher=fetch){
  if(url.origin===origin){const file=path.resolve(root,'.'+url.pathname);if(!file.startsWith(path.resolve(root,'img')+path.sep))throw Error('Ruta de imagen no válida');if((await stat(file)).size>maxBytes)throw Error('Imagen demasiado grande');return readFile(file)}
- const res=await fetcher(url,{redirect:'error',signal:AbortSignal.timeout(30000)});
+ const res=await fetcher(url,{redirect:'error',signal:AbortSignal.timeout(12000)});
  if(!res.ok)throw Error('Imagen no disponible: '+res.status);
  if(Number(res.headers.get('content-length')||0)>maxBytes)throw Error('Imagen demasiado grande');
  const reader=res.body.getReader(),parts=[];let size=0;
@@ -28,6 +28,7 @@ export async function createThumbnail(input,sharp){
 export async function generateThumbnails(profiles,root,{sharp,fetcher=fetch}={}){
  if(!sharp)sharp=createRequire(new URL('../qa/package.json',import.meta.url))('sharp');
  let old={};try{old=JSON.parse(await readFile(path.join(root,'img/miniaturas/indice.json'),'utf8'))}catch{}
+ const deadline=Date.now()+90000;
  const manifest={},stats={generated:0,cached:0,failed:0,notSmaller:0,originalBytes:0,thumbnailBytes:0};
  const sources=[...new Set(profiles.filter(p=>p.estado!=='pausado').map(p=>sourceURL(p.fotoPrincipal||p.foto||'')?.href).filter(Boolean))].sort();
  await mkdir(path.join(root,'img/miniaturas'),{recursive:true});
@@ -37,6 +38,7 @@ export async function generateThumbnails(profiles,root,{sharp,fetcher=fetch}={})
   const id=hash(recipe+'\n'+source+'\n'+fingerprint).slice(0,24),file='img/miniaturas/'+id+'.webp';
   const previous=old[source];
   if(previous?.file===file&&/^img\/miniaturas\/[a-f0-9]{24}\.webp$/.test(previous.file)&&(await stat(path.join(root,file)).catch(()=>null))?.size===previous.bytes){manifest[source]=previous;stats.cached++;stats.originalBytes+=previous.originalBytes;stats.thumbnailBytes+=previous.bytes;continue}
+  if(!bytes&&Date.now()>deadline)throw Error('Tiempo de generación agotado; se conserva entrega original');
   bytes ||= await imageBytes(url,root,fetcher);
   const result=await createThumbnail(bytes,sharp);
   if(result.length>=bytes.length){stats.notSmaller++;continue}
