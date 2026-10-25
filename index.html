@@ -124,6 +124,9 @@ function priveEscucharVotos(id){
    if(!vigente)return;
    ultimo=snap;
    priveVotosCacheHasta.set(id,Date.now()+60000);
+   // Un resultado nuevo del servidor puede volver a sincronizar el estado local,
+   // salvo que haya un voto todavía en curso.
+   if(!priveVotos.ocupados.has(id))priveVotos.votadosLocalmente.delete(id);
    pintar();
   },err=>console.warn('No se pudieron leer los votos:',id,err.code||err.message));
   if(!cacheVigente)priveUsuario().then(u=>{usuario=u;pintar();}).catch(err=>console.warn('No se pudo consultar tu voto:',err.code||err.message));
