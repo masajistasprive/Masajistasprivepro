@@ -27,6 +27,7 @@ jobs:
         run: |
           node tests/votos.test.cjs
           node tests/visibilidad.test.cjs
+          node tests/recorridos.test.cjs
       - name: Instalar navegador de pruebas
         run: |
           npm install --prefix qa --no-save --ignore-scripts --no-audit --no-fund playwright@1.58.2
