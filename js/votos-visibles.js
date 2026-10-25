@@ -24,7 +24,19 @@
  }
  function schedule(){if(!queued){queued=true;requestAnimationFrame(scan);}}
  window.priveVotosVisibles={registrar(key,attribute,id,start,paint){if(!records.has(key))records.set(key,{attribute,id,start,paint,visible:new Set(),stop:null,timer:null});schedule();}};
- new MutationObserver(schedule).observe(document.documentElement,{childList:true,subtree:true});
+ // Evitar recorrer todas las tarjetas por cambios del DOM ajenos a los corazones.
+  // Las tarjetas se recrean al filtrar/renderizar: detectar altas y bajas.
+  const afectaVotos=node=>{
+    if(node.nodeType!==1)return false;
+    if(node.matches?.('[data-prive-voto]'))return true;
+    return !!node.querySelector?.('[data-prive-voto]');
+  };
+  new MutationObserver(changes=>{
+    for(const change of changes){
+      for(const node of change.addedNodes)if(afectaVotos(node)){schedule();return;}
+      for(const node of change.removedNodes)if(afectaVotos(node)){schedule();return;}
+    }
+  }).observe(document.documentElement,{childList:true,subtree:true});
  document.addEventListener('visibilitychange',()=>{for(const r of records.values())reconcile(r);schedule();});
  window.addEventListener('pagehide',()=>{suspended=true;for(const r of records.values())stop(r);});
  window.addEventListener('pageshow',()=>{suspended=false;for(const r of records.values())reconcile(r);schedule();});
