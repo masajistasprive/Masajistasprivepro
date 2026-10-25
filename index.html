@@ -235,8 +235,15 @@ function pintarClubHome(){
 async function cargarClubHome(){
  const zona=document.getElementById('priveClubTopics');if(!zona||!db)return;
  try{
-  // Sin orderBy: evita requerir un índice compuesto adicional.
-  const snap=await db.collection('club_posts').where('status','==','published').limit(100).get();
+  // Consulta optimizada: solo tres publicaciones. Requiere índice compuesto.
+  // Hasta que se instale el índice, conservar el comportamiento anterior.
+  let snap;
+  try{
+   snap=await db.collection('club_posts').where('status','==','published').orderBy('createdAt','desc').limit(3).get();
+  }catch(error){
+   if(error.code!=='failed-precondition')throw error;
+   snap=await db.collection('club_posts').where('status','==','published').limit(100).get();
+  }
   priveClubPosts=snap.docs.map(d=>d.data()).filter(p=>p.status==='published');
   priveClubPosts.sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));
   pintarClubHome();
