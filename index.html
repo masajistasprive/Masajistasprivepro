@@ -234,6 +234,16 @@ function pintarClubHome(){
 }
 async function cargarClubHome(){
  const zona=document.getElementById('priveClubTopics');if(!zona||!db)return;
+ // Solo los tres títulos públicos del Club, con caché de sesión breve.
+ const cacheKey='prive_club_home_v1',cacheMs=2*60*1000;
+ try{
+  const cached=JSON.parse(sessionStorage.getItem(cacheKey)||'null');
+  if(cached&&Array.isArray(cached.posts)&&Date.now()-cached.time<cacheMs){
+   priveClubPosts=cached.posts.slice(0,3);
+   pintarClubHome();
+   return;
+  }
+ }catch{}
  try{
   // Consulta optimizada: solo tres publicaciones. Requiere índice compuesto.
   // Hasta que se instale el índice, conservar el comportamiento anterior.
@@ -246,6 +256,8 @@ async function cargarClubHome(){
   }
   priveClubPosts=snap.docs.map(d=>d.data()).filter(p=>p.status==='published');
   priveClubPosts.sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));
+  priveClubPosts=priveClubPosts.slice(0,3);
+  try{sessionStorage.setItem(cacheKey,JSON.stringify({time:Date.now(),posts:priveClubPosts.map(p=>({title:p.title,author:p.author}))}));}catch{}
   pintarClubHome();
  }catch(err){
   console.warn('No se pudo cargar la vista previa del Club:',err);
