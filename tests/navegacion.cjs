@@ -39,6 +39,7 @@ const server=http.createServer((req,res)=>{const rel=decodeURIComponent(new URL(
   await page.bringToFront();await page.waitForFunction(()=>document.querySelector('#grid-favoritos [data-prive-voto]').getAttribute('aria-pressed')==='false');
   await profile.bringToFront();await profile.reload();await profile.locator('#fotoPrincipal').waitFor();
   await profile.locator('#fotoPrincipal').click();assert(await profile.locator('#priveLightbox').isVisible());await profile.locator('#priveLbNext').click();assert.equal(await profile.locator('#privePhotoCount').textContent(),'2 / 2');await profile.locator('#priveLbClose').click();assert(!await profile.locator('#priveLightbox').isVisible());
+  for(const lang of ['en','pt','fr','es']){await profile.locator('#btn-idioma').click();assert.equal(await profile.locator('html').getAttribute('lang'),lang);assert(await profile.locator('#fotoPrincipal').isVisible() || await profile.locator('#fotoPrincipal').count()===1)}
   const contact=await profile.locator('[data-metrica-whatsapp="principal"]').getAttribute('href');assert(contact.startsWith('https://wa.me/5491100000000?text='));
   await page.bringToFront();await page.reload();await page.locator('.story-item').first().waitFor();assert.equal(await page.evaluate(()=>window.qa.clubReads()),0,'Club cached during navigation');
   assert.deepEqual(errors,[]);console.log('PASS browser '+(mobile?'mobile 390px':'desktop 1440px')+': categories, favorites, two-tab votes, reload, gallery, WhatsApp, Club cache, no JS errors');

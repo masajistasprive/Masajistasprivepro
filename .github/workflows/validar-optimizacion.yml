@@ -24,10 +24,14 @@ jobs:
       - name: Ejecutar pruebas
         run: node tests/optimizacion.test.cjs
       - name: Probar sincronización de votos
-        run: node tests/votos.test.cjs
+        run: |
+          node tests/votos.test.cjs
+          node tests/visibilidad.test.cjs
       - name: Instalar navegador de pruebas
         run: |
           npm install --prefix qa --no-save --ignore-scripts --no-audit --no-fund playwright@1.58.2
           qa/node_modules/.bin/playwright install --with-deps chromium
       - name: Probar navegación en escritorio y móvil sin datos reales
         run: node tests/navegacion.cjs
+      - name: Probar categorías e idiomas existentes
+        run: node qa/check-categories.cjs
