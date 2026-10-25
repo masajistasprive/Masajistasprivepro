@@ -81,14 +81,14 @@
 <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-<script src="js/votos-visibles.js?v=20261020-recursos1"></script>
+<script src="js/votos-visibles.js?v=20261024-fluidez2"></script>
 <script>
 /* MASAJISTAS PRIVÉ · TURBO 5.0 · Fichas públicas livianas */
 const firebaseConfig={apiKey:'AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ',authDomain:'masajistasprivepro.firebaseapp.com',projectId:'masajistasprivepro',storageBucket:'masajistasprivepro.firebasestorage.app',measurementId:'G-SBN70C32JF'};
 let db;
 
 // CORAZONES PRIVÉ: votos reales, separados de los favoritos personales.
-const priveVotos={cuentas:new Map(),propios:new Map(),ocupados:new Set(),votadosLocalmente:new Set()};
+const priveVotos={cuentas:new Map(),propios:new Map(),ocupados:new Set()};
 let priveAuthPromise=null;
 function priveUsuario(){
  if(priveAuthPromise)return priveAuthPromise;
@@ -111,31 +111,13 @@ function privePintarVotos(id){
   const ocupado=priveVotos.ocupados.has(id);if(b.disabled!==ocupado)b.disabled=ocupado;
  });
 }
-const priveVotosCacheHasta=new Map();
-const priveVotosVersion=new Map();
 function priveEscucharVotos(id){
  window.priveVotosVisibles.registrar('perfil:'+id,'data-prive-voto',id,()=>{
   let vigente=true,ultimo=null,usuario=null;
-  const pintar=()=>{if(!vigente||!ultimo)return;if(!priveVotos.votadosLocalmente.has(id)&&!priveVotos.ocupados.has(id)){priveVotos.cuentas.set(id,ultimo.size);if(usuario)priveVotos.propios.set(id,ultimo.docs.some(d=>d.id===usuario.uid));}privePintarVotos(id);};
-  // Una lectura al entrar en pantalla, sin suscripción permanente.
-  // Un voto propio actualiza la cuenta local; se refresca al volver a abrir el perfil.
-  const cacheVigente=(priveVotosCacheHasta.get(id)||0)>Date.now()&&priveVotos.cuentas.has(id);
-  if(cacheVigente)privePintarVotos(id);
-  else {
-   const versionInicial=priveVotosVersion.get(id)||0;
-   priveRutaVotos(id).get().then(snap=>{
-    if(!vigente||versionInicial!==(priveVotosVersion.get(id)||0))return;
-    // No guardar en caché una respuesta recibida durante un voto:
-    // podría reflejar un estado anterior al cambio confirmado.
-    if(priveVotos.ocupados.has(id))return;
-    ultimo=snap;
-    priveVotosCacheHasta.set(id,Date.now()+60000);
-    priveVotos.votadosLocalmente.delete(id);
-    pintar();
-   },err=>console.warn('No se pudieron leer los votos:',id,err.code||err.message));
-  }
-  if(!cacheVigente)priveUsuario().then(u=>{usuario=u;pintar();}).catch(err=>console.warn('No se pudo consultar tu voto:',err.code||err.message));
-  return ()=>{vigente=false;ultimo=null;};
+  const pintar=()=>{if(!vigente||!ultimo)return;priveVotos.cuentas.set(id,ultimo.size);if(usuario)priveVotos.propios.set(id,ultimo.docs.some(d=>d.id===usuario.uid));privePintarVotos(id);};
+  const stop=priveRutaVotos(id).onSnapshot(snap=>{ultimo=snap;pintar();},err=>console.warn('No se pudieron leer los votos:',id,err.code||err.message));
+  priveUsuario().then(u=>{usuario=u;pintar();}).catch(err=>console.warn('No se pudo consultar tu voto:',err.code||err.message));
+  return ()=>{vigente=false;ultimo=null;stop();};
  },()=>privePintarVotos(id));
 }
 async function priveAlternarVoto(id){
@@ -147,11 +129,7 @@ async function priveAlternarVoto(id){
   const anterior=await ref.get({source:'server'});
   if(anterior.exists)await ref.delete();
   else await ref.set({usuarioId:u.uid,perfilId:id,creado:firebase.firestore.FieldValue.serverTimestamp()});
-  priveVotosVersion.set(id,(priveVotosVersion.get(id)||0)+1);
-  priveVotos.votadosLocalmente.add(id);
-  priveVotosCacheHasta.set(id,Date.now()+60000);
   priveVotos.propios.set(id,!anterior.exists);
-  if(priveVotos.cuentas.has(id))priveVotos.cuentas.set(id,Math.max(0,priveVotos.cuentas.get(id)+(anterior.exists?-1:1)));
  }catch(err){console.error('No se pudo votar:',err);alert('No pudimos guardar tu Me gusta. Revisá la conexión e intentá nuevamente.');}
  finally{priveVotos.ocupados.delete(id);privePintarVotos(id)}
 }
@@ -267,15 +245,8 @@ async function cargarClubHome(){
   }
  }catch{}
  try{
-  // Consulta optimizada: solo tres publicaciones. Requiere índice compuesto.
-  // Hasta que se instale el índice, conservar el comportamiento anterior.
-  let snap;
-  try{
-   snap=await db.collection('club_posts').where('status','==','published').orderBy('createdAt','desc').limit(3).get();
-  }catch(error){
-   if(error.code!=='failed-precondition')throw error;
-   snap=await db.collection('club_posts').where('status','==','published').limit(100).get();
-  }
+  // Conservar la consulta compatible: el índice compuesto aún no está instalado.
+  const snap=await db.collection('club_posts').where('status','==','published').limit(100).get();
   priveClubPosts=snap.docs.map(d=>d.data()).filter(p=>p.status==='published');
   priveClubPosts.sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));
   priveClubPosts=priveClubPosts.slice(0,3);

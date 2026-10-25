@@ -5,7 +5,6 @@ on:
       - 'index.html'
       - 'perfil.html'
       - 'js/votos-visibles.js'
-      - 'firestore.indexes.json'
       - 'tests/**'
       - '.github/workflows/validar-optimizacion.yml'
   workflow_dispatch:
@@ -14,7 +13,7 @@ permissions:
 jobs:
   validacion-estatica:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - name: Obtener código
         uses: actions/checkout@v4
@@ -24,3 +23,11 @@ jobs:
           node-version: '22'
       - name: Ejecutar pruebas
         run: node tests/optimizacion.test.cjs
+      - name: Probar sincronización de votos
+        run: node tests/votos.test.cjs
+      - name: Instalar navegador de pruebas
+        run: |
+          npm install --prefix qa --no-save --ignore-scripts --no-audit --no-fund playwright@1.58.2
+          qa/node_modules/.bin/playwright install --with-deps chromium
+      - name: Probar navegación en escritorio y móvil sin datos reales
+        run: node tests/navegacion.cjs
