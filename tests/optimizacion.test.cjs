@@ -5,8 +5,8 @@ const assert=require('node:assert/strict');
 const path=require('node:path');
 const root=path.resolve(__dirname,'..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
-const htmlScripts=html=>[...html.matchAll(/<script\\b([^>]*)>([\\s\\S]*?)<\\/script>/gi)]
-  .filter(m=>!/\\bsrc\\s*=|application\\/ld\\+json/i.test(m[1])).map(m=>m[2]);
+const htmlScripts=html=>[...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
+  .filter(m=>!/\bsrc\s*=|application\/ld\+json/i.test(m[1])).map(m=>m[2]);
 let checks=0;
 for(const file of ['index.html','perfil.html']){
  const html=read(file);
