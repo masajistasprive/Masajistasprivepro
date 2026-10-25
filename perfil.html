@@ -186,7 +186,7 @@ if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
 const db=firebase.firestore();
 
 // CORAZONES PRIVÉ: votos reales, separados de los favoritos personales.
-const priveVotos={cuentas:new Map(),propios:new Map(),ocupados:new Set()};
+const priveVotos={cuentas:new Map(),propios:new Map(),ocupados:new Set(),votadosLocalmente:new Set()};
 let priveAuthPromise=null;
 function priveUsuario(){
  if(priveAuthPromise)return priveAuthPromise;
@@ -212,7 +212,7 @@ function privePintarVotos(id){
 function priveEscucharVotos(id){
  window.priveVotosVisibles.registrar('perfil:'+id,'data-prive-voto',id,()=>{
   let vigente=true,ultimo=null,usuario=null;
-  const pintar=()=>{if(!vigente||!ultimo||priveVotos.ocupados.has(id))return;priveVotos.cuentas.set(id,ultimo.size);if(usuario)priveVotos.propios.set(id,ultimo.docs.some(d=>d.id===usuario.uid));privePintarVotos(id);};
+  const pintar=()=>{if(!vigente||!ultimo||priveVotos.ocupados.has(id)||priveVotos.votadosLocalmente.has(id))return;priveVotos.cuentas.set(id,ultimo.size);if(usuario)priveVotos.propios.set(id,ultimo.docs.some(d=>d.id===usuario.uid));privePintarVotos(id);};
   // Una lectura al entrar en pantalla, sin suscripción permanente.
   // Un voto propio actualiza la cuenta local; se refresca al volver a abrir el perfil.
   priveRutaVotos(id).get().then(snap=>{if(vigente){ultimo=snap;pintar();}},err=>console.warn('No se pudieron leer los votos:',id,err.code||err.message));
@@ -229,6 +229,7 @@ async function priveAlternarVoto(id){
   const anterior=await ref.get({source:'server'});
   if(anterior.exists)await ref.delete();
   else await ref.set({usuarioId:u.uid,perfilId:id,creado:firebase.firestore.FieldValue.serverTimestamp()});
+  priveVotos.votadosLocalmente.add(id);
   priveVotos.propios.set(id,!anterior.exists);
   if(priveVotos.cuentas.has(id))priveVotos.cuentas.set(id,Math.max(0,priveVotos.cuentas.get(id)+(anterior.exists?-1:1)));
  }catch(err){console.error('No se pudo votar:',err);alert('No pudimos guardar tu Me gusta. Revisá la conexión e intentá nuevamente.');}
