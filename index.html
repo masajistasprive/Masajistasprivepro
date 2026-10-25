@@ -81,7 +81,7 @@
 <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-<script src="js/votos-visibles.js?v=20261020-recursos1"></script>
+<script src="js/votos-visibles.js?v=20261024-fluidez2"></script>
 <script>
 /* MASAJISTAS PRIVÉ · TURBO 5.0 · Fichas públicas livianas */
 const firebaseConfig={apiKey:'AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ',authDomain:'masajistasprivepro.firebaseapp.com',projectId:'masajistasprivepro',storageBucket:'masajistasprivepro.firebasestorage.app',measurementId:'G-SBN70C32JF'};
@@ -103,11 +103,12 @@ function priveUsuario(){
 function priveRutaVotos(id){return db.collection('votos_perfiles').doc(id).collection('usuarios')}
 function privePintarVotos(id){
  const total=priveVotos.cuentas.get(id)||0,activo=priveVotos.propios.get(id)===true;
- document.querySelectorAll('[data-prive-voto]').forEach(b=>{
-  if(b.dataset.priveVoto!==id)return;
-  const n=b.querySelector('[data-prive-cuenta]');if(n)n.textContent=total?String(total):'';
-  b.classList.toggle('prive-votado',activo);b.setAttribute('aria-pressed',String(activo));
-  b.disabled=priveVotos.ocupados.has(id);
+ document.querySelectorAll('[data-prive-voto="'+CSS.escape(id)+'"]').forEach(b=>{
+  const n=b.querySelector('[data-prive-cuenta]'),cantidad=total?String(total):'';
+  if(n&&n.textContent!==cantidad)n.textContent=cantidad;
+  b.classList.toggle('prive-votado',activo);
+  if(b.getAttribute('aria-pressed')!==String(activo))b.setAttribute('aria-pressed',String(activo));
+  const ocupado=priveVotos.ocupados.has(id);if(b.disabled!==ocupado)b.disabled=ocupado;
  });
 }
 function priveEscucharVotos(id){
@@ -233,11 +234,23 @@ function pintarClubHome(){
 }
 async function cargarClubHome(){
  const zona=document.getElementById('priveClubTopics');if(!zona||!db)return;
+ // Solo los tres títulos públicos del Club, con caché de sesión breve.
+ const cacheKey='prive_club_home_v1',cacheMs=2*60*1000;
  try{
-  // Sin orderBy: evita requerir un índice compuesto adicional.
+  const cached=JSON.parse(sessionStorage.getItem(cacheKey)||'null');
+  if(cached&&Array.isArray(cached.posts)&&Date.now()-cached.time<cacheMs){
+   priveClubPosts=cached.posts.slice(0,3);
+   pintarClubHome();
+   return;
+  }
+ }catch{}
+ try{
+  // Conservar la consulta compatible: el índice compuesto aún no está instalado.
   const snap=await db.collection('club_posts').where('status','==','published').limit(100).get();
   priveClubPosts=snap.docs.map(d=>d.data()).filter(p=>p.status==='published');
   priveClubPosts.sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));
+  priveClubPosts=priveClubPosts.slice(0,3);
+  try{sessionStorage.setItem(cacheKey,JSON.stringify({time:Date.now(),posts:priveClubPosts.map(p=>({title:p.title,author:p.author}))}));}catch{}
   pintarClubHome();
  }catch(err){
   console.warn('No se pudo cargar la vista previa del Club:',err);

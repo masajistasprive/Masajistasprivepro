@@ -178,7 +178,7 @@ html,body{max-width:100%;overflow-x:clip}
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-<script src="js/votos-visibles.js?v=20261020-recursos1"></script>
+<script src="js/votos-visibles.js?v=20261024-fluidez2"></script>
 <script>
 'use strict';
 const firebaseConfig={apiKey:'AIzaSyBDSGPbs_ioH74p-RTctx9av5KKjhnDjBQ',authDomain:'masajistasprivepro.firebaseapp.com',projectId:'masajistasprivepro',storageBucket:'masajistasprivepro.firebasestorage.app',messagingSenderId:'768677270509',appId:'1:768677270509:web:f4409c2f9c0bbb42ebcde4',measurementId:'G-SBN70C32JF'};
@@ -201,11 +201,12 @@ function priveUsuario(){
 function priveRutaVotos(id){return db.collection('votos_perfiles').doc(id).collection('usuarios')}
 function privePintarVotos(id){
  const total=priveVotos.cuentas.get(id)||0,activo=priveVotos.propios.get(id)===true;
- document.querySelectorAll('[data-prive-voto]').forEach(b=>{
-  if(b.dataset.priveVoto!==id)return;
-  const n=b.querySelector('[data-prive-cuenta]');if(n)n.textContent=total?String(total):'';
-  b.classList.toggle('prive-votado',activo);b.setAttribute('aria-pressed',String(activo));
-  b.disabled=priveVotos.ocupados.has(id);
+ document.querySelectorAll('[data-prive-voto="'+CSS.escape(id)+'"]').forEach(b=>{
+  const n=b.querySelector('[data-prive-cuenta]'),cantidad=total?String(total):'';
+  if(n&&n.textContent!==cantidad)n.textContent=cantidad;
+  b.classList.toggle('prive-votado',activo);
+  if(b.getAttribute('aria-pressed')!==String(activo))b.setAttribute('aria-pressed',String(activo));
+  const ocupado=priveVotos.ocupados.has(id);if(b.disabled!==ocupado)b.disabled=ocupado;
  });
 }
 function priveEscucharVotos(id){
@@ -288,7 +289,7 @@ const details=[['valorHorarios','horarios',L.hours],['valorEquipamiento','equipa
 const favs=readFavs(),isFav=favs.includes(perfilId);
 document.getElementById('contenedorWppFlotante').innerHTML=active&&whatsapp?`<a href="${esc(whatsapp)}" target="_blank" rel="noopener noreferrer" class="btn-whatsapp-flotante" data-metrica-whatsapp="flotante">${whatsappSvg}<span>${esc(L.whatsapp)}</span></a>`:'';
 document.getElementById('perfil-content-box').innerHTML=`
-<div class="perfil-galeria-grid"><img src="${esc(main)}" alt="${esc(m.nombre)}" class="foto-principal" id="fotoPrincipal" data-photo="0" fetchpriority="high" decoding="async"><div class="galeria-miniaturas">${lightboxUrls.map((p,i)=>`<img src="${esc(p)}" alt="${esc(m.nombre)} ${i+1}" data-photo="${i}" loading="lazy" decoding="async">`).join('')}</div></div>
+<div class="perfil-galeria-grid"><img src="${esc(main)}" alt="${esc(m.nombre)}" class="foto-principal" id="fotoPrincipal" data-photo="0" fetchpriority="high" decoding="async"><div class="galeria-miniaturas">${lightboxUrls.map((p,i)=>`<img src="${esc(p)}" alt="${esc(m.nombre)} ${i+1}" data-photo="${i}" loading="lazy" decoding="async" fetchpriority="low">`).join('')}</div></div>
 <div class="perfil-info"><div class="perfil-titulo-seccion"><h2>${esc(m.nombre)}</h2><span class="badge-verificado">${esc(L.verified)}</span></div>
 <p class="perfil-ubicacion">📍 ${esc(L.area)} <strong>${esc(pick('valorZona',m.zona))}</strong></p><p class="perfil-modalidad">🏠 ${esc(L.mode)} <strong>${esc(pick('valorModalidad',m.modalidad))}</strong></p>
 ${active&&whatsapp?`<a href="${esc(whatsapp)}" target="_blank" rel="noopener noreferrer" class="btn-accion-prive btn-accion-wpp prive-whatsapp-principal" data-metrica-whatsapp="principal">${whatsappSvg}<span>${esc(L.sendWhatsApp)}</span></a>`:''}
