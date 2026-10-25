@@ -35,8 +35,8 @@
   // Las tarjetas se recrean al filtrar/renderizar: detectar altas y bajas.
   const afectaVotos=node=>{
     if(node.nodeType!==1)return false;
-    if(node.matches?.('[data-prive-voto], [data-review-id]'))return true;
-    return !!node.querySelector?.('[data-prive-voto], [data-review-id]');
+    if(node.matches?.('[data-prive-voto], [data-review-id], [data-prive-reviews]'))return true;
+    return !!node.querySelector?.('[data-prive-voto], [data-review-id], [data-prive-reviews]');
   };
   new MutationObserver(changes=>{
     for(const change of changes){
