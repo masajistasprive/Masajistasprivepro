@@ -1,0 +1,107 @@
+{
+  "https://masajistasprive.com/img/luly1.jpg": {
+    "file": "img/miniaturas/ca530f5aaf14cb022b6b801d.webp",
+    "bytes": 27514,
+    "originalBytes": 99849,
+    "width": 512,
+    "height": 768
+  },
+  "https://masajistasprive.com/img/luly5.jpg": {
+    "file": "img/miniaturas/895e8433dd86713652bc7f8c.webp",
+    "bytes": 32996,
+    "originalBytes": 119898,
+    "width": 512,
+    "height": 768
+  },
+  "https://masajistasprive.com/img/lupita1.jpg": {
+    "file": "img/miniaturas/24903dcd27c536fefcea0432.webp",
+    "bytes": 25458,
+    "originalBytes": 70613,
+    "width": 512,
+    "height": 765
+  },
+  "https://masajistasprive.com/img/mariela5.jpg": {
+    "file": "img/miniaturas/5515fbf5aa24e1da6fec718d.webp",
+    "bytes": 27194,
+    "originalBytes": 60148,
+    "width": 512,
+    "height": 673
+  },
+  "https://masajistasprive.com/img/pamela3.jpg": {
+    "file": "img/miniaturas/49aad60b11cc36f5ce655db6.webp",
+    "bytes": 47170,
+    "originalBytes": 134290,
+    "width": 512,
+    "height": 768
+  },
+  "https://masajistasprive.com/img/prada2.jpg": {
+    "file": "img/miniaturas/a15fe6e85fcdd48d62d2d285.webp",
+    "bytes": 22714,
+    "originalBytes": 54084,
+    "width": 512,
+    "height": 748
+  },
+  "https://masajistasprive.com/img/renata1.jpg": {
+    "file": "img/miniaturas/f542cb1ff2cee75469b6c65c.webp",
+    "bytes": 53984,
+    "originalBytes": 173357,
+    "width": 512,
+    "height": 683
+  },
+  "https://masajistasprive.com/img/sol1.jpg": {
+    "file": "img/miniaturas/648e7ecaa4f42c97bdbd7629.webp",
+    "bytes": 44068,
+    "originalBytes": 109700,
+    "width": 512,
+    "height": 785
+  },
+  "https://res.cloudinary.com/kupju04k/image/upload/v1791848050/rfccwqrhwihc1jsis8pw.jpg": {
+    "file": "img/miniaturas/930d0f383f606bdd417b7838.webp",
+    "bytes": 26026,
+    "originalBytes": 30666,
+    "width": 505,
+    "height": 800
+  },
+  "https://res.cloudinary.com/kupju04k/image/upload/v1791851058/ymnfhd9t2busqkkdosqd.jpg": {
+    "file": "img/miniaturas/e69a5b2cc7b9476486e3f71a.webp",
+    "bytes": 25924,
+    "originalBytes": 33975,
+    "width": 512,
+    "height": 739
+  },
+  "https://res.cloudinary.com/kupju04k/image/upload/v1791851278/lsqq8oe4julpxv75cnzp.jpg": {
+    "file": "img/miniaturas/f7414c61a87798f90bf3c66e.webp",
+    "bytes": 39566,
+    "originalBytes": 98981,
+    "width": 512,
+    "height": 779
+  },
+  "https://res.cloudinary.com/kupju04k/image/upload/v1791851592/cfrfzgknyfjhl1ohl1u0.jpg": {
+    "file": "img/miniaturas/ed24e48574a87af915d61539.webp",
+    "bytes": 46468,
+    "originalBytes": 47071,
+    "width": 485,
+    "height": 800
+  },
+  "https://res.cloudinary.com/kupju04k/image/upload/v1791939635/znpyu1vm90lhb4q8y1ug.jpg": {
+    "file": "img/miniaturas/bec82dd706ad5272d07cf087.webp",
+    "bytes": 42858,
+    "originalBytes": 355011,
+    "width": 512,
+    "height": 789
+  },
+  "https://res.cloudinary.com/kupju04k/image/upload/v1791942672/bumozk1haisklfqrrz48.jpg": {
+    "file": "img/miniaturas/6af8f41784651a64303f3efd.webp",
+    "bytes": 36926,
+    "originalBytes": 138503,
+    "width": 512,
+    "height": 787
+  },
+  "https://res.cloudinary.com/kupju04k/image/upload/v1792147590/rda8398tr6mtpwdob8nc.jpg": {
+    "file": "img/miniaturas/5c97ffd831ca666124d32215.webp",
+    "bytes": 73732,
+    "originalBytes": 231235,
+    "width": 512,
+    "height": 912
+  }
+}

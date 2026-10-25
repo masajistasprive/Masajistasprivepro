@@ -107,6 +107,8 @@ async function main(){
  const nextDirectory=directory(entries);
  const nextAreas=await Promise.all(areaFiles.map(async file=>({file,html:areaPage(await readFile(path.join(root,file),'utf8'),profiles)})));
  if(!process.argv.includes('--check')){
+  const {generateThumbnails}=await import('./miniaturas.mjs');
+  console.log('Miniaturas:',JSON.stringify(await generateThumbnails(profiles,root)));
   await mkdir(path.join(root,'p'),{recursive:true});
   for(const {meta,html}of pages)await writeFile(path.join(root,meta.path.slice(1)),html);
   await writeFile(path.join(root,'p/indice.json'),JSON.stringify(manifest,null,2)+'\n');
