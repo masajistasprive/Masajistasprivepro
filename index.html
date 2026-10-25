@@ -125,9 +125,12 @@ function priveEscucharVotos(id){
    const versionInicial=priveVotosVersion.get(id)||0;
    priveRutaVotos(id).get().then(snap=>{
     if(!vigente||versionInicial!==(priveVotosVersion.get(id)||0))return;
+    // No guardar en caché una respuesta recibida durante un voto:
+    // podría reflejar un estado anterior al cambio confirmado.
+    if(priveVotos.ocupados.has(id))return;
     ultimo=snap;
     priveVotosCacheHasta.set(id,Date.now()+60000);
-    if(!priveVotos.ocupados.has(id))priveVotos.votadosLocalmente.delete(id);
+    priveVotos.votadosLocalmente.delete(id);
     pintar();
    },err=>console.warn('No se pudieron leer los votos:',id,err.code||err.message));
   }
