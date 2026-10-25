@@ -16,8 +16,15 @@
  function fallback(){if(observer)return;for(const [node,r]of nodes){const b=node.getBoundingClientRect();if(b.width&&b.height&&b.bottom>=-300&&b.top<=innerHeight+300)r.visible.add(node);else r.visible.delete(node);}for(const r of records.values())reconcile(r);}
  function scan(){queued=false;
   for(const [node,r]of nodes)if(!node.isConnected){observer?.unobserve(node);nodes.delete(node);r.visible.delete(node);reconcile(r);}
-  for(const r of records.values())for(const node of document.querySelectorAll('['+r.attribute+']')){
-   if(node.getAttribute(r.attribute)!==r.id||nodes.has(node))continue;
+  // Agrupar registros: un solo recorrido del DOM por tipo de control.
+  const groups=new Map();
+  for(const r of records.values()){
+   if(!groups.has(r.attribute))groups.set(r.attribute,new Map());
+   groups.get(r.attribute).set(r.id,r);
+  }
+  for(const [attribute,byId] of groups)for(const node of document.querySelectorAll('['+attribute+']')){
+   if(nodes.has(node))continue;
+   const r=byId.get(node.getAttribute(attribute));if(!r)continue;
    nodes.set(node,r);r.paint();if(observer)observer.observe(node);
   }
   fallback();

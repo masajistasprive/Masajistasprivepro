@@ -4,6 +4,7 @@ const http=require('node:http'),fs=require('node:fs'),path=require('node:path'),
 const root=path.resolve(__dirname,'..');
 function firebaseMock(){
  const models=Object.fromEntries(['terapeuticas','sensuales','fantasias'].map((categoria,i)=>['qa'+i,{nombre:'QA '+i,categoria,zona:'Tribunales',estado:'activo',destacada:true,nuevaAnunciante:true,fotoPrincipal:'img/logo.png',fotosGaleria:['img/logo.png','img/monograma.png'],whatsapp:'5491100000000',descripcion:'Descripción de prueba.',horarios:'10 a 20'}]));
+ models['qa-hidden']={...models.qa0,nombre:'QA hidden',destacada:false,nuevaAnunciante:false,fotoPrincipal:'img/qa-hidden.svg'};
  const listeners=new Map();let clubReads=0;
  const users=id=>JSON.parse(localStorage.getItem('qa-votes-'+id)||'[]');
  const snap=p=>{const id=p.split('/')[1];let docs=p==='perfiles_publicos'?Object.entries(models).map(([id,d])=>({id,data:()=>d})):p==='club_posts'?[{id:'post',data:()=>({status:'published',title:'Club QA',author:'QA',createdAt:{toMillis:()=>1}})}]:p.startsWith('votos_perfiles/')?users(id).map(id=>({id})):[];return{docs,size:docs.length}};
@@ -15,7 +16,7 @@ function firebaseMock(){
  window.qa={listenerCount:()=>[...listeners.values()].reduce((n,s)=>n+s.size,0),clubReads:()=>clubReads};
 }
 const mime={'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp'};
-const server=http.createServer((req,res)=>{const rel=decodeURIComponent(new URL(req.url,'http://local').pathname);const file=path.join(root,rel==='/'?'index.html':rel);if(!file.startsWith(root+path.sep)){res.writeHead(403).end();return}fs.readFile(file,(e,b)=>{res.writeHead(e?404:200,{'content-type':mime[path.extname(file)]||'text/plain'});res.end(e?'missing':b)})});
+const server=http.createServer((req,res)=>{if(req.url==='/img/qa-hidden.svg'){res.writeHead(200,{'content-type':'image/svg+xml'});res.end('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="500"><rect width="400" height="500" fill="gold"/></svg>');return}const rel=decodeURIComponent(new URL(req.url,'http://local').pathname);const file=path.join(root,rel==='/'?'index.html':rel);if(!file.startsWith(root+path.sep)){res.writeHead(403).end();return}fs.readFile(file,(e,b)=>{res.writeHead(e?404:200,{'content-type':mime[path.extname(file)]||'text/plain'});res.end(e?'missing':b)})});
 (async()=>{
  await new Promise(r=>server.listen(0,'127.0.0.1',r));const url='http://127.0.0.1:'+server.address().port;
  const browser=await chromium.launch({headless:true});
@@ -24,9 +25,10 @@ const server=http.createServer((req,res)=>{const rel=decodeURIComponent(new URL(
   await context.addInitScript(firebaseMock);
   await context.route('**/*',route=>{const u=new URL(route.request().url());if(u.origin===url)return route.continue();if(u.hostname==='www.gstatic.com')return route.fulfill({body:'',contentType:'text/javascript'});return route.fulfill({body:'{}',contentType:'application/json'})});
   const page=await context.newPage(),errors=[];context.on('page',p=>p.on('pageerror',e=>errors.push(e.message)));page.on('pageerror',e=>errors.push(e.message));
+  let hiddenImageRequests=0;page.on('request',r=>{if(r.url().endsWith('/img/qa-hidden.svg'))hiddenImageRequests++});
   await page.goto(url);await page.locator('#btn-mayor').click();
-  await page.locator('.story-item').first().waitFor();
-  for(const cat of ['terapeuticas','sensuales','fantasias']){await page.locator('.prive-category-card[data-filter="'+cat+'"]').click();await page.locator('#grid-'+cat+' [data-prive-voto]').first().waitFor();await page.locator('#priveCloseCatalogue').click()}
+  await page.locator('.story-item').first().waitFor();assert.equal(hiddenImageRequests,0,'Catálogo cerrado: no descargar fotos exclusivas del catálogo');
+  for(const cat of ['terapeuticas','sensuales','fantasias']){await page.locator('.prive-category-card[data-filter="'+cat+'"]').click();await page.locator('#grid-'+cat+' [data-prive-voto]').first().waitFor();if(cat==='terapeuticas'){await page.locator('[data-perfil-id=qa-hidden] img').waitFor();await page.waitForFunction(()=>document.querySelector('[data-perfil-id=qa-hidden] img').naturalWidth>0);assert(hiddenImageRequests>0,'Las fotos cargan al abrir su categoría')}await page.locator('#priveCloseCatalogue').click()}
   await page.locator('.prive-category-card[data-filter="terapeuticas"]').click();
   const heart=page.locator('#grid-terapeuticas [data-prive-voto="qa0"]');
   await heart.click();await page.waitForFunction(()=>document.querySelector('#grid-terapeuticas [data-prive-voto="qa0"]').getAttribute('aria-pressed')==='true');

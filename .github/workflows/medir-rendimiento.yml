@@ -1,0 +1,25 @@
+name: Medir carga pública Privé
+on:
+  pull_request:
+    paths: ['tests/carga-publica.cjs', '.github/workflows/medir-rendimiento.yml']
+  push:
+    branches: [main]
+    paths: ['index.html', 'perfil.html', 'js/votos-visibles.js', 'js/prive-home-2.js']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  medir:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Preparar navegador
+        run: |
+          npm install --prefix qa --no-save --ignore-scripts --no-audit --no-fund playwright@1.58.2
+          qa/node_modules/.bin/playwright install --with-deps chromium
+      - name: Medir portada y perfil sin registrar visitas
+        run: node tests/carga-publica.cjs
