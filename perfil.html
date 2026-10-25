@@ -213,9 +213,11 @@ function priveEscucharVotos(id){
  window.priveVotosVisibles.registrar('perfil:'+id,'data-prive-voto',id,()=>{
   let vigente=true,ultimo=null,usuario=null;
   const pintar=()=>{if(!vigente||!ultimo)return;priveVotos.cuentas.set(id,ultimo.size);if(usuario)priveVotos.propios.set(id,ultimo.docs.some(d=>d.id===usuario.uid));privePintarVotos(id);};
-  const stop=priveRutaVotos(id).onSnapshot(snap=>{ultimo=snap;pintar();},err=>console.warn('No se pudieron leer los votos:',id,err.code||err.message));
+  // Una lectura al entrar en pantalla, sin suscripción permanente.
+  // Un voto propio actualiza la cuenta local; se refresca al volver a abrir el perfil.
+  priveRutaVotos(id).get().then(snap=>{if(vigente){ultimo=snap;pintar();}},err=>console.warn('No se pudieron leer los votos:',id,err.code||err.message));
   priveUsuario().then(u=>{usuario=u;pintar();}).catch(err=>console.warn('No se pudo consultar tu voto:',err.code||err.message));
-  return ()=>{vigente=false;ultimo=null;stop();};
+  return ()=>{vigente=false;ultimo=null;};
  },()=>privePintarVotos(id));
 }
 async function priveAlternarVoto(id){
@@ -228,6 +230,7 @@ async function priveAlternarVoto(id){
   if(anterior.exists)await ref.delete();
   else await ref.set({usuarioId:u.uid,perfilId:id,creado:firebase.firestore.FieldValue.serverTimestamp()});
   priveVotos.propios.set(id,!anterior.exists);
+  if(priveVotos.cuentas.has(id))priveVotos.cuentas.set(id,Math.max(0,priveVotos.cuentas.get(id)+(anterior.exists?-1:1)));
  }catch(err){console.error('No se pudo votar:',err);alert('No pudimos guardar tu Me gusta. Revisá la conexión e intentá nuevamente.');}
  finally{priveVotos.ocupados.delete(id);privePintarVotos(id)}
 }
