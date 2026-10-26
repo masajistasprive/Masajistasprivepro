@@ -1,18 +1,4 @@
 {
-  "https://masajistasprive.com/img/luly1.jpg": {
-    "file": "img/miniaturas/ca530f5aaf14cb022b6b801d.webp",
-    "bytes": 27514,
-    "originalBytes": 99849,
-    "width": 512,
-    "height": 768
-  },
-  "https://masajistasprive.com/img/luly5.jpg": {
-    "file": "img/miniaturas/895e8433dd86713652bc7f8c.webp",
-    "bytes": 32996,
-    "originalBytes": 119898,
-    "width": 512,
-    "height": 768
-  },
   "https://masajistasprive.com/img/lupita1.jpg": {
     "file": "img/miniaturas/24903dcd27c536fefcea0432.webp",
     "bytes": 25458,
@@ -69,12 +55,12 @@
     "width": 512,
     "height": 739
   },
-  "https://res.cloudinary.com/kupju04k/image/upload/v1791851278/lsqq8oe4julpxv75cnzp.jpg": {
-    "file": "img/miniaturas/f7414c61a87798f90bf3c66e.webp",
-    "bytes": 39566,
-    "originalBytes": 98981,
+  "https://res.cloudinary.com/kupju04k/image/upload/v1791851309/ncmr3baqjpwxhptxha3w.jpg": {
+    "file": "img/miniaturas/76bbda43d6558693b02f4363.webp",
+    "bytes": 26540,
+    "originalBytes": 76073,
     "width": 512,
-    "height": 779
+    "height": 744
   },
   "https://res.cloudinary.com/kupju04k/image/upload/v1791851592/cfrfzgknyfjhl1ohl1u0.jpg": {
     "file": "img/miniaturas/ed24e48574a87af915d61539.webp",
