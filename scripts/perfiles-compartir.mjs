@@ -31,7 +31,7 @@ export function metadata(profile){
  const id=profile.id;
  if(!/^[a-z0-9_-]+$/.test(id))throw Error('ID de perfil no compatible con enlace seguro');
  const name=String(profile.nombre||'Perfil').trim().slice(0,100);
- const description=[profile.categoria,profile.zona].filter(v=>typeof v==='string'&&v.trim()).join(' · ').slice(0,220)||'Perfil independiente en Masajistas Privé.';
+ const description=[Array.isArray(profile.categoriasPublicacion)?['terapeuticas','sensuales','fantasias'].filter(c=>profile.categoriasPublicacion.includes(c)).join(' · '):profile.categoria,profile.zona].filter(v=>typeof v==='string'&&v.trim()).join(' · ').slice(0,220)||'Perfil independiente en Masajistas Privé.';
  let image=profile.fotoPrincipal||profile.foto||(profile.fotosGaleria||[])[0]||'/img/logo.png';
  try{const url=new URL(image,origin+'/');if(!['http:','https:'].includes(url.protocol))throw Error();url.hash='';image=url.href}catch{throw Error(`Portada de ${id} sin URL pública. No se publican cambios incompletos.`)}
  const title=`${name} | Masajistas Privé`;

@@ -34,3 +34,13 @@ localStorage.setItem('priveFavoritos','[]');const clearEvent=new window.Event('s
 click('[data-prive-nav=inicio]');assert(get('priveResultados').hidden);click('[data-prive-nav=explorar]');assert(get('priveResultados').hidden,'Explorar lleva a elegir, no despliega todos los perfiles');
 click('.prive-category-card[data-filter=fantasias]');assert.equal(document.querySelector('[data-sec=fantasias]').style.display,'block');click('.prive-all');assert.equal(document.querySelector('[data-sec=terapeuticas]').style.display,'block');assert.equal(document.querySelector('[data-sec=sensuales]').style.display,'block');
 console.log('PASS: inicio compacto, vitrinas visibles, categorías, búsqueda, favoritos, idiomas, volver a inicio, ver todas y datos únicos en cabecera. Sin red ni escrituras reales.');
+
+
+vm.runInContext("aplicarIdioma('es');documentosPerfiles=[{id:'celeste',data:()=>({nombre:'Celeste',categoria:'fantasias',categoriasPublicacion:['sensuales','fantasias'],zona:'Congreso',fotoPrincipal:'img/celeste1.jpg'})}];renderizarPerfiles();home2Choose('sensuales')",ctx);
+assert.equal(document.querySelectorAll('#grid-sensuales [data-perfil-id=celeste]').length,1);
+assert.equal(document.querySelectorAll('#grid-fantasias [data-perfil-id=celeste]').length,1);
+assert.equal(document.querySelectorAll('#grid-terapeuticas [data-perfil-id=celeste]').length,0);
+click('#grid-sensuales [data-prive-favorite=celeste]');assert.equal(document.querySelectorAll('#grid-favoritos [data-perfil-id=celeste]').length,1);
+vm.runInContext("home2Choose('todas')",ctx);assert(get('priveSearchCount').textContent.startsWith('1 perfil'),'El resultado cuenta anunciantes únicas aunque figuren en dos categorías');
+for(const a of document.querySelectorAll('[data-perfil-id=celeste] a.prive-card-summary'))assert.equal(a.getAttribute('href'),'perfil.html?id=celeste');
+console.log('PASS: un mismo perfil en Sensuales y Fantasías, mismas fotos y enlace, un favorito y un solo resultado único.');
