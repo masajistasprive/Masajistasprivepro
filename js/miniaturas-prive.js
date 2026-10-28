@@ -11,5 +11,6 @@ window.priveMiniaturas=Object.freeze({
   "https://res.cloudinary.com/kupju04k/image/upload/v1791851592/cfrfzgknyfjhl1ohl1u0.jpg": "/img/miniaturas/ed24e48574a87af915d61539.webp",
   "https://res.cloudinary.com/kupju04k/image/upload/v1791939635/znpyu1vm90lhb4q8y1ug.jpg": "/img/miniaturas/bec82dd706ad5272d07cf087.webp",
   "https://res.cloudinary.com/kupju04k/image/upload/v1791942465/t8bdm6r2gnpyhax7uyke.jpg": "/img/miniaturas/142415f79e5c1e829d6dbc10.webp",
-  "https://res.cloudinary.com/kupju04k/image/upload/v1792147590/rda8398tr6mtpwdob8nc.jpg": "/img/miniaturas/5c97ffd831ca666124d32215.webp"
+  "https://res.cloudinary.com/kupju04k/image/upload/v1792147590/rda8398tr6mtpwdob8nc.jpg": "/img/miniaturas/5c97ffd831ca666124d32215.webp",
+  "https://res.cloudinary.com/kupju04k/image/upload/v1793210120/tgomu3mvm7hztag4jiov.jpg": "/img/miniaturas/90ec5de604966689430035ef.webp"
 });

@@ -82,5 +82,12 @@
     "originalBytes": 231235,
     "width": 512,
     "height": 912
+  },
+  "https://res.cloudinary.com/kupju04k/image/upload/v1793210120/tgomu3mvm7hztag4jiov.jpg": {
+    "file": "img/miniaturas/90ec5de604966689430035ef.webp",
+    "bytes": 53668,
+    "originalBytes": 190874,
+    "width": 512,
+    "height": 690
   }
 }
