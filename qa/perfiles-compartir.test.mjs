@@ -72,3 +72,20 @@ test('barrios tienen fichas iniciales correctas, seguras y sincronizables',async
  assert.throws(()=>areaPage('<html></html>',fixtures));
  assert.equal(decode({mapValue:{fields:{zona:{stringValue:'Congreso'}}}}).zona,'Congreso');
 });
+
+
+test('compartir exige la portada actual y refresca la versión sin perder campaña',async()=>{
+ const location=new URL('https://masajistasprive.com/perfil.html?id=delfi-123&utm_source=whatsapp#fotos');
+ let replaced,photo='https://example.com/nueva.jpg';
+ const context={window:{},URL,location,AbortController,setTimeout,clearTimeout,history:{state:null,replaceState:(a,b,url)=>replaced=url},fetch:async(url,options)=>{
+  assert.equal(options.cache,'no-store');return {ok:true,json:async()=>({'delfi-123':{path:'/p/delfi-123.html',version:'1234567890abcdef',image:photo}})};
+ }};
+ vm.runInNewContext(client,context);await context.window.priveEnlacePerfilListo;
+ assert.equal(await context.window.priveResolverEnlacePerfil({fotoPrincipal:photo+'#encuadre'}),'https://masajistasprive.com/p/delfi-123.html?utm_source=whatsapp&v=1234567890abcdef#fotos');
+ assert.equal(replaced,'https://masajistasprive.com/p/delfi-123.html?utm_source=whatsapp&v=1234567890abcdef#fotos');
+ await assert.rejects(context.window.priveResolverEnlacePerfil({fotoPrincipal:'https://example.com/otra.jpg'}));
+ context.fetch=async()=>({ok:true,json:async()=>({})});
+ await assert.rejects(context.window.priveResolverEnlacePerfil({fotoPrincipal:photo}));
+ context.fetch=async()=>{throw Error('offline')};
+ await assert.rejects(context.window.priveResolverEnlacePerfil({fotoPrincipal:photo}));
+});
