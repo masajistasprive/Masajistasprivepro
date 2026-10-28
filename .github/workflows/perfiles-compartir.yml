@@ -2,7 +2,7 @@ name: Portadas para compartir perfiles
 on:
   workflow_dispatch:
   schedule:
-    - cron: '23 * * * *'
+    - cron: '*/5 * * * *'
   push:
     branches: [main]
     paths: ['perfil.html', 'js/perfil-compartir.js', 'scripts/perfiles-compartir.mjs', '.github/workflows/perfiles-compartir.yml', 'qa/perfiles-compartir.test.mjs', 'qa/check-profile-contact.cjs', 'scripts/miniaturas.mjs', 'qa/miniaturas.test.mjs', 'qa/package.json']
@@ -26,7 +26,8 @@ jobs:
       - run: npm install --prefix qa --ignore-scripts --no-audit --no-fund
       - run: node qa/check-profile-contact.cjs
       - run: node --test qa/miniaturas.test.mjs
-      - run: node scripts/perfiles-compartir.mjs --check
+      - if: github.event_name != 'schedule'
+        run: node scripts/perfiles-compartir.mjs --check
   sincronizar:
     if: github.event_name != 'pull_request'
     needs: verificar
@@ -61,3 +62,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh api --method POST "repos/$GITHUB_REPOSITORY/pages/builds"
+

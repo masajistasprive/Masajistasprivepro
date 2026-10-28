@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <base href="/">
-<script src="js/perfil-compartir.js?v=20261021-1"></script>
+<script src="js/perfil-compartir.js?v=20261028-foto-20261021-1"></script>
 <meta name="google" content="notranslate">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title id="perfil-title">Camila | Masajistas Privé</title>
@@ -318,7 +318,7 @@ document.getElementById('pSubmit').addEventListener('click',submitReview);
 }
 function readFavs(){try{const a=JSON.parse(localStorage.getItem('priveFavoritos')||'[]');return Array.isArray(a)?a:[]}catch{return []}}
 function toggleFavorite(){const f=readFavs(),i=f.indexOf(perfilId);if(i>=0)f.splice(i,1);else f.push(perfilId);localStorage.setItem('priveFavoritos',JSON.stringify(f));const b=document.getElementById('btnFavElement');b.classList.toggle('activo',i<0);b.textContent='⭐ '+(i<0?t().saved:t().favorite)}
-async function shareProfile(){if(navigator.share){try{await navigator.share({title:`${modelo.nombre} | Masajistas Privé`,url:location.href});registrarMetrica('perfil_compartido',{metodo:'compartir_nativo'})}catch{}}else{try{await navigator.clipboard.writeText(location.href);registrarMetrica('perfil_compartido',{metodo:'copiar_enlace'});alert(t().copied)}catch{prompt('Copiá este enlace:',location.href)}}}
+async function shareProfile(){let shareURL;try{shareURL=await window.priveResolverEnlacePerfil(modelo)}catch{alert('Estamos preparando el enlace con la foto actualizada. Volvé a intentar en unos minutos.');return}if(navigator.share){try{await navigator.share({title:`${modelo.nombre} | Masajistas Privé`,url:shareURL});registrarMetrica('perfil_compartido',{metodo:'compartir_nativo'})}catch{}}else{try{await navigator.clipboard.writeText(shareURL);registrarMetrica('perfil_compartido',{metodo:'copiar_enlace'});alert(t().copied)}catch{prompt('Copiá este enlace:',shareURL)}}}
 document.addEventListener('contextmenu',e=>{if(e.target.closest('.perfil-galeria-grid, .prive-lightbox-photo'))e.preventDefault()});
 document.addEventListener('dragstart',e=>{if(e.target.closest('.perfil-galeria-grid, .prive-lightbox-photo'))e.preventDefault()});
 function openLightbox(i){if(!lightboxUrls.length)return;lightboxIndex=(i+lightboxUrls.length)%lightboxUrls.length;document.getElementById('priveLightboxImg').src=lightboxUrls[lightboxIndex];document.getElementById('privePhotoCount').textContent=`${lightboxIndex+1} / ${lightboxUrls.length}`;document.getElementById('priveLightbox').style.display='flex';registrarMetrica('foto_abierta',{foto_numero:lightboxIndex+1})}

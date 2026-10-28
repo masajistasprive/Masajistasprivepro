@@ -102,7 +102,7 @@ async function main(){
  if(!entries.length)throw Error('No hay perfiles activos; se conservan las páginas existentes.');
  // Validar todo antes de escribir. Nunca borrar páginas ni imágenes originales.
  const pages=entries.map(meta=>({meta,html:page(template,meta)}));
- const manifest=Object.fromEntries(entries.map(m=>[m.id,{path:m.path,version:m.version}]));
+ const manifest=Object.fromEntries(entries.map(m=>[m.id,{path:m.path,version:m.version,image:m.image}]));
  const nextSitemap=sitemap(await readFile(path.join(root,'sitemap.xml'),'utf8'),entries);
  const nextDirectory=directory(entries);
  const nextAreas=await Promise.all(areaFiles.map(async file=>({file,html:areaPage(await readFile(path.join(root,file),'utf8'),profiles)})));
@@ -119,3 +119,4 @@ async function main(){
  console.log(`${entries.length} perfiles con portada y metadatos verificados.`);
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(error=>{console.error(error.message);process.exitCode=1});
+
