@@ -42,6 +42,10 @@ const server=http.createServer((req,res)=>{if(req.url==='/img/miniaturas/'+ '1'.
   assert.equal(await page.locator('#priveBuscar').inputValue(),'QA 0');await page.locator('#priveBuscar').fill('');
   await page.locator('[data-prive-nav="favoritos"]').click();assert(await page.locator('#grid-favoritos [data-prive-voto="qa0"]').isVisible());
   const profile=await context.newPage();profile.on('pageerror',e=>errors.push(e.message));await profile.goto(url+'/perfil.html?id=qa0');
+  const initialAnalytics=await profile.evaluate(()=>window.dataLayer.map(a=>Array.from(a)));
+  assert.equal(initialAnalytics.filter(a=>a[0]==='config'&&a[1]==='G-DXX740HP41').length,1,'Una sola entrada GA por documento');
+  assert.equal(initialAnalytics.find(a=>a[0]==='config')[2].perfil_id,'qa0','ID disponible antes de cargar el perfil');
+  assert.equal(initialAnalytics.find(a=>a[0]==='config')[2].send_page_view,true,'La vista inicial no espera a Firebase');
   await profile.locator('#fotoPrincipal').waitFor();assert.equal(new URL(await profile.locator('#fotoPrincipal').getAttribute('src'),url).href,url+'/img/logo.png','La galería conserva el original');const ph=profile.locator('[data-prive-voto="qa0"]');await ph.scrollIntoViewIfNeeded();
   await profile.waitForFunction(()=>document.querySelector('[data-prive-voto]').getAttribute('aria-pressed')==='true');
   await ph.click();await profile.waitForFunction(()=>document.querySelector('[data-prive-voto]').getAttribute('aria-pressed')==='false');
@@ -49,6 +53,7 @@ const server=http.createServer((req,res)=>{if(req.url==='/img/miniaturas/'+ '1'.
   await profile.bringToFront();await profile.reload();await profile.locator('#fotoPrincipal').waitFor();
   await profile.locator('#fotoPrincipal').click();assert(await profile.locator('#priveLightbox').isVisible());await profile.locator('#priveLbNext').click();assert.equal(await profile.locator('#privePhotoCount').textContent(),'2 / 2');await profile.locator('#priveLbClose').click();assert(!await profile.locator('#priveLightbox').isVisible());
   for(const lang of ['en','pt','fr','es']){await profile.locator('#btn-idioma').click();assert.equal(await profile.locator('html').getAttribute('lang'),lang);assert(await profile.locator('#fotoPrincipal').isVisible() || await profile.locator('#fotoPrincipal').count()===1)}
+  assert.equal(await profile.evaluate(()=>window.dataLayer.filter(a=>a[0]==='event'&&a[1]==='page_view').length),0,'Galería e idiomas no duplican page_view');
   const contact=await profile.locator('[data-metrica-whatsapp="principal"]').getAttribute('href');assert(contact.startsWith('https://wa.me/5491100000000?text='));
   const reviews=await context.newPage();await reviews.goto(url+'/perfil.html?id=qa0&qa_reviews=1');await reviews.locator('#fotoPrincipal').waitFor();
   assert.equal(await reviews.evaluate(()=>window.qa.reviewsStarted()),0,'No consultar experiencias fuera de vista');
@@ -69,3 +74,4 @@ const server=http.createServer((req,res)=>{if(req.url==='/img/miniaturas/'+ '1'.
   await context.close();
  }}finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exitCode=1}).finally(()=>server.close());
+

@@ -7,6 +7,11 @@ on:
       - 'js/votos-visibles.js'
       - 'js/prive-home-2.js'
       - 'js/encuadres-portal.js'
+      - 'js/analytics-prive.js'
+      - 'js/recorrido-prive.js'
+      - 'js/perfil-compartir.js'
+      - 'landing.html'
+      - 'p/**'
       - 'qa/check-categories.cjs'
       - 'tests/**'
       - '.github/workflows/validar-optimizacion.yml'
@@ -25,7 +30,9 @@ jobs:
         with:
           node-version: '22'
       - name: Ejecutar pruebas
-        run: node tests/optimizacion.test.cjs
+        run: |
+          node tests/optimizacion.test.cjs
+          node tests/analytics.test.cjs
       - name: Probar sincronización de votos
         run: |
           node tests/votos.test.cjs
@@ -41,3 +48,4 @@ jobs:
         run: node tests/navegacion.cjs
       - name: Probar categorías e idiomas existentes
         run: node qa/check-categories.cjs
+

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <base href="/">
-<script src="js/perfil-compartir.js?v=20261028-foto-20261021-1"></script>
+<script src="js/perfil-compartir.js?v=20261029-medicion1"></script>
 <meta name="google" content="notranslate">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title id="perfil-title">Morena | Masajistas Privé</title>
@@ -16,9 +16,9 @@
 <!-- PRIVÉ PREMIUM 2.0: versión de prueba, requiere ?id=... -->
 <script src="js/metricas-prive.js?v=20261016-1"></script>
 <!-- GA4: mismo identificador que el index público -->
+<script src="/js/analytics-prive.js?v=20261029-medicion1"></script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DXX740HP41"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-DXX740HP41',{send_page_view:false});</script>
-<script src="js/recorrido-prive.js?v=20261020-entrada1"></script>
+<script src="js/recorrido-prive.js?v=20261029-medicion1"></script>
 <style>
 :root{--gold:#dfc285;--dark:#0d0d0d}
 #priveTransitionScreen{position:fixed;inset:0;background:var(--dark);z-index:999999;display:flex;align-items:center;justify-content:center;transition:opacity .6s}
@@ -245,7 +245,7 @@ async function priveAlternarVoto(id){
 function registrarMetricaPrivada(tipo){return window.priveMetricas?.registrar({db,perfilId,tipo,origen:'perfil'})}
 function registrarPaginaGA(){
  if(!modelo||typeof window.gtag!=='function')return;
- window.gtag('event','page_view',{page_title:`${modelo.nombre||'Perfil'} | Masajistas Privé`,page_location:location.href,perfil_id:perfilId});
+ window.priveAnalytics?.perfilListo(perfilId,modelo.categoriaNormalizada||modelo.categoria,modelo.nombre);
 }
 let visitaRegistrada=false;
 function registrarMetrica(nombre,datos={}){
@@ -253,7 +253,7 @@ function registrarMetrica(nombre,datos={}){
  try{window.gtag('event',nombre,{perfil_id:perfilId,perfil_categoria:String(modelo?.categoriaNormalizada||modelo?.categoria||'sin_categoria').slice(0,80),...datos})}
  catch(error){console.warn('Error de Analytics:',error)}
 }
-function registrarVisitaPerfil(){if(visitaRegistrada||!modelo)return;visitaRegistrada=true;window.priveRecorrido?.perfilListo(perfilId);registrarPaginaGA();registrarMetrica('perfil_visto');void registrarMetricaPrivada('visita')}
+function registrarVisitaPerfil(){if(visitaRegistrada||!modelo)return;visitaRegistrada=true;registrarPaginaGA();window.priveRecorrido?.perfilListo(perfilId);registrarMetrica('perfil_visto');void registrarMetricaPrivada('visita')}
 document.addEventListener('click',evento=>{
  const enlace=evento.target.closest('[data-metrica-whatsapp]');
  if(enlace){registrarMetrica('whatsapp_click',{ubicacion_boton:enlace.dataset.metricaWhatsapp||'desconocido'});void registrarMetricaPrivada('whatsapp');}
@@ -384,6 +384,7 @@ setLanguage(idiomaPerfil);loadProfile();
 </script>
 </body>
 </html>
+
 
 
 

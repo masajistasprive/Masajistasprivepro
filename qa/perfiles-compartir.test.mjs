@@ -34,8 +34,9 @@ test('enlace nuevo mantiene campaña y hash; sin catálogo conserva original',as
  const location=new URL('https://masajistasprive.com/perfil.html?id=prada-123&utm_source=facebook#galeria');
  let replaced;
  const context={window:{},URL,location,AbortController,setTimeout,clearTimeout,history:{state:null,replaceState:(a,b,url)=>replaced=url},fetch:async()=>({ok:true,json:async()=>({'prada-123':{path:'/p/prada-123.html',version:'1234567890abcdef'}})})};
- vm.runInNewContext(client,context);await context.window.priveEnlacePerfilListo;
- assert.equal(replaced,'https://masajistasprive.com/p/prada-123.html?utm_source=facebook&v=1234567890abcdef#galeria');
+ vm.runInNewContext(client,context);
+ assert.equal(await context.window.priveEnlacePerfilListo,'https://masajistasprive.com/p/prada-123.html?utm_source=facebook&v=1234567890abcdef#galeria');
+ assert.equal(replaced,undefined,'No simular navegación al resolver la URL');
  replaced=undefined;context.fetch=async()=>{throw Error('offline')};vm.runInNewContext(client,context);await context.window.priveEnlacePerfilListo;assert.equal(replaced,undefined);
 });
 
@@ -82,10 +83,11 @@ test('compartir exige la portada actual y refresca la versión sin perder campa�
  }};
  vm.runInNewContext(client,context);await context.window.priveEnlacePerfilListo;
  assert.equal(await context.window.priveResolverEnlacePerfil({fotoPrincipal:photo+'#encuadre'}),'https://masajistasprive.com/p/delfi-123.html?utm_source=whatsapp&v=1234567890abcdef#fotos');
- assert.equal(replaced,'https://masajistasprive.com/p/delfi-123.html?utm_source=whatsapp&v=1234567890abcdef#fotos');
+ assert.equal(replaced,undefined,'Compartir no genera otra vista virtual de la misma ficha');
  await assert.rejects(context.window.priveResolverEnlacePerfil({fotoPrincipal:'https://example.com/otra.jpg'}));
  context.fetch=async()=>({ok:true,json:async()=>({})});
  await assert.rejects(context.window.priveResolverEnlacePerfil({fotoPrincipal:photo}));
  context.fetch=async()=>{throw Error('offline')};
  await assert.rejects(context.window.priveResolverEnlacePerfil({fotoPrincipal:photo}));
 });
+
