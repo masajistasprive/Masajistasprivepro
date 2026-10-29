@@ -34,7 +34,7 @@
  function prepararEnlace(a){
   try{
    const destino=new URL(a.getAttribute('href'),location.href);if(destino.origin!==location.origin)return;
-   const permitidos=new Set(['utm_source','utm_medium','utm_campaign','utm_id','utm_content','utm_term','utm_source_platform','fbclid','gclid']);
+   const permitidos=new Set(['utm_source','utm_medium','utm_campaign','utm_id','utm_content','utm_term','utm_source_platform','fbclid','gclid','gbraid','wbraid']);
    for(const [key,value]of new URL(location.href).searchParams){
     const k=key.trim().toLowerCase();if(!permitidos.has(k)||!value||value.length>2048)continue;
     destino.searchParams.set(k,['utm_source','utm_medium','utm_source_platform'].includes(k)?value.trim().toLowerCase():value.trim());
@@ -80,3 +80,4 @@
  window.priveRecorrido={perfilListo(id){perfilActual=String(id||'').slice(0,120);if(perfilActual)paso('perfil_listo',{perfil_id:perfilActual});}};
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',iniciar,{once:true});else iniciar();
 })();
+
