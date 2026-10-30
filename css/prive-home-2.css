@@ -200,3 +200,12 @@ body.prive-home-v2{margin:0;min-width:320px;padding-bottom:calc(86px + env(safe-
 .prive-home-v2 .modal-edad-content p{font-size:13px;line-height:1.65;color:#d0c7b8;margin:0 0 20px}
 .prive-home-v2 .modal-edad-botones :is(button,a){min-height:46px;display:flex;align-items:center;justify-content:center}
 .prive-home-v2 .modal-edad-botones :is(button,a):focus-visible{outline:2px solid #f3e5ab;outline-offset:4px}
+
+/* Prueba de portada abierta: accesos a bloques ya visibles, sin pantalla de ingreso. */
+.prive-home-v2 .prive-category-cards{display:flex!important;justify-content:center;flex-wrap:wrap;gap:8px!important;margin:0 0 14px!important;padding:2px 0!important}
+.prive-home-v2 .prive-category-cards .prive-category-card{display:inline-flex!important;align-items:center;justify-content:center;gap:10px!important;width:auto!important;min-width:0!important;min-height:44px!important;height:auto!important;aspect-ratio:auto!important;padding:11px 13px!important;border:1px solid #dfc28544!important;border-radius:9px!important;background:#171612!important;color:#e5d1a4!important;overflow:visible!important;font:500 12px/1.4 Montserrat,sans-serif!important;box-shadow:none!important}
+.prive-home-v2 .prive-category-cards .prive-category-card::before,.prive-home-v2 .prive-category-cards .prive-category-card::after{display:none!important}
+.prive-home-v2 .prive-category-cards .prive-category-card span{position:static!important;padding:0!important;transform:none!important;font:inherit!important;letter-spacing:0!important;text-shadow:none!important;color:inherit!important}
+.prive-home-v2 .prive-category-card .prive-category-jump{font-size:15px!important;color:#c0a776!important}
+.prive-home-v2 .categoria-seccion-wrapper{scroll-margin-top:16px}
+.prive-home-v2 .prive-catalogue-actions:has(#priveCloseCatalogue[hidden]){display:none}
