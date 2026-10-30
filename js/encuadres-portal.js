@@ -1,4 +1,4 @@
-import {leerEncuadres,aplicarEncuadre} from './encuadres-foto.js?v=20261016-1';
+import {leerEncuadres,aplicarEncuadre} from './encuadres-foto.js?v=20261030-encuadres3';
 // Solo portada y destacadas: nunca cambia las fotos de la galería ni el original.
 const selector='.card-image img, #stories-destacadas-container .story-ring img, #stories-nuevas-container .story-ring img';
 const activos=new Map();
@@ -18,8 +18,8 @@ function sincronizar(){
     if(activos.has(img))continue;
     const valor=leerEncuadres(img.getAttribute('src'));
     if(!valor)continue;
-    // Las nuevas cuadradas necesitan mostrar la parte superior, sin el zoom del antiguo círculo.
-    const item={src:img.getAttribute('src'),padre:img.parentElement,estilo:img.style.cssText,valor:img.closest('#stories-nuevas-container')?{x:50,y:0,zoom:100}:img.closest('.story-ring')?valor.destacada:valor.portada};
+    // Cada vitrina usa su encuadre; las fotos antiguas conservan el automático superior en nuevas.
+    const item={src:img.getAttribute('src'),padre:img.parentElement,estilo:img.style.cssText,valor:img.closest('#stories-nuevas-container')?valor.nueva:img.closest('.story-ring')?valor.destacada:valor.portada};
     item.cargar=()=>aplicarEncuadre(img,item.valor);
     activos.set(img,item);img.addEventListener('load',item.cargar);resize?.observe(item.padre);item.cargar();
   }

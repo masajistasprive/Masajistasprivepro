@@ -43,6 +43,7 @@ jobs:
           node tests/recorridos.test.cjs
           node tests/comentarios.test.cjs
           node tests/encuadres-dom.test.cjs
+          node tests/encuadres.test.cjs
       - name: Instalar navegador de pruebas
         run: |
           npm install --prefix qa --no-save --ignore-scripts --no-audit --no-fund playwright@1.58.2
