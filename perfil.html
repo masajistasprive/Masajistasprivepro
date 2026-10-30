@@ -125,6 +125,8 @@ html,body{max-width:100%;overflow-x:clip}
 #priveLightbox{position:fixed;display:none;align-items:center;justify-content:center;padding:58px 12px 48px;gap:0}
 #priveLightbox .prive-lightbox-photo{position:relative;display:flex;align-items:center;justify-content:center;max-width:calc(100vw - 24px);max-height:calc(100dvh - 115px)}
 #priveLightboxImg{max-width:calc(100vw - 24px)!important;max-height:calc(100dvh - 115px)!important;border-radius:10px}
+[data-photo][role=button]:focus-visible{outline:3px solid #fff;outline-offset:-4px}
+#priveLightbox button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 #priveLbPrev,#priveLbNext{position:absolute;top:50%;transform:translateY(-50%);z-index:4;width:38px;height:38px;min-width:38px!important;min-height:38px!important;padding:0!important;border:1px solid #dfc28599!important;border-radius:50%!important;background:rgba(8,8,8,.62)!important;display:grid;place-items:center;color:#dfc285!important;font:300 25px/1 Arial,sans-serif!important;backdrop-filter:blur(5px)}
 #priveLbPrev{left:clamp(14px,7vw,80px)}#priveLbNext{right:clamp(14px,7vw,80px)}
 #priveLbClose{width:39px;height:39px;display:grid;place-items:center;font-size:23px!important;top:18px!important;right:18px!important;padding:0!important}
@@ -290,7 +292,7 @@ const favs=readFavs(),isFav=favs.includes(perfilId);
 document.getElementById('contenedorWppFlotante').innerHTML=active&&whatsapp?`<a href="${esc(whatsapp)}" target="_blank" rel="noopener noreferrer" class="btn-whatsapp-flotante" data-metrica-whatsapp="flotante">${whatsappSvg}<span>${esc(L.whatsapp)}</span></a>`:'';
 document.getElementById('perfil-content-box').innerHTML=`
 <div class="perfil-galeria-grid"><img src="${esc(main)}" alt="${esc(m.nombre)}" class="foto-principal" id="fotoPrincipal" data-photo="0" fetchpriority="high" decoding="async"><div class="galeria-miniaturas">${lightboxUrls.map((p,i)=>`<img src="${esc(p)}" alt="${esc(m.nombre)} ${i+1}" data-photo="${i}" loading="lazy" decoding="async" fetchpriority="low">`).join('')}</div></div>
-<div class="perfil-info"><div class="perfil-titulo-seccion"><h2>${esc(m.nombre)}</h2><span class="badge-verificado">${esc(L.verified)}</span></div>
+<div class="perfil-info"><div class="perfil-titulo-seccion"><h2>${esc(m.nombre)}</h2>${m.verificado===true||m.perfilVerificado===true?`<span class="badge-verificado">${esc(L.verified)}</span>`:''}</div>
 <p class="perfil-ubicacion">📍 ${esc(L.area)} <strong>${esc(pick('valorZona',m.zona))}</strong></p><p class="perfil-modalidad">🏠 ${esc(L.mode)} <strong>${esc(pick('valorModalidad',m.modalidad))}</strong></p>
 ${active&&whatsapp?`<a href="${esc(whatsapp)}" target="_blank" rel="noopener noreferrer" class="btn-accion-prive btn-accion-wpp prive-whatsapp-principal" data-metrica-whatsapp="principal">${whatsappSvg}<span>${esc(L.sendWhatsApp)}</span></a>`:''}
 <div class="perfil-descripcion"><h3>${esc(L.description)}</h3><div id="priveDescription" class="prive-description-text">${formatProfileText(description)}</div>${description.length>330?`<button type="button" id="priveReadMore" class="prive-read-more" aria-expanded="false">${esc(({es:"Leer más",en:"Read more",pt:"Ler mais",fr:"Lire plus"})[idiomaPerfil])}</button>`:""}${pick('valorTecnicas')?`<section class="prive-techniques"><strong class="prive-techniques-title">${esc(L.techniques)}</strong><div class="prive-techniques-text">${formatProfileText(pick('valorTecnicas'))}</div></section>`:''}</div>
@@ -298,7 +300,13 @@ ${details?`<div class="perfil-detalles">${details}</div>`:''}
 <div class="perfil-acciones-inferior"><button type="button" class="prive-voto-btn" data-prive-voto="${esc(perfilId)}" aria-pressed="false">❤️ Me gusta <span data-prive-cuenta></span></button><div class="btn-accion-secundarios"><button type="button" id="btnFavElement" class="btn-accion-prive btn-accion-fav ${isFav?'activo':''}">⭐ ${esc(isFav?L.saved:L.favorite)}</button><button type="button" id="btnShare" class="btn-accion-prive btn-accion-compartir">↗ ${esc(L.share)}</button></div></div></div>
 <section class="prive-review-panel" data-prive-reviews="${esc(perfilId)}"><p class="prive-review-kicker">MASAJISTAS PRIVÉ</p><h3>${esc(({es:"Experiencias Privé",en:"Privé Experiences",pt:"Experiências Privé",fr:"Expériences Privé"})[idiomaPerfil])}</h3><p class="prive-review-subtitle">${esc(({es:"Tu opinión hace la diferencia",en:"Your opinion matters",pt:"Sua opinião faz a diferença",fr:"Votre avis compte"})[idiomaPerfil])}</p><div class="review-form"><div class="prive-rating-block"><span>${esc(({es:"¿Cómo fue tu experiencia?",en:"How was your experience?",pt:"Como foi sua experiência?",fr:"Comment était votre expérience ?"})[idiomaPerfil])}</span><div class="star-rating">${[5,4,3,2,1].map(n=>`<input type="radio" id="star${n}" name="rating" value="${n}"><label for="star${n}" title="${n} estrellas">★</label>`).join('')}</div></div><input type="text" id="pAuthor" maxlength="70" placeholder="${esc(L.author)}"><textarea id="pText" rows="3" maxlength="2000" placeholder="${esc(L.review)}"></textarea><div class="prive-review-tools">${['😊','👍','🔥','❤️','⭐'].map(e=>`<button type="button" class="emoji-btn" data-emoji="${e}" style="background:none;border:0;font-size:20px;cursor:pointer">${e}</button>`).join('')}<label class="prive-photo-label">📎 ${esc(L.photo)} <input type="file" id="pImageFile" accept="image/jpeg,image/png,image/webp" style="display:none"></label></div><small id="pFileName" style="color:#dfc285"></small><button type="button" class="review-submit" id="pSubmit">${esc(L.publish)}</button><p id="pFormStatus" role="status" style="color:#dfc285;font-size:12px;margin:0"></p></div><h4 class="prive-reviews-heading">${esc(({es:"Opiniones de visitantes",en:"Visitor reviews",pt:"Opiniões dos visitantes",fr:"Avis des visiteurs"})[idiomaPerfil])}</h4><div id="pCommentsContainer" aria-live="polite"><p class="review-status">${esc(L.loading)}</p></div></section>`;
 document.getElementById('perfil-title').textContent=`${m.nombre||'Perfil'} | Masajistas Privé`;
-document.querySelectorAll('[data-photo]').forEach(el=>{el.setAttribute('draggable','false');el.addEventListener('click',()=>openLightbox(Number(el.dataset.photo)));});
+const photoLabel=({es:'Abrir foto',en:'Open photo',pt:'Abrir foto',fr:'Ouvrir la photo'})[idiomaPerfil]||'Abrir foto';
+document.querySelectorAll('[data-photo]').forEach(el=>{
+ el.setAttribute('draggable','false');el.setAttribute('role','button');el.setAttribute('tabindex','0');el.setAttribute('aria-haspopup','dialog');el.setAttribute('aria-controls','priveLightbox');
+ el.setAttribute('aria-label',`${photoLabel} ${Number(el.dataset.photo)+1} / ${lightboxUrls.length} · ${m.nombre||''}`);
+ el.addEventListener('click',()=>openLightbox(Number(el.dataset.photo),el));
+ el.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();if(!event.repeat)openLightbox(Number(el.dataset.photo),el);}});
+});
 document.getElementById('btnFavElement').addEventListener('click',toggleFavorite);
 document.querySelector('[data-prive-voto]').addEventListener('click',()=>priveAlternarVoto(perfilId));
 privePintarVotos(perfilId);
@@ -314,10 +322,47 @@ function toggleFavorite(){const f=readFavs(),i=f.indexOf(perfilId);if(i>=0)f.spl
 async function shareProfile(){let shareURL;try{shareURL=await window.priveResolverEnlacePerfil(modelo)}catch{alert('Estamos preparando el enlace con la foto actualizada. Volvé a intentar en unos minutos.');return}if(navigator.share){try{await navigator.share({title:`${modelo.nombre} | Masajistas Privé`,url:shareURL});registrarMetrica('perfil_compartido',{metodo:'compartir_nativo'})}catch{}}else{try{await navigator.clipboard.writeText(shareURL);registrarMetrica('perfil_compartido',{metodo:'copiar_enlace'});alert(t().copied)}catch{prompt('Copiá este enlace:',shareURL)}}}
 document.addEventListener('contextmenu',e=>{if(e.target.closest('.perfil-galeria-grid, .prive-lightbox-photo'))e.preventDefault()});
 document.addEventListener('dragstart',e=>{if(e.target.closest('.perfil-galeria-grid, .prive-lightbox-photo'))e.preventDefault()});
-function openLightbox(i){if(!lightboxUrls.length)return;lightboxIndex=(i+lightboxUrls.length)%lightboxUrls.length;document.getElementById('priveLightboxImg').src=lightboxUrls[lightboxIndex];document.getElementById('privePhotoCount').textContent=`${lightboxIndex+1} / ${lightboxUrls.length}`;document.getElementById('priveLightbox').style.display='flex';registrarMetrica('foto_abierta',{foto_numero:lightboxIndex+1})}
-function moveLightbox(d){openLightbox(lightboxIndex+d)}
-function closeLightbox(){document.getElementById('priveLightbox').style.display='none'}
-document.getElementById('priveLbPrev').addEventListener('click',()=>moveLightbox(-1));document.getElementById('priveLbNext').addEventListener('click',()=>moveLightbox(1));document.getElementById('priveLbClose').addEventListener('click',closeLightbox);document.getElementById('priveLightbox').addEventListener('click',e=>{if(e.target.id==='priveLightbox')closeLightbox()});document.addEventListener('keydown',e=>{if(document.getElementById('priveLightbox').style.display!=='flex')return;if(e.key==='Escape')closeLightbox();if(e.key==='ArrowRight')moveLightbox(1);if(e.key==='ArrowLeft')moveLightbox(-1)});
+let lightboxTrigger=null,lightboxPreviousOverflow='',lightboxBackground=[];
+function openLightbox(i,trigger=null){
+ if(!lightboxUrls.length)return;
+ const dialog=document.getElementById('priveLightbox'),opening=dialog.style.display!=='flex';
+ if(opening){
+  lightboxTrigger=trigger||document.activeElement;lightboxPreviousOverflow=document.body.style.overflow;
+  lightboxBackground=[...document.body.children].filter(el=>el!==dialog&&!el.contains(dialog)&&!['SCRIPT','STYLE'].includes(el.tagName)).map(el=>({el,inert:el.inert,hidden:el.getAttribute('aria-hidden')}));
+  for(const item of lightboxBackground){item.el.inert=true;item.el.setAttribute('aria-hidden','true');}
+  document.body.style.overflow='hidden';
+ }
+ lightboxIndex=((i%lightboxUrls.length)+lightboxUrls.length)%lightboxUrls.length;
+ const labels=({es:['Galería de fotos','Foto anterior','Foto siguiente','Cerrar','Foto'],en:['Photo gallery','Previous photo','Next photo','Close','Photo'],pt:['Galeria de fotos','Foto anterior','Próxima foto','Fechar','Foto'],fr:['Galerie de photos','Photo précédente','Photo suivante','Fermer','Photo']})[idiomaPerfil]||['Galería de fotos','Foto anterior','Foto siguiente','Cerrar','Foto'];
+ dialog.setAttribute('aria-label',labels[0]);
+ for(const [id,label]of [['priveLbPrev',labels[1]],['priveLbNext',labels[2]],['priveLbClose',labels[3]]])document.getElementById(id).setAttribute('aria-label',label);
+ const image=document.getElementById('priveLightboxImg');image.src=lightboxUrls[lightboxIndex];image.alt=`${labels[4]} ${lightboxIndex+1} / ${lightboxUrls.length}`;
+ document.getElementById('privePhotoCount').textContent=`${lightboxIndex+1} / ${lightboxUrls.length}`;
+ document.getElementById('priveLbPrev').disabled=lightboxUrls.length<2;document.getElementById('priveLbNext').disabled=lightboxUrls.length<2;
+ dialog.style.display='flex';if(opening)document.getElementById('priveLbClose').focus({preventScroll:true});
+ registrarMetrica('foto_abierta',{foto_numero:lightboxIndex+1});
+}
+function moveLightbox(d){if(lightboxUrls.length>1)openLightbox(lightboxIndex+d)}
+function closeLightbox(){
+ const dialog=document.getElementById('priveLightbox');if(dialog.style.display!=='flex')return;
+ dialog.style.display='none';document.body.style.overflow=lightboxPreviousOverflow;
+ for(const item of lightboxBackground){item.el.inert=item.inert;if(item.hidden===null)item.el.removeAttribute('aria-hidden');else item.el.setAttribute('aria-hidden',item.hidden);}
+ lightboxBackground=[];
+ const target=lightboxTrigger?.isConnected?lightboxTrigger:document.getElementById('fotoPrincipal');lightboxTrigger=null;target?.focus({preventScroll:true});
+}
+document.getElementById('priveLbPrev').addEventListener('click',()=>moveLightbox(-1));document.getElementById('priveLbNext').addEventListener('click',()=>moveLightbox(1));document.getElementById('priveLbClose').addEventListener('click',closeLightbox);document.getElementById('priveLightbox').addEventListener('click',e=>{if(e.target.id==='priveLightbox')closeLightbox()});
+document.addEventListener('keydown',e=>{
+ const dialog=document.getElementById('priveLightbox');if(dialog.style.display!=='flex')return;
+ if(e.key==='Escape'){e.preventDefault();closeLightbox();return;}
+ if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();moveLightbox(e.key==='ArrowRight'?1:-1);return;}
+ if(e.key==='Tab'){
+  const controls=[...dialog.querySelectorAll('button:not([disabled])')],first=controls[0],last=controls[controls.length-1];
+  if(!first)return;
+  if(!dialog.contains(document.activeElement)){e.preventDefault();(e.shiftKey?last:first).focus();}
+  else if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+  else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+ }
+});
 let touchX=0;document.getElementById('priveLightbox').addEventListener('touchstart',e=>{touchX=e.changedTouches[0].screenX},{passive:true});document.getElementById('priveLightbox').addEventListener('touchend',e=>{const dx=e.changedTouches[0].screenX-touchX;if(Math.abs(dx)>40)moveLightbox(dx<0?1:-1)},{passive:true});
 function listenReviews(){
  window.priveVotosVisibles.registrar('reviews:'+perfilId,'data-prive-reviews',perfilId,()=>{

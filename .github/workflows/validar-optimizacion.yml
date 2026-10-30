@@ -4,6 +4,7 @@ on:
     paths:
       - 'index.html'
       - 'perfil.html'
+      - 'css/prive-home-2.css'
       - 'js/votos-visibles.js'
       - 'js/prive-home-2.js'
       - 'js/encuadres-portal.js'
@@ -13,6 +14,8 @@ on:
       - 'landing.html'
       - 'p/**'
       - 'qa/check-categories.cjs'
+      - 'qa/check-profile-contact.cjs'
+      - 'qa/check-profile-accessibility.cjs'
       - 'tests/**'
       - '.github/workflows/validar-optimizacion.yml'
   workflow_dispatch:
@@ -47,5 +50,8 @@ jobs:
       - name: Probar navegación en escritorio y móvil sin datos reales
         run: node tests/navegacion.cjs
       - name: Probar categorías e idiomas existentes
-        run: node qa/check-categories.cjs
+        run: |
+          node qa/check-categories.cjs
+          node qa/check-profile-contact.cjs
+          node qa/check-profile-accessibility.cjs
 
