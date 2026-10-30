@@ -137,7 +137,10 @@ inicializarInteracciones=function(){
   const pill=event.target.closest('.pill-btn[data-filter]');
   if(pill){
    const jump=pill.classList.contains('prive-category-card'),requested=pill.dataset.filter,filter=jump?'todas':requested;home2Choose(filter);
+   const focusAtClick=document.activeElement;
    requestAnimationFrame(()=>{
+    // No robar el foco si la persona ya pasó a otro control con el teclado.
+    if(document.activeElement!==focusAtClick)return;
     if(!home2CatalogueOpen||home2Filter!==filter)return;
     const feedback=!home2Loaded||home2Failed||!home2('priveEmpty').hidden;
     const section=jump?home2('grid-'+requested)?.closest('.categoria-seccion-wrapper'):null;
