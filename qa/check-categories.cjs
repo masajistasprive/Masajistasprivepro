@@ -11,16 +11,16 @@ const ctx=vm.createContext({window,document,console,Intl,Date,Map,Set,URL,URLSea
 let main=[...document.querySelectorAll('script:not([src])')].map(x=>x.textContent).find(x=>x.includes('const firebaseConfig='));
 main=main.replace("if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',iniciarPagina,{once:true});else iniciarPagina();",'');
 vm.runInContext(main,ctx);vm.runInContext(fs.readFileSync(path.join(root,'js/prive-home-2.js'),'utf8'),ctx);
-vm.runInContext(`documentosPerfiles=[{id:'prada',data:()=>({nombre:'Prada',categoria:'terapeuticas',zona:'Tribunales',modalidad:'Gabinete propio',destacada:true,nuevaAnunciante:false,fotoPrincipal:'img/prada1.jpg'})},{id:'mora-sensual',data:()=>({nombre:'Mora',categoria:'sensuales',zona:'Tribunales',destacada:false,nuevaAnunciante:true,fotoPrincipal:'img/mora.jpg'})},{id:'celeste',data:()=>({nombre:'Celeste',categoria:'fantasias',zona:'Congreso'})}];home2Loaded=true;iniciarBusquedaPrive();inicializarInteracciones();renderizarPerfiles();`,ctx);
+vm.runInContext(`documentosPerfiles=[{id:'prada',data:()=>({nombre:'Prada',whatsapp:'5491100000000',categoria:'terapeuticas',zona:'Tribunales',modalidad:'Gabinete propio',destacada:true,nuevaAnunciante:false,fotoPrincipal:'img/prada1.jpg'})},{id:'mora-sensual',data:()=>({nombre:'Mora',categoria:'sensuales',zona:'Tribunales',destacada:false,nuevaAnunciante:true,fotoPrincipal:'img/mora.jpg'})},{id:'celeste',data:()=>({nombre:'Celeste',categoria:'fantasias',zona:'Congreso'})}];home2Loaded=true;iniciarBusquedaPrive();inicializarInteracciones();renderizarPerfiles();`,ctx);
 const get=id=>document.getElementById(id),click=s=>{const e=document.querySelector(s);assert(e,s);e.click()};
-assert(get('priveResultados').hidden,'El catálogo inicia cerrado aun con estado antiguo');assert(get('priveCatalogueTools').hidden);
+assert(!get('priveResultados').hidden,'Las tres categorías inician abiertas aun con estado antiguo');assert(!get('priveCatalogueTools').hidden);for(const cat of ['terapeuticas','sensuales','fantasias'])assert.equal(document.querySelector('[data-sec='+cat+']').style.display,'block');
 assert.equal(get('stories-destacadas-container').querySelectorAll('.story-item').length,1);assert.equal(get('stories-nuevas-container').querySelectorAll('.story-item').length,1);
 assert(get('clima-info').closest('header'));assert(get('dolar-info').closest('header'));assert.equal(document.querySelectorAll('#clima-info').length,1);assert.equal(document.querySelectorAll('#dolar-info').length,1);
 assert.equal(document.querySelectorAll('.prive-category-card').length,3);assert(get('catalogo-prive').firstElementChild.querySelector('h1'));assert(get('catalogo-prive').firstElementChild.nextElementSibling.classList.contains('prive-category-cards'));
-click('.prive-category-card[data-filter=terapeuticas]');assert(!get('priveResultados').hidden);assert(!get('priveCatalogueTools').hidden);assert.equal(document.querySelector('[data-sec=terapeuticas]').style.display,'block');assert.equal(document.querySelector('[data-sec=sensuales]').style.display,'none');assert(get('priveSearchCount').textContent.startsWith('1 perfil'));
+click('.prive-category-card[data-filter=terapeuticas]');assert(!get('priveResultados').hidden);assert(!get('priveCatalogueTools').hidden);assert.equal(document.querySelector('[data-sec=terapeuticas]').style.display,'block');assert.equal(document.querySelector('[data-sec=sensuales]').style.display,'block');assert.equal(document.querySelector('[data-sec=fantasias]').style.display,'block');assert(get('priveSearchCount').textContent.startsWith('3 perfiles'));
 get('priveBuscar').value='NO EXISTE';get('priveBuscar').dispatchEvent(new window.Event('input'));assert(!get('priveEmpty').hidden);get('priveLimpiar').click();assert(get('priveEmpty').hidden);
-for(const lang of ['pt','fr','es'])vm.runInContext(`aplicarIdioma('${lang}')`,ctx);vm.runInContext("aplicarIdioma('en')",ctx);assert.equal(document.querySelector('.prive-category-card[data-filter=fantasias] span').textContent,'Fantasies');assert.equal(document.querySelectorAll('.prive-category-card img').length,3,'Cambiar idioma no elimina las imágenes');assert.equal(get('priveCloseCatalogue').textContent,'Close profiles');
-click('#priveCloseCatalogue');assert(get('priveResultados').hidden);assert(!get('stories-destacadas-container').parentElement.hidden);assert(!get('stories-nuevas-container').parentElement.hidden);
+for(const lang of ['pt','fr','es'])vm.runInContext(`aplicarIdioma('${lang}')`,ctx);vm.runInContext("aplicarIdioma('en')",ctx);assert.equal(document.querySelector('.prive-category-card[data-filter=fantasias] span').textContent,'Fantasies');assert.equal(document.querySelectorAll('.prive-category-card img').length,0,'Accesos compactos sin pantalla de ingreso');assert.equal(get('priveCloseCatalogue').textContent,'Show all categories');
+click('[data-prive-nav=inicio]');assert(!get('priveResultados').hidden);assert(!get('stories-destacadas-container').parentElement.hidden);assert(!get('stories-nuevas-container').parentElement.hidden);
 click('.prive-category-card[data-filter=sensuales]');
 const stableCards=[...document.querySelectorAll('.card-link[data-perfil-id]')],stableStories=[...document.querySelectorAll('.story-item img')];
 click('[data-prive-favorite="mora-sensual"]');
@@ -31,9 +31,9 @@ click('#grid-favoritos [data-prive-favorite="mora-sensual"]');assert(!get('prive
 localStorage.setItem('priveFavoritos',JSON.stringify(['mora-sensual']));const storageEvent=new window.Event('storage');Object.defineProperty(storageEvent,'key',{value:'priveFavoritos'});window.dispatchEvent(storageEvent);assert.equal(get('grid-favoritos').querySelectorAll('[data-perfil-id]').length,1,'Sincronizar favorita de otra pestaña');assert(stableCards.every(n=>n.isConnected));
 localStorage.setItem('priveFavoritos','[]');const clearEvent=new window.Event('storage');Object.defineProperty(clearEvent,'key',{value:null});window.dispatchEvent(clearEvent);assert.equal(get('grid-favoritos').querySelectorAll('[data-perfil-id]').length,0,'Sincronizar limpieza del almacenamiento');
 
-click('[data-prive-nav=inicio]');assert(get('priveResultados').hidden);click('[data-prive-nav=explorar]');assert(get('priveResultados').hidden,'Explorar lleva a elegir, no despliega todos los perfiles');
-click('.prive-category-card[data-filter=fantasias]');assert.equal(document.querySelector('[data-sec=fantasias]').style.display,'block');click('.prive-all');assert.equal(document.querySelector('[data-sec=terapeuticas]').style.display,'block');assert.equal(document.querySelector('[data-sec=sensuales]').style.display,'block');
-console.log('PASS: inicio compacto, vitrinas visibles, categorías, búsqueda, favoritos, idiomas, volver a inicio, ver todas y datos únicos en cabecera. Sin red ni escrituras reales.');
+click('[data-prive-nav=inicio]');assert(!get('priveResultados').hidden);click('[data-prive-nav=explorar]');assert(!get('priveResultados').hidden,'Explorar mantiene el catálogo abierto');
+click('.prive-category-card[data-filter=fantasias]');assert.equal(document.querySelector('[data-sec=fantasias]').style.display,'block');click('[data-prive-nav=inicio]');assert.equal(document.querySelector('[data-sec=terapeuticas]').style.display,'block');assert.equal(document.querySelector('[data-sec=sensuales]').style.display,'block');
+console.log('PASS: inicio con categorías abiertas, vitrinas visibles, categorías, búsqueda, favoritos, idiomas, volver a inicio, ver todas y datos únicos en cabecera. Sin red ni escrituras reales.');
 
 
 vm.runInContext("aplicarIdioma('es');documentosPerfiles=[{id:'celeste',data:()=>({nombre:'Celeste',categoria:'fantasias',categoriasPublicacion:['sensuales','fantasias'],zona:'Congreso',fotoPrincipal:'img/celeste1.jpg'})}];renderizarPerfiles();home2Choose('sensuales')",ctx);
@@ -44,3 +44,12 @@ click('#grid-sensuales [data-prive-favorite=celeste]');assert.equal(document.que
 vm.runInContext("home2Choose('todas')",ctx);assert(get('priveSearchCount').textContent.startsWith('1 perfil'),'El resultado cuenta anunciantes únicas aunque figuren en dos categorías');
 for(const a of document.querySelectorAll('[data-perfil-id=celeste] a.prive-card-summary'))assert.equal(a.getAttribute('href'),'perfil.html?id=celeste');
 console.log('PASS: un mismo perfil en Sensuales y Fantasías, mismas fotos y enlace, un favorito y un solo resultado único.');
+
+// Se conservan los eventos reales de contacto: una llamada por cada clic, con el mismo origen.
+vm.runInContext("documentosPerfiles=[{id:'contacto-qa',data:()=>({nombre:'Contacto QA',categoria:'terapeuticas',whatsapp:'5491100000000'})}];renderizarPerfiles();home2Choose('todas')",ctx);
+const contacts=[],ga=[];window.priveMetricas={registrar:e=>contacts.push(e)};ctx.gtag=(...args)=>ga.push(args);
+click('#grid-terapeuticas [data-whatsapp-perfil="contacto-qa"]');
+assert.equal(contacts.length,1);assert.equal(contacts[0].perfilId,'contacto-qa');assert.equal(contacts[0].tipo,'whatsapp');assert.equal(contacts[0].origen,'portada');
+assert.equal(ga.filter(a=>a[0]==='event'&&a[1]==='whatsapp_click').length,1);
+assert.equal(ga[0][2].ubicacion_boton,'tarjeta_grande');
+console.log('PASS: catálogo abierto conserva atributos y eventos históricos de WhatsApp sin duplicar el manejador.');
