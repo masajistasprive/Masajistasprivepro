@@ -3,7 +3,7 @@ const {chromium}=require('../qa/node_modules/playwright');
 const http=require('node:http'),fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'..');
 function firebaseMock(){
- const models=Object.fromEntries(['terapeuticas','sensuales','fantasias'].map((categoria,i)=>['qa'+i,{nombre:'QA '+i,categoria,zona:'Tribunales',estado:'activo',destacada:true,nuevaAnunciante:true,fotoPrincipal:'img/logo.png',fotosGaleria:['img/logo.png','img/monograma.png'],whatsapp:'5491100000000',descripcion:'Descripción de prueba.',horarios:'10 a 20'}]));
+ const models=Object.fromEntries(['terapeuticas','sensuales','fantasias'].map((categoria,i)=>['qa'+i,{nombre:'QA '+i,categoria,zona:'Tribunales',estado:'activo',destacada:true,nuevaAnunciante:true,fotoPrincipal:'img/logo.png',fotosGaleria:['img/logo.png','img/monograma.png'],whatsapp:'5491100000000',verificado:i===0,descripcion:'Descripción de prueba.',horarios:'10 a 20'}]));
  models.qa1.fotoPrincipal='img/monograma.png';
  models['qa-hidden']={...models.qa0,nombre:'QA hidden',destacada:false,nuevaAnunciante:false,fotoPrincipal:'img/qa-hidden.svg'};
  const listeners=new Map();let clubReads=0,reviewsStarted=0,reviewsStopped=0;
@@ -21,8 +21,9 @@ const server=http.createServer((req,res)=>{if(req.url==='/img/miniaturas/'+ '1'.
 (async()=>{
  await new Promise(r=>server.listen(0,'127.0.0.1',r));const url='http://127.0.0.1:'+server.address().port;
  const browser=await chromium.launch({headless:true});
- try{for(const mobile of [false,true]){
-  const context=await browser.newContext({viewport:mobile?{width:390,height:844}:{width:1440,height:1000},isMobile:mobile,hasTouch:mobile});
+ try{for(const width of [320,390,768,1440]){
+  const mobile=width<700;
+  const context=await browser.newContext({viewport:{width,height:mobile?844:1000},isMobile:mobile,hasTouch:mobile});
   await context.addInitScript(firebaseMock);
   await context.route('**/*',route=>{const u=new URL(route.request().url());if(u.pathname==='/js/miniaturas-prive.js')return route.fulfill({contentType:'text/javascript',body:'window.priveMiniaturas='+JSON.stringify({'https://masajistasprive.com/img/logo.png':'/img/miniaturas/'+ '1'.repeat(24)+'.webp','https://masajistasprive.com/img/monograma.png':'/img/miniaturas/'+ '2'.repeat(24)+'.webp'})});if(u.origin===url)return route.continue();if(u.hostname==='www.gstatic.com')return route.fulfill({body:'',contentType:'text/javascript'});return route.fulfill({body:'{}',contentType:'application/json'})});
   const page=await context.newPage(),errors=[];context.on('page',p=>p.on('pageerror',e=>errors.push(e.message)));page.on('pageerror',e=>errors.push(e.message));
@@ -33,6 +34,12 @@ const server=http.createServer((req,res)=>{if(req.url==='/img/miniaturas/'+ '1'.
   assert((await page.locator('.story-item[href*=qa0] img').first().getAttribute('src')).includes('/img/miniaturas/'));assert.equal(await page.locator('.story-item[href*=qa1] img').first().getAttribute('data-prive-original'),null,'Si falta miniatura, recupera el original');
   for(const cat of ['terapeuticas','sensuales','fantasias']){await page.locator('.prive-category-card[data-filter="'+cat+'"]').click();await page.locator('#grid-'+cat+' [data-prive-voto]').first().waitFor();if(cat==='terapeuticas'){await page.locator('[data-perfil-id=qa-hidden] img').waitFor();await page.waitForFunction(()=>document.querySelector('[data-perfil-id=qa-hidden] img').naturalWidth>0);assert(hiddenImageRequests>0,'Las fotos cargan al abrir su categoría')}await page.locator('#priveCloseCatalogue').click()}
   await page.locator('.prive-category-card[data-filter="terapeuticas"]').click();
+  const compactContact=page.locator('#grid-terapeuticas [data-whatsapp-perfil="qa0"]');
+  assert(await compactContact.isVisible(),'WhatsApp accesible en la vista compacta');
+  assert.equal(await compactContact.getAttribute('aria-label'),'WhatsApp · QA 0');
+  assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Catálogo sin desbordamiento horizontal');
+  await page.locator('#btnAlternarEstilo').click();assert(await compactContact.isVisible(),'WhatsApp accesible en la vista ampliada');
+  await page.locator('#btnAlternarEstilo').click();
   const heart=page.locator('#grid-terapeuticas [data-prive-voto="qa0"]');
   await heart.click();await page.waitForFunction(()=>document.querySelector('#grid-terapeuticas [data-prive-voto="qa0"]').getAttribute('aria-pressed')==='true');
   await page.locator('#priveBuscar').fill('QA 0');
@@ -51,7 +58,17 @@ const server=http.createServer((req,res)=>{if(req.url==='/img/miniaturas/'+ '1'.
   await ph.click();await profile.waitForFunction(()=>document.querySelector('[data-prive-voto]').getAttribute('aria-pressed')==='false');
   await page.bringToFront();await page.waitForFunction(()=>document.querySelector('#grid-favoritos [data-prive-voto]').getAttribute('aria-pressed')==='false');
   await profile.bringToFront();await profile.reload();await profile.locator('#fotoPrincipal').waitFor();
-  await profile.locator('#fotoPrincipal').click();assert(await profile.locator('#priveLightbox').isVisible());await profile.locator('#priveLbNext').click();assert.equal(await profile.locator('#privePhotoCount').textContent(),'2 / 2');await profile.locator('#priveLbClose').click();assert(!await profile.locator('#priveLightbox').isVisible());
+  assert.equal(await profile.locator('.perfil-titulo-seccion .badge-verificado').count(),1,'Sello para el perfil verificado');
+  assert.equal(await profile.locator('#fotoPrincipal').getAttribute('role'),'button');
+  await profile.locator('#fotoPrincipal').press('Enter');assert(await profile.locator('#priveLightbox').isVisible());
+  assert.equal(await profile.evaluate(()=>document.activeElement.id),'priveLbClose');
+  await profile.locator('#priveLbClose').press('Tab');assert.equal(await profile.evaluate(()=>document.activeElement.id),'priveLbPrev');
+  await profile.locator('#priveLbPrev').press('Shift+Tab');assert.equal(await profile.evaluate(()=>document.activeElement.id),'priveLbClose');
+  await profile.locator('#priveLbNext').click();assert.equal(await profile.locator('#privePhotoCount').textContent(),'2 / 2');
+  await profile.locator('#priveLbNext').press('Escape');assert(!await profile.locator('#priveLightbox').isVisible());
+  assert.equal(await profile.evaluate(()=>document.activeElement.id),'fotoPrincipal','Restituir foco a la foto de origen');
+  await profile.locator('.galeria-miniaturas [data-photo="1"]').press('Space');assert(await profile.locator('#priveLightbox').isVisible());
+  await profile.locator('#priveLbClose').click();assert.equal(await profile.evaluate(()=>document.activeElement.dataset.photo),'1');
   for(const lang of ['en','pt','fr','es']){await profile.locator('#btn-idioma').click();assert.equal(await profile.locator('html').getAttribute('lang'),lang);assert(await profile.locator('#fotoPrincipal').isVisible() || await profile.locator('#fotoPrincipal').count()===1)}
   assert.equal(await profile.evaluate(()=>window.dataLayer.filter(a=>a[0]==='event'&&a[1]==='page_view').length),0,'Galería e idiomas no duplican page_view');
   const contact=await profile.locator('[data-metrica-whatsapp="principal"]').getAttribute('href');assert(contact.startsWith('https://wa.me/5491100000000?text='));
@@ -70,7 +87,7 @@ const server=http.createServer((req,res)=>{if(req.url==='/img/miniaturas/'+ '1'.
   await page.bringToFront();await page.locator('[data-prive-nav="favoritos"]').click();await page.locator('#grid-favoritos [data-prive-favorite="qa0"]').press('Enter');
   await page.waitForFunction(()=>!document.querySelector('#grid-favoritos [data-perfil-id="qa0"]'));assert.equal(await page.evaluate(()=>document.activeElement?.dataset?.priveNav),'favoritos','Conservar foco al quitar última favorita con teclado');
   assert(await page.locator('#priveEmpty').isVisible());
-  assert.deepEqual(errors,[]);console.log('PASS browser '+(mobile?'mobile 390px':'desktop 1440px')+': categories, favorites, two-tab votes, reload, gallery, WhatsApp, Club cache, stable favorite DOM, cross-tab favorites, keyboard focus, visible reviews, live updates, pause/resync, no JS errors');
+  assert.deepEqual(errors,[]);console.log('PASS browser '+width+'px '+': categories, favorites, two-tab votes, reload, gallery, WhatsApp, Club cache, stable favorite DOM, cross-tab favorites, keyboard focus, visible reviews, live updates, pause/resync, no JS errors');
   await context.close();
  }}finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exitCode=1}).finally(()=>server.close());
