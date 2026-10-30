@@ -8,7 +8,7 @@ const home2Text={
 };
 Object.assign(home2Text.es,{close:'Ver todas las categorías'});Object.assign(home2Text.en,{close:'Show all categories'});Object.assign(home2Text.pt,{close:'Ver todas as categorias'});Object.assign(home2Text.fr,{close:'Afficher toutes les catégories'});
 Object.assign(home2Text.es,{enter:'Ingresar'});Object.assign(home2Text.en,{enter:'Enter'});Object.assign(home2Text.pt,{enter:'Entrar'});Object.assign(home2Text.fr,{enter:'Accéder'});
-let home2CatalogueOpen=true;
+let home2CatalogueOpen=true,home2InteractionVersion=0;
 const home2=id=>document.getElementById(id),home2T=()=>home2Text[idiomaActual]||home2Text.es;
 const home2Normalize=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('es').trim();
 let home2Filter='todas',home2LastCategory='todas',home2Loaded=false,home2Failed=false;
@@ -127,6 +127,7 @@ cargarPerfilesDesdeFirebase=function(){
 const home2OriginalInteractions=inicializarInteracciones;
 inicializarInteracciones=function(){
  home2OriginalInteractions();
+ for(const type of ['keydown','pointerdown'])document.addEventListener(type,()=>{home2InteractionVersion++},true);
  const announce=document.createElement('p');announce.id='priveFavoriteNotice';announce.className='sr-only';announce.setAttribute('role','status');document.body.append(announce);
  const closeMenu=()=>{home2('priveSiteMenu').hidden=true;home2('priveMenuButton').setAttribute('aria-expanded','false')};
  home2('priveMenuButton').onclick=()=>{const open=home2('priveSiteMenu').hidden;home2('priveSiteMenu').hidden=!open;home2('priveMenuButton').setAttribute('aria-expanded',String(open));if(open)cerrarMenuIdioma()};
@@ -137,10 +138,10 @@ inicializarInteracciones=function(){
   const pill=event.target.closest('.pill-btn[data-filter]');
   if(pill){
    const jump=pill.classList.contains('prive-category-card'),requested=pill.dataset.filter,filter=jump?'todas':requested;home2Choose(filter);
-   const focusAtClick=document.activeElement;
+   const focusAtClick=document.activeElement,navigationVersion=home2InteractionVersion;
    requestAnimationFrame(()=>{
     // No robar el foco si la persona ya pasó a otro control con el teclado.
-    if(document.activeElement!==focusAtClick)return;
+    if(home2InteractionVersion!==navigationVersion||document.activeElement!==focusAtClick)return;
     if(!home2CatalogueOpen||home2Filter!==filter)return;
     const feedback=!home2Loaded||home2Failed||!home2('priveEmpty').hidden;
     const section=jump?home2('grid-'+requested)?.closest('.categoria-seccion-wrapper'):null;
