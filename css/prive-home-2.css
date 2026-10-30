@@ -141,7 +141,8 @@ body.prive-home-v2{margin:0;min-width:320px;padding-bottom:calc(86px + env(safe-
 .prive-home-v2 .prive-showcase .story-item>span{display:flex!important;align-items:center;justify-content:space-between;gap:8px;box-sizing:border-box;width:100%;padding:12px 11px;min-height:46px;margin:0!important;font-family:Montserrat,sans-serif;font-size:clamp(12px,2.8vw,14px)!important;font-weight:500;line-height:1.4;letter-spacing:.15px;white-space:normal;overflow-wrap:anywhere}
 .prive-home-v2 .prive-showcase .story-item>span::after{content:"↗";font-size:14px;font-weight:400;color:#c6aa72;flex-shrink:0}
 .prive-home-v2 .prive-showcase-new .story-item{border-color:#ffffff13;background:#141515;color:#d5d0c6;border-radius:9px}
-.prive-home-v2 .prive-showcase-new .story-ring{aspect-ratio:4/3!important}
+.prive-home-v2 .prive-showcase-new .story-ring{aspect-ratio:1/1!important}
+.prive-home-v2 .prive-showcase-new .story-ring img{object-position:center top}
 .prive-home-v2 .prive-showcase-new .story-item>span{font-size:12px!important;min-height:40px;padding:10px}
 .prive-home-v2 .prive-showcase-new .story-item>span::after{color:#9e9687}
 .prive-home-v2 .prive-showcase .story-item:focus-visible{outline:2px solid #e2c78e;outline-offset:3px}
