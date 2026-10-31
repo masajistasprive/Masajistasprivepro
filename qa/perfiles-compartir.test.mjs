@@ -91,3 +91,22 @@ test('compartir exige la portada actual y refresca la versión sin perder campa�
  await assert.rejects(context.window.priveResolverEnlacePerfil({fotoPrincipal:photo}));
 });
 
+
+
+test('una pestaña anterior comparte la foto actual y nunca una portada atrasada',async()=>{
+ const location=new URL('https://masajistasprive.com/p/lupita-sensual.html?v=old&utm_source=whatsapp#galeria');
+ const entry={path:'/p/lupita-sensual.html',version:'abcdef1234567890',image:'https://example.com/actual.jpg'};
+ let current='https://example.com/actual.jpg',paused=false,reads=0;
+ const context={window:{},URL,location,AbortController,setTimeout,clearTimeout,fetch:async(url,options)=>{
+  assert.equal(options.cache,'no-store');
+  if(String(url).startsWith('https://firestore.googleapis.com/')){reads++;return {ok:true,json:async()=>({fields:{fotoPrincipal:{stringValue:current+'#encuadre'},estado:{stringValue:paused?'pausado':'activo'}}})}}
+  if(String(url).includes('share_check='))assert.match(String(url),/share_check=\d+/);
+  return {ok:true,json:async()=>({'lupita-sensual':entry})};
+ }};
+ vm.runInNewContext(client,context);await context.window.priveEnlacePerfilListo;
+ assert.equal(await context.window.priveResolverEnlacePerfil({fotoPrincipal:'https://example.com/anterior.jpg'}),'https://masajistasprive.com/p/lupita-sensual.html?v=abcdef1234567890&utm_source=whatsapp#galeria');
+ assert.equal(reads,1);
+ await context.window.priveResolverEnlacePerfil({fotoPrincipal:entry.image});assert.equal(reads,1,'Si coinciden, no agrega lecturas');
+ current='https://example.com/mas-nueva.jpg';await assert.rejects(context.window.priveResolverEnlacePerfil({fotoPrincipal:current}));
+ paused=true;await assert.rejects(context.window.priveResolverEnlacePerfil({fotoPrincipal:'https://example.com/anterior.jpg'}));
+});
