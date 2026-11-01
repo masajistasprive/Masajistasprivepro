@@ -51,5 +51,13 @@ const contacts=[],ga=[];window.priveMetricas={registrar:e=>contacts.push(e)};ctx
 click('#grid-terapeuticas [data-whatsapp-perfil="contacto-qa"]');
 assert.equal(contacts.length,1);assert.equal(contacts[0].perfilId,'contacto-qa');assert.equal(contacts[0].tipo,'whatsapp');assert.equal(contacts[0].origen,'portada');
 assert.equal(ga.filter(a=>a[0]==='event'&&a[1]==='whatsapp_click').length,1);
-assert.equal(ga[0][2].ubicacion_boton,'tarjeta_grande');
+assert.equal(ga[0][2].ubicacion_boton,'portada');
+// Repetir con el emisor compartido real, además del fallback anterior.
+window.gtag=ctx.gtag;vm.runInContext(fs.readFileSync(path.join(root,'js/analytics-prive.js'),'utf8'),ctx);
+ga.length=0;contacts.length=0;
+click('#grid-terapeuticas [data-whatsapp-perfil="contacto-qa"]');
+assert.equal(contacts.length,1);assert.equal(ga.length,1);
+assert.equal(ga[0][1],'whatsapp_click');assert.equal(ga[0][2].perfil_id,'contacto-qa');
+assert.equal(ga[0][2].perfil_nombre,'Contacto QA');assert.equal(ga[0][2].perfil_categoria,'terapeuticas');
+assert.equal(ga[0][2].ubicacion_boton,'portada');
 console.log('PASS: catálogo abierto conserva atributos y eventos históricos de WhatsApp sin duplicar el manejador.');
