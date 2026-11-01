@@ -102,7 +102,7 @@ const server=http.createServer((req,res)=>{if(req.url==='/img/miniaturas/'+ '1'.
   await popupClick(journey.locator('#grid-terapeuticas [data-whatsapp-perfil=qa0]'));
   const homeContact=await journey.evaluate(()=>({ga:window.dataLayer.filter(a=>a[0]==='event'&&a[1]==='whatsapp_click').map(a=>a[2]),private:window.qa.metricWrites().filter(e=>e.tipo==='whatsapp')}));
   assert.equal(homeContact.ga.length,1);assert.equal(homeContact.ga[0].perfil_id,'qa0');assert.equal(homeContact.ga[0].ubicacion_boton,'portada');assert.equal(homeContact.private.length,1);assert(homeContact.private[0].path.includes('/whatsapp_portada_'));
-  await journey.locator('#grid-terapeuticas [data-perfil-id=qa0] .prive-card-profile-link').click();await journey.locator('[data-metrica-whatsapp=principal]').waitFor();
+  await journey.locator('#grid-terapeuticas [data-perfil-id=qa0] .prive-card-photo-link').click();await journey.locator('[data-metrica-whatsapp=principal]').waitFor();
   assert.equal(await journey.evaluate(()=>JSON.parse(sessionStorage.getItem('prive_recorrido_v1')).origen),'landing','Conservar recorrido al abrir el perfil');
   const journeyContact=journey.locator('[data-metrica-whatsapp=principal]');assert((await journeyContact.getAttribute('href')).startsWith('https://wa.me/5491100000000?text='));
   await popupClick(journeyContact);await popupClick(journeyContact);
