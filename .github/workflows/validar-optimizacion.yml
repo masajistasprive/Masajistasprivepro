@@ -36,6 +36,7 @@ jobs:
         run: |
           node tests/optimizacion.test.cjs
           node tests/analytics.test.cjs
+          node tests/contactos-recorrido.test.cjs
       - name: Probar sincronización de votos
         run: |
           node tests/votos.test.cjs

@@ -17,6 +17,14 @@
  window.gtag('js',new Date());
  window.gtag('config',measurementId,config);
  window.priveAnalytics=Object.freeze({
+  contacto({id,categoria,nombre,ubicacion}){
+   if(!/^[a-z0-9_-]{1,120}$/.test(String(id||'')))return false;
+   const params={perfil_id:String(id),ubicacion_boton:String(ubicacion||'desconocido').slice(0,80),medicion_version:'20261101'};
+   if(categoria)params.perfil_categoria=String(categoria).slice(0,80);
+   if(nombre)params.perfil_nombre=String(nombre).slice(0,100);
+   window.gtag('event','whatsapp_click',params);
+   return true;
+  },
   perfilListo(id,categoria,nombre){
    if(!/^[a-z0-9_-]{1,120}$/.test(String(id||'')))return;
    const params={perfil_id:String(id)};

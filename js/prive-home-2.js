@@ -112,6 +112,7 @@ renderizarPerfiles=function(){
  if(home2InitialHash&&home2Loaded){home2InitialHash=false;home2Choose('favoritos')}
  aplicarBusquedaPrive();
  home2Vitrinas();
+ if(home2Loaded&&!home2Failed)window.priveRecorrido?.catalogoListo?.(documentosPerfiles.filter(d=>d.data().estado!=='pausado').length);
  if(focus){const buttons=[...document.querySelectorAll('[data-prive-favorite]')];const next=buttons.find(b=>b.dataset.priveFavorite===focus&&b.closest('.categoria-seccion-wrapper').style.display!=='none');(next||document.querySelector('[data-prive-nav=favoritos]')).focus({preventScroll:true})}
 };
 const home2OriginalLanguage=aplicarIdioma;
@@ -122,7 +123,7 @@ cargarPerfilesDesdeFirebase=function(){
  suscripcionPerfiles=db.collection('perfiles_publicos').onSnapshot(snapshot=>{
   documentosPerfiles=snapshot.docs.slice();for(let i=documentosPerfiles.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[documentosPerfiles[i],documentosPerfiles[j]]=[documentosPerfiles[j],documentosPerfiles[i]]}
   home2Loaded=true;home2Failed=false;programarRenderPerfiles();snapshot.docs.filter(d=>d.data().estado!=='pausado').forEach(d=>priveEscucharVotos(d.id));ocultarTransicionPrive();
- },error=>{console.error('Error cargando fichas públicas:',error);home2Failed=true;aplicarBusquedaPrive();ocultarTransicionPrive()});
+ },error=>{console.error('Error cargando fichas públicas:',error);home2Failed=true;window.priveRecorrido?.catalogoError?.();aplicarBusquedaPrive();ocultarTransicionPrive()});
 };
 const home2OriginalInteractions=inicializarInteracciones;
 inicializarInteracciones=function(){
@@ -163,7 +164,7 @@ inicializarInteracciones=function(){
  const state=home2PendingState;home2UpdateText();home2PendingState=state;
 };
 const home2OriginalStart=iniciarFirebase;
-iniciarFirebase=function(){home2OriginalStart();if(!db){home2Failed=true;aplicarBusquedaPrive()}};
+iniciarFirebase=function(){home2OriginalStart();if(!db){home2Failed=true;window.priveRecorrido?.catalogoError?.();aplicarBusquedaPrive()}};
 window.addEventListener('hashchange',()=>{if(location.hash==='#favoritas')home2Choose('favoritos')});
 
 

@@ -12,17 +12,18 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<script src="/js/analytics-prive.js?v=20261029-medicion1"></script>
+<script src="/js/analytics-prive.js?v=20261101-contactos1"></script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DXX740HP41"></script>
 
-<script defer src="js/recorrido-prive.js?v=20261029-medicion1"></script>
+<script defer src="js/recorrido-prive.js?v=20261101-contactos1"></script>
 <style>
 :root{--gold:#dfc285;--light:#f3e5ab;--muted:#b5ada1;color-scheme:dark}
 *{box-sizing:border-box}body{margin:0;min-height:100dvh;background:radial-gradient(ellipse at top,#30271955,transparent 70%),#080808;color:#f5f2ec;font-family:Montserrat,Arial,sans-serif}
 .page{max-width:580px;margin:auto;padding:22px 22px 26px;text-align:center}.topline{color:var(--gold);font-size:10px;letter-spacing:2px;text-transform:uppercase}.logo{display:block;width:132px;max-width:45%;height:auto;margin:15px auto}
 h1{font:500 clamp(34px,8.5vw,49px)/1.06 'Cormorant Garamond',Georgia,serif;margin:16px 0;color:var(--light)}.intro{max-width:450px;margin:0 auto 14px;color:#ccc3b6;font-size:14px;line-height:1.65}.categories{margin:0 0 22px;color:var(--gold);font-size:12px;line-height:1.6}
-.entry{padding:20px 16px;background:#171511;border:1px solid #dfc28544;border-radius:14px}.entry p{margin:0 0 15px;color:#cfc6b8;font-size:12px;line-height:1.6}.cta{display:flex;align-items:center;justify-content:center;min-height:56px;padding:14px 12px;border:1px solid var(--light);border-radius:9px;background:linear-gradient(110deg,#c5a362,#f0dba5,#c5a362);color:#17120b;font-size:13px;line-height:1.4;font-weight:700;text-decoration:none}.cta:hover{filter:brightness(1.07)}.exit{display:inline-block;margin-top:15px;color:#c2b8a9;font-size:12px;text-underline-offset:3px}.cta:focus-visible,.exit:focus-visible,summary:focus-visible,.social-links a:focus-visible{outline:2px solid var(--light);outline-offset:4px}
+.entry{padding:20px 16px;background:#171511;border:1px solid #dfc28544;border-radius:14px}.entry p{margin:0 0 15px;color:#cfc6b8;font-size:12px;line-height:1.6}.cta{display:flex;align-items:center;justify-content:center;min-height:56px;padding:14px 12px;border:1px solid var(--light);border-radius:9px;background:linear-gradient(110deg,#c5a362,#f0dba5,#c5a362);color:#17120b;font-size:13px;line-height:1.4;font-weight:700;text-decoration:none}.cta small{display:block;margin-top:4px;font-size:11px;font-weight:500}.cta:hover{filter:brightness(1.07)}.exit{display:inline-block;margin-top:15px;color:#c2b8a9;font-size:12px;text-underline-offset:3px}.cta:focus-visible,.exit:focus-visible,summary:focus-visible,.social-links a:focus-visible{outline:2px solid var(--light);outline-offset:4px}
 .secondary{margin:22px 0 0;border-top:1px solid #dfc28522;padding-top:16px}summary{color:var(--gold);font-size:12px;cursor:pointer;min-height:32px}.social-section h2{font:500 25px 'Cormorant Garamond',Georgia,serif;color:var(--light)}.social-section p{font-size:12px;color:var(--muted);line-height:1.6}.social-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.social-links a{display:flex;align-items:center;gap:8px;min-height:48px;padding:10px;color:var(--gold);font-size:11px;text-decoration:none;border:1px solid #dfc28533;border-radius:9px;text-align:left}.social-links svg{width:18px;height:18px;fill:currentColor;flex:none}.social-links a span:last-child{margin-left:auto}.footer{margin-top:22px;color:#999184;font-size:10px;line-height:1.8}.footer strong{color:var(--gold)}
+@media(max-height:640px) and (max-width:600px){.page{padding-top:12px}.logo{width:105px;margin:10px auto}h1{font-size:36px;margin:10px 0}.intro{font-size:13px;line-height:1.5}.entry{padding:16px 12px}.secondary{margin-top:16px}}
 @media(max-width:350px){.page{padding:18px 15px}.entry{padding:16px 12px}.cta{font-size:12px}.social-links{grid-template-columns:1fr}}
 </style>
 </head>
@@ -32,10 +33,10 @@ h1{font:500 clamp(34px,8.5vw,49px)/1.06 'Cormorant Garamond',Georgia,serif;margi
  <div class="topline">Buenos Aires · Argentina</div>
  <img src="img/logo.png" alt="Masajistas Privé" class="logo" width="132" fetchpriority="high">
  <h1>Masajes y bienestar<br>en Buenos Aires</h1>
- <p class="intro">Conocé profesionales independientes, elegí por zona y categoría y contactá directamente por WhatsApp.</p>
+ <p class="intro">Elegí profesionales por zona y contactá directamente por WhatsApp.</p>
  <section class="entry" aria-label="Acceso para mayores de edad">
-  <p>Este directorio está destinado exclusivamente a personas mayores de 18 años.</p>
-  <a id="btnEntrarPrive" class="cta" href="index.html">Entrar al sitio</a>
+  <p id="entradaEdad">Directorio exclusivo para mayores de 18 años.</p>
+  <a id="btnEntrarPrive" class="cta" href="index.html" aria-describedby="entradaEdad"><span>Entrar al sitio<small>Soy mayor de 18 años</small></span></a>
   <a class="exit" href="https://www.google.com" data-prive-salir>Salir</a>
  </section>
  <details class="secondary">
