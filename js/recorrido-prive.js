@@ -2,7 +2,7 @@
 (()=>{
  'use strict';
  if(window.priveRecorrido)return;
- const VERSION='20261020_1',KEY='prive_recorrido_v1',TIMEOUT=30*60*1000;
+ const VERSION='20261101_1',KEY='prive_recorrido_v1',TIMEOUT=30*60*1000;
  const esLanding=location.pathname.endsWith('/landing.html'),esPortal=/\/(?:index\.html)?$/.test(location.pathname);
  const validos=['landing','directo','sin_memoria'];let memoria=null,perfilActual='',modal=null,botonEdad=null;
  function leer(key){try{return sessionStorage.getItem(key)}catch{return null}}
@@ -77,7 +77,7 @@
    else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
   });
  }
- window.priveRecorrido={perfilListo(id){perfilActual=String(id||'').slice(0,120);if(perfilActual)paso('perfil_listo',{perfil_id:perfilActual});}};
+ window.priveRecorrido={catalogoListo(cantidad){if(esPortal)paso('catalogo_listo',{cantidad_perfiles:Math.max(0,Math.floor(Number(cantidad)||0))});},catalogoError(){if(esPortal)paso('catalogo_error');},perfilListo(id){perfilActual=String(id||'').slice(0,120);if(perfilActual)paso('perfil_listo',{perfil_id:perfilActual});}};
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',iniciar,{once:true});else iniciar();
 })();
 
