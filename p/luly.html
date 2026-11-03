@@ -274,7 +274,25 @@ let idiomaPerfil=langs.includes(localStorage.getItem('idiomaPrive'))?localStorag
 let modelo=null,unsubscribeReviews=null,reviewItems=[],reviewsLoaded=false,reviewLoadError=null,lightboxUrls=[],lightboxIndex=0;
 const priveReviewCounts=new Map(),priveReviewMine=new Map(),priveReviewBusy=new Set();
 function t(){return labels[idiomaPerfil]||labels.es}
-function hideTransition(){const e=document.getElementById('priveTransitionScreen');e.style.opacity='0';setTimeout(()=>e.remove(),650)}
+let entradaPerfilIniciada=false;
+function animarEntradaPerfil(){
+ if(entradaPerfilIniciada||!modelo)return;
+ entradaPerfilIniciada=true;
+ const reducir=()=>window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+ if(reducir())return;
+ const opciones={duration:300,easing:'cubic-bezier(.2,.7,.2,1)'};
+ const info=document.querySelector('#perfil-content-box .perfil-info');
+ info?.animate?.([{opacity:.45,transform:'translateY(8px)'},{opacity:1,transform:'none'}],opciones);
+ const foto=document.getElementById('fotoPrincipal');
+ const mostrarFoto=()=>{
+  if(!foto?.isConnected||reducir())return;
+  // Animar el marco conserva el encuadre aplicado sobre la imagen original.
+  foto.closest('.perfil-galeria-grid')?.animate?.([{opacity:.45,transform:'scale(.985)'},{opacity:1,transform:'none'}],opciones);
+ };
+ if(foto?.complete&&foto.naturalWidth>0)mostrarFoto();
+ else foto?.addEventListener('load',mostrarFoto,{once:true});
+}
+function hideTransition(){document.getElementById('priveTransitionScreen')?.remove();animarEntradaPerfil()}
 function setLanguage(l){idiomaPerfil=l;localStorage.setItem('idiomaPrive',l);const next=langs[(langs.indexOf(l)+1)%langs.length];document.getElementById('btn-idioma').textContent=({es:'🇦🇷 ES',en:'🇺🇸 EN',pt:'🇧🇷 PT',fr:'🇫🇷 FR'})[next];document.documentElement.lang=l;if(modelo){renderProfile();renderReviews()}}
 document.getElementById('btn-idioma').addEventListener('click',()=>setLanguage(langs[(langs.indexOf(idiomaPerfil)+1)%langs.length]));
 // Convierte saltos de línea del texto guardado en párrafos legibles.
@@ -429,6 +447,7 @@ setLanguage(idiomaPerfil);loadProfile();
 </script>
 </body>
 </html>
+
 
 
 

@@ -25,6 +25,14 @@ const server=http.createServer((req,res)=>{if(req.url==='/img/miniaturas/'+ '1'.
   const mobile=width<700;
   const context=await browser.newContext({viewport:{width,height:mobile?844:1000},isMobile:mobile,hasTouch:mobile});
   await context.addInitScript(firebaseMock);
+  await context.addInitScript(()=>{
+   window.qaEntradas=[];
+   const original=Element.prototype.animate;
+   Element.prototype.animate=function(frames,options){
+    if(this.matches('#perfil-content-box .perfil-info, #perfil-content-box .perfil-galeria-grid'))window.qaEntradas.push({target:this.className,duration:options.duration});
+    return original.call(this,frames,options);
+   };
+  });
   await context.route('**/*',route=>{const u=new URL(route.request().url());if(u.pathname==='/js/miniaturas-prive.js')return route.fulfill({contentType:'text/javascript',body:'window.priveMiniaturas='+JSON.stringify({'https://masajistasprive.com/img/logo.png':'/img/miniaturas/'+ '1'.repeat(24)+'.webp','https://masajistasprive.com/img/monograma.png':'/img/miniaturas/'+ '2'.repeat(24)+'.webp'})});if(u.origin===url)return route.continue();if(u.hostname==='www.gstatic.com')return route.fulfill({body:'',contentType:'text/javascript'});return route.fulfill({body:'{}',contentType:'application/json'})});
   const page=await context.newPage(),errors=[];context.on('page',p=>p.on('pageerror',e=>errors.push(e.message)));page.on('pageerror',e=>errors.push(e.message));
   let hiddenImageRequests=0;page.on('request',r=>{if(r.url().endsWith('/img/qa-hidden.svg'))hiddenImageRequests++});
@@ -75,6 +83,13 @@ const server=http.createServer((req,res)=>{if(req.url==='/img/miniaturas/'+ '1'.
   for(const lang of ['en','pt','fr','es']){await profile.locator('#btn-idioma').click();assert.equal(await profile.locator('html').getAttribute('lang'),lang);assert(await profile.locator('#fotoPrincipal').isVisible() || await profile.locator('#fotoPrincipal').count()===1)}
   assert.equal(await profile.evaluate(()=>window.dataLayer.filter(a=>a[0]==='event'&&a[1]==='page_view').length),0,'Galería e idiomas no duplican page_view');
   const contact=await profile.locator('[data-metrica-whatsapp="principal"]').getAttribute('href');assert(contact.startsWith('https://wa.me/5491100000000?text='));
+  await profile.waitForFunction(()=>document.getElementById('fotoPrincipal').complete&&document.getElementById('fotoPrincipal').naturalWidth>0);
+  assert.equal(await profile.locator('#priveTransitionScreen').count(),0,'El cargador no bloquea el perfil listo');
+  assert.deepEqual(await profile.evaluate(()=>window.qaEntradas.map(x=>x.duration)),[300,300],'Entrada de datos y foto una vez; cambiar idioma no la repite');
+  await profile.emulateMedia({reducedMotion:'reduce'});await profile.reload();await profile.locator('#fotoPrincipal').waitFor();
+  assert.equal(await profile.locator('#priveTransitionScreen').count(),0);
+  assert.equal(await profile.evaluate(()=>window.qaEntradas.length),0,'Movimiento reducido: perfil inmediato, sin animaciones');
+  assert(await profile.locator('[data-metrica-whatsapp="principal"]').isVisible(),'Contacto disponible también sin animación');
   const reviews=await context.newPage();await reviews.goto(url+'/perfil.html?id=qa0&qa_reviews=1');await reviews.locator('#fotoPrincipal').waitFor();
   assert.equal(await reviews.evaluate(()=>window.qa.reviewsStarted()),0,'No consultar experiencias fuera de vista');
   await reviews.locator('[data-prive-reviews]').scrollIntoViewIfNeeded();await reviews.getByText('Experiencia aprobada QA',{exact:true}).waitFor();assert.equal(await reviews.evaluate(()=>window.qa.reviewsStarted()),1);
@@ -114,4 +129,5 @@ const server=http.createServer((req,res)=>{if(req.url==='/img/miniaturas/'+ '1'.
   await context.close();
  }}finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exitCode=1}).finally(()=>server.close());
+
 
