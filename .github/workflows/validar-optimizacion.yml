@@ -37,6 +37,7 @@ jobs:
           node tests/optimizacion.test.cjs
           node tests/analytics.test.cjs
           node tests/contactos-recorrido.test.cjs
+          node tests/entrada-perfil.test.cjs
       - name: Probar sincronización de votos
         run: |
           node tests/votos.test.cjs
@@ -56,4 +57,5 @@ jobs:
           node qa/check-categories.cjs
           node qa/check-profile-contact.cjs
           node qa/check-profile-accessibility.cjs
+
 
