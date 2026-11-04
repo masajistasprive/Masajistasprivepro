@@ -11,7 +11,7 @@ test('metadatos estáticos personalizados, escapados y misma aplicación',()=>{
  assert.match(html,/og:image" content="https:\/\/masajistasprive.com\/img\/prada1.jpg"/);
  assert.match(html,/Prada &lt;&quot;&amp;/);
  assert.match(html,/og:url" content="https:\/\/masajistasprive.com\/p\/prada-123.html\?v=[a-f0-9]{16}"/);
- assert.ok(html.includes("collection('modelos_prive').doc(perfilId).get()"));
+ assert.ok(html.includes("collection('modelos_prive').doc(perfilId).get({source:'server'})"));
  assert.ok(html.includes('await window.priveEnlacePerfilListo;renderProfile()'));
  assert.equal(metadata({id:'a',nombre:'A',foto:'/x.jpg'}).version,metadata({id:'a',nombre:'A',foto:'/x.jpg'}).version);
  assert.throws(()=>metadata({id:'../bad',foto:'/x.jpg'}));

@@ -101,7 +101,10 @@ async function main(){
  const entries=profiles.filter(p=>p.estado!=='pausado').map(metadata).sort((a,b)=>a.id.localeCompare(b.id));
  if(!entries.length)throw Error('No hay perfiles activos; se conservan las páginas existentes.');
  // Validar todo antes de escribir. Nunca borrar páginas ni imágenes originales.
- const pages=entries.map(meta=>({meta,html:page(template,meta)}));
+ const pages=profiles.map(profile=>{
+  const meta=metadata(profile.estado==='pausado'?{id:profile.id,nombre:'Perfil temporalmente no disponible',foto:'/img/logo.png'}:profile);
+  return {meta,html:page(template,meta)};
+ });
  const manifest=Object.fromEntries(entries.map(m=>[m.id,{path:m.path,version:m.version,image:m.image}]));
  const nextSitemap=sitemap(await readFile(path.join(root,'sitemap.xml'),'utf8'),entries);
  const nextDirectory=directory(entries);

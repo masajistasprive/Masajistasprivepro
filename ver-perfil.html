@@ -360,7 +360,7 @@
 
             const docRef = db.collection("modelos_prive").doc(perfilId);
 
-            docRef.get().then((doc) => {
+            docRef.get({source:"server"}).then((doc) => {
                 if (!doc.exists) {
                     container.innerHTML = `<h2 style="color:#e74c3c; text-align:center;">El perfil solicitado no existe o fue removido.</h2>`;
                     ocultarTransicionPrive();
@@ -368,6 +368,11 @@
                 }
 
                 const datosActuales = doc.data();
+                if (datosActuales.estado === 'pausado') {
+                    container.innerHTML = '<section role="status" style="text-align:center;padding:50px 20px"><h1>Perfil temporalmente no disponible</h1><a href="index.html">Volver al portal</a></section>';
+                    ocultarTransicionPrive();
+                    return;
+                }
                 let visitasActuales = parseInt(datosActuales.visitas);
                 if (isNaN(visitasActuales)) {
                     visitasActuales = 0;
