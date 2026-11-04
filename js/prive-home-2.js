@@ -7,10 +7,14 @@ const home2Text={
  fr:{kicker:'BUENOS AIRES · BIEN-ÊTRE ET DÉTENTE',hero:'Votre moment de bien-être',sub:'Trouvez votre prochain massage à Buenos Aires.',discover:'Découvrez les professionnels',all:'Tout voir →',home:'Accueil',explore:'Explorer',favorites:'Favoris',area:'Quartier',mode:'Modalité',areas:'Tous les quartiers',modes:'Toutes les modalités',search:'Dans quel quartier cherchez-vous ?',searchLabel:'Rechercher par nom ou quartier',empty:'Aucun profil ne correspond à ces filtres.',emptyFav:'Aucun favori. Touchez l’étoile d’un profil pour le garder.',reset:'Effacer les filtres',byArea:'Explorer par quartier',advertise:'Publiez votre profil ↗',useful:'Informations de Buenos Aires',save:'Ajouter aux favoris',unsave:'Retirer des favoris',saved:'Profil ajouté aux favoris.',removed:'Profil retiré des favoris.',localError:'Impossible d’enregistrer. Vérifiez le stockage du navigateur.',results:'profils',result:'profil',loading:'Chargement des profils…',failed:'Impossible de charger les profils. Vérifiez la connexion et réessayez.',retry:'Réessayer',reviews:'Avis',view:'Voir le profil',large:'Vue agrandie',compact:'Vue compacte',likes:'J’aime'}
 };
 Object.assign(home2Text.es,{close:'Ver todas las categorías'});Object.assign(home2Text.en,{close:'Show all categories'});Object.assign(home2Text.pt,{close:'Ver todas as categorias'});Object.assign(home2Text.fr,{close:'Afficher toutes les catégories'});
+Object.assign(home2Text.es,{quickProfiles:'Ver perfiles'});Object.assign(home2Text.en,{quickProfiles:'View profiles'});Object.assign(home2Text.pt,{quickProfiles:'Ver perfis'});Object.assign(home2Text.fr,{quickProfiles:'Voir les profils'});
 Object.assign(home2Text.es,{enter:'Ingresar'});Object.assign(home2Text.en,{enter:'Enter'});Object.assign(home2Text.pt,{enter:'Entrar'});Object.assign(home2Text.fr,{enter:'Accéder'});
 let home2CatalogueOpen=true,home2InteractionVersion=0;
 const home2=id=>document.getElementById(id),home2T=()=>home2Text[idiomaActual]||home2Text.es;
 const home2Normalize=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('es').trim();
+// Un perfil puede atender en más de un barrio: Congreso / Balvanera pertenece a ambos.
+function home2AreaParts(value){return String(value||'').split(/\s*(?:\/|,|;|·)\s*/).map(v=>v.trim()).filter(Boolean)}
+function home2AreaKeys(value){return [...new Set(home2AreaParts(value).map(home2Normalize))]}
 let home2Filter='todas',home2LastCategory='todas',home2Loaded=false,home2Failed=false;
 let home2PendingState=null,home2InitialHash=location.hash==='#favoritas';
 try{home2PendingState=JSON.parse(sessionStorage.getItem('priveHome2Filters')||'null')}catch{}
@@ -33,10 +37,11 @@ function home2Options(){
  for(const[id,key,label]of [['priveZona','zona',t.areas],['priveModalidad','modalidad',t.modes]]){
   const select=home2(id);if(!select)return;
   const previous=select.value;const values=new Map();
-  for(const d of docs){const m=d.data(),value=String(m[key]||'').trim();if(!value)continue;const normalized=home2Normalize(value);if(!values.has(normalized))values.set(normalized,value)}
+  for(const d of docs){const m=d.data();for(const value of key==='zona'?home2AreaParts(m[key]):[String(m[key]||'').trim()]){if(!value)continue;const normalized=home2Normalize(value);if(!values.has(normalized))values.set(normalized,value)}}
   select.replaceChildren(new Option(label,''));
   for(const[value,display]of [...values].sort((a,b)=>a[1].localeCompare(b[1],'es'))){select.add(new Option(display,value))}
-  if(values.has(previous))select.value=previous;
+  const restored=key==='zona'?home2AreaKeys(previous).find(v=>values.has(v)):previous;
+  if(values.has(restored))select.value=restored;
  }
 }
 function home2UpdateText(){
@@ -64,7 +69,7 @@ aplicarBusquedaPrive=function(){
  document.querySelectorAll('.categoria-seccion-wrapper').forEach(wrap=>{
   const section=wrap.dataset.sec,selected=home2Filter==='todas'?section!=='favoritos':section===home2Filter;let count=0;
   wrap.querySelectorAll('.card-link[data-busqueda]').forEach(card=>{
-   const match=(!term||home2Normalize(card.dataset.busqueda).includes(term))&&(!area||card.dataset.zona===area)&&(!mode||card.dataset.modalidad===mode);
+   const match=(!term||home2Normalize(card.dataset.busqueda).includes(term))&&(!area||home2AreaKeys(card.dataset.zona).includes(area))&&(!mode||card.dataset.modalidad===mode);
    card.style.display=match?'':'none';if(match){count++;if(selected)ids.add(card.dataset.perfilId)}
   });
   const showAds=selected&&home2Filter!=='favoritos'&&!term&&!area&&!mode;
@@ -108,7 +113,7 @@ const home2OriginalRender=renderizarPerfiles;
 renderizarPerfiles=function(){
  const focus=document.activeElement?.dataset?.priveFavorite;
  home2OriginalRender();home2Options();
- if(home2PendingState&&home2Loaded){const v=home2PendingState;home2PendingState=null;home2('priveBuscar').value=typeof v.search==='string'?v.search:'';for(const[id,value]of [['priveZona',v.area],['priveModalidad',v.mode]]){const select=home2(id);if([...select.options].some(o=>o.value===value))select.value=value}home2LastCategory=['todas','terapeuticas','sensuales','fantasias'].includes(v.lastCategory)?v.lastCategory:'todas';home2Choose(v.category==='favoritos'?'favoritos':'todas')}
+ if(home2PendingState&&home2Loaded){const v=home2PendingState;home2PendingState=null;home2('priveBuscar').value=typeof v.search==='string'?v.search:'';for(const[id,value]of [['priveZona',v.area],['priveModalidad',v.mode]]){const select=home2(id),restored=id==='priveZona'?home2AreaKeys(value).find(v=>[...select.options].some(o=>o.value===v)):value;if([...select.options].some(o=>o.value===restored))select.value=restored}home2LastCategory=['todas','terapeuticas','sensuales','fantasias'].includes(v.lastCategory)?v.lastCategory:'todas';home2Choose(v.category==='favoritos'?'favoritos':'todas')}
  if(home2InitialHash&&home2Loaded){home2InitialHash=false;home2Choose('favoritos')}
  aplicarBusquedaPrive();
  home2Vitrinas();

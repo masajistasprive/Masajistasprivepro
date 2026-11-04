@@ -209,3 +209,9 @@ body.prive-home-v2{margin:0;min-width:320px;padding-bottom:calc(86px + env(safe-
 .prive-home-v2 .prive-category-card .prive-category-jump{font-size:15px!important;color:#c0a776!important}
 .prive-home-v2 .categoria-seccion-wrapper{scroll-margin-top:16px}
 .prive-home-v2 .prive-catalogue-actions:has(#priveCloseCatalogue[hidden]){display:none}
+
+/* Acceso directo antes de las vitrinas, sin desplazar el catálogo ni sus filtros. */
+.prive-quick-discovery{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;width:calc(100% - 28px);max-width:1080px;margin:8px auto 14px}
+.prive-quick-discovery a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:9px 12px;border:1px solid #dfc28555;border-radius:10px;background:#151614;color:#dfc285;font:500 12px/1.4 Montserrat,sans-serif;text-decoration:none}
+.prive-quick-discovery a:first-child{background:#dfc285;color:#16120b;font-weight:600}
+.prive-quick-discovery a:focus-visible{outline:2px solid #fff;outline-offset:3px}

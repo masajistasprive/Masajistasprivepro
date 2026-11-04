@@ -61,3 +61,25 @@ assert.equal(ga[0][1],'whatsapp_click');assert.equal(ga[0][2].perfil_id,'contact
 assert.equal(ga[0][2].perfil_nombre,'Contacto QA');assert.equal(ga[0][2].perfil_categoria,'terapeuticas');
 assert.equal(ga[0][2].ubicacion_boton,'portada');
 console.log('PASS: catálogo abierto conserva atributos y eventos históricos de WhatsApp sin duplicar el manejador.');
+
+// Regresión real: Congreso y Congreso / Balvanera deben encontrarse juntos.
+vm.runInContext("aplicarIdioma('es');home2Reset();documentosPerfiles=[{id:'mariela',data:()=>({nombre:'Mariela',categoria:'terapeuticas',zona:'Congreso / Balvanera'})},{id:'olivia',data:()=>({nombre:'Olivia',categoria:'sensuales',zona:'CONGRESO'})},{id:'recoleta',data:()=>({nombre:'Otra',categoria:'terapeuticas',zona:'Recoleta'})},{id:'pausada',data:()=>({nombre:'Pausada',categoria:'terapeuticas',zona:'Congreso',estado:'pausado'})}];renderizarPerfiles();home2Choose('todas')",ctx);
+const areaSelect=get('priveZona');
+assert.equal([...areaSelect.options].filter(o=>o.value==='congreso').length,1,'Congreso no se duplica por mayúsculas o zona compuesta');
+assert([...areaSelect.options].some(o=>o.value==='balvanera'));
+areaSelect.value='congreso';areaSelect.dispatchEvent(new window.Event('change'));
+for(const id of ['mariela','olivia'])assert.notEqual(document.querySelector('[data-perfil-id='+id+']').style.display,'none','Congreso incluye '+id);
+assert.equal(document.querySelector('[data-perfil-id=recoleta]').style.display,'none');
+assert.equal(document.querySelectorAll('[data-perfil-id=pausada]').length,0);
+assert(get('priveSearchCount').textContent.startsWith('2 perfiles'));
+areaSelect.value='balvanera';areaSelect.dispatchEvent(new window.Event('change'));
+assert.notEqual(document.querySelector('[data-perfil-id=mariela]').style.display,'none');
+assert.equal(document.querySelector('[data-perfil-id=olivia]').style.display,'none');
+areaSelect.value='congreso / balvanera';vm.runInContext('home2Options();aplicarBusquedaPrive()',ctx);
+assert.equal(areaSelect.value,'congreso','Migrar filtros guardados con la zona compuesta');
+get('priveBuscar').value='NO EXISTE';click('.prive-quick-discovery a[data-prive-reset]');
+assert.equal(areaSelect.value,'');assert.equal(get('priveBuscar').value,'');assert(get('priveSearchCount').textContent.startsWith('3 perfiles'));
+const quick=document.querySelector('.prive-quick-discovery');
+assert(quick.compareDocumentPosition(get('stories-destacadas-container'))&4,'Los accesos van antes de las vitrinas');
+assert(quick.querySelector('a[href="masajistas-congreso.html"]'));
+console.log('PASS: Congreso incluye Mariela y Olivia, Balvanera solo Mariela, pausadas excluidas, filtros antiguos migrados y acceso directo restablece el catálogo.');
