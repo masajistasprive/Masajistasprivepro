@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <base href="/">
-<script src="js/perfil-compartir.js?v=20261031-compartir1"></script>
+<script src="js/perfil-compartir.js?v=20261106-compartir2"></script>
 <meta name="google" content="notranslate">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title id="perfil-title">Perfil temporalmente no disponible | Masajistas Privé</title>
-<meta property="og:title" content="Perfil temporalmente no disponible | Masajistas Privé">
-<meta property="og:description" content="Perfil independiente en Masajistas Privé.">
-<meta property="og:image" content="https://masajistasprive.com/img/logo.png">
-<meta property="og:url" content="https://masajistasprive.com/p/luly-sensual.html?v=ca6e6c859184136c">
+<title id="perfil-title">Luly | Masajistas Privé</title>
+<meta property="og:title" content="Luly | Masajistas Privé">
+<meta property="og:description" content="sensuales · CABA">
+<meta property="og:image" content="https://masajistasprive.com/img/luly5.jpg">
+<meta property="og:url" content="https://masajistasprive.com/p/luly-sensual.html?v=73fa36fc053ec502">
 <link rel="stylesheet" href="css/style.css">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 <!-- PRIVÉ PREMIUM 2.0: versión de prueba, requiere ?id=... -->
@@ -170,11 +170,11 @@ html,body{max-width:100%;overflow-x:clip}
 </style>
 <style>.prive-whatsapp-principal{min-height:48px;margin:16px 0 20px;letter-spacing:.4px;text-align:center}.prive-whatsapp-principal span{white-space:normal}</style>
 <meta property="og:type" content="website">
-<meta name="description" content="Perfil independiente en Masajistas Privé.">
+<meta name="description" content="sensuales · CABA">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Perfil temporalmente no disponible | Masajistas Privé">
-<meta name="twitter:description" content="Perfil independiente en Masajistas Privé.">
-<meta name="twitter:image" content="https://masajistasprive.com/img/logo.png">
+<meta name="twitter:title" content="Luly | Masajistas Privé">
+<meta name="twitter:description" content="sensuales · CABA">
+<meta name="twitter:image" content="https://masajistasprive.com/img/luly5.jpg">
 <link rel="canonical" href="https://masajistasprive.com/p/luly-sensual.html">
 </head>
 <body class="perfil-body">
@@ -351,7 +351,24 @@ document.getElementById('pSubmit').addEventListener('click',submitReview);
 }
 function readFavs(){try{const a=JSON.parse(localStorage.getItem('priveFavoritos')||'[]');return Array.isArray(a)?a:[]}catch{return []}}
 function toggleFavorite(){const f=readFavs(),i=f.indexOf(perfilId);if(i>=0)f.splice(i,1);else f.push(perfilId);localStorage.setItem('priveFavoritos',JSON.stringify(f));const b=document.getElementById('btnFavElement');b.classList.toggle('activo',i<0);b.textContent='⭐ '+(i<0?t().saved:t().favorite)}
-async function shareProfile(){let shareURL;try{shareURL=await window.priveResolverEnlacePerfil(modelo)}catch{alert('Estamos preparando el enlace con la foto actualizada. Volvé a intentar en unos minutos.');return}if(navigator.share){try{await navigator.share({title:`${modelo.nombre} | Masajistas Privé`,url:shareURL});registrarMetrica('perfil_compartido',{metodo:'compartir_nativo'})}catch{}}else{try{await navigator.clipboard.writeText(shareURL);registrarMetrica('perfil_compartido',{metodo:'copiar_enlace'});alert(t().copied)}catch{prompt('Copiá este enlace:',shareURL)}}}
+async function shareProfile(){
+ const shareURL=await window.priveResolverEnlacePerfil(modelo);
+ if(!shareURL)return;
+ if(navigator.share){
+  try{
+   await navigator.share({title:`${modelo.nombre} | Masajistas Privé`,url:shareURL});
+   registrarMetrica('perfil_compartido',{metodo:'compartir_nativo'});
+   return;
+  }catch(error){if(error.name==='AbortError')return}
+ }
+ try{
+  await navigator.clipboard.writeText(shareURL);
+  registrarMetrica('perfil_compartido',{metodo:'copiar_enlace'});
+  alert(t().copied);
+ }catch{
+  prompt(({es:'Copiá este enlace:',en:'Copy this link:',pt:'Copie este link:',fr:'Copiez ce lien :'})[idiomaPerfil],shareURL);
+ }
+}
 document.addEventListener('contextmenu',e=>{if(e.target.closest('.perfil-galeria-grid, .prive-lightbox-photo'))e.preventDefault()});
 document.addEventListener('dragstart',e=>{if(e.target.closest('.perfil-galeria-grid, .prive-lightbox-photo'))e.preventDefault()});
 let lightboxTrigger=null,lightboxPreviousOverflow='',lightboxBackground=[];

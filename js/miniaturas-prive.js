@@ -1,5 +1,6 @@
 /* Miniaturas derivadas; originales intactos. Generado por scripts/miniaturas.mjs. */
 window.priveMiniaturas=Object.freeze({
+  "https://masajistasprive.com/img/luly5.jpg": "/img/miniaturas/895e8433dd86713652bc7f8c.webp",
   "https://masajistasprive.com/img/lupita1.jpg": "/img/miniaturas/24903dcd27c536fefcea0432.webp",
   "https://masajistasprive.com/img/mariela5.jpg": "/img/miniaturas/5515fbf5aa24e1da6fec718d.webp",
   "https://masajistasprive.com/img/pamela3.jpg": "/img/miniaturas/49aad60b11cc36f5ce655db6.webp",
