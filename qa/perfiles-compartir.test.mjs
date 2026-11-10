@@ -74,9 +74,9 @@ test('compartir consulta la portada vigente sin esperar el índice estático',as
  }};
  vm.runInNewContext(client,context);await context.window.priveEnlacePerfilListo;assert.equal(reads,0);
  const first=new URL(await context.window.priveResolverEnlacePerfil({fotoPrincipal:'https://example.com/vieja.jpg'}));
- assert.equal(first.origin,'https://prive-compartir.nicolasgraino.chatgpt.site');assert.equal(first.pathname,'/p/mariela');assert.equal(first.searchParams.get('utm_source'),'whatsapp');assert.equal(first.hash,'#galeria');assert.match(first.searchParams.get('v'),/^[a-f0-9]{16}$/);
+ assert.equal(first.origin,'https://masajistasprive.com');assert.equal(first.pathname,'/p/mariela.html');assert.equal(first.searchParams.get('utm_source'),'whatsapp');assert.equal(first.hash,'#galeria');assert.match(first.searchParams.get('v'),/^[a-f0-9]{16}$/);
  photo='https://example.com/nueva.jpg';const second=new URL(await context.window.priveResolverEnlacePerfil({fotoPrincipal:'https://example.com/vieja.jpg'}));assert.notEqual(second.searchParams.get('v'),first.searchParams.get('v'));
  paused=true;assert.equal(await context.window.priveResolverEnlacePerfil({}),null);
- context.fetch=async()=>{throw Error('offline')};assert.match(await context.window.priveResolverEnlacePerfil({}),/^https:\/\/prive-compartir\.nicolasgraino\.chatgpt\.site\/p\/mariela\?/);
+ context.fetch=async()=>{throw Error('offline')};assert.equal(new URL(await context.window.priveResolverEnlacePerfil({})).origin,'https://masajistasprive.com');
  assert.equal(await context.window.priveResolverEnlacePerfil({estado:'pausado'}),null);
 });
