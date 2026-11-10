@@ -315,7 +315,12 @@ if(modelo?.estado==='pausado'){
 const m=modelo,L=t(),tr=m.traducciones||{},x=tr[idiomaPerfil]||tr.es||{};
 const pick=(key,fall='')=>x[key]||fall;
 const description=[pick('descPerfil1',m.descripcion),pick('descPerfil2')].filter(Boolean).join('\n\n');
-const phone=String(m.whatsapp||m.telefono||'').replace(/\D/g,'');const whatsapp=phone?`https://wa.me/${phone}?text=${encodeURIComponent(`Hola ${m.nombre||''}, vi tu perfil en Masajistas Privé: ${location.href}`)}`:'';
+const enlacePerfil=new URL('/p/'+encodeURIComponent(perfilId)+'.html','https://masajistasprive.com');
+enlacePerfil.search=new URL(location.href).search;enlacePerfil.searchParams.delete('id');
+const portadaCompartida=String(m.fotoPrincipal||m.foto||(m.fotosGaleria||[])[0]||'').split('#')[0];
+let versionPortada=2166136261;for(const c of portadaCompartida)versionPortada=Math.imul(versionPortada^c.charCodeAt(0),16777619);
+enlacePerfil.searchParams.set('v',(versionPortada>>>0).toString(16));
+const phone=String(m.whatsapp||m.telefono||'').replace(/\D/g,'');const whatsapp=phone?`https://wa.me/${phone}?text=${encodeURIComponent(`Hola ${m.nombre||''}, vi tu perfil en Masajistas Privé: ${enlacePerfil.href}`)}`:'';
 const active=m.estado!=='pausado';
 const pics=(Array.isArray(m.fotosGaleria)?m.fotosGaleria:[]).map(safeUrl).filter(Boolean);const main=safeUrl(m.fotoPrincipal)||safeUrl(m.foto)||pics[0]||'img/logo.png';
 lightboxUrls=[main,...pics.filter(p=>p!==main)];
