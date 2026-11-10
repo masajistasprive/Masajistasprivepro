@@ -6,7 +6,7 @@ window.priveResolverEnlacePerfil=async function(profile){
  const current=new URL(location.href);
  const id=current.searchParams.get('id')||decodeURIComponent(current.pathname.split('/').pop().replace(/\.html?$/i,''));
  if(!/^[a-z0-9_-]{1,100}$/.test(id)||id==='perfil'||profile.estado==='pausado')return null;
- const next=new URL('/p/'+id,'https://prive-compartir.nicolasgraino.chatgpt.site');
+ const next=new URL('/p/'+id+'.html','https://masajistasprive.com');
  next.search=current.search;next.searchParams.delete('id');next.searchParams.delete('v');next.hash=current.hash;
  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),5000);
  try{
