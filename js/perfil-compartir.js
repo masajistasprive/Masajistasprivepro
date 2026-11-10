@@ -1,60 +1,27 @@
-/* Enlaces públicos con metadatos legibles sin JavaScript. Sin lecturas Firebase. */
-window.priveEnlacePerfilListo=(async()=>{
- const current=new URL(location.href);
- const id=current.searchParams.get('id')||decodeURIComponent(current.pathname.split('/').pop().replace(/\.html?$/i,''));
- if(!id||id==='perfil')return;
- const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),2500);
- try{
-  const response=await fetch('/p/indice.json',{signal:controller.signal,cache:'no-store'});
-  if(!response.ok)return;
-  const manifest=await response.json();
-  const entry=Object.hasOwn(manifest,id)?manifest[id]:null;
-  if(!entry||!/^\/p\/[a-z0-9_-]+\.html$/.test(entry.path)||!/^[a-f0-9]{16}$/.test(entry.version))return;
-  const next=new URL(entry.path,location.origin);
-  next.search=current.search;next.searchParams.delete('id');next.searchParams.set('v',entry.version);
-  next.hash=current.hash;
-  // Resolver el enlace sin simular navegación: replaceState dispara otra
-  // page_view con la medición mejorada de GA4 aunque la ficha sea la misma.
-  return next.href;
- }catch{/* El perfil sigue disponible con el enlace original si no hay conexión. */}
- finally{clearTimeout(timer)}
-})();
+// La carga de la ficha no espera la generación de páginas estáticas.
+window.priveEnlacePerfilListo=Promise.resolve(null);
 
-
-// Comprobar la portada publicada al compartir y evitar un índice antiguo en la caché.
+// La vista previa se resuelve en el servidor desde la ficha pública actual.
 window.priveResolverEnlacePerfil=async function(profile){
  const current=new URL(location.href);
  const id=current.searchParams.get('id')||decodeURIComponent(current.pathname.split('/').pop().replace(/\.html?$/i,''));
- if(!id||id==='perfil'||profile.estado==='pausado')return null;
- // El enlace dinámico funciona antes de que se genere la portada pública.
- const fallback=new URL('/perfil.html',location.origin);
- fallback.search=current.search;
- fallback.searchParams.set('id',id);
- fallback.searchParams.delete('v');
- fallback.hash=current.hash;
+ if(!/^[a-z0-9_-]{1,100}$/.test(id)||id==='perfil'||profile.estado==='pausado')return null;
+ const next=new URL('/p/'+id,'https://prive-compartir.nicolasgraino.chatgpt.site');
+ next.search=current.search;next.searchParams.delete('id');next.searchParams.delete('v');next.hash=current.hash;
  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),5000);
  try{
-  const response=await fetch('/p/indice.json?share_check='+Date.now(),{signal:controller.signal,cache:'no-store'});
-  if(!response.ok)return fallback.href;
-  const manifest=await response.json(),entry=Object.hasOwn(manifest,id)?manifest[id]:null;
-  const photo=new URL(profile.fotoPrincipal||profile.foto||(profile.fotosGaleria||[])[0]||'/img/logo.png',location.origin);photo.hash='';
-  if(!entry||entry.path!=='/p/'+id+'.html'||!/^\/p\/[a-z0-9_-]+\.html$/.test(entry.path)||!/^[a-f0-9]{16}$/.test(entry.version))return fallback.href;
-  if(entry.image!==photo.href){
-   // Una pestaña abierta antes de cambiar la foto no debe quedar bloqueada para siempre.
-   // Confirmar contra la ficha pública actual; nunca compartir una portada desactualizada.
-   const url='https://firestore.googleapis.com/v1/projects/masajistasprivepro/databases/(default)/documents/perfiles_publicos/'+encodeURIComponent(id)+'?mask.fieldPaths=fotoPrincipal&mask.fieldPaths=foto&mask.fieldPaths=fotosGaleria&mask.fieldPaths=estado';
-   const fresh=await fetch(url,{signal:controller.signal,cache:'no-store'});
-   if(!fresh.ok)return fallback.href;
-   const fields=(await fresh.json()).fields||{};
-   if(fields.estado?.stringValue==='pausado')return null;
-   const source=fields.fotoPrincipal?.stringValue||fields.foto?.stringValue||fields.fotosGaleria?.arrayValue?.values?.[0]?.stringValue;
-   if(!source)return fallback.href;
-   const currentPhoto=new URL(source,location.origin);currentPhoto.hash='';
-   if(entry.image!==currentPhoto.href)return fallback.href;
-  }
-  const next=new URL(entry.path,location.origin);next.search=current.search;next.searchParams.delete('id');next.searchParams.set('v',entry.version);next.hash=current.hash;
-  return next.href;
- }catch{return fallback.href}
- finally{clearTimeout(timer)}
+  const url='https://firestore.googleapis.com/v1/projects/masajistasprivepro/databases/(default)/documents/perfiles_publicos/'+encodeURIComponent(id)+'?mask.fieldPaths=fotoPrincipal&mask.fieldPaths=foto&mask.fieldPaths=fotosGaleria&mask.fieldPaths=estado';
+  const response=await fetch(url,{signal:controller.signal,cache:'no-store'});
+  if(response.status===404)return null;
+  if(!response.ok)throw Error('No se pudo comprobar la portada');
+  const fields=(await response.json()).fields||{};
+  if(fields.estado?.stringValue==='pausado')return null;
+  const photo=new URL(fields.fotoPrincipal?.stringValue||fields.foto?.stringValue||fields.fotosGaleria?.arrayValue?.values?.[0]?.stringValue||'/img/logo.png',location.origin);photo.hash='';
+  let a=2166136261,b=5381;for(const c of photo.href){a=Math.imul(a^c.charCodeAt(0),16777619);b=Math.imul(b,33)^c.charCodeAt(0)}
+  next.searchParams.set('v',(a>>>0).toString(16).padStart(8,'0')+(b>>>0).toString(16).padStart(8,'0'));
+ }catch{
+  // Aun sin esta consulta, el servidor consulta la portada al abrir el enlace.
+  next.searchParams.set('v',Date.now().toString(36));
+ }finally{clearTimeout(timer)}
+ return next.href;
 };
-

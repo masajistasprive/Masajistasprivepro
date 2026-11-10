@@ -30,16 +30,6 @@ test('catálogo paginado y fallo seguro ante límites o respuesta vacía',async(
  await assert.rejects(publicProfiles(async()=>({ok:true,json:async()=>({})})));
 });
 const client=await readFile(new URL('../js/perfil-compartir.js',import.meta.url),'utf8');
-test('enlace nuevo mantiene campaña y hash; sin catálogo conserva original',async()=>{
- const location=new URL('https://masajistasprive.com/perfil.html?id=prada-123&utm_source=facebook#galeria');
- let replaced;
- const context={window:{},URL,location,AbortController,setTimeout,clearTimeout,history:{state:null,replaceState:(a,b,url)=>replaced=url},fetch:async()=>({ok:true,json:async()=>({'prada-123':{path:'/p/prada-123.html',version:'1234567890abcdef'}})})};
- vm.runInNewContext(client,context);
- assert.equal(await context.window.priveEnlacePerfilListo,'https://masajistasprive.com/p/prada-123.html?utm_source=facebook&v=1234567890abcdef#galeria');
- assert.equal(replaced,undefined,'No simular navegación al resolver la URL');
- replaced=undefined;context.fetch=async()=>{throw Error('offline')};vm.runInNewContext(client,context);await context.window.priveEnlacePerfilListo;assert.equal(replaced,undefined);
-});
-
 test('sitemap conserva barrios, excluye perfiles anteriores y genera canónicos únicos',()=>{
  const original='<urlset>\n<url><loc>https://masajistasprive.com/</loc></url>\n<url><loc>https://masajistasprive.com/masajistas-recoleta.html</loc></url>\n<url><loc>https://masajistasprive.com/p/pausado.html</loc></url>\n</urlset>';
  const active=[metadata({id:'activa',nombre:'Activa',zona:'CABA'})];
@@ -75,42 +65,18 @@ test('barrios tienen fichas iniciales correctas, seguras y sincronizables',async
 });
 
 
-test('compartir prefiere la portada actual y conserva el enlace sin portada sincronizada',async()=>{
- const location=new URL('https://masajistasprive.com/perfil.html?id=delfi-123&utm_source=whatsapp#fotos');
- let replaced,photo='https://example.com/nueva.jpg';
- const context={window:{},URL,location,AbortController,setTimeout,clearTimeout,history:{state:null,replaceState:(a,b,url)=>replaced=url},fetch:async(url,options)=>{
-  assert.equal(options.cache,'no-store');return {ok:true,json:async()=>({'delfi-123':{path:'/p/delfi-123.html',version:'1234567890abcdef',image:photo}})};
- }};
- vm.runInNewContext(client,context);await context.window.priveEnlacePerfilListo;
- assert.equal(await context.window.priveResolverEnlacePerfil({fotoPrincipal:photo+'#encuadre'}),'https://masajistasprive.com/p/delfi-123.html?utm_source=whatsapp&v=1234567890abcdef#fotos');
- assert.equal(replaced,undefined,'Compartir no genera otra vista virtual de la misma ficha');
- const fallback='https://masajistasprive.com/perfil.html?id=delfi-123&utm_source=whatsapp#fotos';
- assert.equal(await context.window.priveResolverEnlacePerfil({fotoPrincipal:'https://example.com/otra.jpg'}),fallback);
- context.fetch=async()=>({ok:true,json:async()=>({})});
- assert.equal(await context.window.priveResolverEnlacePerfil({fotoPrincipal:photo}),fallback);
- context.fetch=async()=>{throw Error('offline')};
- assert.equal(await context.window.priveResolverEnlacePerfil({fotoPrincipal:photo}),fallback);
-});
-
-
-
-test('una pestaña anterior comparte la foto actual y nunca una portada atrasada',async()=>{
- const location=new URL('https://masajistasprive.com/p/lupita-sensual.html?v=old&utm_source=whatsapp#galeria');
- const entry={path:'/p/lupita-sensual.html',version:'abcdef1234567890',image:'https://example.com/actual.jpg'};
- let current='https://example.com/actual.jpg',paused=false,reads=0;
+test('compartir consulta la portada vigente sin esperar el índice estático',async()=>{
+ const location=new URL('https://masajistasprive.com/p/mariela.html?v=old&utm_source=whatsapp#galeria');
+ let photo='https://example.com/actual.jpg',paused=false,reads=0;
  const context={window:{},URL,location,AbortController,setTimeout,clearTimeout,fetch:async(url,options)=>{
-  assert.equal(options.cache,'no-store');
-  if(String(url).startsWith('https://firestore.googleapis.com/')){reads++;return {ok:true,json:async()=>({fields:{fotoPrincipal:{stringValue:current+'#encuadre'},estado:{stringValue:paused?'pausado':'activo'}}})}}
-  if(String(url).includes('share_check='))assert.match(String(url),/share_check=\d+/);
-  return {ok:true,json:async()=>({'lupita-sensual':entry})};
+  reads++;assert.equal(options.cache,'no-store');assert.match(url,/perfiles_publicos\/mariela\?/);
+  return {ok:true,json:async()=>({fields:{fotoPrincipal:{stringValue:photo+'#encuadre'},estado:{stringValue:paused?'pausado':'activo'}}})};
  }};
- vm.runInNewContext(client,context);await context.window.priveEnlacePerfilListo;
- assert.equal(await context.window.priveResolverEnlacePerfil({fotoPrincipal:'https://example.com/anterior.jpg'}),'https://masajistasprive.com/p/lupita-sensual.html?v=abcdef1234567890&utm_source=whatsapp#galeria');
- assert.equal(reads,1);
- await context.window.priveResolverEnlacePerfil({fotoPrincipal:entry.image});assert.equal(reads,1,'Si coinciden, no agrega lecturas');
- current='https://example.com/mas-nueva.jpg';
- assert.equal(await context.window.priveResolverEnlacePerfil({fotoPrincipal:current}),'https://masajistasprive.com/perfil.html?utm_source=whatsapp&id=lupita-sensual#galeria');
- paused=true;
- assert.equal(await context.window.priveResolverEnlacePerfil({fotoPrincipal:'https://example.com/anterior.jpg'}),null);
- assert.equal(await context.window.priveResolverEnlacePerfil({estado:'pausado',fotoPrincipal:entry.image}),null);
+ vm.runInNewContext(client,context);await context.window.priveEnlacePerfilListo;assert.equal(reads,0);
+ const first=new URL(await context.window.priveResolverEnlacePerfil({fotoPrincipal:'https://example.com/vieja.jpg'}));
+ assert.equal(first.origin,'https://prive-compartir.nicolasgraino.chatgpt.site');assert.equal(first.pathname,'/p/mariela');assert.equal(first.searchParams.get('utm_source'),'whatsapp');assert.equal(first.hash,'#galeria');assert.match(first.searchParams.get('v'),/^[a-f0-9]{16}$/);
+ photo='https://example.com/nueva.jpg';const second=new URL(await context.window.priveResolverEnlacePerfil({fotoPrincipal:'https://example.com/vieja.jpg'}));assert.notEqual(second.searchParams.get('v'),first.searchParams.get('v'));
+ paused=true;assert.equal(await context.window.priveResolverEnlacePerfil({}),null);
+ context.fetch=async()=>{throw Error('offline')};assert.match(await context.window.priveResolverEnlacePerfil({}),/^https:\/\/prive-compartir\.nicolasgraino\.chatgpt\.site\/p\/mariela\?/);
+ assert.equal(await context.window.priveResolverEnlacePerfil({estado:'pausado'}),null);
 });
