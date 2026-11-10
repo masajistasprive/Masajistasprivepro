@@ -4,7 +4,7 @@ on:
     paths: ['tests/carga-publica.cjs', '.github/workflows/medir-rendimiento.yml']
   push:
     branches: [main]
-    paths: ['index.html', 'perfil.html', 'js/votos-visibles.js', 'js/prive-home-2.js']
+    paths: ['index.html', 'perfil.html', 'js/votos-visibles.js', 'js/prive-home-2.js', '.github/workflows/medir-rendimiento.yml']
   workflow_dispatch:
 permissions:
   contents: read
