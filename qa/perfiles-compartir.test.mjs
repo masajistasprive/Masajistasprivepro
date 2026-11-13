@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
+import {webcrypto} from 'node:crypto';
 import {metadata,page,publicProfiles,sitemap,directory,areaPage,decode} from '../scripts/perfiles-compartir.mjs';
 const template=await readFile(new URL('../perfil.html',import.meta.url),'utf8');
 test('metadatos estáticos personalizados, escapados y misma aplicación',()=>{
@@ -65,18 +66,24 @@ test('barrios tienen fichas iniciales correctas, seguras y sincronizables',async
 });
 
 
-test('compartir consulta la portada vigente sin esperar el índice estático',async()=>{
- const location=new URL('https://masajistasprive.com/p/mariela.html?v=old&utm_source=whatsapp#galeria');
- let photo='https://example.com/actual.jpg',paused=false,reads=0;
- const context={window:{},URL,location,AbortController,setTimeout,clearTimeout,fetch:async(url,options)=>{
-  reads++;assert.equal(options.cache,'no-store');assert.match(url,/perfiles_publicos\/mariela\?/);
-  return {ok:true,json:async()=>({fields:{fotoPrincipal:{stringValue:photo+'#encuadre'},estado:{stringValue:paused?'pausado':'activo'}}})};
+test('tarjeta vigente: foto y categoría invalidan el enlace; una publicación atrasada no se comparte',async()=>{
+ const location=new URL('https://masajistasprive.com/p/celeste.html?v=4e477632&utm_source=whatsapp#galeria');
+ let profile={id:'celeste',nombre:'Celeste',zona:'Congreso',categoria:'fantasias',categoriasPublicacion:['sensuales','fantasias'],fotoPrincipal:'https://example.com/actual.jpg'},paused=false,reads=0;
+ let published=metadata(profile),staleHtml=false;
+ const context={window:{},URL,location,crypto:webcrypto,TextEncoder,Uint8Array,AbortController,setTimeout,clearTimeout,fetch:async(url,options)=>{
+  reads++;assert.equal(options.cache,'no-store');
+  if(url.includes('firestore.googleapis.com'))return {ok:true,json:async()=>({fields:{nombre:{stringValue:profile.nombre},zona:{stringValue:profile.zona},categoria:{stringValue:profile.categoria},categoriasPublicacion:{arrayValue:{values:profile.categoriasPublicacion.map(c=>({stringValue:c}))}},fotoPrincipal:{stringValue:profile.fotoPrincipal+'#encuadre'},estado:{stringValue:paused?'pausado':'activo'}}})};
+  if(url.endsWith('/p/indice.json'))return {ok:true,json:async()=>({celeste:published})};
+  return {ok:true,text:async()=>staleHtml?'<html>vieja</html>':page(template,published)};
  }};
  vm.runInNewContext(client,context);await context.window.priveEnlacePerfilListo;assert.equal(reads,0);
- const first=new URL(await context.window.priveResolverEnlacePerfil({fotoPrincipal:'https://example.com/vieja.jpg'}));
- assert.equal(first.origin,'https://masajistasprive.com');assert.equal(first.pathname,'/p/mariela.html');assert.equal(first.searchParams.get('utm_source'),'whatsapp');assert.equal(first.hash,'#galeria');assert.match(first.searchParams.get('v'),/^[a-f0-9]{16}$/);
- photo='https://example.com/nueva.jpg';const second=new URL(await context.window.priveResolverEnlacePerfil({fotoPrincipal:'https://example.com/vieja.jpg'}));assert.notEqual(second.searchParams.get('v'),first.searchParams.get('v'));
- paused=true;assert.equal(await context.window.priveResolverEnlacePerfil({}),null);
- context.fetch=async()=>{throw Error('offline')};assert.equal(new URL(await context.window.priveResolverEnlacePerfil({})).origin,'https://masajistasprive.com');
+ const resolve=()=>context.window.priveResolverEnlacePerfil({fotoPrincipal:'https://example.com/vieja.jpg'});
+ const first=new URL(await resolve());assert.equal(first.searchParams.get('v'),published.version);assert.equal(first.searchParams.get('utm_source'),'whatsapp');assert.equal(first.hash,'#galeria');
+ profile.categoriasPublicacion=['terapeuticas'];assert.equal(await resolve(),null);published=metadata(profile);
+ const second=new URL(await resolve());assert.notEqual(second.searchParams.get('v'),first.searchParams.get('v'));
+ profile.fotoPrincipal='https://example.com/nueva.jpg';assert.equal(await resolve(),null);published=metadata(profile);const third=new URL(await resolve());assert.notEqual(third.searchParams.get('v'),second.searchParams.get('v'));
+ staleHtml=true;assert.equal(await resolve(),null);staleHtml=false;
+ paused=true;assert.equal(await resolve(),null);paused=false;
+ context.fetch=async()=>{throw Error('offline')};assert.equal(await resolve(),null);
  assert.equal(await context.window.priveResolverEnlacePerfil({estado:'pausado'}),null);
 });

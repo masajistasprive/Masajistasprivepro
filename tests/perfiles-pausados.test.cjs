@@ -3,7 +3,7 @@ const html=fs.readFileSync('perfil.html','utf8');
 const loader=html.match(/^async function loadProfile\(\).*$/m)[0];
 async function scenario(state,{exists=true,fail=false}={}){
  const calls=[],box={innerHTML:''};
- const ctx={perfilId:'renata',modelo:null,document:{getElementById:()=>box},window:{priveEnlacePerfilListo:Promise.resolve()},db:{collection(name){assert.equal(name,'modelos_prive');return{doc(id){assert.equal(id,'renata');return{async get(options){assert.equal(options.source,'server');if(fail)throw Error('offline');return{exists,data:()=>({estado:state})}}}}}}},renderProfile:()=>calls.push('render'),priveEscucharVotos:()=>calls.push('votes'),listenReviews:()=>calls.push('reviews'),registrarVisitaPerfil:()=>calls.push('visit'),hideTransition:()=>calls.push('ready'),esc:String,console:{error(){}}};
+ const ctx={perfilId:'renata',modelo:null,document:{getElementById:()=>box},window:{priveEnlacePerfilListo:Promise.resolve()},db:{collection(name){assert.equal(name,'modelos_prive');return{doc(id){assert.equal(id,'renata');return{async get(options){assert.equal(options.source,'server');if(fail)throw Error('offline');return{exists,data:()=>({estado:state})}}}}}}},actualizarEnlaceContacto:()=>{},renderProfile:()=>calls.push('render'),priveEscucharVotos:()=>calls.push('votes'),listenReviews:()=>calls.push('reviews'),registrarVisitaPerfil:()=>calls.push('visit'),hideTransition:()=>calls.push('ready'),esc:String,console:{error(){}}};
  await vm.runInNewContext(loader+';loadProfile()',ctx);
  return {calls,box};
 }
