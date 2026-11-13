@@ -8,10 +8,10 @@ window.priveMiniaturas=Object.freeze({
   "https://res.cloudinary.com/kupju04k/image/upload/v1791848050/rfccwqrhwihc1jsis8pw.jpg": "/img/miniaturas/930d0f383f606bdd417b7838.webp",
   "https://res.cloudinary.com/kupju04k/image/upload/v1791851309/ncmr3baqjpwxhptxha3w.jpg": "/img/miniaturas/76bbda43d6558693b02f4363.webp",
   "https://res.cloudinary.com/kupju04k/image/upload/v1791851544/brppy07pls4qegt7osi3.jpg": "/img/miniaturas/b30fbce0e8884d1d432db571.webp",
-  "https://res.cloudinary.com/kupju04k/image/upload/v1791939635/znpyu1vm90lhb4q8y1ug.jpg": "/img/miniaturas/bec82dd706ad5272d07cf087.webp",
   "https://res.cloudinary.com/kupju04k/image/upload/v1791942468/wxb304lzsqv6odjlojll.jpg": "/img/miniaturas/273bf59f1873eff4c61d06c5.webp",
   "https://res.cloudinary.com/kupju04k/image/upload/v1792147590/rda8398tr6mtpwdob8nc.jpg": "/img/miniaturas/5c97ffd831ca666124d32215.webp",
   "https://res.cloudinary.com/kupju04k/image/upload/v1793210120/tgomu3mvm7hztag4jiov.jpg": "/img/miniaturas/90ec5de604966689430035ef.webp",
   "https://res.cloudinary.com/kupju04k/image/upload/v1794348385/vdrsluzpsmjpe2hqvdr1.jpg": "/img/miniaturas/74fab97f1346794c2be55286.webp",
-  "https://res.cloudinary.com/kupju04k/image/upload/v1794348510/xdhhiwztcuiszq0rwfmm.jpg": "/img/miniaturas/c1ef4969bd9939d856e1cad2.webp"
+  "https://res.cloudinary.com/kupju04k/image/upload/v1794348510/xdhhiwztcuiszq0rwfmm.jpg": "/img/miniaturas/c1ef4969bd9939d856e1cad2.webp",
+  "https://res.cloudinary.com/kupju04k/image/upload/v1794587983/pksbb3hdx8dhshtxcsiu.jpg": "/img/miniaturas/f1ae4e67cce4703c81b34ea7.webp"
 });

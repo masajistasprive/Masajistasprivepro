@@ -55,13 +55,6 @@
     "width": 512,
     "height": 768
   },
-  "https://res.cloudinary.com/kupju04k/image/upload/v1791939635/znpyu1vm90lhb4q8y1ug.jpg": {
-    "file": "img/miniaturas/bec82dd706ad5272d07cf087.webp",
-    "bytes": 42858,
-    "originalBytes": 355011,
-    "width": 512,
-    "height": 789
-  },
   "https://res.cloudinary.com/kupju04k/image/upload/v1791942468/wxb304lzsqv6odjlojll.jpg": {
     "file": "img/miniaturas/273bf59f1873eff4c61d06c5.webp",
     "bytes": 31304,
@@ -96,5 +89,12 @@
     "originalBytes": 183192,
     "width": 512,
     "height": 679
+  },
+  "https://res.cloudinary.com/kupju04k/image/upload/v1794587983/pksbb3hdx8dhshtxcsiu.jpg": {
+    "file": "img/miniaturas/f1ae4e67cce4703c81b34ea7.webp",
+    "bytes": 19632,
+    "originalBytes": 158707,
+    "width": 512,
+    "height": 629
   }
 }
