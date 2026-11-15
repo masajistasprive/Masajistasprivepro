@@ -24,7 +24,7 @@
   </style>
 </head>
 <body>
-  <header><span class="brand">Masajistas Privé</span><span class="tag">Masajes y bienestar · Buenos Aires</span></header>
+  <header><span class="brand"><img src="/img/logo.png" alt="Masajistas Privé" width="200" height="111" style="display:block;width:160px;height:auto;border-radius:6px"></span><span class="tag">Masajes y bienestar · Buenos Aires</span></header>
   <main>
     <section class="hero" aria-labelledby="titulo">
       <div class="hero-copy">
@@ -71,7 +71,7 @@
       }
       const modelo=doc.data(),phone=String(modelo.whatsapp||modelo.telefono||'').replace(/\D/g,'');
       if(!/^\d{8,15}$/.test(phone))throw new Error('contacto');
-      const mensaje='Hola Mariela, vi tu propuesta de masajes y bienestar en Masajistas Privé. Quisiera consultar duración, valor y disponibilidad de una sesión de relajación.';
+      const mensaje='Hola, vi tu propuesta de masajes en Masajistas Privé. Quisiera consultar disponibilidad, duración y valores.';
       for(const boton of botones){
         boton.href='https://wa.me/'+phone+'?text='+encodeURIComponent(mensaje);
         boton.removeAttribute('aria-disabled');boton.removeAttribute('role');boton.removeAttribute('tabindex');
