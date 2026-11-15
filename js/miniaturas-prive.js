@@ -13,5 +13,6 @@ window.priveMiniaturas=Object.freeze({
   "https://res.cloudinary.com/kupju04k/image/upload/v1793210120/tgomu3mvm7hztag4jiov.jpg": "/img/miniaturas/90ec5de604966689430035ef.webp",
   "https://res.cloudinary.com/kupju04k/image/upload/v1794348385/vdrsluzpsmjpe2hqvdr1.jpg": "/img/miniaturas/74fab97f1346794c2be55286.webp",
   "https://res.cloudinary.com/kupju04k/image/upload/v1794348510/xdhhiwztcuiszq0rwfmm.jpg": "/img/miniaturas/c1ef4969bd9939d856e1cad2.webp",
-  "https://res.cloudinary.com/kupju04k/image/upload/v1794587983/pksbb3hdx8dhshtxcsiu.jpg": "/img/miniaturas/f1ae4e67cce4703c81b34ea7.webp"
+  "https://res.cloudinary.com/kupju04k/image/upload/v1794587983/pksbb3hdx8dhshtxcsiu.jpg": "/img/miniaturas/f1ae4e67cce4703c81b34ea7.webp",
+  "https://res.cloudinary.com/kupju04k/image/upload/v1794776713/hp7ygqnowd3vb6romabo.jpg": "/img/miniaturas/bacfa2e8a90efac4fbef1a28.webp"
 });
